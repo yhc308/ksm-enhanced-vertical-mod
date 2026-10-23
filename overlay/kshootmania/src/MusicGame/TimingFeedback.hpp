@@ -141,7 +141,7 @@ namespace MusicGame
 		return y[Clamp(static_cast<int32>(position), 0, 3)];
 	}
 	// Shared by navigation and tests, so disabled settings cannot receive a cursor.
-	inline int32 TimingMenuCursor(int32 cursor, int32 delta, bool newMode)
+	inline int32 TimingMenuCursor(int32 cursor, int32 /* delta */, bool newMode)
 	{
 		return Clamp(cursor, newMode ? 0 : 4, 8);
 	}

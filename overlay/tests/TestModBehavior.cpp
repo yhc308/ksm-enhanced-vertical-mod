@@ -5,6 +5,7 @@
 #include "MusicGame/JudgeSettingSession.hpp"
 #include "MusicGame/TimingFeedback.hpp"
 #include <limits>
+#include "HighScore/AdditionalScoreIO.hpp"
 
 using namespace MusicGame;
 using namespace MusicGame::Judgment;
@@ -104,4 +105,20 @@ TEST_CASE("Sixteen ms color setting excludes its exact boundary", "[Timing][Comp
 	REQUIRE(PresentTiming(settings, event, 0).color == Color(178, 178, 178));
 	event.signedMs = 16.001;
 	REQUIRE(PresentTiming(settings, event, 0).color == JudgeDirectionColor(settings.judgeColor, true));
+}
+
+TEST_CASE("Additional EX records preserve legacy and optional maximum compatibility", "[EX][Persistence]")
+{
+	const String prefix = U"normal,normal,x10,on,on,on=100,0,1,0,1,1,0,0,0,";
+	for (const String tail : { U"95", U"95,100", U"95,", U"95,invalid" })
+	{
+		const auto record = AdditionalScoreIO::ParseRecord(prefix + tail);
+		REQUIRE(record.has_value());
+		REQUIRE(record->first == U"normal,normal,x10,on,on,on");
+		REQUIRE(record->second == 95);
+	}
+	REQUIRE(AdditionalScoreIO::ParseRecord(prefix + U"0,100")->second == 0);
+	REQUIRE_FALSE(AdditionalScoreIO::ParseRecord(prefix + U"-1,100").has_value());
+	REQUIRE_FALSE(AdditionalScoreIO::ParseRecord(prefix + U",100").has_value());
+	REQUIRE_FALSE(AdditionalScoreIO::ParseRecord(prefix + U"95,100,extra").has_value());
 }

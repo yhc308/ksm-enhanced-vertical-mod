@@ -1,4 +1,4 @@
-param([ValidateSet('Debug','Release')][string]$Configuration='Release')
+﻿param([ValidateSet('Debug','Release')][string]$Configuration='Release')
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
@@ -26,11 +26,13 @@ foreach($name in @('engine','dll')){
 $old=$env:KSM_TEST_REPORT
 try{
     $env:KSM_TEST_REPORT=Join-Path $output 'results.xml'
+    if(Test-Path -LiteralPath $env:KSM_TEST_REPORT){Remove-Item -LiteralPath $env:KSM_TEST_REPORT -Force}
     $process=Start-Process -FilePath (Join-Path $output 'ksm-v2-tests.exe') -WorkingDirectory $output -WindowStyle Hidden -PassThru
     if(-not $process.WaitForExit(120000)){throw "Unit test PID $($process.Id) timed out; left running"}
     if($process.ExitCode){throw "Unit tests failed; $output/results.xml"}
     if(-not(Test-Path -LiteralPath $env:KSM_TEST_REPORT)){throw 'Unit report missing'}
     [xml]$report=[IO.File]::ReadAllText($env:KSM_TEST_REPORT)
+    if(@($report.testsuites.testsuite).Count -eq 0 -or [int]$report.testsuites.testsuite.tests -le 0){throw 'Unit report contains no tests'}
     if(@($report.testsuites.testsuite|Where-Object {[int]$_.failures -gt 0 -or [int]$_.errors -gt 0}).Count){throw "Unit assertions failed; $output/results.xml"}
     Write-Output "UNIT TEST PASS: $output/results.xml"
 }finally{$env:KSM_TEST_REPORT=$old}

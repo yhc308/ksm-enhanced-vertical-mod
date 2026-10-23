@@ -1,0 +1,31 @@
+name: Mod source checks
+on:
+  push:
+    branches: [refactor/upstream-style-parity]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  source-and-headless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python scripts/VerifySource.py
+      - run: python -m unittest discover -s tests -p 'test_source_*.py'
+      - run: python scripts/PrepareSource.py --destination build/source
+      - run: pip install clang-format==19.1.5
+      - run: python build/source/scripts/CheckCppStyle.py --formatter clang-format
+      - name: Compile production rolling-window tests without Siv3D
+        run: |
+          mkdir -p build/deps/catch2
+          curl --fail --location https://raw.githubusercontent.com/catchorg/Catch2/v2.13.6/single_include/catch2/catch.hpp --output build/deps/catch2/catch.hpp
+          g++ -std=c++20 -O2 -Ibuild/deps -Ibuild/source/kshootmania/src build/source/tests/headless/RecentTimingWindowTests.cpp -o build/recent-tests
+          build/recent-tests --reporter junit --out build/headless-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: headless-test-results
+          path: build/headless-results.xml

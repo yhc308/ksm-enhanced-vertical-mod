@@ -1,6 +1,5 @@
 ﻿#include "SkinPreset.hpp"
 #include "I18n/I18n.hpp"
-#include <filesystem>
 #include <cstdio>
 #ifdef _WIN32
 #include <Siv3D/Windows/Windows.hpp>
@@ -10,23 +9,23 @@ namespace SkinPreset
 {
 	namespace
 	{
-		Settings g_settings;
-		HashTable<String, FilePath> g_resolved;
-		Array<String> g_keys;
+		Settings g_currentSettings;
+		HashTable<String, FilePath> g_resolvedImagePaths;
+		Array<String> g_registeredTextureNames;
 		template <class T>
 		T Read(const JSON& json, StringView key, const T& fallback)
 		{
 			return json.isObject() && json.hasElement(key) ? json[key].getOr<T>(fallback) : fallback;
 		}
-		FilePath Root()
+		FilePath GetBaseImageDirectory()
 		{
 			return FsUtils::GetResourcePath(U"imgs/");
 		}
-		FilePath SkinsRoot()
+		FilePath GetUserSkinDirectory()
 		{
 			return FsUtils::GetResourcePath(U"skins/");
 		}
-		FilePath SettingsPath()
+		FilePath GetSettingsFilePath()
 		{
 			return FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"skin_preset.json");
 		}
@@ -35,18 +34,18 @@ namespace SkinPreset
 			const auto ext = FileSystem::Extension(path).lowercased();
 			return ext == U"png" || ext == U"gif" || ext == U"jpg" || ext == U"jpeg" || ext == U"bmp" || ext == U"webp";
 		}
-		String LogicalName(FilePathView input)
+		String GetLogicalImagePath(FilePathView input)
 		{
 			String path{ input };
 			path.replace(U'\\', U'/');
 			if (path.starts_with(U"imgs/"))
 				return path.substr(5);
-			const auto root = Root();
+			const auto root = GetBaseImageDirectory();
 			if (path.starts_with(root))
 				return path.substr(root.size());
 			return path;
 		}
-		FilePath YellowImage(FilePathView name, FilePathView base)
+		FilePath CreateMissingImagePlaceholder(FilePathView name, FilePathView base)
 		{
 			// Keep sprite-sheet geometry; a zero-sized Texture would divide tiles by zero.
 			const auto info = ImageDecoder::GetImageInfo(base);
@@ -80,9 +79,9 @@ namespace SkinPreset
 			}
 			result.push_back(std::move(entry));
 		};
-		addEntry(U"default", Root());
-		if (FileSystem::IsDirectory(SkinsRoot()))
-			for (const auto& path : FileSystem::DirectoryContents(SkinsRoot(), Recursive::No))
+		addEntry(U"default", GetBaseImageDirectory());
+		if (FileSystem::IsDirectory(GetUserSkinDirectory()))
+			for (const auto& path : FileSystem::DirectoryContents(GetUserSkinDirectory(), Recursive::No))
 			{
 				if (!FileSystem::IsDirectory(path))
 					continue;
@@ -100,7 +99,7 @@ namespace SkinPreset
 
 	const Settings& Current()
 	{
-		return g_settings;
+		return g_currentSettings;
 	}
 
 	void Settings::sanitize()
@@ -132,9 +131,9 @@ namespace SkinPreset
 
 	void Initialize()
 	{
-		if (!FileSystem::IsDirectory(Root()))
+		if (!FileSystem::IsDirectory(GetBaseImageDirectory()))
 			throw Error{ I18n::Get(I18n::Mod::DefaultSkinMissing, U"imgs") };
-		const auto json = JSON::Load(SettingsPath());
+		const auto json = JSON::Load(GetSettingsFilePath());
 		Settings settings;
 		if (json)
 		{
@@ -153,8 +152,8 @@ namespace SkinPreset
 		if (!entries.any([&](const Entry& e)
 						 { return e.folder == settings.folder; }))
 			settings.folder = U"default";
-		g_settings = settings;
-		g_resolved.clear();
+		g_currentSettings = settings;
+		g_resolvedImagePaths.clear();
 		noco::Asset::SetTextureLoader([](FilePathView path, noco::MipmapEnabledYN mip)
 									  {
             String normalized{ path }; normalized.replace(U'\\', U'/');
@@ -165,11 +164,11 @@ namespace SkinPreset
 
 	FilePath Resolve(FilePathView logicalPath)
 	{
-		const String name = LogicalName(logicalPath);
-		if (const auto it = g_resolved.find(name); it != g_resolved.end())
+		const String name = GetLogicalImagePath(logicalPath);
+		if (const auto it = g_resolvedImagePaths.find(name); it != g_resolvedImagePaths.end())
 			return it->second;
-		const auto base = FileSystem::PathAppend(Root(), name);
-		const auto selected = g_settings.folder == U"default" ? base : FileSystem::PathAppend(SkinsRoot(), g_settings.folder + U"/" + name);
+		const auto base = FileSystem::PathAppend(GetBaseImageDirectory(), name);
+		const auto selected = g_currentSettings.folder == U"default" ? base : FileSystem::PathAppend(GetUserSkinDirectory(), g_currentSettings.folder + U"/" + name);
 		// Unknown legacy background/icon names retain the original caller's fallback.
 		if (!FileSystem::IsFile(base) && !FileSystem::IsFile(selected))
 			return selected;
@@ -177,15 +176,15 @@ namespace SkinPreset
 		// Decode validation also treats corrupt images as missing, once per selection.
 		if (FileSystem::IsFile(selected) && !Image{ selected }.isEmpty())
 			path = selected;
-		else if (g_settings.missing == MissingMode::Default || g_settings.folder == U"default")
+		else if (g_currentSettings.missing == MissingMode::Default || g_currentSettings.folder == U"default")
 		{
 			if (!FileSystem::IsFile(base) || Image{ base }.isEmpty())
 				throw Error{ I18n::Get(I18n::Mod::SkinImageUnreadable, name) };
 			path = base;
 		}
 		else
-			path = YellowImage(name, base);
-		g_resolved[name] = path;
+			path = CreateMissingImagePlaceholder(name, base);
+		g_resolvedImagePaths[name] = path;
 		return path;
 	}
 
@@ -196,11 +195,11 @@ namespace SkinPreset
 
 	void RegisterTextures()
 	{
-		for (const auto& key : g_keys)
+		for (const auto& key : g_registeredTextureNames)
 			TextureAsset::Unregister(key);
-		g_keys.clear();
+		g_registeredTextureNames.clear();
 		HashSet<String> names;
-		for (const auto& root : { Root(), g_settings.folder == U"default" ? Root() : FileSystem::PathAppend(SkinsRoot(), g_settings.folder + U"/") })
+		for (const auto& root : { GetBaseImageDirectory(), g_currentSettings.folder == U"default" ? GetBaseImageDirectory() : FileSystem::PathAppend(GetUserSkinDirectory(), g_currentSettings.folder + U"/") })
 		{
 			if (!FileSystem::IsDirectory(root))
 				continue;
@@ -221,18 +220,18 @@ namespace SkinPreset
 				return !asset.texture.isEmpty();
 			};
 			TextureAsset::Register(name, std::move(data));
-			g_keys.push_back(name);
+			g_registeredTextureNames.push_back(name);
 		}
 	}
 
 	void Activate(const Settings& settings)
 	{
-		const bool imagesChanged = g_settings.folder != settings.folder || g_settings.missing != settings.missing;
-		g_settings = settings;
-		g_settings.sanitize();
+		const bool imagesChanged = g_currentSettings.folder != settings.folder || g_currentSettings.missing != settings.missing;
+		g_currentSettings = settings;
+		g_currentSettings.sanitize();
 		if (!imagesChanged)
 			return; // Numeric edits never re-register textures or disturb playback.
-		g_resolved.clear();
+		g_resolvedImagePaths.clear();
 		noco::Asset::UnloadAllTextures();
 		RegisterTextures();
 	}
@@ -251,7 +250,7 @@ namespace SkinPreset
 		json[U"indicatorPortrait"] = static_cast<int32>(clean.indicatorPortrait);
 		json[U"indicatorLandscape"] = clean.indicatorLandscape;
 		json[U"keyBeamMode"] = static_cast<int32>(clean.keyBeamMode);
-		const auto path = SettingsPath(), temp = path + U".tmp";
+		const auto path = GetSettingsFilePath(), temp = path + U".tmp";
 		if (!json.save(temp))
 			return false;
 		// Same-directory atomic replacement; preserve the previous settings on failure.

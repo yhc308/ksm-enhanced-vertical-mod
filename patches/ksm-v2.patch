@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..d6610a6f2ea2a214f01e9092a4a25d87a255bff1 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..5929d92cb78285a809553552a57ecbb446e6c67e 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,37 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,42 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -40,6 +40,11 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..d6610a6f2ea2a214f01e9092a4a25d87
 +# Public review documentation
 +!/README_ENHANCED.md
 +!/REVIEW.md
++
++# Refactoring audit documents
++!/docs/REFACTOR_PROGRESS.md
++!/docs/BASELINE_TEST_FINDINGS.md
++!/docs/REMOVAL_AUDIT.md
 diff --git a/README.md b/README.md
 index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e00fbe0e6c 100644
 --- a/README.md
@@ -2385,7 +2390,7 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 +  }
  }
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
-index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098ae9a19835 100644
+index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869c1b9f01d 100644
 --- a/kshootmania/kshootmania.vcxproj
 +++ b/kshootmania/kshootmania.vcxproj
 @@ -61,6 +61,7 @@
@@ -2408,7 +2413,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
      <ClCompile>
        <WarningLevel>Level4</WarningLevel>
-@@ -116,9 +115,6 @@
+@@ -116,11 +115,9 @@
        <DelayLoadDLLs>advapi32.dll;crypt32.dll;dwmapi.dll;gdi32.dll;imm32.dll;ole32.dll;oleaut32.dll;opengl32.dll;shell32.dll;shlwapi.dll;user32.dll;winmm.dll;ws2_32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
        <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
@@ -2417,8 +2422,11 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
 -    </PostBuildEvent>
    </ItemDefinitionGroup>
    <ItemGroup>
++    <ClCompile Include="src\Diagnostics\DiagnosticRunner.cpp" />
      <ClCompile Include="ThirdParty\SQLiteCpp\sqlite3\sqlite3.c">
-@@ -205,6 +201,8 @@
+       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+@@ -205,6 +202,8 @@
      <ClCompile Include="src\Input\LaserInput\KeyboardLaserInput.cpp" />
      <ClCompile Include="src\Input\LaserInput\MouseXYLaserInput.cpp" />
      <ClCompile Include="src\Input\LaserInput\SliderLaserInput.cpp" />
@@ -2427,7 +2435,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
      <ClCompile Include="src\Main.cpp" />
      <ClCompile Include="src\RuntimeConfig.cpp" />
      <ClCompile Include="src\TestPlayArgs.cpp" />
-@@ -246,6 +244,7 @@
+@@ -246,6 +245,7 @@
      <ClCompile Include="src\MusicGame\Judgment\ButtonLaneJudgment.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\ComboStatus.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\JudgmentHandler.cpp" />
@@ -2435,7 +2443,15 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
      <ClCompile Include="src\MusicGame\Judgment\JudgmentMain.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\LaserLaneJudgment.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\LaserSlamShake.cpp" />
-@@ -428,6 +427,17 @@
+@@ -403,6 +403,7 @@
+     <None Include="App\engine\soundfont\GMGSx.sf2.zstdcmp" />
+   </ItemGroup>
+   <ItemGroup>
++    <ClInclude Include="src\Diagnostics\DiagnosticRunner.hpp" />
+     <ClInclude Include="src\Addon\AutoMuteAddon.hpp" />
+     <ClInclude Include="src\Addon\CommonSEAddon.hpp" />
+     <ClInclude Include="src\Addon\DisableIMEAddon.hpp" />
+@@ -428,6 +429,17 @@
      <ClInclude Include="src\I18n\I18n.hpp" />
      <ClInclude Include="src\IR\IRHash.hpp" />
      <ClInclude Include="src\Ini\ConfigIni.hpp" />
@@ -2453,7 +2469,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
      <ClInclude Include="src\Ini\FolderConfIni.hpp" />
      <ClInclude Include="src\Ini\KSMIniData.hpp" />
      <ClInclude Include="src\Input\FXButtonUpDetection.hpp" />
-@@ -449,6 +459,7 @@
+@@ -449,6 +461,7 @@
      <ClInclude Include="src\MusicGame\Audio\AudioEffectMain.hpp" />
      <ClInclude Include="src\MusicGame\Audio\AudioEffectUtils.hpp" />
      <ClInclude Include="src\MusicGame\Audio\BGM.hpp" />
@@ -2461,7 +2477,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
      <ClInclude Include="src\MusicGame\Audio\FXChipSE.hpp" />
      <ClInclude Include="src\MusicGame\Audio\LaserSlamSE.hpp" />
      <ClInclude Include="src\MusicGame\Camera\CameraMath.hpp" />
-@@ -482,11 +493,16 @@
+@@ -482,11 +495,16 @@
      <ClInclude Include="src\MusicGame\HispeedUtils.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ButtonLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp" />
@@ -2478,17 +2494,89 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098a
      <ClInclude Include="src\MusicGame\Judgment\JudgmentMain.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp" />
+@@ -608,6 +626,57 @@
+     <Font Include="App\assets\font\corporate-logo\Corporate-Logo-Medium-ver3.otf" />
+     <Font Include="App\assets\font\tektur-ksm\Tektur-KSM-Medium.ttf" />
+   </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Common\AudioOutputRestart.hpp" />
++    <ClInclude Include="src\Common\AudioOutputRestartPolicy.hpp" />
++    <ClInclude Include="src\Common\AudioOutputSettings.hpp" />
++    <ClInclude Include="src\Common\SkinPreset.hpp" />
++    <ClInclude Include="src\Diagnostics\ApsFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\ApsVideoFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\EnhancedMenuFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\JudgeSettingFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\RenderGeometryFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\SkinPresetFixture.hpp" />
++    <ClInclude Include="src\Graphics\GameRenderContext.hpp" />
++    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp" />
++    <ClInclude Include="src\HighScore\AdditionalScoreIO.hpp" />
++    <ClInclude Include="src\Input\MenuInputProfiles.hpp" />
++    <ClCompile Include="src\MusicGame\GaugePresentation.cpp" />
++    <ClInclude Include="src\MusicGame\GaugePresentation.hpp" />
++    <ClInclude Include="src\MusicGame\Graphics\ViewportGeometry.hpp" />
++    <ClCompile Include="src\MusicGame\JudgeSettingSession.cpp" />
++    <ClInclude Include="src\MusicGame\JudgeSettingSession.hpp" />
++    <ClCompile Include="src\MusicGame\Judgment\NormalGaugeState.cpp" />
++    <ClInclude Include="src\MusicGame\Judgment\NormalGaugeState.hpp" />
++    <ClInclude Include="src\MusicGame\Judgment\RecentTimingWindow.hpp" />
++    <ClCompile Include="src\Scenes\Title\JudgeSettingOverlay.cpp" />
++    <ClInclude Include="src\Scenes\Title\JudgeSettingOverlay.hpp" />
++    <ClInclude Include="src\Scenes\Title\ModMenuButtons.hpp" />
++    <ClInclude Include="src\Scenes\Title\SkinOverlay.hpp" />
++    <ClInclude Include="src\UI\ModMenuStyle.hpp" />
++    <ClInclude Include="src\Vertical\DepthImageSettings.hpp" />
++    <ClInclude Include="src\Vertical\DiagnosticInputReplay.hpp" />
++    <ClInclude Include="src\Vertical\DisplayTransitionTest.hpp" />
++    <ClInclude Include="src\Vertical\JudgmentReplayTest.hpp" />
++    <ClInclude Include="src\Vertical\MenuContentLayout.hpp" />
++    <ClInclude Include="src\Vertical\MenuEntryGate.hpp" />
++    <ClInclude Include="src\Vertical\MenuInputTest.hpp" />
++    <ClInclude Include="src\Vertical\ModOptionsScene.hpp" />
++    <ClInclude Include="src\Vertical\OptionFlowTest.hpp" />
++    <ClInclude Include="src\Vertical\OptionsPresentation.hpp" />
++    <ClInclude Include="src\Vertical\ProjectiveWall.hpp" />
++    <ClInclude Include="src\Vertical\SpinRegression.hpp" />
++    <ClInclude Include="src\Vertical\VerticalCameraProfile.hpp" />
++    <ClInclude Include="src\Vertical\VerticalDisplay.hpp" />
++    <ClInclude Include="src\Vertical\VerticalHUDLayout.hpp" />
++    <ClInclude Include="src\Vertical\VerticalLaneGeometry.hpp" />
++    <ClInclude Include="src\Vertical\VerticalLayout.hpp" />
++    <ClInclude Include="src\Vertical\VerticalModConfig.hpp" />
++    <ClInclude Include="src\Vertical\VerticalRenderPreview.hpp" />
++    <ClInclude Include="src\Vertical\VerticalResources.hpp" />
++    <ClInclude Include="src\Vertical\VerticalSelfTest.hpp" />
++    <ClInclude Include="src\Vertical\VerticalTunnelWarp.hpp" />
++  </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
 diff --git a/kshootmania/kshootmania.vcxproj.filters b/kshootmania/kshootmania.vcxproj.filters
-index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..8762f5e4568afe47621a84a619bed6eecbbd5fae 100644
+index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..d83a51c43d69a65d997c7114165a0cc23420a134 100644
 --- a/kshootmania/kshootmania.vcxproj.filters
 +++ b/kshootmania/kshootmania.vcxproj.filters
-@@ -1,4 +1,4 @@
--﻿<?xml version="1.0" encoding="utf-8"?>
-+<?xml version="1.0" encoding="utf-8"?>
- <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+@@ -318,6 +318,9 @@
+     </Filter>
+   </ItemGroup>
    <ItemGroup>
-     <Filter Include="Source Files">
-@@ -1315,6 +1315,18 @@
++    <ClCompile Include="src\Diagnostics\DiagnosticRunner.cpp">
++      <Filter>src\Diagnostics</Filter>
++    </ClCompile>
+     <ClCompile Include="ThirdParty\SQLiteCpp\sqlite3\sqlite3.c">
+       <Filter>Source Files\ThirdParty\SQLiteCpp\sqlite3</Filter>
+     </ClCompile>
+@@ -1015,6 +1018,9 @@
+     </None>
+   </ItemGroup>
+   <ItemGroup>
++    <ClInclude Include="src\Diagnostics\DiagnosticRunner.hpp">
++      <Filter>src\Diagnostics</Filter>
++    </ClInclude>
+     <ClInclude Include="src\RuntimeConfig.hpp">
+       <Filter>Header Files</Filter>
+     </ClInclude>
+@@ -1315,6 +1321,18 @@
      <ClInclude Include="src\MusicGame\Camera\HighwayTilt.hpp">
        <Filter>Header Files\MusicGame\Camera</Filter>
      </ClInclude>
@@ -2507,7 +2595,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..8762f5e4568afe47621a84a619bed6ee
      <ClInclude Include="src\MusicGame\ViewStatus.hpp">
        <Filter>Header Files\MusicGame</Filter>
      </ClInclude>
-@@ -1348,6 +1360,9 @@
+@@ -1348,6 +1366,9 @@
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
@@ -2517,6 +2605,62 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..8762f5e4568afe47621a84a619bed6ee
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
+@@ -1582,4 +1603,55 @@
+       <Filter>Resource Files\assets\font\tektur-ksm</Filter>
+     </Font>
+   </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Common\AudioOutputRestart.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Common\AudioOutputRestartPolicy.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Common\AudioOutputSettings.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Common\SkinPreset.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\ApsFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\ApsVideoFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\EnhancedMenuFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\JudgeSettingFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\RenderGeometryFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\SkinPresetFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Graphics\GameRenderContext.hpp"><Filter>Header Files\Graphics</Filter></ClInclude>
++    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp"><Filter>Source Files\HighScore</Filter></ClCompile>
++    <ClInclude Include="src\HighScore\AdditionalScoreIO.hpp"><Filter>Header Files\HighScore</Filter></ClInclude>
++    <ClInclude Include="src\Input\MenuInputProfiles.hpp"><Filter>Header Files\Input</Filter></ClInclude>
++    <ClCompile Include="src\MusicGame\GaugePresentation.cpp"><Filter>Source Files\MusicGame</Filter></ClCompile>
++    <ClInclude Include="src\MusicGame\GaugePresentation.hpp"><Filter>Header Files\MusicGame</Filter></ClInclude>
++    <ClInclude Include="src\MusicGame\Graphics\ViewportGeometry.hpp"><Filter>Header Files\MusicGame\Graphics</Filter></ClInclude>
++    <ClCompile Include="src\MusicGame\JudgeSettingSession.cpp"><Filter>Source Files\MusicGame</Filter></ClCompile>
++    <ClInclude Include="src\MusicGame\JudgeSettingSession.hpp"><Filter>Header Files\MusicGame</Filter></ClInclude>
++    <ClCompile Include="src\MusicGame\Judgment\NormalGaugeState.cpp"><Filter>Source Files\MusicGame\Judgment</Filter></ClCompile>
++    <ClInclude Include="src\MusicGame\Judgment\NormalGaugeState.hpp"><Filter>Header Files\MusicGame\Judgment</Filter></ClInclude>
++    <ClInclude Include="src\MusicGame\Judgment\RecentTimingWindow.hpp"><Filter>Header Files\MusicGame\Judgment</Filter></ClInclude>
++    <ClCompile Include="src\Scenes\Title\JudgeSettingOverlay.cpp"><Filter>Source Files\Scenes\Title</Filter></ClCompile>
++    <ClInclude Include="src\Scenes\Title\JudgeSettingOverlay.hpp"><Filter>Header Files\Scenes\Title</Filter></ClInclude>
++    <ClInclude Include="src\Scenes\Title\ModMenuButtons.hpp"><Filter>Header Files\Scenes\Title</Filter></ClInclude>
++    <ClInclude Include="src\Scenes\Title\SkinOverlay.hpp"><Filter>Header Files\Scenes\Title</Filter></ClInclude>
++    <ClInclude Include="src\UI\ModMenuStyle.hpp"><Filter>Header Files\UI</Filter></ClInclude>
++    <ClInclude Include="src\Vertical\DepthImageSettings.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\DiagnosticInputReplay.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\DisplayTransitionTest.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\JudgmentReplayTest.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\MenuContentLayout.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\MenuEntryGate.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\MenuInputTest.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\ModOptionsScene.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\OptionFlowTest.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\OptionsPresentation.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\ProjectiveWall.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\SpinRegression.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalCameraProfile.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalDisplay.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalHUDLayout.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalLaneGeometry.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalLayout.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalModConfig.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalRenderPreview.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalResources.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalSelfTest.hpp"></ClInclude>
++    <ClInclude Include="src\Vertical\VerticalTunnelWarp.hpp"></ClInclude>
++  </ItemGroup>
+ </Project>
 diff --git a/kshootmania/src/Common/AssetManagement.cpp b/kshootmania/src/Common/AssetManagement.cpp
 index 66e0bd4a567b138001dac9974f839bbbc4dd816f..ecbbcfaa9f127938a4543c63a81b8dc1f8151779 100644
 --- a/kshootmania/src/Common/AssetManagement.cpp
@@ -3080,43 +3224,19 @@ index 5fc99279ed9aec7f455f9a6f8cae0f3a87bda331..c2bfd01af7f7ad737e4b1fa88bcab202
  
  	KscValue easyGauge;
 diff --git a/kshootmania/src/HighScore/KscIO.cpp b/kshootmania/src/HighScore/KscIO.cpp
-index ad29bef731603cc9d84976d1780fcbaee804a716..2e785dd8d887e1cec1e7cf888757a49c2c4660f2 100644
+index ad29bef731603cc9d84976d1780fcbaee804a716..f8d6477873b5c291f63f7f6008287f5621f315c1 100644
 --- a/kshootmania/src/HighScore/KscIO.cpp
 +++ b/kshootmania/src/HighScore/KscIO.cpp
 @@ -1,4 +1,5 @@
--﻿#include "KscIO.hpp"
-+﻿#include <Siv3D/Windows/Windows.hpp>
-+#include "KscIO.hpp"
+ ﻿#include "KscIO.hpp"
++#include "AdditionalScoreIO.hpp"
  #include "Common/FsUtils.hpp"
  #include "Ini/ConfigIni.hpp"
  #include "Course/CoursePlayState.hpp"
-@@ -8,6 +9,88 @@ namespace KscIO
+@@ -8,6 +9,17 @@ namespace KscIO
  {
  	namespace
  	{
-+		FilePath AdditionalPath(FilePathView path)
-+		{
-+			return FsUtils::EliminateExtension(path) + U"_additional.ksc";
-+		}
-+		HashTable<String, int64> ReadAdditional(FilePathView path)
-+		{
-+			HashTable<String, int64> values;
-+			TextReader reader{ AdditionalPath(path) };
-+			String line;
-+			while (reader && reader.readLine(line))
-+			{
-+				const auto eq = line.indexOf(U'=');
-+				if (eq == String::npos)
-+					continue;
-+				const auto fields = line.substr(eq + 1).split(U',');
-+				// The final maximum is optional in legacy additional records.
-+				if ((fields.size() != 10 && fields.size() != 11) || fields[9].isEmpty())
-+					continue;
-+				if (const auto value = ParseOpt<int64>(fields[9]); value && *value >= 0)
-+					values[line.substr(0, eq)] = *value;
-+			}
-+			return values;
-+		}
 +		void ApplyAdditional(HighScoreInfo& info, const String& key, const HashTable<String, int64>& values)
 +		{
 +			for (auto gauge : { GaugeType::kEasyGauge, GaugeType::kNormalGauge, GaugeType::kHardGauge })
@@ -3127,59 +3247,11 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..2e785dd8d887e1cec1e7cf888757a49c
 +					info.kscValueOf(gauge).exScore = it->second;
 +			}
 +		}
-+		bool WriteAdditional(FilePathView path, const MusicGame::PlayResult& result, const KscKey& condition)
-+		{
-+			auto values = ReadAdditional(path);
-+			if (result.exMaximum > 0 && result.exScore >= 0 && result.exScore <= result.exMaximum)
-+			{
-+				auto it = values.find(condition.toString());
-+				const int64 previous = it == values.end() || it->second > result.exMaximum ? 0 : it->second;
-+				values[condition.toString()] = Max(previous, result.exScore);
-+			}
-+			TextReader reader{ path };
-+			if (!reader)
-+				return false;
-+			String content, line;
-+			while (reader.readLine(line))
-+			{
-+				if (line.isEmpty())
-+					continue;
-+				const auto eq = line.indexOf(U'=');
-+				if (eq == String::npos)
-+					continue;
-+				const auto it = values.find(line.substr(0, eq));
-+				content += line + U"," + (it == values.end() ? String{} : Format(it->second)) + U"," + (result.exMaximum > 0 ? Format(result.exMaximum) : String{}) + U"\n";
-+			}
-+			const auto destination = AdditionalPath(path);
-+			const auto temporary = destination + U".{}.tmp"_fmt(Time::GetMicrosec());
-+			{
-+				TextWriter writer{ temporary, TextEncoding::UTF8_NO_BOM };
-+				if (!writer)
-+					return false;
-+				writer.write(content);
-+			}
-+			{
-+				TextReader verify{ temporary };
-+				if (!verify || verify.readAll() != content)
-+				{
-+					FileSystem::Remove(temporary);
-+					return false;
-+				}
-+			}
-+#ifdef _WIN32
-+			const bool ok = ::MoveFileExW(temporary.toWstr().c_str(), destination.toWstr().c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
-+#else
-+			const bool ok = FileSystem::Rename(temporary, destination);
-+#endif
-+			if (!ok)
-+				FileSystem::Remove(temporary);
-+			return ok;
-+		}
 +
  		bool TryConvertChartFilePathToKscPath(FilePathView chartFilePath, FilePath* pFilePath)
  		{
  			if (pFilePath == nullptr)
-@@ -230,8 +313,8 @@ namespace KscIO
+@@ -230,8 +242,8 @@ namespace KscIO
  				}
  				const KscValue& origKscValue = origHighScoreInfo.kscValueOf(gaugeType);
  				const KscValue newKscValue = playResult.playOption.gameMode == MusicGame::GameMode::kCourseMode
@@ -3190,25 +3262,25 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..2e785dd8d887e1cec1e7cf888757a49c
  				const String replace = search + newKscValue.toString();
  
  				TextReader reader(kscFilePath);
-@@ -297,6 +380,7 @@ namespace KscIO
+@@ -297,6 +309,7 @@ namespace KscIO
  			return HighScoreInfo{};
  		}
  
-+		ApplyAdditional(highScoreInfo, condition.toStringWithoutGaugeType(), ReadAdditional(kscFilePath));
++		ApplyAdditional(highScoreInfo, condition.toStringWithoutGaugeType(), AdditionalScoreIO::Read(kscFilePath));
  		return highScoreInfo;
  	}
  
-@@ -310,6 +394,9 @@ namespace KscIO
+@@ -310,6 +323,9 @@ namespace KscIO
  		}
  
  		ReadAllHighScoreInfoFromKscFile(kscFilePath, pHighScoreInfoMap);
-+		const auto additional = ReadAdditional(kscFilePath);
++		const auto additional = AdditionalScoreIO::Read(kscFilePath);
 +		for (auto& [key, info] : *pHighScoreInfoMap)
 +			ApplyAdditional(info, key, additional);
  	}
  
  	bool WriteHighScoreInfo(FilePathView chartFilePath, const MusicGame::PlayResult& playResult, const KscKey& condition)
-@@ -327,16 +414,24 @@ namespace KscIO
+@@ -327,16 +343,24 @@ namespace KscIO
  			return false;
  		}
  
@@ -3220,7 +3292,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..2e785dd8d887e1cec1e7cf888757a49c
  			// ファイルが存在する場合は既存のファイルを更新する
 -			return UpdateExistingKscFile(kscFilePath, playResult, condition);
 +			const bool ok = UpdateExistingKscFile(kscFilePath, playResult, condition);
-+			if (ok && !WriteAdditional(kscFilePath, playResult, condition))
++			if (ok && !AdditionalScoreIO::Write(kscFilePath, playResult, condition))
 +				Logger << U"[EX SCORE] additional save failed: " + kscFilePath;
 +			return ok;
  		}
@@ -3229,13 +3301,13 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..2e785dd8d887e1cec1e7cf888757a49c
  			// ファイルが存在しない場合は今回のプレイ結果を新しいファイルとして書き込む
 -			return CreateNewKscFile(kscFilePath, playResult, condition);
 +			const bool ok = CreateNewKscFile(kscFilePath, playResult, condition);
-+			if (ok && !WriteAdditional(kscFilePath, playResult, condition))
++			if (ok && !AdditionalScoreIO::Write(kscFilePath, playResult, condition))
 +				Logger << U"[EX SCORE] additional save failed: " + kscFilePath;
 +			return ok;
  		}
  	}
  
-@@ -406,8 +501,7 @@ namespace KscIO
+@@ -406,8 +430,7 @@ namespace KscIO
  			}
  
  			// 新しいハイスコア情報を生成
@@ -3777,10 +3849,10 @@ index 693926b6a7971d28185b837a136b01db805a4e23..f3487989c2a31cbd64c605dc1a8c24b0
  	void RequestVirtualDown(Button button);
  
 diff --git a/kshootmania/src/Main.cpp b/kshootmania/src/Main.cpp
-index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195dacacff8 100644
+index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4e0a3e9e8 100644
 --- a/kshootmania/src/Main.cpp
 +++ b/kshootmania/src/Main.cpp
-@@ -1,4 +1,11 @@
+@@ -1,4 +1,12 @@
 -﻿#include <Siv3D.hpp>
 +﻿#include "ksmaudio/Diagnostics.hpp"
 +#include "Common/AudioOutputSettings.hpp"
@@ -3790,22 +3862,16 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
 +#endif
 +#include "Diagnostics/SkinPresetFixture.hpp"
 +#include "Diagnostics/RenderGeometryFixture.hpp"
++#include "Diagnostics/DiagnosticRunner.hpp"
  #include <CoTaskLib.hpp>
  #include <NocoUI.hpp>
  #include "Common/FrameRateLimit.hpp"
-@@ -11,11 +18,34 @@
+@@ -11,11 +19,24 @@
  #include <ksmaxis/ksmaxis.hpp>
  #include "RuntimeConfig.hpp"
  #include "Scenes/Title/TitleScene.hpp"
 +#include "Scenes/Option/OptionScene.hpp"
 +#include "Ini/AudioCalibration.hpp"
-+#include "Diagnostics/AudioTimingFixture.hpp"
-+#include "Diagnostics/AudioEndGameFixture.hpp"
-+#include "Diagnostics/ApsVideoFixture.hpp"
-+#include "Diagnostics/TimingHudFixture.hpp"
-+#include "Diagnostics/ExScoreFixture.hpp"
-+#include "Diagnostics/ApsFixture.hpp"
-+#include "Diagnostics/JudgeSettingFixture.hpp"
 +#include "Diagnostics/TimingHudCapture.hpp"
 +#include "Scenes/Select/SelectScene.hpp"
 +#include "Scenes/Result/ResultScene.hpp"
@@ -3822,13 +3888,10 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
 +#include "Vertical/JudgmentReplayTest.hpp"
 +#include "Vertical/MenuInputTest.hpp"
 +#include "Vertical/DisplayTransitionTest.hpp"
-+#include "Scenes/Option/OptionScene.hpp"
-+#include "Scenes/Select/SelectScene.hpp"
-+#include "Scenes/Result/ResultScene.hpp"
  
  #ifdef __APPLE__
  #include <ksmplatform_macos/input_method.h>
-@@ -122,14 +152,14 @@ void OutputLicenseTxt()
+@@ -122,14 +143,14 @@ void OutputLicenseTxt()
  	bassFxLicense.title = U"BASS_FX";
  	bassFxLicense.copyright = U"Copyright (c) 2002-2018 Arthur Aminov (JOBnik!)\nhttp://www.jobnik.org";
  	bassFxLicense.text = U"BASS_FX is fully useable in commercial software, as long as credit is given.\n"
@@ -3851,7 +3914,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(bassFxLicense);
  #else
  	// Web版のオーディオバックエンドで使用しているライブラリのライセンス情報を追加
-@@ -137,41 +167,41 @@ void OutputLicenseTxt()
+@@ -137,41 +158,41 @@ void OutputLicenseTxt()
  	miniaudioLicense.title = U"miniaudio";
  	miniaudioLicense.copyright = U"Copyright (c) 2025 David Reid\nhttps://miniaud.io/";
  	miniaudioLicense.text = U"This software is available as a choice of the following licenses (MIT No Attribution / Public Domain).\n"
@@ -3922,7 +3985,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(stbVorbisLicense);
  #endif
  
-@@ -180,22 +210,22 @@ void OutputLicenseTxt()
+@@ -180,22 +201,22 @@ void OutputLicenseTxt()
  	ksonLicense.title = U"libkson";
  	ksonLicense.copyright = U"Copyright (c) 2019-2022 masaka";
  	ksonLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -3961,7 +4024,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(ksonLicense);
  
  	// ksmaxisのライセンス情報を追加
-@@ -203,43 +233,43 @@ void OutputLicenseTxt()
+@@ -203,43 +224,43 @@ void OutputLicenseTxt()
  	ksmaxisLicense.title = U"ksmaxis";
  	ksmaxisLicense.copyright = U"Copyright (c) 2025 masaka";
  	ksmaxisLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -4035,7 +4098,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(ksmFontLicense);
  
  	// SQLiteのライセンス情報を追加
-@@ -247,31 +277,31 @@ void OutputLicenseTxt()
+@@ -247,31 +268,31 @@ void OutputLicenseTxt()
  	sqliteLicense.title = U"SQLite";
  	sqliteLicense.copyright = U"https://www.sqlite.org/copyright.html";
  	sqliteLicense.text = U"SQLite Is Public Domain\n"
@@ -4092,7 +4155,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(sqliteLicense);
  
  	// SQLiteCppのライセンス情報を追加
-@@ -279,21 +309,21 @@ void OutputLicenseTxt()
+@@ -279,21 +300,21 @@ void OutputLicenseTxt()
  	sqliteCppLicense.title = U"SQLiteCpp";
  	sqliteCppLicense.copyright = U"Copyright (c) 2012-2025 Sebastien Rombauts (sebastien.rombauts@gmail.com)";
  	sqliteCppLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -4129,7 +4192,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	licenses.push_back(sqliteCppLicense);
  
  	// stb_imageのライセンス情報を追加
-@@ -301,29 +331,27 @@ void OutputLicenseTxt()
+@@ -301,29 +322,27 @@ void OutputLicenseTxt()
  	stbImageLicense.title = U"stb_image";
  	stbImageLicense.copyright = U"Copyright (c) 2017 Sean Barrett\nhttps://github.com/nothings/stb\nLicensed under the MIT License (ALTERNATIVE A of stb's dual license).";
  	stbImageLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
@@ -4176,7 +4239,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  
  	// ファイルに保存
  	TextWriter writer(U"license.txt");
-@@ -354,6 +382,8 @@ void OutputLicenseTxt()
+@@ -354,6 +373,8 @@ void OutputLicenseTxt()
  ksmaudio::AudioBackend GetAudioBackendFromConfig()
  {
  	const StringView value = ConfigIni::GetString(ConfigIni::Key::kAudioBackend, ConfigIni::Value::AudioBackend::kDefault);
@@ -4185,7 +4248,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	return value == ConfigIni::Value::AudioBackend::kDirectSound ? ksmaudio::AudioBackend::DirectSound : ksmaudio::AudioBackend::Default;
  }
  #endif
-@@ -371,11 +401,19 @@ void KSMMain()
+@@ -371,11 +392,19 @@ void KSMMain()
  	LicenseManager::DisableDefaultTrigger();
  
  	// ウィンドウタイトル
@@ -4206,7 +4269,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  
  	// デフォルト色を指定
  	Scene::SetBackground(Palette::Black);
-@@ -390,6 +428,52 @@ void KSMMain()
+@@ -390,6 +419,52 @@ void KSMMain()
  
  	// config.iniを読み込み
  	ConfigIni::Load();
@@ -4259,7 +4322,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  
  	// ランタイム設定を初期化
  	RuntimeConfig::RestoreJudgmentModesFromConfigIni();
-@@ -400,20 +484,91 @@ void KSMMain()
+@@ -400,20 +475,46 @@ void KSMMain()
  
  	// 音声処理を初期化
  #ifdef _WIN32
@@ -4288,53 +4351,8 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
 +						ksmaudio::GetAudioOutputStatus().bufferSamples, ksmaudio::GetAudioOutputStatus().driver);
 +	ksmaudio::qa::Event("OUTPUT_WARNING", 0, 0, ksmaudio::GetAudioOutputStatus().warning);
 +	AudioCalibration::Initialize();
-+	if (System::GetCommandLineArgs().contains(U"--ex-score-test"))
++	if (DiagnosticRunner::RunAfterAudioInitialization())
 +	{
-+		try
-+		{
-+			ExScoreFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"ex-score-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--timing-hud-smoke-test"))
-+	{
-+		try
-+		{
-+			TimingHudFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"timing-hud-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--audio-timing-smoke-test"))
-+	{
-+		try
-+		{
-+			AudioTimingFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"audio-timing-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--audio-calibration-smoke-test"))
-+	{
-+		AudioCalibration::RunFixtureTests();
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
 +		return;
 +	}
 +	const auto& audioStatus = ksmaudio::GetAudioOutputStatus();
@@ -4353,7 +4371,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	}
  
  	// ハイスコアのバックアップを作成
-@@ -423,8 +578,48 @@ void KSMMain()
+@@ -423,8 +524,38 @@ void KSMMain()
  	Window::SetToggleFullscreenEnabled(false); // Alt+Enter無効化
  	ApplyScreenSizeConfig();
  
@@ -4385,87 +4403,25 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	// アセット一覧を登録
 +	SkinPreset::Initialize();
  	AssetManagement::RegisterAssets();
-+	if (RenderGeometryFixture::Requested())
++	if (DiagnosticRunner::RunAfterAssetRegistration())
 +	{
-+		RenderGeometryFixture::Run();
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (SkinFixture::Enabled() && System::GetCommandLineArgs().contains(U"--skin-core-test"))
-+	{
-+		SkinFixture::Core();
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
 +		return;
 +	}
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -479,6 +674,62 @@ void KSMMain()
+@@ -479,6 +610,10 @@ void KSMMain()
  
  	// NocoUIのグローバルデフォルトフォントを設定
  	noco::SetGlobalDefaultFont(AssetManagement::SystemFont());
-+	if (System::GetCommandLineArgs().contains(U"--judge-setting-test"))
++	if (DiagnosticRunner::RunAfterInputInitialization())
 +	{
-+		try
-+		{
-+			JudgeSettingFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"judge-setting-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--aps-video-fixture"))
-+	{
-+		try
-+		{
-+			ApsVideoFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"aps-video-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--aps-test"))
-+	{
-+		try
-+		{
-+			ApsFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"aps-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
-+		return;
-+	}
-+	if (System::GetCommandLineArgs().contains(U"--audio-end-game-test"))
-+	{
-+		try
-+		{
-+			AudioEndGameFixture::Run();
-+		}
-+		catch (const Error& error)
-+		{
-+			TextWriter{ FsUtils::GetResourcePath(U"audio-end-game-failure.txt") }.writeln(error);
-+		}
-+		Vertical::OptionsPresentation::Reset();
-+		ksmaudio::Terminate();
 +		return;
 +	}
  
  	// NocoUIの音声再生をゲーム本体と同じ音声バックエンド(BASS)で行う
  	noco::UISound::SetPlayAudioCallback(
-@@ -507,8 +758,8 @@ void KSMMain()
+@@ -507,8 +642,8 @@ void KSMMain()
  	if (testPlayArgs.has_value())
  	{
  		const auto chartData = FsUtils::HasKsonExtension(testPlayArgs->chartFilePath)
@@ -4476,7 +4432,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  		if (chartData.error != kson::ErrorType::None)
  		{
  			MessageBoxUtils::ShowOK(I18n::Get(I18n::Play::ErrorChartLoadFailed), MessageBoxStyle::Error);
-@@ -516,9 +767,54 @@ void KSMMain()
+@@ -516,9 +651,54 @@ void KSMMain()
  		}
  	}
  
@@ -4532,7 +4488,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  	{
  		// テストプレイ(-from指定あり)の場合
  		initialSceneFactory = Co::MakeSceneFactory<PlayScene>(
-@@ -543,10 +839,146 @@ void KSMMain()
+@@ -543,10 +723,146 @@ void KSMMain()
  	}
  
  	// メインループ
@@ -4681,7 +4637,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  		// マウスカーソル非表示設定(全画面での非表示)
  		// プレイ中のみの非表示はPlaySceneで処理する
  		if (ConfigIni::GetInt(ConfigIni::Key::kHideMouseCursor, ConfigIni::Value::HideMouseCursor::kPlayOnly) == ConfigIni::Value::HideMouseCursor::kAll)
-@@ -556,28 +988,109 @@ void KSMMain()
+@@ -556,28 +872,109 @@ void KSMMain()
  
  		if (ksmaxis::IsInitialized())
  		{
@@ -4792,7 +4748,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..53687f8760c32c9debb4c156db69b195
  
  #ifdef __APPLE__
  	// macOS: 英数・かなキーのイベントタップを停止
-@@ -589,27 +1102,73 @@ void KSMMain()
+@@ -589,27 +986,73 @@ void KSMMain()
  	{
  		ksmaxis::Terminate();
  	}
@@ -14287,6 +14243,21 @@ index b1260230013f8920fa08f9a729218974dbcf60d7..7764e61b33dd73a000683a9fa83e22d3
  #include "Common/MessageBoxUtils.hpp"
  #include "Addon/AutoMuteAddon.hpp"
  #include "Addon/CommonSEAddon.hpp"
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index d7e58ded3117ba60a54bb0fcf31a6a0e9f7d7358..fa5a6a65d69c3b5a4a54a6df592bcc7ec3d2c28a 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -101,4 +101,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
+ endif()
+ 
+ enable_testing()
+-add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
++find_package(Python3 REQUIRED COMPONENTS Interpreter)
++add_test(NAME ${TARGET_NAME}
++    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/RunCatch2.py
++    $<TARGET_FILE:${TARGET_NAME}> ${CMAKE_CURRENT_BINARY_DIR}/catch2-results.xml
++)
++set_tests_properties(${TARGET_NAME} PROPERTIES TIMEOUT 200)
 diff --git a/tests/Main.cpp b/tests/Main.cpp
 index cc6f318ffaed1913a206e980135e12ff72bfdc4f..a78cd0fb0388e6653058d096b589b6ba6fa1e535 100644
 --- a/tests/Main.cpp

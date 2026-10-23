@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261023-171521-0937f555",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "37127cf35b8ac324e22c4feda650a77ba014782fcd483c63ebcb33b786fcae77",
+  "mainPatchSha256": "d36b3d666039f1556eb247474c9cfb3bc567e24fa4dfbfad9032b5ac6c335b61",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -43,8 +43,20 @@
       "sha256": "612acf8a11552f8774fdfc6c636f9cf5e575c93b2247fcc620b1200ebe553799"
     },
     {
+      "path": "docs/BASELINE_TEST_FINDINGS.md",
+      "sha256": "2e44ec40792868d14f895ce3432b61a1822bf88bada76e0ad0ee80a022294adf"
+    },
+    {
       "path": "docs/CPP_STYLE_SCOPE.json",
-      "sha256": "f92a11adbf6dcc5505364311a7b053e5adc9cca0da5371f465067cafe8ea16d7"
+      "sha256": "c97e10be5525adbfb512d93c3f5128c716826ccae6ad33cf38d8a729c1eb0c99"
+    },
+    {
+      "path": "docs/REFACTOR_PROGRESS.md",
+      "sha256": "6bb208baf0d187c88cdb915ba0b71fd6e28abe9a442b0e0f25e7300eaacdd55c"
+    },
+    {
+      "path": "docs/REMOVAL_AUDIT.md",
+      "sha256": "56ec706c3dfdc75e423dc8940e31676b00f2f182a072550c4cca96e31e06cb35"
     },
     {
       "path": "kshootmania/App/imgs/bg2_vertical.png",
@@ -312,7 +324,7 @@
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.cpp",
-      "sha256": "528f5390d9fef1f837481a7fcc989d4b142f85975aa4382bcb910f6f29b31899"
+      "sha256": "d535203450c94c110bc3674ee77128b5bd9940a2fe2350dc4e806d5225100a8a"
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.hpp",
@@ -333,6 +345,14 @@
     {
       "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
       "sha256": "d7a00eadece904081094dc437f59c0b13752ca4620ea9897ed9bbe22a4fb9b0f"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/DiagnosticRunner.cpp",
+      "sha256": "0fa3e17c0c5c3cecf177ba4feb0cdab40b90c4133a17c6cb8061c061b7f50f34"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/DiagnosticRunner.hpp",
+      "sha256": "f90d41c68b19777876e7494c243e8160705fcf8af298e959e727ce47c6896fc9"
     },
     {
       "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
@@ -379,6 +399,14 @@
       "sha256": "721b9599dac2f7a18ef861e64a5d90c728b829a9b8503ff9564b5bac5517e3d6"
     },
     {
+      "path": "kshootmania/src/HighScore/AdditionalScoreIO.cpp",
+      "sha256": "766ca7046ec84cc9c05ed110a55cc1212e5a5e5047da4abeab6636d816f2eb31"
+    },
+    {
+      "path": "kshootmania/src/HighScore/AdditionalScoreIO.hpp",
+      "sha256": "9b2a777343e95931f252db3a7a3ce5abdddcc12228d127f6b4954fe2ffb1d4af"
+    },
+    {
       "path": "kshootmania/src/Ini/AudioCalibration.hpp",
       "sha256": "57b724d2dc8ee71f107b4e9ef9c6b5eb454edd98cee342cd073ffd30355f06f3"
     },
@@ -391,8 +419,12 @@
       "sha256": "324cb2887c02a23520e920f060d86a91bf384bf954db4517e73560679867a8c4"
     },
     {
+      "path": "kshootmania/src/MusicGame/GaugePresentation.cpp",
+      "sha256": "527a35cd9aacbf94ce9e65e5ee9155422515c1fe2a85bf90c8bbe30f99b02976"
+    },
+    {
       "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
-      "sha256": "5fe4b90ffec75ba048d5c61e0dda5d1464b63e533942773f18648aff2eddea1e"
+      "sha256": "37ce551646907501435c2a03a8c8f2c6af8571a11885c972c9ea4988578cd4f1"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
@@ -411,8 +443,12 @@
       "sha256": "5af2e6b090c1d893e0f89f2262019c8a173fd7a73e17493f201b25c7563748b8"
     },
     {
+      "path": "kshootmania/src/MusicGame/JudgeSettingSession.cpp",
+      "sha256": "d98972a387e401c0035f2087aecb2b65e648573d1ad2c9c5145028b0e6a40514"
+    },
+    {
       "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
-      "sha256": "9495f59a1a7d21c085a5e58fbe6313c9ff6201a9ecfb4ae24a4142d793c5897a"
+      "sha256": "b2bbcf7dd703c473ea5f7cdc745baa6d779d50744bc6364eb84f2ed1a59040dc"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
@@ -431,16 +467,28 @@
       "sha256": "2107623770eb3ec5f0321662279c772652cf94cfa3c14d44d5878e4a34f76406"
     },
     {
+      "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.cpp",
+      "sha256": "7a35b09511a822984d56da83a4229156a988bcc4bdb2c4e82081b38e81153949"
+    },
+    {
       "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
-      "sha256": "8ffe640f876371df25d7f4679994f4ab4b15e86f266b8e1e6e41b43497e3006f"
+      "sha256": "5bb8ab33086e45b7488394526f6d28b158c34c4e22c8b66e1b0af5c555bfd599"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/RecentTimingWindow.hpp",
+      "sha256": "ba121db7ec0e4d6bab3a70c74cb90d7c673ed0b7f17a033646ba42cb94a509e9"
     },
     {
       "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
-      "sha256": "915a69ea45ebab4b528e370f741b277b76052407e95b54b485e787672720f31d"
+      "sha256": "b92686f8a47d072a659362ca5e25e75ec9e061bf98c642b4601c203e1d8ee739"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.cpp",
+      "sha256": "678ced4b49b6e2cbfe208dc320ee0b9cdae68777dcc6dad929b02933c5cf5775"
     },
     {
       "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
-      "sha256": "308912590361c5ffc3a4ad0b519e6e0041a61352a651d3a6556304528618eeee"
+      "sha256": "9cbc1d850125a79dcb973a49c483b7225136245b33673ac823b41054011d0eef"
     },
     {
       "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
@@ -584,7 +632,7 @@
     },
     {
       "path": "scripts/Build.ps1",
-      "sha256": "66bc3e5a70b564e1b7a46bd1509ce077e7e12cad03c5d5f8fffce32f75167a26"
+      "sha256": "51b37c0f1a362c1c77bf5df5ecd94f3ca039e267a5eaccd562538cd12da47ae6"
     },
     {
       "path": "scripts/BuildAudioTests.cmd",
@@ -612,7 +660,7 @@
     },
     {
       "path": "scripts/BuildUnitTests.ps1",
-      "sha256": "a587c2692e3d399bb4137f226c6d49406b9438775202997c9c1004140b67ed82"
+      "sha256": "eae2fea9501808ff4e45c221a64e80484c87e7c2c5be8e5f5dcae982dd267369"
     },
     {
       "path": "scripts/BuildWallSampleGallery.py",
@@ -795,6 +843,10 @@
       "sha256": "65f27c8ce4a4428912c0b3124c609ca3ada013a2e1335ccea9495bbb28b6f0a6"
     },
     {
+      "path": "scripts/RunHeadlessTests.cmd",
+      "sha256": "1bdc8fd9afd4705d62aea2fbb32a0a56de4e531c2195f0f5a6cdb29473a141c9"
+    },
+    {
       "path": "scripts/RunIngameExHudTests.ps1",
       "sha256": "079bd7d32b19713f1a28781653b6b9e72504286ffe6890ea666a6ba4cce08af9"
     },
@@ -923,6 +975,10 @@
       "sha256": "500b54592cd031beed9b4994128b1540766d411377898377b620fcef34556782"
     },
     {
+      "path": "tests/RunCatch2.py",
+      "sha256": "08506120a617232006fd9942cb3130b96ee5d8b66d975fe9cb9caa8fa8d9aa7a"
+    },
+    {
       "path": "tests/ScorePanelAlignmentVerifier.py",
       "sha256": "b2558ddb1944f64e0eb79094339fc0dfe6fbbe498187577db8183db485b61bea"
     },
@@ -932,7 +988,7 @@
     },
     {
       "path": "tests/TestModBehavior.cpp",
-      "sha256": "503503dedb863bfaaebce54db130a2cb5fc66a893f83e5fda13c0eac0f9b02ba"
+      "sha256": "e24feb364097f1f159147b17d7f4be38ea80dca771a6b3290c00ee9b33f6d258"
     },
     {
       "path": "tests/TestModEnvironment.ps1",
@@ -961,6 +1017,10 @@
     {
       "path": "tests/asio/QADiagnosticsTest.cpp",
       "sha256": "79c31c63723a3681663fdd8928e78428aca6faddf2f72a8297c841af7e83cad5"
+    },
+    {
+      "path": "tests/headless/RecentTimingWindowTests.cpp",
+      "sha256": "f02e8c7937d9b383ef835081c267cb2d5803093b93c569c16a5155dc19cb20f5"
     }
   ],
   "refactorBranch": "refactor/upstream-style-parity"

@@ -14,7 +14,7 @@ namespace MusicGame
 	class GaugePresentation
 	{
 		bool m_initialized = false, m_transition = false;
-		double m_start = 0, m_elapsed = 0, m_previousChartTime = 0;
+		double m_transitionStartPercent = 0, m_transitionElapsedSeconds = 0, m_previousChartTimeSeconds = 0;
 		GaugeVisual m_visual;
 
 	public:
@@ -30,21 +30,9 @@ namespace MusicGame
 		{
 			return .5;
 		}
-		static double EaseOut(double t)
-		{
-			t = Clamp(t, 0.0, 1.0);
-			return 1 - (1 - t) * (1 - t);
-		}
-		static Optional<double>& FixtureStep()
-		{
-			static thread_local Optional<double> step;
-			return step;
-		}
-		static Optional<double>& FixtureChartTime()
-		{
-			static thread_local Optional<double> time;
-			return time;
-		}
+		static double EaseOut(double t);
+		static Optional<double>& FixtureStep();
+		static Optional<double>& FixtureChartTime();
 		static double FrameDelta()
 		{
 			return FixtureStep().value_or(Scene::DeltaTime());
@@ -57,43 +45,6 @@ namespace MusicGame
 		{
 			return m_visual;
 		}
-		GaugeVisual update(double actual, bool protectedAps, bool switched, bool paused, double delta, double chartTime)
-		{
-			if (!m_initialized || chartTime < m_previousChartTime - .001)
-			{
-				m_initialized = true;
-				m_transition = false;
-				m_visual = { true, actual, 0, protectedAps ? 1.0 : 0.0 };
-			}
-			m_previousChartTime = chartTime;
-			if (switched)
-			{
-				m_start = m_visual.percent;
-				m_elapsed = 0;
-				m_transition = true;
-			}
-			else if (m_transition && !paused)
-				m_elapsed += Max(0.0, delta) * kPlaybackSpeed;
-			m_visual.enabled = true;
-			if (m_transition)
-			{
-				const double blend = EaseOut(m_elapsed);
-				m_visual.percent = m_start * (1 - blend) + actual * blend;
-				const double release = EaseOut((m_elapsed - kDodgeReleaseStart) / kDodgeReleaseDuration);
-				m_visual.dodge = EaseOut(m_elapsed / kDodgeDuration) * (1 - (1 - kDodgeHold) * release);
-				m_visual.burn = EaseOut((m_elapsed - kBurnStart) / kBurnDuration);
-				const double fade = Clamp((m_elapsed - FadeStart()) / kFadeDuration, 0.0, 1.0);
-				m_visual.bannerOpacity = 1 - fade * fade;
-				if (m_elapsed >= Max(FadeStart() + kFadeDuration, kDodgeReleaseStart + kDodgeReleaseDuration) - 1e-9)
-				{
-					m_visual.percent = actual;
-					m_visual.bannerOpacity = 0;
-					m_transition = false;
-				}
-			}
-			else
-				m_visual = { true, actual, 0, protectedAps ? 1.0 : 0.0 };
-			return m_visual;
-		}
+		GaugeVisual update(double actualPercent, bool isApsProtected, bool switched, bool paused, double deltaSeconds, double chartTimeSeconds);
 	};
 }
