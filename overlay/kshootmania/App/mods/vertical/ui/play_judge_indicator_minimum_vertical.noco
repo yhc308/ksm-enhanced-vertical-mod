@@ -1,0 +1,1138 @@
+﻿{
+  "autoFitMode": "Contain",
+  "children": [
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count0\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount0",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          347.4
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count1\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount1",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          361.05
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count2\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount2",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          374.7
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count3\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount3",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          388.35
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count4\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount4",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          402.0
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count5\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount5",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          415.65
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "canvasPath": "ui/font/num2.noco",
+          "propagateEvents": true,
+          "serializedParamBindingModesJSON": "{\"text\":\"Normal\"}",
+          "serializedParamBindingsJSON": "{\"text\": \"count6\"}",
+          "serializedParamsJSON": "{\"characterSize\": [10.5, 9.450000000000001], \"characterSpacing\": [0.0, 0.0], \"horizontalAlign\": \"Right\", \"horizontalOverflow\": \"Overflow\", \"preserveAspect\": true, \"sizingMode\": \"AutoShrinkWidth\", \"textureCellTrim\": [0.0, 0.0, 0.5, 0.5], \"verticalAlign\": \"Middle\"}",
+          "tag": "",
+          "type": "SubCanvas"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniCount6",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          91.2,
+          429.3
+        ],
+        "sizeDelta": [
+          53.550000000000004,
+          11.55
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "countersVisible"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 9.975,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 5.25,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "AutoShrink",
+          "text": "",
+          "text_paramRef": "averageText",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "averageTop",
+          "gradationColor2_paramRef": "averageBottom",
+          "outlineColor_paramRef": "averageOutline",
+          "shadowColor_paramRef": "averageShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniAverage",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          68.1,
+          447.15
+        ],
+        "sizeDelta": [
+          35.7,
+          13.65
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 9.975,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 5.25,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "AutoShrink",
+          "text": "",
+          "text_paramRef": "absoluteText",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "absoluteTop",
+          "gradationColor2_paramRef": "absoluteBottom",
+          "outlineColor_paramRef": "absoluteOutline",
+          "shadowColor_paramRef": "absoluteShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "MiniAbsolute",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0,
+          0
+        ],
+        "anchorMax": [
+          0,
+          0
+        ],
+        "posDelta": [
+          105.9,
+          447.15
+        ],
+        "sizeDelta": [
+          46.2,
+          13.65
+        ],
+        "sizeDeltaPivot": [
+          0,
+          0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0
+    }
+  ],
+  "childrenLayout": {
+    "horizontalAlign": "Left",
+    "padding": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "spacing": [
+      0.0,
+      0.0
+    ],
+    "type": "FlowLayout",
+    "verticalAlign": "Top"
+  },
+  "defaultFontAssetName": "System",
+  "params": {
+    "countersVisible": {
+      "type": "Bool",
+      "value": true
+    },
+    "count0": {
+      "type": "String",
+      "value": "0"
+    },
+    "count1": {
+      "type": "String",
+      "value": "0"
+    },
+    "count2": {
+      "type": "String",
+      "value": "0"
+    },
+    "count3": {
+      "type": "String",
+      "value": "0"
+    },
+    "count4": {
+      "type": "String",
+      "value": "0"
+    },
+    "count5": {
+      "type": "String",
+      "value": "0"
+    },
+    "count6": {
+      "type": "String",
+      "value": "0"
+    },
+    "averageTop": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "averageBottom": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "averageOutline": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "averageShadow": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "averageText": {
+      "type": "String",
+      "value": "0.0"
+    },
+    "absoluteTop": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "absoluteBottom": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "absoluteOutline": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "absoluteShadow": {
+      "type": "Color",
+      "value": [
+        178,
+        178,
+        178,
+        255
+      ]
+    },
+    "absoluteText": {
+      "type": "String",
+      "value": "±0.0ms"
+    }
+  },
+  "referenceSize": [
+    720,
+    1280
+  ],
+  "serializedVersion": 10,
+  "version": "0.4.3"
+}

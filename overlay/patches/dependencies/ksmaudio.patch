@@ -1,0 +1,3024 @@
+diff --git a/THIRD_PARTY_LICENSE.txt b/THIRD_PARTY_LICENSE.txt
+--- a/THIRD_PARTY_LICENSE.txt
++++ b/THIRD_PARTY_LICENSE.txt
+@@ -72,3 +72,13 @@
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
++
++BASSASIO 1.4.3 / BASSmix 2.4.13 (Windows ASIO mod)
++-------------------------------------------------
++Copyright (c) 2005-2026 Un4seen Developments Ltd.
++https://www.un4seen.com/bassasio.html
++https://www.un4seen.com/bass.html
++BASSASIO is free for non-commercial use; commercial use requires a license.
++BASSmix follows the BASS licensing conditions.
++Full vendor readme notices: ThirdParty_Windows/bassasio/bassasio.txt and
++ThirdParty_Windows/bassmix/bassmix.txt.
+diff --git a/ThirdParty_Windows/bassasio/bassasio.h b/ThirdParty_Windows/bassasio/bassasio.h
+new file mode 100644
+--- /dev/null
++++ b/ThirdParty_Windows/bassasio/bassasio.h
+@@ -0,0 +1,163 @@
++/*
++	BASSASIO 1.4 C/C++ header file
++	Copyright (c) 2005-2026 Un4seen Developments Ltd.
++
++	See the BASSASIO.CHM file for more detailed documentation
++*/
++
++#ifndef BASSASIO_H
++#define BASSASIO_H
++
++#include <wtypes.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#ifndef BASSASIODEF
++#define BASSASIODEF(f) WINAPI f
++#endif
++
++#define BASSASIOVERSION 0x104	// API version
++
++// error codes returned by BASS_ASIO_ErrorGetCode
++#define BASS_OK				0	// all is OK
++#define BASS_ERROR_FILEOPEN	2	// can't open the file
++#define BASS_ERROR_DRIVER	3	// can't find a free/valid driver
++#define BASS_ERROR_HANDLE	5	// invalid handle
++#define BASS_ERROR_FORMAT	6	// unsupported sample format
++#define BASS_ERROR_INIT		8	// BASS_ASIO_Init has not been successfully called
++#define BASS_ERROR_START	9	// BASS_ASIO_Start has/hasn't been called
++#define BASS_ERROR_ALREADY	14	// already initialized/started
++#define BASS_ERROR_NOCHAN	18	// no channels are enabled
++#define BASS_ERROR_ILLPARAM	20	// an illegal parameter was specified
++#define BASS_ERROR_DEVICE	23	// illegal device number
++#define BASS_ERROR_NOTAVAIL	37	// not available
++#define BASS_ERROR_UNKNOWN	-1	// some other mystery error
++
++// BASS_ASIO_Init flags
++#define BASS_ASIO_THREAD		1 // host driver in dedicated thread
++#define BASS_ASIO_JOINORDER		2 // order joined channels by when they were joined
++#define BASS_ASIO_PRELEVELS		4 // pre-calculate channel levels
++#define BASS_ASIO_ALLINPUTS		8 // start all input channels
++#define BASS_ASIO_ALLOUTPUTS	16 // start all output channels
++
++// device info structure
++typedef struct {
++	const char *name;	// description
++	const char *driver;	// driver
++} BASS_ASIO_DEVICEINFO;
++
++typedef struct {
++	char name[32];	// driver name
++	DWORD version;	// driver version
++	DWORD inputs;	// number of inputs
++	DWORD outputs;	// number of outputs
++	DWORD bufmin;	// minimum buffer length
++	DWORD bufmax;	// maximum buffer length
++	DWORD bufpref;	// preferred/default buffer length
++	int bufgran;	// buffer length granularity
++	DWORD initflags; // BASS_ASIO_Init "flags" parameter
++} BASS_ASIO_INFO;
++
++typedef struct {
++	DWORD group;
++	DWORD format;	// sample format (BASS_ASIO_FORMAT_xxx)
++	char name[32];	// channel name
++} BASS_ASIO_CHANNELINFO;
++
++// sample formats
++#define BASS_ASIO_FORMAT_16BIT		16 // 16-bit integer
++#define BASS_ASIO_FORMAT_24BIT		17 // 24-bit integer
++#define BASS_ASIO_FORMAT_32BIT		18 // 32-bit integer
++#define BASS_ASIO_FORMAT_FLOAT		19 // 32-bit floating-point
++#define BASS_ASIO_FORMAT_32BIT16	24 // 32-bit integer with 16-bit alignment
++#define BASS_ASIO_FORMAT_32BIT18	25 // 32-bit integer with 18-bit alignment
++#define BASS_ASIO_FORMAT_32BIT20	26 // 32-bit integer with 20-bit alignment
++#define BASS_ASIO_FORMAT_32BIT24	27 // 32-bit integer with 24-bit alignment
++#define BASS_ASIO_FORMAT_DSD_LSB	32 // DSD (LSB 1st)
++#define BASS_ASIO_FORMAT_DSD_MSB	33 // DSD (MSB 1st)
++#define BASS_ASIO_FORMAT_DITHER		0x100 // flag: apply dither when converting from floating-point to integer
++
++// BASS_ASIO_ChannelReset flags
++#define BASS_ASIO_RESET_ENABLE	1 // disable channel
++#define BASS_ASIO_RESET_JOIN	2 // unjoin channel
++#define BASS_ASIO_RESET_PAUSE	4 // unpause channel
++#define BASS_ASIO_RESET_FORMAT	8 // reset sample format to native format
++#define BASS_ASIO_RESET_RATE	16 // reset sample rate to device rate
++#define BASS_ASIO_RESET_VOLUME	32 // reset volume to 1.0
++#define BASS_ASIO_RESET_JOINED	0x10000 // apply to joined channels too
++
++// BASS_ASIO_ChannelIsActive return values
++#define BASS_ASIO_ACTIVE_DISABLED	0
++#define BASS_ASIO_ACTIVE_ENABLED	1
++#define BASS_ASIO_ACTIVE_PAUSED		2
++
++typedef DWORD (CALLBACK ASIOPROC)(BOOL input, DWORD channel, void *buffer, DWORD length, void *user);
++/* ASIO channel callback function.
++input  : Input? else output
++channel: Channel number
++buffer : Buffer containing the sample data
++length : Number of bytes
++user   : The 'user' parameter given when calling BASS_ASIO_ChannelEnable
++RETURN : The number of bytes written (ignored with input channels) */
++
++typedef void (CALLBACK ASIONOTIFYPROC)(DWORD notify, void *user);
++/* Driver notification callback function.
++notify : The notification (BASS_ASIO_NOTIFY_xxx)
++user   : The 'user' parameter given when calling BASS_ASIO_SetNotify */
++
++// driver notifications
++#define BASS_ASIO_NOTIFY_RATE	1 // sample rate change
++#define BASS_ASIO_NOTIFY_RESET	2 // reset (reinitialization) request
++
++// BASS_ASIO_ChannelGetLevel flags
++#define BASS_ASIO_LEVEL_RMS		0x1000000
++
++DWORD BASSASIODEF(BASS_ASIO_GetVersion)();
++BOOL BASSASIODEF(BASS_ASIO_SetUnicode)(BOOL unicode);
++void BASSASIODEF(BASS_ASIO_SetWindow)(HWND win);
++DWORD BASSASIODEF(BASS_ASIO_ErrorGetCode)();
++BOOL BASSASIODEF(BASS_ASIO_GetDeviceInfo)(DWORD device, BASS_ASIO_DEVICEINFO *info);
++DWORD BASSASIODEF(BASS_ASIO_AddDevice)(const GUID *clsid, const char *driver, const char *name);
++BOOL BASSASIODEF(BASS_ASIO_SetDevice)(DWORD device);
++DWORD BASSASIODEF(BASS_ASIO_GetDevice)();
++BOOL BASSASIODEF(BASS_ASIO_Init)(int device, DWORD flags);
++BOOL BASSASIODEF(BASS_ASIO_Free)();
++BOOL BASSASIODEF(BASS_ASIO_Lock)(BOOL lock);
++BOOL BASSASIODEF(BASS_ASIO_SetNotify)(ASIONOTIFYPROC *proc, void *user);
++BOOL BASSASIODEF(BASS_ASIO_ControlPanel)();
++BOOL BASSASIODEF(BASS_ASIO_GetInfo)(BASS_ASIO_INFO *info);
++BOOL BASSASIODEF(BASS_ASIO_CheckRate)(double rate);
++BOOL BASSASIODEF(BASS_ASIO_SetRate)(double rate);
++double BASSASIODEF(BASS_ASIO_GetRate)();
++BOOL BASSASIODEF(BASS_ASIO_Start)(DWORD buflen, DWORD threads);
++BOOL BASSASIODEF(BASS_ASIO_Stop)();
++BOOL BASSASIODEF(BASS_ASIO_IsStarted)();
++DWORD BASSASIODEF(BASS_ASIO_GetLatency)(BOOL input);
++float BASSASIODEF(BASS_ASIO_GetCPU)();
++BOOL BASSASIODEF(BASS_ASIO_Monitor)(int input, DWORD output, DWORD gain, DWORD state, DWORD pan);
++BOOL BASSASIODEF(BASS_ASIO_SetDSD)(BOOL dsd);
++BOOL BASSASIODEF(BASS_ASIO_Future)(DWORD selector, void *param);
++
++BOOL BASSASIODEF(BASS_ASIO_ChannelGetInfo)(BOOL input, DWORD channel, BASS_ASIO_CHANNELINFO *info);
++BOOL BASSASIODEF(BASS_ASIO_ChannelReset)(BOOL input, int channel, DWORD flags);
++BOOL BASSASIODEF(BASS_ASIO_ChannelEnable)(BOOL input, DWORD channel, ASIOPROC *proc, void *user);
++BOOL BASSASIODEF(BASS_ASIO_ChannelEnableMirror)(DWORD channel, BOOL input2, DWORD channel2);
++BOOL BASSASIODEF(BASS_ASIO_ChannelEnableBASS)(BOOL input, DWORD channel, DWORD handle, BOOL join);
++BOOL BASSASIODEF(BASS_ASIO_ChannelJoin)(BOOL input, DWORD channel, int channel2);
++BOOL BASSASIODEF(BASS_ASIO_ChannelPause)(BOOL input, DWORD channel);
++DWORD BASSASIODEF(BASS_ASIO_ChannelIsActive)(BOOL input, DWORD channel);
++BOOL BASSASIODEF(BASS_ASIO_ChannelSetFormat)(BOOL input, DWORD channel, DWORD format);
++DWORD BASSASIODEF(BASS_ASIO_ChannelGetFormat)(BOOL input, DWORD channel);
++BOOL BASSASIODEF(BASS_ASIO_ChannelSetRate)(BOOL input, DWORD channel, double rate);
++double BASSASIODEF(BASS_ASIO_ChannelGetRate)(BOOL input, DWORD channel);
++BOOL BASSASIODEF(BASS_ASIO_ChannelSetVolume)(BOOL input, int channel, float volume);
++float BASSASIODEF(BASS_ASIO_ChannelGetVolume)(BOOL input, int channel);
++float BASSASIODEF(BASS_ASIO_ChannelGetLevel)(BOOL input, DWORD channel);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff --git a/ThirdParty_Windows/bassasio/bassasio.txt b/ThirdParty_Windows/bassasio/bassasio.txt
+new file mode 100644
+--- /dev/null
++++ b/ThirdParty_Windows/bassasio/bassasio.txt
+@@ -0,0 +1,338 @@
++BASSASIO 1.4
++Copyright (c) 2005-2026 Un4seen Developments Ltd. All rights reserved.
++
++BASSASIO is basically a wrapper for ASIO drivers, with the addition of channel
++joining and sample format/rate conversion.
++
++
++Requirements
++============
++BASSASIO requires a soundcard with ASIO drivers installed, and an
++SSE-supporting CPU.
++
++The BASS library is not required by BASSASIO, but BASS can of course be used
++for decoding purposes, to apply DSP/FX, etc.
++
++
++Using BASSASIO
++==============
++C/C++, Visual Basic and Delphi APIs and example projects are provided. To use
++BASSASIO with another language you will first have to convert the header file.
++Or you could use LoadLibrary and GetProcAddress.
++
++There is no guarantee that all future BASSASIO versions will be compatible with
++all previous versions, so your program should use BASS_ASIO_GetVersion to check
++the version that is loaded. This also means that you should put BASSASIO.DLL in
++the same directory as your program (not just somewhere in the path), to avoid
++the possibility of a wrong version being loaded.
++
++If you are updating your software from a previous BASSASIO version, then you
++should check the "History" section (below), to see if any of the functions that
++you are using have been affected by a change.
++
++To use BASSASIO with Borland C++ Builder, you will first have to create a
++Borland C++ Builder import library for it. This is done by using the IMPLIB
++tool that comes with Borland C++ Builder. Simply execute this:
++
++	IMPLIB BASSASIOBCB.LIB BASSASIO.DLL
++
++... and then use BASSASIOBCB.LIB in your projects to import BASSASIO.
++
++To use BASSASIO with LCC-Win32, you will first have to create a compatible
++import library for it. This is done by using the PEDUMP and BUILDLIB tools that
++ome with LCC-Win32. Run these 2 commands:
++
++	PEDUMP /EXP BASSASIO.LIB > BASSASIOLCC.EXP
++	BUILDLIB BASSASIOLCC.EXP BASSASIOLCC.LIB
++
++... and then use BASSASIOLCC.LIB in your projects to import BASSASIO.
++
++For the BASSASIO functions that return strings (char*), VB users should use the
++VBStrFromAnsiPtr function to convert the returned pointer into a VB string.
++
++
++Included files
++==============
++BASSASIO.TXT    This file
++BASSASIO.DLL    32-bit BASSASIO module
++BASSASIO.CHM    BASSASIO documentation
++X64\
++  BASSASIO.DLL    64-bit BASSASIO module
++C\
++  BASSASIO.H      BASSASIO C/C++ header file
++  BASSASIO.LIB    32-bit BASSASIO import library
++  BASSASIO.SLN    Visual Studio solution for examples
++  MAKEFILE        Makefile for examples
++  X64\
++    BASSASIO.LIB    64-bit BASSASIO import library
++  CONTEST\        ASIO version of the BASS console example
++    ...
++  DSDTEST\        DSD playback example
++    ...
++  DSPTEST\        ASIO version of the BASS DSP example
++    ...
++  LIST\           Lists ASIO devices
++    ...
++  LIVEFX\         ASIO version of the BASS full-duplex example
++    ...
++  MULTI\          ASIO version of the BASS multiple device example
++    ...
++  RECTEST\        ASIO version of the BASS recording example
++    ...
++  SPEAKERS\       ASIO version of the BASS multi-speaker example
++    ...
++  SYNTH\          ASIO version of the BASS synth example
++    ...
++  BIN\            Precompiled examples
++    CONTEST.EXE
++    DSDTEST.EXE
++    DSPTEST.EXE
++    LIST.EXE
++    LIVEFX.EXE
++    MULTI.EXE
++    RECTEST.EXE
++    SPEAKERS.EXE
++    SYNTH.EXE
++DELPHI\
++  BASSASIO.PAS    BASSASIO Delphi/Pascal unit
++  CONTEST\        Console example
++    ...
++  DSPTEST\        DSP example
++    ...
++  LIST\           List ASIO devices
++    ...
++  LIVEFX\         Full-duplex example
++    ...
++  RECTEST\        Recording example
++    ...
++  SPEAKERS\       Multi-speaker example
++    ...
++VB\
++  BASSASIO.BAS    BASSASIO Visual Basic module
++  DSPTEST\        DSP example
++    ...
++  LIST\           List ASIO devices
++    ...
++  LIVEFX\         Full-duplex example
++    ...
++  MULTI\          Multiple device example
++    ...
++
++NOTE: You may need to "Unblock" the BASSASIO.CHM file in its "Properties" to
++      view it. The documentation can also be viewed online at the BASSASIO
++	  website.
++
++NOTE: To run the example EXEs, first you will need to copy BASSASIO.DLL and
++      BASS.DLL into the same directory as them. BASSDSD.DLL is also required
++	  by the DSDTEST example.
++
++NOTE: To build the examples, you will need to copy the BASS API into the same
++      directory as the BASSASIO API. BASSDSD is also required by the DSDTEST
++	  example.
++
++NOTE: The Delphi and VB examples may not always be up to date with the C
++      examples, so the latter should be preferred as references if possible.
++      
++
++Latest Version
++==============
++The latest version of BASSASIO can be found at the BASSASIO website:
++
++	www.un4seen.com
++
++
++Licence
++=======
++BASSASIO is free for non-commercial use. If you are a non-commercial entity
++(eg. an individual) and you are not making any money from your product
++(through sales/advertising/etc), then you can use BASSASIO in it for free.
++If you wish to use BASSASIO in commercial products, then please also see the
++next section.
++
++TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, BASSASIO IS PROVIDED
++"AS IS", WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
++INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY
++AND/OR FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS SHALL NOT BE HELD
++LIABLE FOR ANY DAMAGE THAT MAY RESULT FROM THE USE OF BASSASIO. YOU USE
++BASSASIO ENTIRELY AT YOUR OWN RISK.
++
++Usage of BASSASIO indicates that you agree to the above conditions.
++
++ASIO is a trademark of Steinberg Media Technologies GmbH. All other
++trademarks and registered names contained in the BASSASIO package
++are the property of their respective owners.
++
++Commercial licensing
++--------------------
++BASSASIO is available for use in your commercial products. The licence
++types available are as follows:
++
++SHAREWARE: Allows the usage of BASSASIO in an unlimited number of your
++shareware ("try before you buy") products, which must sell for no more than 40
++Euros each. Non-shareware products are also permitted, but the product price
++limit is 10 Euros in that case. The price limit can be raised by purchasing
++duplicate licences, eg. 2 licences doubles it. If you are an individual (not a
++corporation) making and selling your own software, this is the licence for you.
++
++SINGLE COMMERCIAL: Allows the usage of BASSASIO in one commercial product.
++
++UNLIMITED COMMERCIAL: Allows the usage of BASSASIO in an unlimited number of
++your commercial products. This licence is on a per-site basis, eg. if you are
++creating products with BASSASIO at 2 sites/locations, then 2 licences are
++required.
++
++Please note the products must be end-user products, eg. not components used by
++other products. 
++
++These licences only cover your own software, not the publishing of other's
++software. If you publish other's software, its developers (or the software
++itself) will need to be licensed to use BASSASIO.
++
++In all cases there are no royalties to pay, and you can use future BASSASIO
++updates without further cost.
++
++These licences do not allow reselling/sublicensing of BASSASIO. For example, if
++a product is a development system, the users of said product are not licensed
++to use BASSASIO in their productions; they will need their own licences.
++
++If the standard licences do not meet your requirements, or if you have any
++questions, please get in touch (email: bass@un4seen.com).
++
++Visit the BASSASIO website for the latest pricing:
++
++	www.un4seen.com
++
++
++History
++=======
++These are the major (and not so major) changes in each release, along with the
++functions/options that are introduced/affected by them. There are other little
++tweaks and fixes made along the way too.
++
++1.4.3 - 14/5/2026
++-----------------
++* Pre-enabling of all channels to allow reconfiguration without restarting
++	BASS_ASIO_ALLINPUTS (BASS_ASIO_Init flag)
++	BASS_ASIO_ALLOUTPUTS (BASS_ASIO_Init flag)
++* Output channel level pre-calculation option
++	BASS_ASIO_PRELEVELS (BASS_ASIO_Init flag)
++	BASS_ASIO_ChannelGetLevel
++* Option to provide a window handle to ASIO drivers
++	BASS_ASIO_SetWindow
++* Support for buffers smaller than 17 samples
++	BASS_ASIO_Start
++
++1.4.2 - 21/7/2023
++-----------------
++* Support for sample rate conversion with ASIO formats 24-27 (32-bit data with alignment)
++	BASS_ASIO_ChannelSetRate
++	BASS_ASIO_ChannelEnableBASS
++* Constants added for ASIO formats 24-27 (32-bit data with alignment)
++	BASS_ASIO_FORMAT_32BIT16/18/20/24 (BASS_ASIO_CHANNELINFO formats)
++* Support for disabling channels after device is started
++	BASS_ASIO_ChannelEnable
++	BASS_ASIO_ChannelReset
++* ASIO host thread terminates immediately (no longer delayed) when all devices are freed
++	BASS_ASIO_THREAD (BASS_ASIO_Init flag)
++	BASS_ASIO_Free
++* SSE is required
++
++1.4.1 - 23/6/2021
++-----------------
++* Support for changing channel processing/joins after device is started
++	BASS_ASIO_ChannelEnable/Mirror/BASS
++	BASS_ASIO_ChannelJoin
++* BASS "dummy" stream support for input channels
++	BASS_ASIO_ChannelEnableBASS
++* Fix for bug in volume ramping without resampling
++	BASS_ASIO_ChannelSetVolume
++
++1.4 - 7/5/2019
++--------------
++* First available device initialization option
++	BASS_ASIO_Init
++* BASS channel support
++	BASS_ASIO_ChannelEnableBASS
++	CONTEST/DSDTEST/DSPTEST/LIVEFX/MULTI/SPEAKERS examples updated
++* RMS level retrieval
++	BASS_ASIO_LEVEL_RMS (BASS_ASIO_ChannelGetLevel flag)
++* Volume changes are ramped
++	BASS_ASIO_ChannelSetVolume
++* Dither when converting from floating-point to integer
++	BASS_ASIO_FORMAT_DITHER (BASS_ASIO_ChannelSetFormat flag)
++* Pausing of all input or output channels at once
++	BASS_ASIO_ChannelPause
++* Device locking to prevent access by other threads
++	BASS_ASIO_Lock
++* Resetting of joined channels' settings
++	BASS_ASIO_RESET_JOINED (BASS_ASIO_ChannelReset flag)
++* All input channels are processed before any output channels when multiple threads are enabled
++	BASS_ASIO_Start
++* Negative return values from ASIO channel callbacks are treated as 0
++	ASIOPROC
++
++1.3.1 - 17/12/2014
++------------------
++* DSD support
++	BASS_ASIO_SetDSD
++	BASS_ASIO_FORMAT_DSD_LSB/MSB (BASS_ASIO_ChannelSetFormat formats)
++	DSDTEST example added
++
++1.3 - 17/4/2013
++---------------
++* Multiple threads for parallel ASIOPROC processing
++	BASS_ASIO_Start
++* Access to an driver's "future" function
++	BASS_ASIO_Future
++* Support for conversion to/from ASIO sample format 27 (32-bit data with 24-bit alignment)
++	BASS_ASIO_ChannelSetFormat
++
++1.2.1 - 26/9/2012
++-----------------
++* Checking whether a sample rate is supported
++	BASS_ASIO_CheckRate
++* Level retrieval support with drivers that clear the buffers
++	BASS_ASIO_ChannelGetLevel
++
++1.2 - 22/3/2012
++---------------
++* Improved sample rate conversion (16 point)
++	BASS_ASIO_ChannelSetRate
++* Custom joined channel order
++	BASS_ASIO_JOINORDER (BASS_ASIO_Init flag)
++	BASS_ASIO_ChannelJoin
++* Support for unregistered drivers
++	BASS_ASIO_AddDevice
++* Unicode driver info
++	BASS_ASIO_SetUnicode
++	BASS_ASIO_GetDeviceInfo
++* Fixed level retrieval with drivers that use a single buffer
++	BASS_ASIO_ChannelGetLevel
++
++1.1 - 17/8/2011
++---------------
++* Driver host thread control
++	BASS_ASIO_THREAD (BASS_ASIO_Init flag)
++	BASS_ASIO_INFO (initflags member)
++* Detection of newly installed drivers
++	BASS_ASIO_GetDeviceInfo
++* Duplicate driver entries removed from device list
++	BASS_ASIO_GetDeviceInfo
++* Input resampling bug fix
++
++1.0.1 - 23/10/2009
++------------------
++* Notification of rate changes and reset requests
++	BASS_ASIO_SetNotify
++* 64-bit version introduced
++
++1.0 - 11/6/2008
++---------------
++* First release
++
++
++Bug reports, Suggestions, Comments, Enquiries, etc
++==================================================
++If you have any of the aforementioned, please visit the BASS forum at the
++website.
++
+diff --git a/ThirdParty_Windows/bassmix/bassmix.h b/ThirdParty_Windows/bassmix/bassmix.h
+new file mode 100644
+--- /dev/null
++++ b/ThirdParty_Windows/bassmix/bassmix.h
+@@ -0,0 +1,154 @@
++/*
++	BASSmix 2.4 C/C++ header file
++	Copyright (c) 2005-2026 Un4seen Developments Ltd.
++
++	See the BASSMIX.CHM file for more detailed documentation
++*/
++
++#ifndef BASSMIX_H
++#define BASSMIX_H
++
++#include "bass.h"
++
++#if BASSVERSION!=0x204
++#error conflicting BASS and BASSmix versions
++#endif
++
++#ifdef __OBJC__
++#define BOOL BOOL32 // override objc's BOOL
++#endif
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#ifndef BASSMIXDEF
++#define BASSMIXDEF(f) WINAPI f
++#endif
++
++// Additional BASS_SetConfig options
++#define BASS_CONFIG_MIXER_BUFFER	0x10601
++#define BASS_CONFIG_MIXER_POSEX		0x10602
++#define BASS_CONFIG_SPLIT_BUFFER	0x10610
++#define BASS_CONFIG_SPLIT_PRIORITY	0x10611
++
++// BASS_Mixer_StreamCreate flags
++#define BASS_MIXER_RESUME			0x1000	// resume stalled immediately upon new/unpaused source
++#define BASS_MIXER_POSEX			0x2000	// enable BASS_Mixer_ChannelGetPositionEx support
++#define BASS_MIXER_NOSPEAKER		0x4000	// ignore speaker arrangement
++#define BASS_MIXER_QUEUE			0x8000	// queue sources
++#define BASS_MIXER_END				0x10000	// end the stream when there are no sources
++#define BASS_MIXER_NONSTOP			0x20000	// don't stall when there are no sources
++
++// BASS_Mixer_StreamAddChannel/Ex flags
++#define BASS_MIXER_CHAN_ABSOLUTE	0x1000	// start is an absolute position
++#define BASS_MIXER_CHAN_BUFFER		0x2000	// buffer data for BASS_Mixer_ChannelGetData/Level
++#define BASS_MIXER_CHAN_LIMIT		0x4000	// limit mixer processing to the amount available from this source
++#define BASS_MIXER_CHAN_MATRIX		0x10000	// matrix mixing
++#define BASS_MIXER_CHAN_PAUSE		0x20000	// don't process the source
++#define BASS_MIXER_CHAN_AUTOFREE	0x40000 // automatically free the source when it ends
++#define BASS_MIXER_CHAN_RAMPOUT		0x80000	// ramp-out when pausing
++#define BASS_MIXER_CHAN_NORAMP		0x100000 // don't ramp vol/pan/matrix changes
++#define BASS_MIXER_CHAN_DOWNMIX		0x400000 // downmix to stereo/mono
++#define BASS_MIXER_CHAN_NORAMPIN	0x800000 // don't ramp-in the start
++
++// Mixer attributes
++#define BASS_ATTRIB_MIXER_LATENCY	0x15000
++#define BASS_ATTRIB_MIXER_THREADS	0x15001
++#define BASS_ATTRIB_MIXER_VOL		0x15002
++
++// Additional BASS_Mixer_ChannelIsActive return values
++#define BASS_ACTIVE_WAITING			5
++#define BASS_ACTIVE_QUEUED			6
++
++// BASS_Split_StreamCreate flags
++#define BASS_SPLIT_SLAVE		0x1000	// only read buffered data
++#define BASS_SPLIT_POS			0x2000
++#define BASS_SPLIT_DSP			0x4000
++#define BASS_SPLIT_AUTORESET	0x8000
++
++// Splitter attributes
++#define BASS_ATTRIB_SPLIT_ASYNCBUFFER	0x15010
++#define BASS_ATTRIB_SPLIT_ASYNCPERIOD	0x15011
++#define BASS_ATTRIB_SPLIT_PRIORITY		0x15012
++
++// Envelope node
++typedef struct {
++	QWORD pos;
++	float value;
++} BASS_MIXER_NODE;
++
++// Envelope types
++#define BASS_MIXER_ENV_FREQ		1
++#define BASS_MIXER_ENV_VOL		2
++#define BASS_MIXER_ENV_PAN		3
++#define BASS_MIXER_ENV_LOOP		0x10000 // flag: loop
++#define BASS_MIXER_ENV_REMOVE	0x20000 // flag: remove at end
++
++// Additional sync types
++#define BASS_SYNC_MIXER_ENVELOPE		0x10200
++#define BASS_SYNC_MIXER_ENVELOPE_NODE	0x10201
++#define BASS_SYNC_MIXER_QUEUE			0x10202
++#define BASS_SYNC_MIXER_STALL			0x10203
++#define BASS_SYNC_MIXER_RESUME			0x10204
++
++// Additional BASS_Mixer_ChannelSetPosition flag
++#define BASS_POS_MIXER_RESET	0x10000 // flag: clear mixer's playback buffer
++
++// Additional BASS_Mixer_ChannelGetPosition mode
++#define BASS_POS_MIXER_DELAY	5
++
++// BASS_CHANNELINFO types
++#define BASS_CTYPE_STREAM_MIXER	0x10800
++#define BASS_CTYPE_STREAM_SPLIT	0x10801
++
++typedef DWORD (CALLBACK MIXERLATENCYPROC)(HSTREAM handle, void *user);
++/* Latency providing callback function.
++handle : The mixer to provide the latency of
++user   : The 'user' parameter value given when calling BASS_Mixer_StreamSetLatency
++RETURN : The latency in bytes */
++
++DWORD BASSMIXDEF(BASS_Mixer_GetVersion)(void);
++
++HSTREAM BASSMIXDEF(BASS_Mixer_StreamCreate)(DWORD freq, DWORD chans, DWORD flags);
++BOOL BASSMIXDEF(BASS_Mixer_StreamAddChannel)(HSTREAM handle, DWORD channel, DWORD flags);
++BOOL BASSMIXDEF(BASS_Mixer_StreamAddChannelEx)(HSTREAM handle, DWORD channel, DWORD flags, QWORD start, QWORD length);
++DWORD BASSMIXDEF(BASS_Mixer_StreamGetChannels)(HSTREAM handle, DWORD *channels, DWORD count);
++BOOL BASSMIXDEF(BASS_Mixer_StreamSetLatency)(HSTREAM handle, MIXERLATENCYPROC *proc, void *user);
++
++HSTREAM BASSMIXDEF(BASS_Mixer_ChannelGetMixer)(DWORD handle);
++DWORD BASSMIXDEF(BASS_Mixer_ChannelIsActive)(DWORD handle);
++DWORD BASSMIXDEF(BASS_Mixer_ChannelFlags)(DWORD handle, DWORD flags, DWORD mask);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelRemove)(DWORD handle);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetPosition)(DWORD handle, QWORD pos, DWORD mode);
++QWORD BASSMIXDEF(BASS_Mixer_ChannelGetPosition)(DWORD handle, DWORD mode);
++QWORD BASSMIXDEF(BASS_Mixer_ChannelGetPositionEx)(DWORD channel, DWORD mode, DWORD delay);
++DWORD BASSMIXDEF(BASS_Mixer_ChannelGetLevel)(DWORD handle);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelGetLevelEx)(DWORD handle, float *levels, float length, DWORD flags);
++DWORD BASSMIXDEF(BASS_Mixer_ChannelGetData)(DWORD handle, void *buffer, DWORD length);
++HSYNC BASSMIXDEF(BASS_Mixer_ChannelSetSync)(DWORD handle, DWORD type, QWORD param, SYNCPROC *proc, void *user);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelRemoveSync)(DWORD channel, HSYNC sync);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetMap)(DWORD handle, const int *chanmap);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetMatrix)(DWORD handle, const void *matrix);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetMatrixEx)(DWORD handle, const void *matrix, float time);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelGetMatrix)(DWORD handle, void *matrix);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetEnvelope)(DWORD handle, DWORD type, const BASS_MIXER_NODE *nodes, DWORD count);
++BOOL BASSMIXDEF(BASS_Mixer_ChannelSetEnvelopePos)(DWORD handle, DWORD type, QWORD pos);
++QWORD BASSMIXDEF(BASS_Mixer_ChannelGetEnvelopePos)(DWORD handle, DWORD type, float *value);
++
++HSTREAM BASSMIXDEF(BASS_Split_StreamCreate)(DWORD channel, DWORD flags, const int *chanmap);
++DWORD BASSMIXDEF(BASS_Split_StreamGetSource)(HSTREAM handle);
++DWORD BASSMIXDEF(BASS_Split_StreamGetSplits)(DWORD handle, HSTREAM *splits, DWORD count);
++BOOL BASSMIXDEF(BASS_Split_StreamReset)(DWORD handle);
++BOOL BASSMIXDEF(BASS_Split_StreamResetEx)(DWORD handle, DWORD offset);
++DWORD BASSMIXDEF(BASS_Split_StreamGetAvailable)(DWORD handle);
++
++#ifdef __cplusplus
++}
++#endif
++
++#ifdef __OBJC__
++#undef BOOL
++#endif
++
++#endif
+diff --git a/ThirdParty_Windows/bassmix/bassmix.txt b/ThirdParty_Windows/bassmix/bassmix.txt
+new file mode 100644
+--- /dev/null
++++ b/ThirdParty_Windows/bassmix/bassmix.txt
+@@ -0,0 +1,439 @@
++BASSmix 2.4
++Copyright (c) 2005-2026 Un4seen Developments Ltd. All rights reserved.
++
++
++BASSmix is an extension to the BASS audio library, providing the ability to mix
++together multiple BASS channels, with resampling and matrix mixing features. It
++also provides the ability to go the other way and split a BASS channel into
++multiple channels.
++
++
++Requirements
++============
++BASS (version 2.4.11 or above) is required.
++
++
++Using BASSmix
++=============
++The usage information in the BASS.TXT file (from the BASS package) is also
++applicable to BASSmix and other add-ons.
++
++As well as the examples included in this package, several of the examples
++included in the BASSWASAPI package also use BASSmix.
++
++TIP: The BASSMIX.CHM file should be put in the same directory as the BASS.CHM
++     file, so that the BASSmix documentation can be accessed from within the
++     BASS documentation.
++
++
++Included files
++==============
++Win32 version
++-------------
++BASSMIX.TXT     This file
++BASSMIX.DLL     32-bit BASSmix module
++BASSMIX.CHM     BASSmix documentation
++X64\
++  BASSMIX.DLL     64-bit BASSmix module
++C\
++  BASSMIX.H       BASSmix C/C++ header file
++  BASSMIX.LIB     32-bit BASSmix import library
++  BASSMIX.SLN     Visual Studio solution for examples
++  MAKEFILE        Makefile for examples
++  MAKEFILE.IN     Makefile helper macros
++  X64\
++    BASSMIX.LIB     64-bit BASSmix import library
++  MULTI\          Multiple device example
++    ...
++  SPEAKERS\       Multi-speaker example
++    ...
++  BIN\            Precompiled examples
++    MULTI.EXE
++    SPEAKERS.EXE
++DELPHI\
++  BASSMIX.PAS     BASSmix Delphi/Pascal unit
++  SPEAKERS\       Multi-speaker example
++    ...
++VB\
++  BASSMIX.BAS     BASSmix Visual Basic module
++  MULTI\          Multiple device example
++    ...
++  SPEAKERS\       Multi-speaker example
++    ...
++
++NOTE: You may need to "Unblock" the BASSMIX.CHM file in its "Properties" to
++      view it. The documentation can also be viewed online at the BASS website.
++
++NOTE: To run the example EXEs, first you will need to copy BASSMIX.DLL and
++      BASS.DLL into the same directory as them.
++
++NOTE: To build the examples, you will need to copy the BASS API into the same
++      directory as the BASSmix API.
++
++NOTE: The Delphi and VB examples may not always be up to date with the C
++      examples, so the latter should be preferred as references if possible.
++
++macOS version
++-------------
++BASSMIX.TXT     This file
++LIBBASSMIX.DYLIB  BASSmix module
++BASSMIX.CHM     BASSmix documentation
++C\
++  BASSMIX.H       BASSmix C/C++/Objective-C header file
++  BASSMIX.XCODEPROJ  Xcode project for examples
++  MULTI\          Multiple device example
++    ...
++  SPEAKERS\       Multi-speaker example
++    ...
++DELPHI\
++  BASSMIX.PAS     BASSmix Delphi/Pascal unit
++
++NOTE: To build the examples, you will need to copy the BASS API into the same
++      directory as the BASSmix API.
++
++Linux version
++-------------
++BASSMIX.TXT     This file
++BASSMIX.CHM     BASSmix documentation
++LIBS\           BASSmix modules
++  ...
++C\
++  BASSMIX.H       BASSmix C/C++ header file
++  MAKEFILE        Makefile for examples
++  MAKEFILE.IN     Makefile helper macros
++  MULTI\          Multiple device example
++    ...
++  SPEAKERS\       Multi-speaker example
++    ...
++DELPHI\
++  BASSMIX.PAS     BASSmix Delphi/Pascal unit
++
++NOTE: To build the examples, you will need to copy the BASS API into the same
++      directory as the BASSmix API.
++
++Android version
++---------------
++BASSMIX.TXT     This file
++BASSMIX.CHM     BASSmix documentation
++LIBS\           BASSmix modules
++  ...
++C\
++  BASSMIX.H       BASSmix C/C++ header file
++JAVA\COM\UN4SEEN\BASS\
++  BASSMIX.JAVA    BASSmix Java class
++
++iOS version
++-----------
++BASSMIX.TXT     This file
++BASSMIX.XCFRAMEWORK  BASSmix framework
++BASSMIX.CHM     BASSmix documentation
++BASSMIX.H       BASSmix C/C++/Objective-C header file
++
++
++Latest Version
++==============
++The latest versions of BASSmix & BASS can be found at the BASS website:
++
++	www.un4seen.com
++
++
++Licence
++=======
++BASSmix is free to use with BASS.
++
++TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, BASSMIX IS PROVIDED
++"AS IS", WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
++INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY
++AND/OR FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS SHALL NOT BE HELD
++LIABLE FOR ANY DAMAGE THAT MAY RESULT FROM THE USE OF BASSMIX. YOU USE
++BASSMIX ENTIRELY AT YOUR OWN RISK.
++
++Usage of BASSmix indicates that you agree to the above conditions.
++
++All trademarks and other registered names contained in the BASSmix
++package are the property of their respective owners.
++
++
++History
++=======
++These are the major (and not so major) changes in each release, along with the
++functions/options that are introduced/affected by them. There are other little
++tweaks and fixes made along the way too.
++
++2.4.13 - 9/9/2026
++-----------------
++* Simpler channel mapping setting
++	BASS_Mixer_ChannelSetMap
++	SPEAKERS example updated
++* Matrix resetting to defaults
++	BASS_Mixer_ChannelSetMatrix
++* Matrix changes are ramped by default
++	BASS_Mixer_ChannelSetMatrix
++	BASS_Mixer_ChannelSetMap
++	BASS_Mixer_ChannelFlags
++* Option to disable ramping of volume/pan/matrix changes
++	BASS_MIXER_CHAN_NORAMP (BASS_ChannelFlags flag)
++* Ramping-out when pausing
++	BASS_MIXER_CHAN_RAMPOUT (BASS_Mixer_StreamAddChannel/Ex flag)
++	BASS_MIXER_CHAN_PAUSE (BASS_ChannelFlags flag)
++* Stalled sources are ramped-in when resuming by default
++	BASS_MIXER_CHAN_NORAMPIN (BASS_Mixer_StreamAddChannel/Ex flag)
++* Syncs for any stalled mixer sources
++	BASS_SYNC_MIXER_STALL (BASS_ChannelSetSync type)
++	BASS_SYNC_MIXER_RESUME (BASS_ChannelSetSync type)
++* Accounting for custom output latency on non-mixtime syncs
++	BASS_Mixer_ChannelSetSync
++* Callback system for providing custom output latency
++	BASS_Mixer_StreamSetLatency
++	MIXERLATENCYPROC
++* DSP-based splitting/cloning with support for non-decoding channels
++	BASS_SPLIT_DSP (BASS_Split_StreamCreate flag)
++	BASS_CONFIG_SPLIT_PRIORITY (BASS_SetConfig option)
++	BASS_ATTRIB_SPLIT_PRIORITY (BASS_ChannelSetAttribute option)
++* Splitter buffers that overflow only drop the excess old data instead of whole buffer
++	BASS_CONFIG_SPLIT_BUFFER (BASS_SetConfig option)
++* Splitter auto-resetting when seeking
++	BASS_SPLIT_AUTORESET (BASS_Split_StreamCreate flag)
++* Splitters only use their source's loop settings
++	BASS_SAMPLE_LOOP (BASS_ChannelFlags flag)
++	BASS_POS_LOOP (BASS_ChannelSetPosition mode)
++* Thread-specific config options
++	BASS_CONFIG_THREAD (BASS_SetConfig flag)
++	BASS_CONFIG_MIXER_BUFFER (BASS_SetConfig option)
++	BASS_CONFIG_MIXER_POSEX (BASS_SetConfig option)
++	BASS_CONFIG_SPLIT_BUFFER (BASS_SetConfig option)
++* A few small default downmixing matrix tweaks
++	BASS_MIXER_CHAN_DOWNMIX (BASS_Mixer_StreamAddChannel/Ex flag)
++* New source auto-freeing flag (same value as BASS_STREAM_AUTOFREE for back-compatibility)
++	BASS_MIXER_CHAN_AUTOFREE (BASS_Mixer_StreamAddChannel/Ex flag)
++* Fix for envelope end syncs and source removal when setting envelope position at/beyond the end
++	BASS_SYNC_MIXER_ENVELOPE (BASS_Mixer_ChannelSetSync type)
++	BASS_MIXER_ENV_REMOVE (BASS_Mixer_ChannelSetEnvelope flag)
++	BASS_Mixer_ChannelSetEnvelopePos
++* 128 point rate conversion limit removed on Android/iOS
++	BASS_ATTRIB_SRC (BASS_ChannelSetAttribute option)
++* Old deprecated flags removed from headers
++	BASS_MIXER_BUFFER
++	BASS_MIXER_LIMIT
++	BASS_MIXER_MATRIX
++	BASS_MIXER_PAUSE
++	BASS_MIXER_DOWNMIX
++	BASS_MIXER_NORAMPIN
++
++2.4.12 - 9/8/2022
++-----------------
++* Mixer master volume control
++	BASS_ATTRIB_MIXER_VOL (BASS_ChannelSetAttribute option)
++* Queued mixers for playing sources one at a time
++	BASS_MIXER_QUEUE (BASS_Mixer_StreamCreate flag)
++	BASS_SYNC_MIXER_QUEUE (BASS_ChannelSetSync type)
++* Option to ignore speaker arrangement
++	BASS_MIXER_NOSPEAKER (BASS_Mixer_StreamCreate flag)
++* Matrix initialization for remapping differing multi-channel sources and mixers
++	BASS_MIXER_CHAN_MATRIX (BASS_Mixer_StreamAddChannel/Ex flag)
++* Downmixing support for multi-channel mixers
++	BASS_MIXER_CHAN_DOWNMIX (BASS_Mixer_StreamAddChannel/Ex flag)
++* Downmixing can be toggled together with SPEAKER flags
++	BASS_MIXER_CHAN_DOWNMIX (BASS_Mixer_ChannelFlags flag)
++* Ramping-in skipped when a source's data begins at a low level
++	BASS_Mixer_StreamAddChannel
++	BASS_Mixer_StreamAddChannelEx
++* Mixer length retrieval
++	BASS_ChannelGetLength
++* SSE is required on x86 platforms
++
++2.4.11 - 23/9/2021
++------------------
++* Multi-threaded mixing
++	BASS_ATTRIB_MIXER_THREADS (BASS_ChannelSetAttribute option)
++* Submixers use parent mixer's latency in source position/data/level retrieval
++	BASS_Mixer_ChannelGetPosition
++	BASS_Mixer_ChannelGetData
++	BASS_Mixer_ChannelGetLevel
++	BASS_Mixer_ChannelGetLevelEx
++* Mixer source status retrieval
++	BASS_Mixer_ChannelIsActive
++* Mixer source start delay retrieval
++	BASS_POS_MIXER_DELAY (BASS_Mixer_ChannelGetPosition mode)
++* Lower CPU usage for matrix mixing when each input goes to a single output in sequence
++	BASS_MIXER_MATRIX (BASS_Mixer_StreamAddChannel/Ex flag)
++	BASS_Mixer_ChannelSetMatrix
++	BASS_Mixer_ChannelSetMatrixEx
++* macOS examples rewritten in Objective-C/Cocoa
++
++2.4.10 - 20/3/2020
++------------------
++* Mixer source flags renamed to distinguish from mixer flags
++	BASS_MIXER_BUFFER -> BASS_MIXER_CHAN_BUFFER
++	BASS_MIXER_LIMIT -> BASS_MIXER_CHAN_LIMIT
++	BASS_MIXER_MATRIX -> BASS_MIXER_CHAN_MATRIX
++	BASS_MIXER_PAUSE -> BASS_MIXER_CHAN_PAUSE
++	BASS_MIXER_DOWNMIX -> BASS_MIXER_CHAN_DOWNMIX
++	BASS_MIXER_NORAMPIN -> BASS_MIXER_CHAN_NORAMPIN
++* Absolute source start position option
++	BASS_MIXER_CHAN_ABSOLUTE (BASS_Mixer_StreamAddChannelEx flag)
++* Improved gapless joins with sources that don't end/begin close to a 0 sample
++	BASS_Mixer_StreamAddChannel
++	BASS_Mixer_StreamAddChannelEx
++* 7th and 8th channels are included in a downmix
++	BASS_MIXER_CHAN_DOWNMIX (BASS_Mixer_StreamAddChannel/Ex flag)
++* Asynchronous source auto-freeing
++	BASS_STREAM_AUTOFREE (BASS_Mixer_StreamAddChannel/Ex flag)
++	BASS_Mixer_ChannelRemove
++* Source removal at the end of an envelope
++	BASS_MIXER_ENV_REMOVE (BASS_Mixer_ChannelSetEnvelope flag)
++* Support for relative seeking
++	BASS_POS_RELATIVE (BASS_Mixer_ChannelSetPosition flag)
++* Volume & panning attribute affected level retrieval
++	BASS_LEVEL_VOLPAN (BASS_Mixer_ChannelGetLevelEx flag)
++* Data/level retrieval dips into played data when not enough unplayed data
++	BASS_Mixer_ChannelGetData
++	BASS_Mixer_ChannelGetLevel
++	BASS_Mixer_ChannelGetLevelEx
++* Support for splitting/cloning dummy streams
++	BASS_Split_StreamCreate
++
++2.4.9 - 30/8/2017
++-----------------
++* Asynchronous buffering for splitters
++	BASS_ATTRIB_SPLIT_ASYNCBUFFER (BASS_ChannelSetAttribute option)
++	BASS_ATTRIB_SPLIT_ASYNCPERIOD (BASS_ChannelSetAttribute option)
++* Splitter position/length based on splitter (rather than source) channel count
++	BASS_SPLIT_POS (BASS_Split_StreamCreate flag)
++* Mixer playback buffer flushing when seeking
++	BASS_POS_MIXER_RESET (BASS_Mixer_ChannelSetPosition flag)
++* Retrieval of a mixer's sources
++	BASS_Mixer_StreamGetChannels
++* Removal of 32 channel limit for matix mixing sources
++	BASS_MIXER_MATRIX (BASS_Mixer_StreamAddChannel/Ex flag)
++
++2.4.8 - 13/3/2015
++-----------------
++* Accounting for custom output latency in source position/data/level retrieval
++	BASS_ATTRIB_MIXER_LATENCY (BASS_ChannelSetAttribute option)
++	BASS_Mixer_ChannelGetPosition
++	BASS_Mixer_ChannelGetData
++	BASS_Mixer_ChannelGetLevel
++	BASS_Mixer_ChannelGetLevelEx
++* Ramped matrix changes
++	BASS_Mixer_ChannelSetMatrixEx
++* Speaker assignment with matrix mixing
++	BASS_SPEAKER_xxx (BASS_Mixer_StreamAddChannel/Ex and BASS_Mixer_ChannelFlags flags)
++* Extended level retrieval support
++	BASS_Mixer_ChannelGetLevelEx
++* Absolute source buffer length option
++	BASS_CONFIG_MIXER_BUFFER
++* Length of resampled output rounded to nearest sample
++
++2.4.7 - 8/5/2012
++----------------
++* Improved and adjustable sample rate conversion quality
++	BASS_ATTRIB_SRC (BASS_ChannelSetAttribute option)
++* Additional filtering option removed (superseded by BASS_ATTRIB_SRC)
++	BASS_MIXER_FILTER
++	BASS_CONFIG_MIXER_FILTER
++
++2.4.6 - 26/9/2011
++-----------------
++* Retrieval of all splitters set on a channel
++	BASS_Split_StreamGetSplits
++* "Slave" splitters that only read buffered data (not directly from the source)
++	BASS_SPLIT_SLAVE (BASS_Split_StreamCreate flag)
++* Splitter buffer length is now unrestricted
++	BASS_CONFIG_SPLIT_BUFFER
++* Splitter position now available immediately following creation of the splitter
++	BASS_ChannelGetPosition
++* Envelope node syncs
++	BASS_SYNC_MIXER_ENVELOPE_NODE (BASS_Mixer_ChannelSetSync type)
++* Limiting of envelope syncs to a particular envelope type
++	BASS_SYNC_MIXER_ENVELOPE (BASS_Mixer_ChannelSetSync type)
++	BASS_SYNC_MIXER_ENVELOPE_NODE (BASS_Mixer_ChannelSetSync type)
++* More precise mixer sample rate conversion
++* Xcode examples project added for OSX
++
++2.4.5 - 17/12/2010
++------------------
++* Accounting for latency when getting the position of a mixer source
++	BASS_MIXER_POSEX (BASS_Mixer_StreamCreate flag)
++	BASS_Mixer_ChannelGetPositionEx
++* Splitter buffer positioning
++	BASS_Split_StreamResetEx
++* Splitter buffer level retrieval
++	BASS_Split_StreamGetAvailable
++* Splitter buffer length limit increased to 10 seconds
++	BASS_CONFIG_SPLIT_BUFFER
++* Decode-to-position seeking support for mixers and splitters
++	BASS_POS_DECODETO (BASS_ChannelSetPosition flag)
++* Fix for potential splitter resetting deadlock
++	BASS_Split_StreamReset
++
++2.4.4 - 4/2/2010
++----------------
++* Fix for a bug that could result in a mixer source ending a fraction early
++
++2.4.3 - 14/12/2009
++------------------
++* Envelope sync fix
++	BASS_SYNC_MIXER_ENVELOPE (BASS_Mixer_ChannelSetSync type)
++* Thread-safety fix
++	BASS_Mixer_ChannelRemove
++
++2.4.2 - 4/9/2009
++----------------
++* Matrix mixing example
++	SPEAKERS example added
++* Splitter stream example
++	MULTI example added
++
++2.4.1 - 19/12/2008
++------------------
++* Splitting into multiple streams
++	BASS_Split_StreamCreate
++	BASS_Split_StreamGetSource
++	BASS_Split_StreamReset
++	BASS_CONFIG_SPLIT_BUFFER (BASS_SetConfig option)
++* Mixer output limiting to the amount of data available from a source
++	BASS_MIXER_LIMIT (BASS_Mixer_StreamAddChannel/Ex flag)
++
++2.4 - 2/4/2008
++--------------
++* Attribute envelopes
++	BASS_Mixer_ChannelSetEnvelope
++	BASS_Mixer_ChannelGetEnvelopePos
++	BASS_Mixer_ChannelSetEnvelopePos
++	BASS_MIXER_NODE
++	BASS_SYNC_MIXER_ENVELOPE (BASS_Mixer_ChannelSetSync type)
++* Adjustable resampling filtering
++	BASS_MIXER_FILTER (BASS_Mixer_StreamAddChannel/Ex flag)
++	BASS_CONFIG_MIXER_FILTER (BASS_SetConfig option)
++* Source level/data retrieval
++	BASS_Mixer_ChannelGetData
++	BASS_Mixer_ChannelGetLevel
++	BASS_MIXER_BUFFER (BASS_Mixer_StreamAddChannel/Ex flag)
++	BASS_CONFIG_MIXER_BUFFER (BASS_SetConfig option)
++* Immediate resuming of a stalled mixer upon a new/unpaused source
++	BASS_MIXER_RESUME (BASS_Mixer_StreamCreate flag)
++* Support for position "modes"
++	BASS_Mixer_ChannelSetPosition
++	BASS_Mixer_ChannelGetPosition
++* 64-bit channel start & length settings
++	BASS_Mixer_StreamAddChannelEx
++* Support for all source sync types
++	BASS_Mixer_ChannelSetSync
++* Mixer channel type added
++	BASS_CTYPE_STREAM_MIXER
++* Version retrieval
++	BASS_Mixer_GetVersion
++* Callback "user" parameters changed to pointers
++	BASS_Mixer_ChannelSetSync
++
++2.3 - 30/7/2007
++---------------
++* First release
++
++
++Bug reports, Suggestions, Comments, Enquiries, etc
++==================================================
++If you have any of the aforementioned, please visit the BASS forum at the
++website.
++
+diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
+--- a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
++++ b/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
+@@ -1,4 +1,4 @@
+-#pragma once
++﻿#pragma once
+ #include <memory>
+ #include <array>
+ #include <set>
+@@ -28,7 +28,7 @@
+     {
+ 	private:
+ 		const bool m_isLaser; // TODO: なるべく型で区別したい
+-		Stream* const m_pStream;
++		Stream* m_pStream;
+ 		std::vector<std::unique_ptr<AudioEffect::IAudioEffect>> m_audioEffects;
+ 		std::vector<HDSP> m_hDSPs;
+ 		std::vector<ParamController> m_paramControllers;
+@@ -39,6 +39,7 @@
+ 		AudioEffectBus(bool isLaser, Stream* pStream);
+ 
+ 		~AudioEffectBus();
++        void rebindStream(Stream* stream) { m_pStream = stream; }
+ 
+ 		// ロングFXによる更新
+ 		void updateByFX(const AudioEffect::Status& status, const ActiveAudioEffectDict& activeAudioEffectDict);
+@@ -97,6 +98,7 @@
+ 
+ 		// シークで時間が飛んだ場合に全エフェクトのDSPの内部状態を初期化
+ 		void reset();
++        void rewind(float timeSec);
+ 
+ 		bool audioEffectContainsName(const std::string& name) const;
+ 
+diff --git a/include/ksmaudio/AudioEffect/ParamController.hpp b/include/ksmaudio/AudioEffect/ParamController.hpp
+--- a/include/ksmaudio/AudioEffect/ParamController.hpp
++++ b/include/ksmaudio/AudioEffect/ParamController.hpp
+@@ -1,4 +1,4 @@
+-#pragma once
++﻿#pragma once
+ #include <map>
+ #include <memory>
+ #include <cassert>
+@@ -38,6 +38,7 @@
+ 			{
+ 			}
+ 
++            void rewind(float timeSec){m_cursorItr=m_map->cend();m_nextCursorItr=m_map->cbegin();m_timeSec=kPastTimeSec;update(timeSec);}
+ 			bool update(float timeSec)
+ 			{
+ 				if (timeSec < m_timeSec) [[unlikely]]
+@@ -98,6 +99,7 @@
+ 			const std::unordered_map<ParamID, std::map<float, ValueSet>>& baseParamChanges);
+ 
+ 		bool update(float timeSec);
++        void rewind(float timeSec);
+ 
+ 		void setOverrideParams(const ParamValueSetDict& overrideParams);
+ 
+diff --git a/include/ksmaudio/Diagnostics.hpp b/include/ksmaudio/Diagnostics.hpp
+new file mode 100644
+--- /dev/null
++++ b/include/ksmaudio/Diagnostics.hpp
+@@ -0,0 +1,224 @@
++#pragma once
++// Opt-in QA flight recorder. Producers never do file I/O or acquire a logger lock.
++// Labels must be static string literals. Each producer owns its bounded ring.
++#include <atomic>
++#include <array>
++#include <thread>
++#include <chrono>
++#include <filesystem>
++#include <fstream>
++#include <string_view>
++#include <stdexcept>
++#include <string>
++#include <cstring>
++#include <cstdint>
++#include <algorithm>
++#include <utility>
++#ifdef _WIN32
++#include <Windows.h>
++#endif
++
++namespace ksmaudio::qa {
++inline constexpr unsigned LaneCount=32, Capacity=512;
++inline std::uint64_t Now() noexcept {
++#ifdef _WIN32
++    return GetTickCount64();
++#else
++    return std::chrono::duration_cast<std::chrono::milliseconds>(
++        std::chrono::steady_clock::now().time_since_epoch()).count();
++#endif
++}
++struct Cell {
++    std::atomic<std::uint64_t> sequence{0}, tick{0}, a{0}, b{0};
++    std::atomic<const char*> label{nullptr};
++    std::array<std::atomic<std::uint64_t>,16> text{};
++};
++struct Lane {
++    std::atomic<unsigned> tid{0};
++    std::atomic<const char*> role{"worker"}, phase{"idle"};
++    std::atomic<std::uint64_t> touched{0}, entered{0}, count{0};
++    std::array<Cell,Capacity> ring{};
++};
++inline std::array<Lane,LaneCount> lanes;
++inline std::atomic<bool> enabled{false}, stopping{false}, writerFailed{false};
++inline std::atomic<unsigned> allocated{0};
++inline std::atomic<std::uint64_t> overflowThreads{0}, frame{0}, frameTick{0};
++inline std::atomic<std::int64_t> gameUs{0};
++inline std::atomic<std::uint64_t> callbacks{0}, audioFrames{0};
++static_assert(std::atomic<std::uint64_t>::is_always_lock_free);
++static_assert(std::atomic<const char*>::is_always_lock_free);
++inline std::atomic<const char*> scene{"startup"};
++inline std::thread writer;
++inline std::filesystem::path sessionPath;
++inline Lane* Current() noexcept {
++    if (!enabled.load(std::memory_order_relaxed)) return nullptr;
++    static thread_local Lane* lane=[]() noexcept -> Lane* {
++        const auto n=allocated.fetch_add(1);
++        if (n>=LaneCount) { ++overflowThreads; return nullptr; }
++        auto& value=lanes[n];
++#ifdef _WIN32
++        value.tid=GetCurrentThreadId();
++#else
++        value.tid=n+1;
++#endif
++        value.touched=Now(); value.entered=Now();
++        return &value;
++    }();
++    return lane;
++}
++inline void Role(const char* role) noexcept { if(auto* l=Current()) l->role.store(role); }
++inline void Event(const char* label, std::uint64_t a=0, std::uint64_t b=0,
++    std::string_view text={}) noexcept {
++    auto* l=Current(); if(!l) return;
++    const auto ticket=l->count.load(std::memory_order_relaxed);
++    auto& cell=l->ring[ticket%Capacity];
++    cell.sequence.store(ticket*2+1,std::memory_order_release);
++    cell.tick=Now(); cell.label=label; cell.a=a; cell.b=b;
++    std::array<std::uint64_t,16> bytes{};
++    if(!text.empty()) std::memcpy(bytes.data(),text.data(),(std::min)(text.size(),sizeof(bytes)-1));
++    for(unsigned i=0;i<bytes.size();++i) cell.text[i].store(bytes[i],std::memory_order_relaxed);
++    cell.sequence.store(ticket*2+2,std::memory_order_release);
++    l->count.store(ticket+1,std::memory_order_release);
++}
++inline void Phase(const char* phase) noexcept {
++    if(auto* l=Current()) { l->phase=phase; l->entered=Now(); l->touched=Now(); }
++}
++class Scope {
++    Lane* lane=nullptr; const char* previous=nullptr; const char* label=nullptr;
++    std::uint64_t started=0, handle=0; bool events=false;
++public:
++    explicit Scope(const char* name, bool record=false, std::uint64_t value=0) noexcept
++        : lane(Current()),label(name),handle(value),events(record) {
++        if(!lane) return;
++        previous=lane->phase.load(); started=Now(); Phase(name);
++        if(events) Event("BEGIN",value,0,name);
++    }
++    ~Scope() {
++        if(!lane) return;
++        if(events) Event("END",handle,Now()-started,label);
++        lane->phase=previous; lane->entered=Now(); lane->touched=Now();
++    }
++};
++template<class F, class E> auto Call(const char* name, std::uint64_t handle, F&& call, E&& error) {
++    Scope scope{name,true,handle};
++    auto result=call();
++    const auto code=enabled && !result ? static_cast<std::uint64_t>(error()) : 0;
++    Event("RESULT",handle,static_cast<std::uint64_t>(result),name);
++    if(!result) Event("ERROR",handle,code,name);
++    return result;
++}
++template<class F> auto Call(const char* name, std::uint64_t handle, F&& call) {
++    return Call(name,handle,std::forward<F>(call),[]{return 0;});
++}
++inline void FrameBegin() noexcept {
++    if(!enabled.load(std::memory_order_relaxed)) return;
++    frame.fetch_add(1,std::memory_order_relaxed); frameTick=Now(); Phase("System::Update");
++}
++inline void Scene(const char* name) noexcept { if(enabled) scene=name; }
++inline void GameTime(double seconds) noexcept { if(enabled) gameUs=static_cast<std::int64_t>(seconds*1000000); }
++
++inline void WriterLoop() noexcept {
++    try {
++        unsigned part=0;
++        std::uint64_t bytes=0, generation=0, lastHeartbeat=0, lastGameChange=Now();
++        std::int64_t previousGameUs=0;
++        std::array<std::uint64_t,LaneCount> consumed{};
++        std::ofstream out;
++        auto open=[&] {
++            out.close(); out.clear();
++            out.open(sessionPath/("events-"+std::to_string(part)+".log"),std::ios::trunc);
++            if(!out) throw std::runtime_error("Cannot open QA event log");
++            out << "QA_LOG_V1 generation=" << generation << " tick_ms label a b text; END b=elapsed_ms\n";
++            bytes=0;
++        };
++        open();
++        while(true) {
++            const bool finalDrain=stopping.load();
++            const auto count=(std::min)(allocated.load(),LaneCount);
++            for(unsigned i=0;i<count;++i) {
++                auto& lane=lanes[i];
++                const auto end=lane.count.load(std::memory_order_acquire);
++                auto& next=consumed[i];
++                if(end>next+Capacity) {
++                    out << Now() << " LOST lane=" << i << " events=" << end-next-Capacity << '\n';
++                    next=end-Capacity;
++                }
++                while(next<end) {
++                    auto& cell=lane.ring[next%Capacity];
++                    const auto expected=next*2+2;
++                    if(cell.sequence.load(std::memory_order_acquire)!=expected) { ++next; continue; }
++                    const auto tick=cell.tick.load(),a=cell.a.load(),b=cell.b.load();
++                    const auto* label=cell.label.load();
++                    std::array<std::uint64_t,16> words{};
++                    for(unsigned j=0;j<words.size();++j) words[j]=cell.text[j].load();
++                    if(cell.sequence.load(std::memory_order_acquire)!=expected) { ++next; continue; }
++                    auto* text=reinterpret_cast<char*>(words.data()); text[sizeof(words)-1]=0;
++                    for(unsigned j=0;j<sizeof(words);++j)
++                        if(text[j]=='\n'||text[j]=='\r'||text[j]=='\t') text[j]=' ';
++                    out << tick << " lane=" << i << " tid=" << lane.tid.load()
++                        << " " << (label?label:"?") << " " << a << " " << b << " " << text << '\n';
++                    ++next;
++                }
++            }
++            const auto now=Now();
++            if(now-lastHeartbeat>=1000 || stopping.load()) {
++                const auto positionUs=gameUs.load();
++                if(positionUs!=previousGameUs) { previousGameUs=positionUs; lastGameChange=now; }
++                out << now << " HEARTBEAT frame=" << frame.load()
++                    << " main_age_ms=" << now-frameTick.load() << " scene=" << scene.load()
++                    << " game_us=" << gameUs.load() << " callbacks=" << callbacks.load() << " audio_frames=" << audioFrames.load() << " overflow_threads=" << overflowThreads.load() << '\n';
++                for(unsigned i=0;i<count;++i) {
++                    auto& lane=lanes[i];
++                    out << now << " THREAD lane=" << i << " tid=" << lane.tid.load()
++                        << " role=" << lane.role.load() << " phase=" << lane.phase.load()
++                        << " phase_age_ms=" << now-lane.entered.load()
++                        << " touched_age_ms=" << now-lane.touched.load() << '\n';
++                }
++                if(now-frameTick.load()>=5000)
++                    out << now << " STALL_HINT main has not completed a frame for >=5s; inspect phase (dialog/loading may be intentional)\n";
++                if(std::string_view{scene.load()}=="play" && now-lastGameChange>=5000)
++                    out << now << " PROGRESS_HINT game time unchanged >=5s; pause or stalled transport may explain this\n";
++                lastHeartbeat=now;
++            }
++            out.flush();
++            if(!out) throw std::runtime_error("QA event log write failed");
++            const auto position=out.tellp(); if(position>=0) bytes=static_cast<std::uint64_t>(position);
++            if(bytes>=8*1024*1024) { part=(part+1)%4; ++generation; open(); }
++            if(finalDrain) break;
++            if(stopping.load()) continue;
++            std::this_thread::sleep_for(std::chrono::milliseconds(100));
++        }
++    } catch(...) { writerFailed=true; }
++}
++inline bool Start(const std::filesystem::path& root) noexcept {
++    if(enabled) return true;
++    try {
++        auto id=std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
++            std::chrono::system_clock::now().time_since_epoch()).count());
++#ifdef _WIN32
++        id+="-pid"+std::to_string(GetCurrentProcessId());
++#endif
++        sessionPath=root/("session-"+id);
++        std::filesystem::create_directories(sessionPath);
++        std::ofstream info{sessionPath/"session.txt"};
++        if(!info) return false;
++        info << "KSM QA flight recorder V1\nstarted_unix_ms_pid=" << id
++             << "\nmax_event_files=4 x approximately 8MiB; normal event writes flush every 100ms"
++             << "\nproducer_lanes=32; ring_events_per_lane=512; overwritten events counted"
++             << "\nNo audio PCM, raw key history, passwords or full memory dump is collected."
++             << "\nThread phases and counters are observations, not proof of a particular driver defect.\n";
++        info.close();
++        frameTick=Now(); stopping=false; writerFailed=false; enabled=true;
++        Role("main"); Event("SESSION_START");
++        writer=std::thread{WriterLoop};
++        return true;
++    } catch(...) { enabled=false; return false; }
++}
++inline void Stop() noexcept {
++    if(!enabled) return;
++    Event("SESSION_STOP"); stopping=true;
++    if(writer.joinable()) writer.join();
++    enabled=false;
++}
++struct SessionGuard { ~SessionGuard() { Stop(); } };
++} // namespace ksmaudio::qa
+diff --git a/include/ksmaudio/Sample.hpp b/include/ksmaudio/Sample.hpp
+--- a/include/ksmaudio/Sample.hpp
++++ b/include/ksmaudio/Sample.hpp
+@@ -1,6 +1,9 @@
+-#pragma once
++﻿#pragma once
+ #include <string>
+ #include <memory>
++#include <vector>
++#include <cstddef>
++#include <cstdint>
+ #include "ksmaudio/Backend.hpp"
+ 
+ namespace ksmaudio
+@@ -9,7 +12,15 @@
+ 	{
+ 	private:
+ #ifdef KSMAUDIO_BACKEND_BASS
+-		HSAMPLE m_hSample = 0;
++        HSAMPLE m_hSample = 0;
++        std::string m_filePath;
++        DWORD m_maxPolyphony = 1;
++        bool m_restoreValid = false;
++        void registerResource();
++        void releaseNative();
++        void rebuildNative();
++        mutable std::vector<HSTREAM> m_asioChannels;
++        mutable std::size_t m_nextAsioChannel = 0;
+ #else
+ 		class Impl;
+ 		std::unique_ptr<Impl> m_impl;
+@@ -29,6 +40,9 @@
+ 
+ 		Sample& operator=(Sample&& other) noexcept;
+ 
+-		void play(double volume = 1.0) const;
++        void play(double volume = 1.0) const;
++        bool schedulePlay(std::uint64_t outputFrame, double volume = 1.0) const;
++        void cancelScheduled() const;
++        void stop() const;
+ 	};
+ }
+diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
+--- a/include/ksmaudio/Stream.hpp
++++ b/include/ksmaudio/Stream.hpp
+@@ -4,6 +4,8 @@
+ #include <string>
+ #include <chrono>
+ #include <optional>
++#include <map>
++#include <cstdint>
+ #include "ksmaudio/Backend.hpp"
+ #include "ksmaudio/AudioEffect/AudioEffect.hpp"
+ 
+@@ -12,18 +14,38 @@
+ 	using SecondsF = std::chrono::duration<double>;
+ 	using Duration = SecondsF;
+ 
++    struct AudioClockSnapshot {
++        double renderPositionSec = 0;
++        double audiblePositionSec = 0;
++        std::uint64_t outputFrame = 0;
++        std::uint64_t generation = 0;
++        bool valid = false;
++        bool playing = false;
++    };
++
+ 	class Stream
+ 	{
+ 	private:
+ #ifdef KSMAUDIO_BACKEND_BASS
+ 		std::unique_ptr<std::vector<char>> m_preloadedBinary;
+ 		std::optional<HSTREAM> m_hStreamSource; // テンポ変更時のみ使用
+-		HSTREAM m_hStream;
++        HSTREAM m_hStream = 0;
++        bool m_restorePlaying = false, m_restoreValid = false;
++        SecondsF m_restorePosition{0};
++        mutable std::uint64_t m_generation = 0;
++        struct EffectRegistration { AudioEffect::IAudioEffect* effect; int priority; HDSP native; };
++        mutable std::map<HDSP, EffectRegistration> m_effects;
++        mutable HDSP m_nextEffect = 1;
++        void registerResource();
++        void releaseNative();
++        void rebuildNative();
+ 		double m_playbackSpeed;
+ 		BASS_CHANNELINFO m_info;
+ 		double m_volume;
+ 		bool m_muted;
+ 		bool m_decode;
++        std::string m_filePath;
++        bool m_compressor = false, m_preload = false, m_loop = false;
+ 		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
+ #else
+ 		class Impl;
+@@ -42,9 +64,9 @@
+ 		Stream& operator=(const Stream&) = delete;
+ 
+ #ifdef KSMAUDIO_BACKEND_BASS
+-		Stream(Stream&&) = default;
++		Stream(Stream&& other) noexcept;
+ 
+-		Stream& operator=(Stream&&) = default;
++		Stream& operator=(Stream&& other) noexcept;
+ #else
+ 		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
+ 		Stream(Stream&&);
+@@ -61,6 +83,8 @@
+ 		void updateManually() const;
+ 
+ 		SecondsF posSec() const;
++
++        AudioClockSnapshot clockSnapshot() const;
+ 
+ 		void seekPosSec(SecondsF time) const;
+ 
+diff --git a/include/ksmaudio/StreamWithEffects.hpp b/include/ksmaudio/StreamWithEffects.hpp
+--- a/include/ksmaudio/StreamWithEffects.hpp
++++ b/include/ksmaudio/StreamWithEffects.hpp
+@@ -21,9 +21,9 @@
+ 
+ 		StreamWithEffects& operator=(const StreamWithEffects&) = delete;
+ 
+-		StreamWithEffects(StreamWithEffects&&) = default;
++		StreamWithEffects(StreamWithEffects&& other) noexcept;
+ 
+-		StreamWithEffects& operator=(StreamWithEffects&&) = default;
++		StreamWithEffects& operator=(StreamWithEffects&& other) noexcept;
+ 
+ 		void play() const;
+ 
+@@ -34,6 +34,7 @@
+ 		void updateManually() const;
+ 
+ 		SecondsF posSec() const;
++        AudioClockSnapshot clockSnapshot() const { return m_stream.clockSnapshot(); }
+ 
+ 		void seekPosSec(SecondsF timeSec) const;
+ 
+diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
+--- a/include/ksmaudio/ksmaudio.hpp
++++ b/include/ksmaudio/ksmaudio.hpp
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include "Stream.hpp"
++#include <functional>
+ #include "StreamWithEffects.hpp"
+ #include "Sample.hpp"
+ #include "AudioEffect/All.hpp"
+@@ -19,6 +20,8 @@
+ 
+ 		/// @brief DirectSound出力を使用(Windowsのみ)
+ 		DirectSound,
++
++        ASIO,
+ 	};
+ 
+ 	/// @brief 音声処理を初期化
+@@ -26,7 +29,58 @@
+ 	/// @param audioBackend Windowsで使用する音声出力バックエンド。それ以外の環境では無視される
+ 	/// @return 成功時true、失敗時false(失敗時はGetLastErrorCode()でBASSエラーコードを取得可能)
+ 	[[nodiscard]]
+-	bool Init(void* hWnd, AudioBackend audioBackend = AudioBackend::Default);
++	bool Init(void* hWnd, AudioBackend audioBackend = AudioBackend::Default, const std::string& asioDriver = "");
++
++    // Synchronous startup diagnostics; observer is never called by the audio callback.
++    [[nodiscard]] bool InitWithTrace(void* hWnd, AudioBackend backend, const std::string& driver,
++        const std::function<void(const char*)>& observer);
++
++    struct AudioOutputStatus
++    {
++        AudioBackend backend = AudioBackend::Default;
++        std::string driver;
++        double sampleRate = 0.0;
++        unsigned int bufferSamples = 0;
++        double latencySec = 0.0;
++        std::string warning;
++    };
++
++    struct AudioLatencySnapshot {
++        AudioOutputStatus output;
++        bool available = false;
++        bool reportedValid = false;
++        bool predictionValid = false;
++        double blockSec = 0, predictedMinSec = 0, predictedMeanSec = 0, predictedMaxSec = 0;
++        std::uint64_t outputFrame = 0, generation = 0, scheduledEvents = 0, lateEvents = 0, rejectedEvents = 0;
++    };
++    struct AudioOutputRequest {
++        AudioBackend backend = AudioBackend::Default;
++        std::string driver;
++        // Synchronous main-thread diagnostics only; never called by the audio callback.
++        std::function<void(const char*)> progress;
++    };
++    struct AudioOutputChangeResult {
++        bool success = false, restoredPrevious = false, available = false;
++        std::string error;
++    };
++    AudioLatencySnapshot GetAudioLatencySnapshot();
++    AudioOutputChangeResult ApplyOutputChange(void* window, const AudioOutputRequest& request);
++    void SetOutputTransitionGain(double gain);
++    void CancelScheduledSounds();
++    // Main-thread batch operations share the callback boundary (ASIO only).
++    class OutputBatchLock {
++        bool m_locked;
++    public:
++        OutputBatchLock();
++        ~OutputBatchLock();
++        OutputBatchLock(const OutputBatchLock&) = delete;
++        OutputBatchLock& operator=(const OutputBatchLock&) = delete;
++    };
++    std::vector<std::string> GetASIODrivers();
++    const AudioOutputStatus& GetAudioOutputStatus();
++    bool IsASIOActive();
++    // Nonempty when the driver requests a reset/rate change or stops producing audio.
++    std::string GetAudioOutputFailure();
+ 
+ 	void Terminate();
+ 
+diff --git a/ksmaudio.vcxproj b/ksmaudio.vcxproj
+--- a/ksmaudio.vcxproj
++++ b/ksmaudio.vcxproj
+@@ -163,6 +163,8 @@
+     </Lib>
+   </ItemDefinitionGroup>
+   <ItemGroup>
++    <ClInclude Include="src\AsioOutput.hpp" />
++    <ClInclude Include="src\OutputResources.hpp" />
+     <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffect.hpp" />
+     <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectBus.hpp" />
+     <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectParam.hpp" />
+diff --git a/src/AsioOutput.hpp b/src/AsioOutput.hpp
+new file mode 100644
+--- /dev/null
++++ b/src/AsioOutput.hpp
+@@ -0,0 +1,23 @@
++#pragma once
++#include "ksmaudio/Backend.hpp"
++#include "ksmaudio/Sample.hpp"
++
++namespace ksmaudio::detail
++{
++    void ForgetChannel(DWORD channel);
++    void LockOutput();
++    void UnlockOutput();
++    bool ScheduleSample(const Sample* sample, std::uint64_t frame, double volume);
++    void CancelSample(const Sample* sample);
++    std::uint64_t OutputFrame();
++    std::uint64_t OutputGeneration();
++    bool AttachOutputChannel(DWORD channel);
++    bool PlayOutputChannel(DWORD channel, bool restart = false);
++    bool PauseOutputChannel(DWORD channel);
++    bool StopOutputChannel(DWORD channel);
++    DWORD OutputChannelIsActive(DWORD channel);
++    QWORD OutputChannelGetPosition(DWORD channel);
++    QWORD OutputChannelGetRenderPosition(DWORD channel);
++    bool OutputChannelSetPosition(DWORD channel, QWORD pos);
++    DWORD OutputChannelGetData(DWORD channel, void* buffer, DWORD length);
++}
+diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus.cpp
+--- a/src/AudioEffect/AudioEffectBus.cpp
++++ b/src/AudioEffect/AudioEffectBus.cpp
+@@ -1,4 +1,15 @@
++﻿#include "ksmaudio/Diagnostics.hpp"
+ #include "ksmaudio/AudioEffect/AudioEffectBus.hpp"
++
++namespace
++{
++    struct EffectStateLock
++    {
++        ksmaudio::Stream* stream;
++        explicit EffectStateLock(ksmaudio::Stream* value) : stream(value) { stream->lockBegin(); }
++        ~EffectStateLock() { stream->lockEnd(); }
++    };
++}
+ 
+ namespace ksmaudio::AudioEffect
+ {
+@@ -10,6 +21,7 @@
+ 
+ 	AudioEffectBus::~AudioEffectBus()
+     {
++    ksmaudio::qa::Scope qaScope{"DSP.bus.destroy",true};
+ 		for (const auto& hDSP : m_hDSPs)
+ 		{
+ 			m_pStream->removeAudioEffect(hDSP);
+@@ -18,6 +30,7 @@
+ 
+ 	void AudioEffectBus::updateByFX(const AudioEffect::Status& status, const ActiveAudioEffectDict& activeAudioEffectDict)
+ 	{
++        const EffectStateLock stateLock{m_pStream};
+ 		assert(!m_isLaser);
+ 
+ 		// Update override params
+@@ -62,6 +75,7 @@
+ 
+ 	void AudioEffectBus::updateByLaser(const AudioEffect::Status& status, std::optional<std::size_t> activeAudioEffectIdx)
+ 	{
++        const EffectStateLock stateLock{m_pStream};
+ 		assert(m_isLaser);
+ 
+ 		// Update override params
+@@ -106,14 +120,25 @@
+ 
+ 	void AudioEffectBus::setBypass(bool bypass)
+ 	{
++        const EffectStateLock stateLock{m_pStream};
+ 		for (const auto& audioEffect : m_audioEffects)
+ 		{
+ 			audioEffect->setBypass(bypass);
+ 		}
+ 	}
+ 
++    void AudioEffectBus::rewind(float timeSec) {
++        const EffectStateLock stateLock{m_pStream};
++        m_activeAudioEffectIdxs.clear();
++        for(std::size_t i=0;i<m_audioEffects.size();++i){
++            m_paramControllers[i].rewind(timeSec);
++            for(const auto& [id,value]:m_paramControllers[i].currentParams())m_audioEffects[i]->setParamValueSet(id,value);
++            m_audioEffects[i]->reset();m_audioEffects[i]->setBypass(true);
++        }
++    }
+ 	void AudioEffectBus::reset()
+ 	{
++        const EffectStateLock stateLock{m_pStream};
+ 		for (const auto& audioEffect : m_audioEffects)
+ 		{
+ 			audioEffect->reset();
+diff --git a/src/AudioEffect/ParamController.cpp b/src/AudioEffect/ParamController.cpp
+--- a/src/AudioEffect/ParamController.cpp
++++ b/src/AudioEffect/ParamController.cpp
+@@ -1,4 +1,4 @@
+-#include "ksmaudio/AudioEffect/ParamController.hpp"
++﻿#include "ksmaudio/AudioEffect/ParamController.hpp"
+ #include <utility>
+ 
+ namespace ksmaudio::AudioEffect
+@@ -43,6 +43,10 @@
+ 	{
+ 	}
+ 
++    void ParamController::rewind(float timeSec) {
++        for(auto& [_,timeline]:m_baseParamChanges)timeline.rewind(timeSec);
++        m_overrideParams.clear();m_timeSec=timeSec;refreshCurrentParams(timeSec);
++    }
+ 	bool ParamController::update(float timeSec)
+ 	{
+ 		if (timeSec < m_timeSec)
+diff --git a/src/OutputResources.hpp b/src/OutputResources.hpp
+new file mode 100644
+--- /dev/null
++++ b/src/OutputResources.hpp
+@@ -0,0 +1,19 @@
++#pragma once
++#include <functional>
++#include <map>
++#include <vector>
++namespace ksmaudio::detail {
++struct OutputResource {
++    std::function<void()> capture;
++    std::function<void()> release;
++    std::function<void()> rebuild;
++    std::function<void()> resume;
++};
++// Process lifetime: addon-owned sounds can outlive ordinary static objects.
++inline auto& OutputResources() { static auto* resources = new std::map<const void*, OutputResource>; return *resources; }
++inline std::vector<OutputResource> ResourceSnapshot() {
++    std::vector<OutputResource> result;
++    for (const auto& [key, hooks] : OutputResources()) result.push_back(hooks);
++    return result;
++}
++}
+diff --git a/src/Sample.cpp b/src/Sample.cpp
+--- a/src/Sample.cpp
++++ b/src/Sample.cpp
+@@ -1,4 +1,9 @@
++﻿#include "ksmaudio/Diagnostics.hpp"
+ #include "ksmaudio/Sample.hpp"
++#include "ksmaudio/ksmaudio.hpp"
++#include "AsioOutput.hpp"
++#include "OutputResources.hpp"
++#include <stdexcept>
+ #include <cassert>
+ #include <filesystem>
+ #include <utility>
+@@ -13,51 +18,105 @@
+ 
+ 	HSAMPLE LoadSample(const std::string& filePath, DWORD maxPolyphony)
+ 	{
++        ksmaudio::qa::Scope qaLoad{"BASS_SampleLoad",true};
+ 		assert(1 <= maxPolyphony && maxPolyphony <= 65535);
+ 		const auto fsPath = U8Path(filePath);
+-		return BASS_SampleLoad(FALSE, fsPath.c_str(), 0, 0, maxPolyphony, BASS_SAMPLE_OVER_POS);
++		return BASS_SampleLoad(FALSE, fsPath.c_str(), 0, 0, maxPolyphony, BASS_SAMPLE_OVER_POS | (ksmaudio::IsASIOActive() ? BASS_SAMPLE_FLOAT : 0));
+ 	}
+ }
+ 
+ namespace ksmaudio
+ {
+ 	Sample::Sample(const std::string& filePath, DWORD maxPolyphony)
+-		: m_hSample(LoadSample(filePath, maxPolyphony))
+-	{
+-	}
++		: m_hSample(LoadSample(filePath, maxPolyphony)), m_filePath(filePath), m_maxPolyphony(maxPolyphony)
++    {
++        if (IsASIOActive() && m_hSample)
++        {
++            for (DWORD i = 0; i < maxPolyphony; ++i)
++            {
++                const HSTREAM channel = BASS_SampleGetChannel(m_hSample, BASS_SAMCHAN_STREAM | BASS_STREAM_DECODE);
++                if (!channel || !detail::AttachOutputChannel(channel))
++                {
++                    if (channel) qa::Call("BASS_StreamFree.sampleVoice",channel,[&]{ return BASS_StreamFree(channel); },[]{return BASS_ErrorGetCode();});
++                    for (const auto value : m_asioChannels) BASS_StreamFree(value);
++                    BASS_SampleFree(m_hSample); m_hSample = 0;
++                    throw std::runtime_error("Cannot attach effect sound to ASIO mixer");
++                }
++                m_asioChannels.push_back(channel);
++            }
++        }
++        registerResource();
++    }
+ 
+-	Sample::~Sample()
+-	{
+-		if (m_hSample != 0)
+-		{
+-			BASS_SampleFree(m_hSample);
+-		}
+-	}
++    void Sample::registerResource() {
++        detail::OutputResources()[this] = {
++            [this] { if (m_hSample) m_restoreValid = true; },
++            [this] { releaseNative(); },
++            [this] { rebuildNative(); }, [] {}
++        };
++    }
++    void Sample::releaseNative() {
++    ksmaudio::qa::Scope qaScope{"Sample.releaseNative",true};
++        OutputBatchLock callbackBoundary;
++        const std::string_view file{m_filePath};
++        qa::Event("SAMPLE_RELEASE",m_hSample,0,file.substr(file.find_last_of("/\\\\")+1));
++        cancelScheduled();
++        for (auto channel : m_asioChannels) { detail::ForgetChannel(channel); qa::Call("BASS_StreamFree.sampleVoice",channel,[&]{ return BASS_StreamFree(channel); },[]{return BASS_ErrorGetCode();}); }
++        m_asioChannels.clear(); m_nextAsioChannel = 0;
++        if (m_hSample) { const auto h=std::exchange(m_hSample,0); qa::Call("BASS_SampleFree",h,[&]{ return BASS_SampleFree(h); },[]{return BASS_ErrorGetCode();}); }
++    }
++    void Sample::rebuildNative() {
++        if (!m_restoreValid) return;
++        Sample replacement(m_filePath, m_maxPolyphony);
++        if (!replacement.m_hSample) throw std::runtime_error("Cannot reload effect sound: " + m_filePath);
++        *this = std::move(replacement); m_restoreValid = true;
++    }
++    Sample::~Sample() { detail::OutputResources().erase(this); releaseNative(); }
+ 
+-	Sample::Sample(Sample&& other) noexcept
+-		: m_hSample(std::exchange(other.m_hSample, 0))
+-	{
+-	}
++    Sample::Sample(Sample&& other) noexcept { *this = std::move(other); }
+ 
+ 	Sample& Sample::operator=(Sample&& other) noexcept
+ 	{
+ 		if (this != &other)
+ 		{
+-			if (m_hSample != 0)
+-			{
+-				BASS_SampleFree(m_hSample);
+-			}
++            releaseNative(); other.cancelScheduled();
++            detail::OutputResources().erase(&other);
++            m_filePath = std::move(other.m_filePath); m_maxPolyphony = other.m_maxPolyphony;
++            m_restoreValid = other.m_restoreValid; registerResource();
+ 			m_hSample = std::exchange(other.m_hSample, 0);
++            m_asioChannels = std::move(other.m_asioChannels);
++            m_nextAsioChannel = other.m_nextAsioChannel;
+ 		}
+ 		return *this;
+ 	}
+ 
++    bool Sample::schedulePlay(std::uint64_t outputFrame, double volume) const {
++        return m_hSample && detail::ScheduleSample(this, outputFrame, volume);
++    }
++    void Sample::cancelScheduled() const { detail::CancelSample(this); }
++    void Sample::stop() const {
++        OutputBatchLock boundary;
++        cancelScheduled();
++        if(!m_hSample)return;
++        for(const auto channel:m_asioChannels) detail::PauseOutputChannel(channel);
++        BASS_SampleStop(m_hSample);
++    }
+ 	void Sample::play(double volume) const
+ 	{
++        OutputBatchLock lock;
+ 		if (m_hSample == 0)
+ 		{
+ 			return;
+ 		}
++        if (!m_asioChannels.empty())
++        {
++            const HSTREAM channel = m_asioChannels[m_nextAsioChannel];
++            m_nextAsioChannel = (m_nextAsioChannel + 1) % m_asioChannels.size();
++            detail::PauseOutputChannel(channel);
++            BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, static_cast<float>(volume));
++            detail::PlayOutputChannel(channel, true);
++            return;
++        }
+ 		const HCHANNEL hChannel = BASS_SampleGetChannel(m_hSample, FALSE);
+ 		if (hChannel == 0)
+ 		{
+diff --git a/src/Stream.cpp b/src/Stream.cpp
+--- a/src/Stream.cpp
++++ b/src/Stream.cpp
+@@ -1,8 +1,13 @@
++#include "ksmaudio/Diagnostics.hpp"
+ #include "ksmaudio/Stream.hpp"
+ #include <filesystem>
+ #include <fstream>
+ #include <optional>
++#include <stdexcept>
+ #include "ksmaudio/ksmaudio.hpp"
++#include "AsioOutput.hpp"
++#include "OutputResources.hpp"
++#include <utility>
+ 
+ namespace
+ {
+@@ -39,6 +44,9 @@
+ 
+ 	std::unique_ptr<std::vector<char>> Preload(const std::string& filePath)
+ 	{
++        ksmaudio::qa::Scope qaLoad{"stream.file.preload",true};
++        const std::string_view file{filePath};
++        ksmaudio::qa::Event("STREAM_LOAD",0,0,file.substr(file.find_last_of("/\\\\")+1));
+ 		std::ifstream ifs(U8Path(filePath), std::ios::in | std::ios::binary);
+ 		if (!ifs)
+ 		{
+@@ -54,9 +62,12 @@
+ 
+ 	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop, bool forTempo, bool decode)
+ 	{
++        ksmaudio::qa::Scope qaLoad{"BASS_StreamCreateFile",true};
++        const std::string_view file{filePath};
++        ksmaudio::qa::Event("STREAM_LOAD",0,0,file.substr(file.find_last_of("/\\\\")+1));
+ 		const DWORD loopFlag = loop ? BASS_SAMPLE_LOOP : 0;
+ 		const DWORD decodeFlag = (forTempo || decode) ? BASS_STREAM_DECODE : 0;
+-		const DWORD floatFlag = decode ? BASS_SAMPLE_FLOAT : 0;
++		const DWORD floatFlag = (decode || ksmaudio::IsASIOActive()) ? BASS_SAMPLE_FLOAT : 0;
+ 		if (pPreloadedBinary == nullptr)
+ 		{
+ 			const auto fsPath = U8Path(filePath);
+@@ -70,7 +81,8 @@
+ 
+ 	HSTREAM CreateTempoStream(HSTREAM hSourceStream, double playbackSpeed)
+ 	{
+-		HSTREAM hTempoStream = BASS_FX_TempoCreate(hSourceStream, 0);
++        ksmaudio::qa::Scope qaLoad{"BASS_FX_TempoCreate",true};
++		HSTREAM hTempoStream = BASS_FX_TempoCreate(hSourceStream, ksmaudio::IsASIOActive() ? (BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT) : 0);
+ 		const double tempo = (playbackSpeed - 1.0) * 100.0;
+ 		BASS_ChannelSetAttribute(hTempoStream, BASS_ATTRIB_TEMPO, static_cast<float>(tempo));
+ 		return hTempoStream;
+@@ -86,6 +98,7 @@
+ 
+ 	void ProcessAudioEffect(HDSP handle, DWORD channel, void* buffer, DWORD length, void* user)
+ 	{
++        ksmaudio::qa::Scope qaDSP{"DSP.process"};
+ 		const auto pAudioEffect = reinterpret_cast<ksmaudio::AudioEffect::IAudioEffect*>(user);
+ 		const auto pData = reinterpret_cast<float*>(buffer);
+ 		pAudioEffect->process(pData, length / sizeof(float));
+@@ -93,7 +106,7 @@
+ 
+ 	double OutputDeviceLatencySec()
+ 	{
+-		static const double latencySec = [] {
++		const double latencySec = [] {
+ 			BASS_INFO info{};
+ 			if (BASS_GetInfo(&info))
+ 			{
+@@ -129,15 +142,24 @@
+ 	}
+ 
+ 	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed, bool decode)
+-		: m_preloadedBinary(preload ? Preload(filePath) : nullptr)
+-		, m_hStreamSource(CreateSourceStream(m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode))
+-		, m_hStream(CreateMainStream(m_hStreamSource, m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode))
++		: m_preloadedBinary((preload || IsASIOActive()) ? Preload(filePath) : nullptr)
++		, m_hStreamSource(CreateSourceStream(m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode || IsASIOActive()))
++		, m_hStream(CreateMainStream(m_hStreamSource, m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode || IsASIOActive()))
+ 		, m_playbackSpeed(playbackSpeed)
+ 		, m_info(GetChannelInfo(m_hStream))
+ 		, m_volume(volume)
+ 		, m_muted(false)
+ 		, m_decode(decode)
+-	{
++        , m_filePath(filePath), m_compressor(enableCompressor), m_preload(preload), m_loop(loop)
++	{
++        if (IsASIOActive() && !decode && m_hStream && !detail::AttachOutputChannel(m_hStream))
++        {
++            BASS_StreamFree(m_hStream);
++            m_hStream = 0;
++            if (m_hStreamSource) qa::Call("BASS_StreamFree.source",*m_hStreamSource,[&]{ return BASS_StreamFree(*m_hStreamSource); },[]{return BASS_ErrorGetCode();});
++            throw std::runtime_error("Cannot attach audio stream to ASIO mixer");
++        }
++        registerResource();
+ 		// 音量を設定
+ 		applyVolume();
+ 
+@@ -152,14 +174,58 @@
+ 		}
+ 	}
+ 
+-	Stream::~Stream()
+-	{
+-		BASS_StreamFree(m_hStream);
+-		if (m_hStreamSource.has_value())
+-		{
+-			BASS_StreamFree(m_hStreamSource.value());
+-		}
+-	}
++    void Stream::registerResource() {
++        detail::OutputResources()[this] = {
++            [this] { if (m_hStream) { m_restorePlaying = isPlaying(); m_restoreValid = true; m_restorePosition = posSec(); } },
++            [this] { releaseNative(); },
++            [this] { rebuildNative(); },
++            [this] { if (m_hStream) { seekPosSec(m_restorePosition); if (m_restorePlaying) play(); } }
++        };
++    }
++    void Stream::releaseNative() {
++    ksmaudio::qa::Scope qaScope{"Stream.releaseNative",true};
++        OutputBatchLock callbackBoundary;
++        const std::string_view file{m_filePath};
++        qa::Event("STREAM_RELEASE",m_hStream,0,file.substr(file.find_last_of("/\\\\")+1));
++        if (m_hStream) { detail::ForgetChannel(m_hStream); const auto handle=std::exchange(m_hStream,0); qa::Call("BASS_StreamFree",handle,[&]{ return BASS_StreamFree(handle); },[]{return BASS_ErrorGetCode();}); }
++        if (m_hStreamSource) qa::Call("BASS_StreamFree.source",*m_hStreamSource,[&]{ return BASS_StreamFree(*m_hStreamSource); },[]{return BASS_ErrorGetCode();});
++        m_hStreamSource.reset(); m_hVolumeAmplifyFX = 0;
++    }
++    void Stream::rebuildNative() {
++        if (!m_restoreValid) return;
++        const auto effects = m_effects;
++        const auto nextEffect = m_nextEffect;
++        const bool playing = m_restorePlaying, muted = m_muted;
++        const auto position = m_restorePosition;
++        Stream replacement(m_filePath, m_volume, m_compressor, m_preload, m_loop, m_playbackSpeed, m_decode);
++        if (!replacement.m_hStream) throw std::runtime_error("Cannot reload audio stream: " + m_filePath);
++        *this = std::move(replacement);
++        m_restoreValid = true; m_restorePlaying = playing; m_restorePosition = position;
++        m_effects = effects; m_nextEffect = nextEffect;
++        for (auto& [id, effect] : m_effects) {
++            effect.native = BASS_ChannelSetDSP(m_hStream, ProcessAudioEffect, effect.effect, effect.priority);
++            if (!effect.native) throw std::runtime_error("Cannot rebind audio DSP");
++        }
++        setMuted(muted);
++    }
++    Stream::~Stream() { detail::OutputResources().erase(this); releaseNative(); }
++    Stream::Stream(Stream&& other) noexcept { *this = std::move(other); }
++    Stream& Stream::operator=(Stream&& other) noexcept {
++        if (this == &other) return *this;
++        releaseNative(); detail::OutputResources().erase(&other);
++        m_preloadedBinary = std::move(other.m_preloadedBinary);
++        m_hStreamSource = std::exchange(other.m_hStreamSource, std::nullopt);
++        m_hStream = std::exchange(other.m_hStream, 0);
++        m_filePath = std::move(other.m_filePath);
++        m_compressor = other.m_compressor; m_preload = other.m_preload; m_loop = other.m_loop;
++        m_playbackSpeed = other.m_playbackSpeed; m_info = other.m_info;
++        m_volume = other.m_volume; m_muted = other.m_muted; m_decode = other.m_decode;
++        m_hVolumeAmplifyFX = std::exchange(other.m_hVolumeAmplifyFX, 0);
++        m_effects = std::move(other.m_effects); m_nextEffect = other.m_nextEffect;
++        m_restorePlaying = other.m_restorePlaying; m_restoreValid = other.m_restoreValid;
++        m_restorePosition = other.m_restorePosition; m_generation = other.m_generation + 1;
++        registerResource(); return *this;
++    }
+ 
+ 	void Stream::applyVolume()
+ 	{
+@@ -199,22 +265,26 @@
+ 
+ 	void Stream::play() const
+ 	{
+-		BASS_ChannelPlay(m_hStream, FALSE);
++        ++m_generation;
++		detail::PlayOutputChannel(m_hStream);
+ 	}
+ 
+ 	void Stream::pause() const
+ 	{
+-		BASS_ChannelPause(m_hStream);
++        ++m_generation;
++		detail::PauseOutputChannel(m_hStream);
+ 	}
+ 
+ 	void Stream::stop() const
+ 	{
+-		BASS_ChannelStop(m_hStream);
++    ksmaudio::qa::Scope qaScope{"Stream.stop",true};
++        ++m_generation;
++		detail::StopOutputChannel(m_hStream);
+ 	}
+ 
+ 	void Stream::updateManually() const
+ 	{
+-		BASS_ChannelUpdate(m_hStream, 0);
++		if (!IsASIOActive()) BASS_ChannelUpdate(m_hStream, 0);
+ 	}
+ 
+ 	SecondsF Stream::posSec() const
+@@ -223,15 +293,31 @@
+ 		{
+ 			return SecondsF{ 0.0 };
+ 		}
+-		const double scaledTime = BASS_ChannelBytes2Seconds(m_hStream, BASS_ChannelGetPosition(m_hStream, BASS_POS_BYTE));
++		const double scaledTime = BASS_ChannelBytes2Seconds(m_hStream, detail::OutputChannelGetPosition(m_hStream));
+ 		return SecondsF{ scaledTime / m_playbackSpeed };
+ 	}
+ 
+ 	void Stream::seekPosSec(SecondsF time) const
+ 	{
++        ++m_generation;
+ 		const double scaledTime = time.count() * m_playbackSpeed;
+-		BASS_ChannelSetPosition(m_hStream, BASS_ChannelSeconds2Bytes(m_hStream, scaledTime), BASS_POS_BYTE);
+-	}
++		detail::OutputChannelSetPosition(m_hStream, BASS_ChannelSeconds2Bytes(m_hStream, scaledTime));
++	}
++
++    AudioClockSnapshot Stream::clockSnapshot() const {
++    ksmaudio::qa::Scope qaScope{"Stream.clockSnapshot",false};
++        OutputBatchLock lock;
++        AudioClockSnapshot value;
++        value.playing = isPlaying(); value.generation = (detail::OutputGeneration() << 32) + m_generation;
++        if (!m_hStream || m_playbackSpeed <= 0) return value;
++        const QWORD rendered = detail::OutputChannelGetRenderPosition(m_hStream);
++        const QWORD audible = detail::OutputChannelGetPosition(m_hStream);
++        if (rendered == static_cast<QWORD>(-1) || audible == static_cast<QWORD>(-1)) return value;
++        value.outputFrame = detail::OutputFrame(); value.valid = true;
++        value.audiblePositionSec = BASS_ChannelBytes2Seconds(m_hStream, audible) / m_playbackSpeed;
++        value.renderPositionSec = IsASIOActive() ? BASS_ChannelBytes2Seconds(m_hStream, rendered) / m_playbackSpeed : value.audiblePositionSec;
++        return value;
++    }
+ 
+ 	Duration Stream::duration() const
+ 	{
+@@ -245,12 +331,22 @@
+ 
+ 	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
+ 	{
+-		return BASS_ChannelSetDSP(m_hStream, ProcessAudioEffect, pAudioEffect, priority);
++        OutputBatchLock callbackBoundary;
++        const HDSP native = BASS_ChannelSetDSP(m_hStream, ProcessAudioEffect, pAudioEffect, priority);
++        if (!native) return 0;
++        const HDSP id = m_nextEffect++;
++        m_effects.emplace(id, EffectRegistration{pAudioEffect, priority, native});
++        return id;
+ 	}
+ 
+ 	void Stream::removeAudioEffect(HDSP hDSP) const
+ 	{
+-		BASS_ChannelRemoveDSP(m_hStream, hDSP);
++    ksmaudio::qa::Scope qaScope{"Stream.removeAudioEffect",true};
++        OutputBatchLock callbackBoundary;
++        const auto it = m_effects.find(hDSP);
++        if (it == m_effects.end()) return;
++        qa::Call("BASS_ChannelRemoveDSP",m_hStream,[&]{ return BASS_ChannelRemoveDSP(m_hStream,it->second.native); },[]{return BASS_ErrorGetCode();});
++        m_effects.erase(it);
+ 	}
+ 
+ 	void Stream::setFadeIn(Duration duration) const
+@@ -283,7 +379,7 @@
+ 	
+ 	bool Stream::isPlaying() const
+ 	{
+-		const DWORD status = BASS_ChannelIsActive(m_hStream);
++		const DWORD status = detail::OutputChannelIsActive(m_hStream);
+ 		return status == BASS_ACTIVE_PLAYING || status == BASS_ACTIVE_STALLED;
+ 	}
+ 
+@@ -349,6 +445,7 @@
+ 
+ 	SecondsF Stream::latency() const
+ 	{
++		if (IsASIOActive()) return SecondsF{ GetAudioOutputStatus().latencySec };
+ 		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
+ 		if (playbuf != (DWORD)-1)
+ 		{
+@@ -359,16 +456,22 @@
+ 
+ 	void Stream::lockBegin() const
+ 	{
++    ksmaudio::qa::Scope qaScope{"Stream.wait_lockBegin",false};
++        // Match callback lock order: output boundary, then source. Preview/FX callers
++        // can seek/play inside this lock without inverting the ASIO lock hierarchy.
++        if (IsASIOActive()) detail::LockOutput();
++        qa::Scope channelLock{"BASS_ChannelLock.wait"};
+ 		BASS_ChannelLock(m_hStream, TRUE);
+ 	}
+ 
+ 	void Stream::lockEnd() const
+ 	{
+ 		BASS_ChannelLock(m_hStream, FALSE);
++        if (IsASIOActive()) detail::UnlockOutput();
+ 	}
+ 
+ 	DWORD Stream::getData(void* buffer, DWORD length)
+ 	{
+-		return BASS_ChannelGetData(m_hStream, buffer, length);
++		return detail::OutputChannelGetData(m_hStream, buffer, length);
+ 	}
+ }
+diff --git a/src/StreamWithEffects.cpp b/src/StreamWithEffects.cpp
+--- a/src/StreamWithEffects.cpp
++++ b/src/StreamWithEffects.cpp
+@@ -13,6 +13,19 @@
+ 		: m_stream(filePath, volume, enableCompressor, preload, false, playbackSpeed, decode)
+ 	{
+ 	}
++
++    StreamWithEffects::StreamWithEffects(StreamWithEffects&& other) noexcept
++        : m_stream(std::move(other.m_stream)), m_audioEffectBuses(std::move(other.m_audioEffectBuses)) {
++        for (auto& bus : m_audioEffectBuses) bus->rebindStream(&m_stream);
++    }
++    StreamWithEffects& StreamWithEffects::operator=(StreamWithEffects&& other) noexcept {
++        if (this == &other) return *this;
++        m_audioEffectBuses.clear(); // Remove old registrations before replacing the stream.
++        m_stream = std::move(other.m_stream);
++        m_audioEffectBuses = std::move(other.m_audioEffectBuses);
++        for (auto& bus : m_audioEffectBuses) bus->rebindStream(&m_stream);
++        return *this;
++    }
+ 
+ 	void StreamWithEffects::play() const
+ 	{
+diff --git a/src/Web/SampleWeb.cpp b/src/Web/SampleWeb.cpp
+--- a/src/Web/SampleWeb.cpp
++++ b/src/Web/SampleWeb.cpp
+@@ -8,6 +8,9 @@
+ 
+ namespace ksmaudio
+ {
++    bool Sample::schedulePlay(std::uint64_t, double) const { return false; }
++    void Sample::cancelScheduled() const {}
++
+ 	class Sample::Impl : public web::IMixSource
+ 	{
+ 	private:
+diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
+--- a/src/Web/StreamWeb.cpp
++++ b/src/Web/StreamWeb.cpp
+@@ -92,6 +92,8 @@
+ 
+ namespace ksmaudio
+ {
++    AudioClockSnapshot Stream::clockSnapshot() const { AudioClockSnapshot c; c.audiblePositionSec = c.renderPositionSec = posSec().count(); c.playing = isPlaying(); c.valid = true; return c; }
++
+ 	class Stream::Impl : public web::IMixSource
+ 	{
+ 	private:
+diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
+--- a/src/Web/ksmaudioWeb.cpp
++++ b/src/Web/ksmaudioWeb.cpp
+@@ -6,10 +6,21 @@
+ 
+ namespace ksmaudio
+ {
+-	bool Init([[maybe_unused]] void* hWnd, [[maybe_unused]] AudioBackend audioBackend)
++	bool Init([[maybe_unused]] void* hWnd, [[maybe_unused]] AudioBackend audioBackend, [[maybe_unused]] const std::string& asioDriver)
+ 	{
+ 		return web::Engine().init();
+ 	}
++
++    AudioLatencySnapshot GetAudioLatencySnapshot() { return {}; }
++    AudioOutputChangeResult ApplyOutputChange(void*, const AudioOutputRequest&) { return {}; }
++    void SetOutputTransitionGain(double) {}
++    void CancelScheduledSounds() {}
++    OutputBatchLock::OutputBatchLock() : m_locked(false) {}
++    OutputBatchLock::~OutputBatchLock() {}
++    std::vector<std::string> GetASIODrivers() { return {}; }
++    const AudioOutputStatus& GetAudioOutputStatus() { static const AudioOutputStatus status{}; return status; }
++    bool IsASIOActive() { return false; }
++    std::string GetAudioOutputFailure() { return {}; }
+ 
+ 	void Terminate()
+ 	{
+diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
+--- a/src/ksmaudio.cpp
++++ b/src/ksmaudio.cpp
+@@ -1,77 +1,656 @@
++#include "ksmaudio/Diagnostics.hpp"
+ #include "ksmaudio/ksmaudio.hpp"
++#include "AsioOutput.hpp"
+ #include "bass.h"
++#include <algorithm>
++#include <atomic>
++#include <cmath>
++#include <cstring>
++#include <string>
++#include <array>
++#include <unordered_map>
++#include <mutex>
++#include <chrono>
++#include <stdexcept>
++#include "OutputResources.hpp"
++#ifdef _WIN32
++#include <windows.h>
++#include "../ThirdParty_Windows/bassasio/bassasio.h"
++#include "../ThirdParty_Windows/bassmix/bassmix.h"
++#endif
+ 
+ namespace ksmaudio
+ {
+-	namespace
+-	{
+-		double s_masterVolume = 1.0;
+-		bool s_isMuted = false;
++    namespace
++    {
++        // Scoped to the synchronous transition thread. The real-time callback has no observer.
++        thread_local const std::function<void(const char*)>* s_initTrace = nullptr;
++        class InitTraceScope {
++            const std::function<void(const char*)>* previous;
++        public:
++            explicit InitTraceScope(const std::function<void(const char*)>& observer) : previous(s_initTrace) { s_initTrace = observer ? &observer : nullptr; }
++            ~InitTraceScope() { s_initTrace = previous; }
++        };
++        void ReportInit(const std::string& message) noexcept {
++            if (s_initTrace) { try { (*s_initTrace)(message.c_str()); } catch (...) {} }
++        }
++        template<class F> auto TraceInitCall(const char* name, F&& operation) {
++            if (!s_initTrace) return operation();
++            ReportInit(std::string("BEGIN ") + name);
++            const auto start = std::chrono::steady_clock::now();
++            const auto result = operation();
++            const int error = BASS_ErrorGetCode();
++            const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start).count();
++            ReportInit(std::string("END ") + name + " result=" + std::to_string(static_cast<std::uint64_t>(result)) +
++                " bass_error=" + std::to_string(error) + " elapsed_ms=" + std::to_string(elapsed / 1000.0));
++            return result;
++        }
++        double s_masterVolume = 1.0;
++        bool s_isMuted = false;
++        AudioOutputStatus s_status;
++        double s_transitionGain = 1.0;
++        bool s_available = false, s_reportedValid = false;
++        std::uint64_t s_generation = 0, s_outputFrame = 0, s_scheduledEvents = 0, s_lateEvents = 0, s_rejectedEvents = 0;
++        std::recursive_mutex s_outputMutex;
++        struct ScheduledSample { const Sample* owner = nullptr; std::uint64_t frame = 0; double volume = 1; };
++        std::array<ScheduledSample, 4096> s_events{};
++        struct TransportOrigin { QWORD position = 0; std::uint64_t frame = 0; QWORD pausedPosition = 0; bool paused = true; };
++        std::unordered_map<DWORD, TransportOrigin> s_origins;
++#ifdef _WIN32
++        struct AddonAPI
++        {
++            HMODULE asio = nullptr, mix = nullptr;
++#define ASIO_API(name) decltype(&BASS_ASIO_##name) asio##name = nullptr
++            ASIO_API(GetVersion); ASIO_API(SetUnicode); ASIO_API(SetWindow);
++            ASIO_API(GetDeviceInfo); ASIO_API(Init); ASIO_API(Free);
++            ASIO_API(GetInfo); ASIO_API(SetRate); ASIO_API(GetRate);
++            ASIO_API(Start); ASIO_API(Stop); ASIO_API(IsStarted);
++            ASIO_API(GetLatency); ASIO_API(ErrorGetCode); ASIO_API(SetNotify);
++            ASIO_API(ChannelEnable); ASIO_API(ChannelJoin);
++            ASIO_API(ChannelSetFormat); ASIO_API(ChannelSetRate);
++#undef ASIO_API
++#define MIX_API(name) decltype(&BASS_Mixer_##name) mix##name = nullptr
++            MIX_API(GetVersion); MIX_API(StreamCreate); MIX_API(StreamAddChannel);
++            MIX_API(ChannelGetMixer); MIX_API(ChannelFlags); MIX_API(ChannelGetPositionEx);
++            MIX_API(ChannelSetPosition); MIX_API(ChannelIsActive); MIX_API(ChannelGetData);
++#undef MIX_API
++        } s_api;
++        HSTREAM s_mixer = 0;
++        bool s_asioInitialized = false;
++        std::atomic<float> s_gain{1.0f};
++        std::atomic<unsigned int> s_reset{0};
++        std::atomic<ULONGLONG> s_lastCallback{0};
++        std::atomic<DWORD> s_callbackFrames{0};
++        std::atomic<bool> s_callbackError{false};
+ 
+-		void ApplyVolume()
+-		{
+-			const DWORD bassVolume = s_isMuted ? 0 : static_cast<DWORD>(s_masterVolume * 10000.0);
+-			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, bassVolume);
+-			BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, bassVolume);
+-		}
+-	}
++        HMODULE LoadLocalAddon(const wchar_t* name)
++        {
++            wchar_t path[32768]{};
++            const DWORD size = GetModuleFileNameW(nullptr, path, 32768);
++            if (!size || size >= 32768) return nullptr;
++            std::wstring full(path, size);
++            full.resize(full.find_last_of(L"\\/") + 1);
++            full += name;
++            return LoadLibraryExW(full.c_str(), nullptr, LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
++        }
++        template<class T> bool Bind(HMODULE module, T& target, const char* name)
++        {
++            target = reinterpret_cast<T>(GetProcAddress(module, name));
++            return target != nullptr;
++        }
++        bool LoadASIO()
++        {
++            if (s_api.asio) return true;
++            s_api.asio = LoadLocalAddon(L"bassasio.dll");
++            if (!s_api.asio) return false;
++            bool ok = true;
++#define BIND(name) ok = Bind(s_api.asio, s_api.asio##name, "BASS_ASIO_" #name) && ok
++            BIND(GetVersion); BIND(SetUnicode); BIND(SetWindow); BIND(GetDeviceInfo);
++            BIND(Init); BIND(Free); BIND(GetInfo); BIND(SetRate); BIND(GetRate);
++            BIND(Start); BIND(Stop); BIND(IsStarted); BIND(GetLatency); BIND(ErrorGetCode);
++            BIND(SetNotify); BIND(ChannelEnable); BIND(ChannelJoin);
++            BIND(ChannelSetFormat); BIND(ChannelSetRate);
++#undef BIND
++            if (!ok || HIWORD(s_api.asioGetVersion()) != BASSASIOVERSION)
++            {
++                FreeLibrary(s_api.asio); s_api.asio = nullptr; return false;
++            }
++            s_api.asioSetUnicode(TRUE);
++            return true;
++        }
++        bool LoadMixer()
++        {
++            if (s_api.mix) return true;
++            s_api.mix = LoadLocalAddon(L"bassmix.dll");
++            if (!s_api.mix) return false;
++            bool ok = true;
++#define BIND(name) ok = Bind(s_api.mix, s_api.mix##name, "BASS_Mixer_" #name) && ok
++            BIND(GetVersion); BIND(StreamCreate); BIND(StreamAddChannel); BIND(ChannelGetMixer);
++            BIND(ChannelFlags); BIND(ChannelGetPositionEx); BIND(ChannelSetPosition);
++            BIND(ChannelIsActive); BIND(ChannelGetData);
++#undef BIND
++            if (!ok || HIWORD(s_api.mixGetVersion()) != BASSVERSION)
++            {
++                FreeLibrary(s_api.mix); s_api.mix = nullptr; return false;
++            }
++            return true;
++        }
++        std::string UTF8(const wchar_t* text)
++        {
++            if (!text) return {};
++            const int size = WideCharToMultiByte(CP_UTF8, 0, text, -1, nullptr, 0, nullptr, nullptr);
++            if (size <= 1) return {};
++            std::string value(size, '\0');
++            WideCharToMultiByte(CP_UTF8, 0, text, -1, value.data(), size, nullptr, nullptr);
++            value.pop_back(); return value;
++        }
++        DWORD CALLBACK RenderASIO(BOOL, DWORD, void* buffer, DWORD length, void*)
++        {
++            // The ASIO driver requests interleaved float stereo. No UI or file I/O here.
++            qa::Role("ASIO"); qa::Scope qaCallback{"ASIO.callback"};
++            if(qa::enabled) { ++qa::callbacks; qa::audioFrames.fetch_add(length/(2*sizeof(float))); }
++            qa::Phase("ASIO.wait_output_mutex");
++            s_lastCallback.store(GetTickCount64(), std::memory_order_relaxed);
++            s_callbackFrames.store(length / (2 * sizeof(float)), std::memory_order_relaxed);
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("ASIO.render");
++            const std::uint64_t endFrame = s_outputFrame + length / (2 * sizeof(float));
++            DWORD offset = 0;
++            while (s_outputFrame < endFrame) {
++                std::uint64_t next = endFrame;
++                for (auto& event : s_events) {
++                    if (!event.owner) continue;
++                    if (event.frame <= s_outputFrame) {
++                        const auto fire = event; event.owner = nullptr;
++                        fire.owner->play(fire.volume);
++                    } else next = (std::min)(next, event.frame);
++                }
++                const DWORD bytes = static_cast<DWORD>(next - s_outputFrame) * 2 * sizeof(float);
++                auto* target = static_cast<char*>(buffer) + offset;
++                qa::Scope render{"ASIO.BASS_ChannelGetData"};
++                DWORD received = BASS_ChannelGetData(s_mixer, target, bytes);
++                if (received == static_cast<DWORD>(-1)) { s_callbackError = true; received = 0; }
++                if (received < bytes) std::memset(target + received, 0, bytes - received);
++                offset += bytes; s_outputFrame = next;
++            }
++            const float gain = s_gain.load(std::memory_order_relaxed);
++            auto* samples = static_cast<float*>(buffer);
++            for (DWORD i = 0; i < length / sizeof(float); ++i) samples[i] *= gain;
++            return length;
++        }
++        void CALLBACK NotifyASIO(DWORD notification, void*)
++        {
++            qa::Event("ASIO_NOTIFY",notification);
++            s_reset.store(notification, std::memory_order_relaxed);
++        }
++        void CloseASIO()
++        {
++            if (s_asioInitialized)
++            {
++                if (s_api.asioIsStarted()) qa::Call("BASS_ASIO_Stop",0,[&]{ return s_api.asioStop(); },[&]{return s_api.asioErrorGetCode();});
++                s_api.asioSetNotify(nullptr, nullptr);
++                qa::Call("BASS_ASIO_Free",0,[&]{ return s_api.asioFree(); },[&]{return s_api.asioErrorGetCode();});
++                s_asioInitialized = false;
++            }
++            if (s_mixer) { BASS_StreamFree(s_mixer); s_mixer = 0; }
++            s_reset = 0; s_callbackError = false;
++        }
++        std::string ASIOError(const char* operation)
++        {
++            return std::string(operation) + " (ASIO error " + std::to_string(s_api.asioErrorGetCode()) + ")";
++        }
++        bool InitASIO(void* window, const std::string& requestedDriver)
++        {
++            if (!LoadASIO() || !LoadMixer())
++            {
++                s_status.warning = "Cannot load compatible x64 bassasio.dll / bassmix.dll next to the executable.";
++                return false;
++            }
++            int selected = -1;
++            BASS_ASIO_DEVICEINFO device{};
++            for (DWORD i = 0; s_api.asioGetDeviceInfo(i, &device); ++i)
++            {
++                const auto name = UTF8(reinterpret_cast<const wchar_t*>(device.name));
++                if (requestedDriver.empty() || requestedDriver == name)
++                {
++                    selected = static_cast<int>(i); s_status.driver = name; break;
++                }
++            }
++            if (selected < 0)
++            {
++                s_status.warning = requestedDriver.empty() ? "No ASIO driver is installed." : "Selected ASIO driver is unavailable: " + requestedDriver;
++                return false;
++            }
++            s_api.asioSetWindow(static_cast<HWND>(window));
++            if (!s_api.asioInit(selected, BASS_ASIO_THREAD))
++            {
++                s_status.warning = ASIOError("Cannot open " ) + ": " + s_status.driver; return false;
++            }
++            s_asioInitialized = true;
++            BASS_ASIO_INFO info{};
++            if (!s_api.asioGetInfo(&info) || info.outputs < 2)
++            {
++                s_status.warning = "ASIO device must expose at least two output channels."; return false;
++            }
++            // Avoid resetting an already usable shared hardware clock. In particular,
++            // some drivers reject SetRate while another client owns the same clock.
++            const double currentRate = s_api.asioGetRate();
++            const auto supportedRate=[](double value) {
++                return std::isfinite(value) && (value==44100.0 || value==48000.0);
++            };
++            qa::Event("ASIO_RATE_CURRENT",std::isfinite(currentRate)&&currentRate>0&&currentRate<1000000?static_cast<std::uint64_t>(currentRate):0, supportedRate(currentRate)?1:0);
++            if (!supportedRate(currentRate)) {
++                if (!s_api.asioSetRate(44100.0) && !s_api.asioSetRate(48000.0)) {
++                    s_status.warning = ASIOError("Cannot select 44100/48000 Hz (unsupported or clock owned by another client)");
++                    return false;
++                }
++            }
++            const double rate = s_api.asioGetRate();
++            if (!supportedRate(rate)) {
++                s_status.warning = "ASIO sample rate readback is invalid or outside tested 44100/48000 Hz.";
++                return false;
++            }
++            qa::Event(supportedRate(currentRate)?"ASIO_RATE_PRESERVED":"ASIO_RATE_SELECTED",
++                static_cast<std::uint64_t>(rate));
++            // NULL BASS device: decoding only, no duplicate Windows playback.
++            if (!BASS_Init(0, static_cast<DWORD>(rate), 0, static_cast<HWND>(window), nullptr))
++            {
++                s_status.warning = "Cannot initialize BASS decoding device: " + std::to_string(BASS_ErrorGetCode()); return false;
++            }
++            BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
++            BASS_SetConfig(BASS_CONFIG_MIXER_POSEX, 2000);
++            if (!BASS_FX_GetVersion()) { s_status.warning = "Cannot load BASS_FX."; return false; }
++            s_mixer = s_api.mixStreamCreate(static_cast<DWORD>(rate), 2,
++                BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_MIXER_NONSTOP | BASS_MIXER_POSEX);
++            if (!s_mixer) { s_status.warning = "Cannot create ASIO mixer: " + std::to_string(BASS_ErrorGetCode()); return false; }
++            if (!s_api.asioChannelEnable(FALSE, 0, RenderASIO, nullptr)
++                || !s_api.asioChannelJoin(FALSE, 1, 0)
++                || !s_api.asioChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT)
++                || !s_api.asioChannelSetRate(FALSE, 0, rate)
++                || !s_api.asioSetNotify(NotifyASIO, nullptr))
++            {
++                s_status.warning = ASIOError("Cannot configure ASIO stereo output"); return false;
++            }
++            s_reset = 0; s_callbackError = false;
++            s_lastCallback = GetTickCount64(); s_callbackFrames = 0;
++            if (!s_api.asioStart(0, 0)) { s_status.warning = ASIOError("Cannot start ASIO"); return false; }
++            const DWORD latency = s_api.asioGetLatency(FALSE);
++            if (latency == static_cast<DWORD>(-1)) { s_status.warning = ASIOError("Cannot query ASIO output latency"); return false; }
++            s_status.backend = AudioBackend::ASIO;
++            s_status.sampleRate = rate;
++            s_status.bufferSamples = s_callbackFrames.load();
++            if (!s_status.bufferSamples) s_status.bufferSamples = info.bufpref;
++            s_status.latencySec = latency / rate;
++            s_status.warning.clear();
++            return true;
++        }
++        bool IsMixed(DWORD channel)
++        {
++            return IsASIOActive() && channel && s_api.mixChannelGetMixer(channel) == s_mixer;
++        }
++#endif
++        void ApplyVolume()
++        {
++#ifdef _WIN32
++            s_gain.store(s_isMuted ? 0.0f : static_cast<float>(s_masterVolume * s_transitionGain));
++#endif
++            const DWORD bassVolume = IsASIOActive() ? 10000 : (s_isMuted ? 0 : static_cast<DWORD>(s_masterVolume * s_transitionGain * 10000.0));
++            TraceInitCall("BASS_SetConfig(BASS_CONFIG_GVOL_STREAM)", [&] { return BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, bassVolume); });
++            TraceInitCall("BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE)", [&] { return BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, bassVolume); });
++        }
++    }
+ 
+-	bool Init(void* hWnd, AudioBackend audioBackend)
+-	{
+-#ifdef _WIN32
+-		const DWORD flags = audioBackend == AudioBackend::DirectSound ? BASS_DEVICE_DSOUND : 0;
+-		BOOL ok = BASS_Init(-1/* default device */, kSampleRate, flags, static_cast<HWND>(hWnd), nullptr);
+-		if (!ok)
+-		{
+-			if (audioBackend != AudioBackend::DirectSound)
+-			{
+-				return false;
+-			}
+-			// 初期化失敗時はDirectSound指定を外して再試行
+-			ok = BASS_Init(-1/* default device */, kSampleRate, 0, static_cast<HWND>(hWnd), nullptr);
+-		}
++    bool Init(void* hWnd, AudioBackend audioBackend, const std::string& asioDriver)
++    {
++        ReportInit("BEGIN reset output state and acquire output mutex");
++        s_status = {}; s_available = false; s_reportedValid = false;
++        { std::lock_guard guard(s_outputMutex); ++s_generation; s_outputFrame = 0; s_events = {}; s_origins.clear(); }
++        ReportInit("END reset output state and acquire output mutex");
++#ifdef _WIN32
++        if (audioBackend == AudioBackend::ASIO)
++        {
++            ReportInit("BEGIN InitASIO");
++            const bool asioReady = InitASIO(hWnd, asioDriver);
++            ReportInit(asioReady ? "END InitASIO result=1" : "END InitASIO result=0");
++            if (asioReady) { s_available = true; s_reportedValid = true; ApplyVolume(); return true; }
++            ReportInit("BEGIN close failed ASIO initialization");
++            CloseASIO();
++            ReportInit("END close failed ASIO initialization");
++            TraceInitCall("BASS_Free(after failed ASIO initialization)", [] { return qa::Call("BASS_Free",0,[]{ return BASS_Free(); },[]{return BASS_ErrorGetCode();}); });
++            s_status.backend = AudioBackend::Default;
++            s_status.driver.clear(); s_status.sampleRate = 0; s_status.bufferSamples = 0; s_status.latencySec = 0;
++        }
++        const DWORD flags = audioBackend == AudioBackend::DirectSound ? BASS_DEVICE_DSOUND : 0;
++        const std::string initName = "BASS_Init(device=-1, freq=" + std::to_string(kSampleRate) + ", flags=" + std::to_string(flags) + ")";
++        BOOL ok = TraceInitCall(initName.c_str(), [&] { return BASS_Init(-1, kSampleRate, flags, static_cast<HWND>(hWnd), nullptr); });
++        if (!ok && audioBackend == AudioBackend::DirectSound)
++            ok = TraceInitCall("BASS_Init(DirectSound fallback to default, flags=0)", [&] { return BASS_Init(-1, kSampleRate, 0, static_cast<HWND>(hWnd), nullptr); });
++        else if (ok && audioBackend == AudioBackend::DirectSound) s_status.backend = AudioBackend::DirectSound;
+ #else
+-		(void)hWnd;
+-		(void)audioBackend;
+-		const BOOL ok = BASS_Init(-1/* default device */, kSampleRate, 0, 0, nullptr);
+-#endif
+-		if (!ok)
+-		{
+-			return false;
+-		}
+-		BASS_SetConfig(BASS_CONFIG_BUFFER, kBufferSizeMs);
+-		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs);
+-		BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
+-		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads);
++        (void)hWnd; (void)audioBackend; (void)asioDriver;
++        const BOOL ok = TraceInitCall("BASS_Init(device=-1, default)", [] { return BASS_Init(-1, kSampleRate, 0, 0, nullptr); });
++#endif
++        if (!ok) return false;
++        TraceInitCall("BASS_SetConfig(BASS_CONFIG_BUFFER, 200)", [] { return BASS_SetConfig(BASS_CONFIG_BUFFER, kBufferSizeMs); });
++        TraceInitCall("BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100)", [] { return BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs); });
++        TraceInitCall("BASS_SetConfig(BASS_CONFIG_FLOATDSP, true)", [] { return BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE); });
++        TraceInitCall("BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 2)", [] { return BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads); });
++        if (!TraceInitCall("BASS_FX_GetVersion()", [] { return BASS_FX_GetVersion(); })) {
++            TraceInitCall("BASS_Free(after BASS_FX failure)", [] { return qa::Call("BASS_Free",0,[]{ return BASS_Free(); },[]{return BASS_ErrorGetCode();}); });
++            return false;
++        }
++        BASS_INFO info{};
++        if (TraceInitCall("BASS_GetInfo()", [&] { return BASS_GetInfo(&info); })) {
++            s_status.sampleRate = info.freq;
++            s_status.latencySec = info.latency / 1000.0;
++            s_reportedValid = info.latency > 0;
++        }
++        BASS_DEVICEINFO device{};
++        const DWORD deviceId = TraceInitCall("BASS_GetDevice()", [] { return BASS_GetDevice(); });
++        const std::string deviceName = "BASS_GetDeviceInfo(device=" + std::to_string(deviceId) + ")";
++        if (TraceInitCall(deviceName.c_str(), [&] { return BASS_GetDeviceInfo(deviceId, &device); }) && device.name) s_status.driver = device.name;
++        s_available = true;
++        ReportInit("BEGIN ApplyVolume");
++        ApplyVolume();
++        ReportInit("END ApplyVolume");
++        return true;
++    }
++    bool InitWithTrace(void* hWnd, AudioBackend backend, const std::string& driver,
++        const std::function<void(const char*)>& observer) {
++        const InitTraceScope trace{observer};
++        return Init(hWnd, backend, driver);
++    }
+ 
+-		// bass_fx.dllをロードするために呼ぶ必要あり(失敗時は0が返る)
+-		if (BASS_FX_GetVersion() == 0)
+-		{
+-			BASS_Free();
+-			return false;
+-		}
+-		return true;
+-	}
+-
+-	void Terminate()
+-	{
+-		BASS_Free();
+-	}
+-
+-	int GetLastErrorCode()
+-	{
+-		return BASS_ErrorGetCode();
+-	}
+-
+-	void SetMute(bool isMute)
+-	{
+-		s_isMuted = isMute;
+-		ApplyVolume();
+-	}
+-
+-	void SetMasterVolume(double volume)
+-	{
+-		s_masterVolume = volume;
+-		ApplyVolume();
+-	}
++    AudioLatencySnapshot GetAudioLatencySnapshot() {
++        std::lock_guard guard(s_outputMutex);
++        AudioLatencySnapshot value;
++        value.available = s_available; value.output = GetAudioOutputStatus(); value.reportedValid = s_reportedValid && s_available;
++        value.outputFrame = s_outputFrame; value.generation = s_generation;
++        value.scheduledEvents = s_scheduledEvents; value.lateEvents = s_lateEvents; value.rejectedEvents = s_rejectedEvents;
++        if (IsASIOActive() && value.output.sampleRate > 0 && value.output.bufferSamples > 0) {
++            value.predictionValid = value.reportedValid;
++            value.blockSec = value.output.bufferSamples / value.output.sampleRate;
++            value.predictedMinSec = value.output.latencySec;
++            value.predictedMeanSec = value.predictedMinSec + value.blockSec * 0.5;
++            value.predictedMaxSec = value.predictedMinSec + value.blockSec;
++        }
++        return value;
++    }
++    void SetOutputTransitionGain(double gain) { s_transitionGain = std::clamp(gain, 0.0, 1.0); ApplyVolume(); }
++    OutputBatchLock::OutputBatchLock() : m_locked(IsASIOActive()) { if (m_locked) detail::LockOutput(); }
++    OutputBatchLock::~OutputBatchLock() { if (m_locked) detail::UnlockOutput(); }
++    void CancelScheduledSounds() { detail::CancelSample(nullptr); }
++    namespace { void ReleaseOutput(const std::function<void(const char*)>& progress); }
++    AudioOutputChangeResult ApplyOutputChange(void* window, const AudioOutputRequest& request) {
++        AudioOutputChangeResult result;
++        const auto previous = s_status;
++        if (s_available && request.backend == previous.backend &&
++            (request.backend != AudioBackend::ASIO || request.driver.empty() || request.driver == previous.driver)) {
++            result.success = result.available = true; return result;
++        }
++        const auto progress = [&](const char* phase) { if (request.progress) { try { request.progress(phase); } catch (...) {} } };
++        const InitTraceScope initTrace{request.progress};
++        progress("capture playback state");
++        const auto resources = detail::ResourceSnapshot();
++        for (const auto& resource : resources) resource.capture();
++        auto release = [&] { ReleaseOutput(progress); };
++        auto rebuild = [&] {
++            OutputBatchLock lock;
++            progress("rebuild streams and samples");
++            for (const auto& resource : resources) resource.rebuild();
++            progress("resume playback");
++            for (const auto& resource : resources) resource.resume();
++#ifdef _WIN32
++            if (IsASIOActive()) s_lastCallback = GetTickCount64();
++#endif
++        };
++        release();
++        try {
++            progress("initialize selected output");
++            if (!Init(window, request.backend, request.driver) || s_status.backend != request.backend)
++                throw std::runtime_error(s_status.warning.empty() ? "Cannot initialize selected output" : s_status.warning);
++            rebuild(); result.success = result.available = true; progress("complete"); return result;
++        } catch (const std::exception& error) { result.error = error.what(); }
++        release();
++        try {
++            progress("restore previous output");
++            if (!Init(window, previous.backend, previous.backend == AudioBackend::ASIO ? previous.driver : "") || s_status.backend != previous.backend)
++                throw std::runtime_error("Previous output unavailable");
++            rebuild(); result.restoredPrevious = result.available = true; return result;
++        } catch (const std::exception& error) { result.error += std::string("; restore: ") + error.what(); }
++        release();
++        try {
++            progress("initialize fallback output");
++            if (!Init(window)) throw std::runtime_error("Default output unavailable");
++            rebuild(); result.available = true; return result;
++        } catch (const std::exception& error) { result.error += std::string("; default: ") + error.what(); }
++        release(); return result;
++    }
++    bool IsASIOActive()
++    {
++#ifdef _WIN32
++        return s_asioInitialized && s_mixer && s_status.backend == AudioBackend::ASIO;
++#else
++        return false;
++#endif
++    }
++    std::vector<std::string> GetASIODrivers()
++    {
++        std::vector<std::string> drivers;
++#ifdef _WIN32
++        if (!LoadASIO()) return drivers;
++        BASS_ASIO_DEVICEINFO info{};
++        for (DWORD i = 0; s_api.asioGetDeviceInfo(i, &info); ++i)
++            drivers.push_back(UTF8(reinterpret_cast<const wchar_t*>(info.name)));
++#endif
++        return drivers;
++    }
++    const AudioOutputStatus& GetAudioOutputStatus()
++    {
++#ifdef _WIN32
++        if (IsASIOActive() && s_callbackFrames.load()) s_status.bufferSamples = s_callbackFrames.load();
++#endif
++        return s_status;
++    }
++    std::string GetAudioOutputFailure()
++    {
++#ifdef _WIN32
++        if (IsASIOActive())
++        {
++            if (s_reset.load()) return "ASIO driver requested a reset or changed sample rate. Restart the game after adjusting the driver.";
++            if (s_callbackError.load()) return "ASIO mixer failed to supply audio.";
++            if (GetTickCount64() - s_lastCallback.load() > 2000 || !s_api.asioIsStarted())
++                return "ASIO output stopped. Check the audio interface connection and restart the game.";
++        }
++#endif
++        return {};
++    }
++    namespace {
++        void ReleaseOutput(const std::function<void(const char*)>& progress) {
++            const auto report = [&](const char* phase) { if (progress) progress(phase); };
++#ifdef _WIN32
++            report("stop ASIO callbacks");
++            if (s_asioInitialized && s_api.asioIsStarted()) qa::Call("BASS_ASIO_Stop",0,[&]{ return s_api.asioStop(); },[&]{return s_api.asioErrorGetCode();});
++#endif
++            report("release streams and samples");
++            CancelScheduledSounds();
++            for (const auto& resource : detail::ResourceSnapshot()) resource.release();
++#ifdef _WIN32
++            report("close ASIO device and mixer");
++            CloseASIO();
++#endif
++            report("free BASS output");
++            qa::Call("BASS_Free",0,[]{ return BASS_Free(); },[]{return BASS_ErrorGetCode();}); s_available = false; s_reportedValid = false; s_status = {};
++            CancelScheduledSounds();
++        }
++    }
++    void Terminate() { qa::Scope terminate{"audio.Terminate",true}; ReleaseOutput({}); }
++    int GetLastErrorCode() { return BASS_ErrorGetCode(); }
++    void SetMute(bool value) { s_isMuted = value; ApplyVolume(); }
++    void SetMasterVolume(double value)
++    {
++        s_masterVolume = std::isfinite(value) ? std::clamp(value, 0.0, 1.0) : 1.0;
++        ApplyVolume();
++    }
++    namespace detail
++    {
++        void ForgetChannel(DWORD channel) { qa::Scope wait{"ForgetChannel.wait_mutex",true,channel}; std::lock_guard guard(s_outputMutex); s_origins.erase(channel); }
++        void LockOutput() { qa::Scope wait{"output.wait_mutex"}; s_outputMutex.lock(); }
++        void UnlockOutput() { s_outputMutex.unlock(); }
++        std::uint64_t OutputFrame() { return s_outputFrame; }
++        std::uint64_t OutputGeneration() { return s_generation; }
++        bool ScheduleSample(const Sample* sample, std::uint64_t frame, double volume) {
++            std::lock_guard guard(s_outputMutex);
++            if (!IsASIOActive()) return false;
++            for (auto& event : s_events) if (!event.owner) {
++                if (frame < s_outputFrame) ++s_lateEvents;
++                event = {sample, (std::max)(frame, s_outputFrame), volume}; ++s_scheduledEvents; return true;
++            }
++            ++s_rejectedEvents; return false;
++        }
++        void CancelSample(const Sample* sample) {
++            qa::Scope wait{"CancelSample.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            for (auto& event : s_events) if (!sample || event.owner == sample) event.owner = nullptr;
++        }
++        bool AttachOutputChannel(DWORD channel)
++        {
++            qa::Scope attach{"mixer.AttachOutputChannel",true,channel};
++#ifdef _WIN32
++            if (IsASIOActive()) {
++                std::lock_guard guard(s_outputMutex);
++                if (!s_api.mixStreamAddChannel(s_mixer, channel,
++                    BASS_MIXER_CHAN_PAUSE | BASS_MIXER_CHAN_BUFFER | BASS_MIXER_CHAN_NORAMP | BASS_MIXER_CHAN_NORAMPIN | BASS_MIXER_CHAN_DOWNMIX)) return false;
++                s_origins[channel] = {0, s_outputFrame, 0, true}; return true;
++            }
++#endif
++            return true;
++        }
++        bool PlayOutputChannel(DWORD channel, bool restart)
++        {
++            qa::Scope qaHelper{"PlayOutputChannel.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("PlayOutputChannel.native");
++#ifdef _WIN32
++            if (IsMixed(channel))
++            {
++                auto it = s_origins.find(channel);
++                if (restart || s_api.mixChannelIsActive(channel) == BASS_ACTIVE_STOPPED) {
++                    if (!s_api.mixChannelSetPosition(channel, 0, BASS_POS_BYTE)) return false;
++                    if (it != s_origins.end()) it->second = {0, s_outputFrame, 0, false};
++                } else if (it != s_origins.end() && it->second.paused) {
++                    const auto position = it->second.pausedPosition;
++                    if (!s_api.mixChannelSetPosition(channel, position, BASS_POS_BYTE)) return false;
++                    it->second = {position, s_outputFrame, position, false};
++                }
++                return s_api.mixChannelFlags(channel, 0, BASS_MIXER_CHAN_PAUSE) != static_cast<DWORD>(-1);
++            }
++#endif
++            return BASS_ChannelPlay(channel, restart) != FALSE;
++        }
++        bool PauseOutputChannel(DWORD channel)
++        {
++            qa::Scope qaHelper{"PauseOutputChannel.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("PauseOutputChannel.native");
++#ifdef _WIN32
++            if (IsMixed(channel)) {
++                const QWORD position = OutputChannelGetPosition(channel);
++                const bool ok = s_api.mixChannelFlags(channel, BASS_MIXER_CHAN_PAUSE, BASS_MIXER_CHAN_PAUSE) != static_cast<DWORD>(-1);
++                const auto it = s_origins.find(channel);
++                if (ok && it != s_origins.end()) { it->second.pausedPosition = position; it->second.paused = true; }
++                return ok;
++            }
++#endif
++            return BASS_ChannelPause(channel) != FALSE;
++        }
++        bool StopOutputChannel(DWORD channel)
++        {
++            qa::Scope qaHelper{"StopOutputChannel.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("StopOutputChannel.native");
++#ifdef _WIN32
++            if (IsMixed(channel))
++            {
++                PauseOutputChannel(channel);
++                return OutputChannelSetPosition(channel, 0);
++            }
++#endif
++            return BASS_ChannelStop(channel) != FALSE;
++        }
++        DWORD OutputChannelIsActive(DWORD channel)
++        {
++            qa::Scope qaHelper{"OutputChannelIsActive.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("OutputChannelIsActive.native");
++#ifdef _WIN32
++            if (IsMixed(channel)) return s_api.mixChannelIsActive(channel);
++#endif
++            return BASS_ChannelIsActive(channel);
++        }
++        QWORD OutputChannelGetRenderPosition(DWORD channel) {
++            qa::Scope qaHelper{"OutputChannelGetRenderPosition.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("OutputChannelGetRenderPosition.native");
++#ifdef _WIN32
++            if (IsMixed(channel)) {
++                // The decoder can prefetch during resampling/tempo processing. Use the mixer
++                // timeline at zero delay, not the raw decoder cursor, for sample scheduling.
++                const QWORD position = s_api.mixChannelGetPositionEx(channel, BASS_POS_BYTE, 0);
++                if (position != static_cast<QWORD>(-1)) return position;
++            }
++#endif
++            return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
++        }
++        QWORD OutputChannelGetPosition(DWORD channel)
++        {
++            qa::Scope qaHelper{"OutputChannelGetPosition.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("OutputChannelGetPosition.native");
++#ifdef _WIN32
++            if (IsMixed(channel))
++            {
++                const auto origin = s_origins.find(channel);
++                if (origin != s_origins.end()) {
++                    if (origin->second.paused) return origin->second.pausedPosition;
++                    if ((s_outputFrame - origin->second.frame) < s_status.latencySec * s_status.sampleRate)
++                        return origin->second.position;
++                }
++                if (s_api.mixChannelFlags(channel, 0, 0) & BASS_MIXER_CHAN_PAUSE)
++                    return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
++                const DWORD delay = static_cast<DWORD>(s_status.latencySec * s_status.sampleRate) * 2 * sizeof(float);
++                const QWORD pos = s_api.mixChannelGetPositionEx(channel, BASS_POS_BYTE, delay);
++                // At startup/after seek, history may not yet cover the output latency.
++                if (pos != static_cast<QWORD>(-1)) return pos;
++                const QWORD decoded = BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
++                if (decoded == static_cast<QWORD>(-1)) return 0;
++                const QWORD sourceDelay = BASS_ChannelSeconds2Bytes(channel, s_status.latencySec);
++                return decoded > sourceDelay ? decoded - sourceDelay : 0;
++            }
++#endif
++            return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
++        }
++        bool OutputChannelSetPosition(DWORD channel, QWORD pos)
++        {
++            qa::Scope qaHelper{"OutputChannelSetPosition.wait_mutex"};
++            std::lock_guard guard(s_outputMutex);
++            qa::Phase("OutputChannelSetPosition.native");
++#ifdef _WIN32
++            if (IsMixed(channel)) {
++                const bool ok = s_api.mixChannelSetPosition(channel, pos, BASS_POS_BYTE) != FALSE;
++                const auto it = s_origins.find(channel);
++                if (ok && it != s_origins.end()) it->second = {pos, s_outputFrame, pos, it->second.paused};
++                return ok;
++            }
++#endif
++            return BASS_ChannelSetPosition(channel, pos, BASS_POS_BYTE) != FALSE;
++        }
++        DWORD OutputChannelGetData(DWORD channel, void* buffer, DWORD length)
++        {
++#ifdef _WIN32
++            if (IsMixed(channel)) return s_api.mixChannelGetData(channel, buffer, length);
++#endif
++            return BASS_ChannelGetData(channel, buffer, length);
++        }
++    }
+ }

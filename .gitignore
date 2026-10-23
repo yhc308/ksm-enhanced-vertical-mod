@@ -1,0 +1,17 @@
+/upstream-worktree/
+/build/
+/releases/
+__pycache__/
+*.pyc
+.env
+.env.*
+*.exe
+*.dll
+*.lib
+*.zip
+*.pdb
+*.obj
+*.ksc
+*.psd
+*.psb
+*.mp4

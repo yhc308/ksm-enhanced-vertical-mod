@@ -1,0 +1,1353 @@
+{
+  "upstream": "https://github.com/kshootmania/ksm-v2.git",
+  "baseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
+  "importedFromCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
+  "mainPatch": "patches/ksm-v2.patch",
+  "mainPatchSha256": "05ea3c84b57fec438903b21542f370082e9c538e9cbe0c1f8b4488ee820fce36",
+  "overlayFiles": [
+    {
+      "path": ".gitattributes",
+      "sha256": "e85ccbaa588dd8b9f982bb50dc2a9fbe9a037288e5f5c7790f0bf4267b0a72fa"
+    },
+    {
+      "path": "README_ENHANCED.md",
+      "sha256": "1f187fe6cb1bcc5851155f5e113429ff2dc4cdbc4be1f6aa70afc8858d70c7ea"
+    },
+    {
+      "path": "REVIEW.md",
+      "sha256": "494c429182a73754f9a9e8ee2f209ec473350b4e1defa6ffbbbae5c0a85d8983"
+    },
+    {
+      "path": "compatibility/targets.json",
+      "sha256": "a6aea08e6c939972d2422ccad2a1004b4c983b9dc895a4ffdf73448bc428ed02"
+    },
+    {
+      "path": "config/default-windows.ini",
+      "sha256": "cef159fa7bcdda50e27edd13e33011dd2251140db4e048c1751171ce6a2e8f4d"
+    },
+    {
+      "path": "config/release.json",
+      "sha256": "612acf8a11552f8774fdfc6c636f9cf5e575c93b2247fcc620b1200ebe553799"
+    },
+    {
+      "path": "kshootmania/App/imgs/bg2_vertical.png",
+      "sha256": "6bcd0b50b90d0cde70ebc3fe1fe33d29882855a1b04bec46476a8a00217f8db8"
+    },
+    {
+      "path": "kshootmania/App/imgs/bg_vertical.png",
+      "sha256": "78dc8d7af0a072be22c7b95360bcebf315115615e5967749000fbb409ddf4995"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/base.gif",
+      "sha256": "aa25a357f648c25f806c6fe56bd0e1fdc2e5de934a20cd6b0d96d2d4a2539aa1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg.jpg",
+      "sha256": "108b3f05425db65a9dc6222c167071d936d40b06a4edc9e4daafcdc01cf5e1c1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/arrow.gif",
+      "sha256": "5e90e887892841abf0e3ea3ed2d01a06b0549893f1db883ea0790476cf3a0901"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/cloudy0.jpg",
+      "sha256": "400c360461f5b37eb47e17ea5111caf2919d771bb4ee2d233af86c56d45ca82f"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/cloudy1.jpg",
+      "sha256": "30f3370e1e6539cc4c53e07d8054047b6570bc80e12fa9367465770d3dc5c5ae"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/cyber0.jpg",
+      "sha256": "ccb89d62996d56c7748673a265fac1f3065cc5f476eae4808f6076098be01300"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/cyber1.jpg",
+      "sha256": "15e7af2024218eeb2014ee2d6e68d10ac4d4e71abcaf5c1cc462f9ffb99cb674"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/deepsea0.jpg",
+      "sha256": "d8f2ac436aa9a2bc25c90f9a73084da3764a7ab3fc42538fef6dfb155f3bb46d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/deepsea1.jpg",
+      "sha256": "31624a4b65a75e52c858d1480bad70ddbd1e5b135a02eac3fd4a88a223e093a5"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/desert0.jpg",
+      "sha256": "2a684f50db34e51f7dec13ac45cb77c27dc2e5398f76e876602ded9232bc98ef"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/desert1.jpg",
+      "sha256": "39bf85b2cf777c69a8650f4a618e54ebbe1a205df388e51c8524bf0384cf67b7"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/fantasy0.jpg",
+      "sha256": "46ae3b7aa81d682bbe4e07f0f414e5e5222419c1a6ff522b724a73a93bfa597f"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/fantasy1.jpg",
+      "sha256": "020dcc2d5394b074eeee8718d2cac18f2498b9af7a8b6dc9821e125519534c28"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/flame0.jpg",
+      "sha256": "6fe11b5c209393f62ae8cb97e53e932df42f8332425c0af6f8a254879de3e90a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/flame1.jpg",
+      "sha256": "515a08448b31fef6dacebd8c7102b0b1f990d8c36a93ca9311e24dbe1fbd1e2a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/grass0.jpg",
+      "sha256": "95630ca538d847fe8e59e7f20c48448c20789150aee0f03f80c1819ad6d4d1a6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/grass1.jpg",
+      "sha256": "616bfae68b47e0c05646997b886ea00cdd0ba6688923e772e4d1be92e9d6a0ba"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/hidden.gif",
+      "sha256": "cb4053ed735812d54c11df336fc11bb8cb026add800117561fdff34d5138edd0"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/mars0.jpg",
+      "sha256": "e7ce58f00f56df6d69431dc9b87a5096150559556871f33249f771183bdbf535"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/mars1.jpg",
+      "sha256": "a96641f522adbd4b99f12188926521579f3e723ebf53beda31e2d49e995dcb1a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/night0.jpg",
+      "sha256": "7c260dcd67430d5fa209d874eb753d694f9c96e7175b3bc8a62f93a5499fcf2b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/night1.jpg",
+      "sha256": "8077fd10c5500d311099c7e84eca8330f8d07c8184da778d894cf34667ca9a51"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/ocean0.jpg",
+      "sha256": "3fbbaf898755e14070e26c6637ada1a6f9c5e41ed0a8c0bf41741d60efe157d3"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/ocean1.jpg",
+      "sha256": "187e6235ce95ac80277093f8577ef266efb2e4a07c0a8cb8cd18789e41a02be2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/sakura.gif",
+      "sha256": "abdfd472b7f8cd15a5c70fce5a20885ef0f1469392b7fa73f670a28690b47437"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/sky0.jpg",
+      "sha256": "2351d612e54126c5ba022f8b69f9aa1348ef2f688e4c17c45043e7f9aa294015"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/sky1.jpg",
+      "sha256": "1636428b7d127108633ca0921a87d2371940fc45ec607b43d581753231520771"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/smoke.gif",
+      "sha256": "e2189cd3563ee40f5ad86ac68925a8fc243b6b4c49882e72ea147d5520e621cc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/snow.gif",
+      "sha256": "a3706261c67182b07be2da3013cde090469360a09814bbd43dae175e7d822f25"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/space0.jpg",
+      "sha256": "38d082461283e0e3ecb2b63e1ca049e00aff053de0aa18e16f67e1ad459cf48b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/space1.jpg",
+      "sha256": "fe2018636e87a54ef73178d59eb70da4e90255e2d9905c731c0fed0d8b2fc413"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/sunset0.jpg",
+      "sha256": "5dca715dfdd91aca65a3748f98b70be0ac20dbe0a47ae519974b0a5d44730668"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/sunset1.jpg",
+      "sha256": "9e7cce8bd76cb46d79df3833366f6742e9307cf04d828b15ef8088e69463f67a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/techno.gif",
+      "sha256": "8fd788e53fb356b7bf0832d503b0c6c07ec4cfe4a05864902a04dc9830be206c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg/wave.gif",
+      "sha256": "b9cf728ed19282024e5ec649e0994c7a074faa382f25999c420f91628c2fcc9c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg2.jpg",
+      "sha256": "3ce0d436b76e18d7bea59db5c9bc9af18e93cb653eaca16bf11deb1b16e0477b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg2_vertical.png",
+      "sha256": "6bcd0b50b90d0cde70ebc3fe1fe33d29882855a1b04bec46476a8a00217f8db8"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg3.jpg",
+      "sha256": "9571e0a7ca728ecf30abb312a7f1f00c761b232c78e57f4fd4d8d947c44f13ff"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg3_vertical.png",
+      "sha256": "9f53c712d946f8d89fdd0bbd3139569a5741895c717a3faec3f17f517e6151ee"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bg_vertical.png",
+      "sha256": "78dc8d7af0a072be22c7b95360bcebf315115615e5967749000fbb409ddf4995"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bline.gif",
+      "sha256": "43b19c9dcdba86b095e65e3944db483207c18cf150f0db361c3b21f08a4ac2f4"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bt_chip.gif",
+      "sha256": "9f4aaaa276faa8f518196884ef8fda2150567be6b2657bfdeb2e2209e415bcc0"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/bt_long.gif",
+      "sha256": "d5e0aac66f324a34be7109be03110f70604f5c9ed2b5ca546a647b612ae0c8c3"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/btn_back.png",
+      "sha256": "a21572bc2273bccb3b5de44fa1f65e9b45a0aa656c8f25828dac5c8a5ec52d8d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/cg.gif",
+      "sha256": "b7e96f64b78ab02e6cb131cda14d83731cb92c6ded68c65f42737031f8511a4b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/cg_header.png",
+      "sha256": "d0d7d348ef0f92ecf96024b4a0055473f5ee1194ea9abe5250f3855c5a72ab52"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/checkbox.png",
+      "sha256": "376e1c44fdfe11d7e89bd5498ffe9add70ce208e9af2d2c581df0e9a37749c39"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/cline.png",
+      "sha256": "ef136bea83b354fd759eddc34a1102d876ffc5f3f035af90f6e22a996dd43d44"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/combonum.gif",
+      "sha256": "c21d9f43dcaae3b35078fed998f746531d58903950908ed9949328b9ab256082"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/courseresult_arrow.png",
+      "sha256": "44f0c20fd515cf8edae666be85a19dc37dfcce8f85d3a709fd0c0974d28a0947"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/courseresult_gauge.png",
+      "sha256": "7ad9d680b46ab7c7968b1ef6e4ea349b0ca8b3b0bb2070b5b1702a5fed39e021"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/courseresult_info.png",
+      "sha256": "39f451954294d71c41e689f47e4df4ccb20d1104c06c91ec5cab78e0e43745a0"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/courseresult_item.png",
+      "sha256": "edf0d735b9fcf154c0b013889f07ee0fe206af63e49aab5a4dd896d8e198d652"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/courseresult_newrecord.png",
+      "sha256": "bc79dadb6657e6f47be6a74df45615dcd2ad1b243b63ff99170d2d26f64077d7"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/dialog_title_head.png",
+      "sha256": "35c4f483b083c3eb9a158edc2034561fe2286a6ce37bdf342561ec97d71cb1d5"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/chokkakusamples.gif",
+      "sha256": "186ea955665e1e1b709c6222bb3dcb2086f52e4fc9b9137f65f863837da1769b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/keyinfo.gif",
+      "sha256": "39370e65786077bb527a4d66d849b90fcea08da25bea8a92401a1861d1b86436"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/keyinfo_en.gif",
+      "sha256": "a9f52d5187031923a522dd15c3db9f7d2c239778cf89cb98caf8ece5ba898c8a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/keyinfo_kr.gif",
+      "sha256": "eae26e452fe80b6863773df3f58b90d001062a0a9ea3d6a983a030ca3bf0c30d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/laser.gif",
+      "sha256": "5e966379ad9155d82f9978727df98c8ecf71e88be0ef476f2e6c557d68c4ebb9"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/lnote.gif",
+      "sha256": "82d777989beb2ed62ca5e425f410691f3a93c3b35f66df711f2426298b9de793"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/lnote2.gif",
+      "sha256": "bba1b77b3d30e854e7895722641367bc7f62f5d16be485727ede851e6138770d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/lnote2_se.gif",
+      "sha256": "b3fa013205edac3e99f4759fcde6c1c68cc293527508e293da9a8633665ece04"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/note.gif",
+      "sha256": "78227babe66de9ecd71852d66e9b3ecc68ebcea91432b7727932ecabd2d4cd72"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/note2.gif",
+      "sha256": "acccaaf54c466db6d334ccad3291d4849455e23cf0873f38473d0f69d18e1692"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/quantize.gif",
+      "sha256": "2f59549c19d240dc31456640393e140d28e81ef60f0b27564b402022c5b74d5d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/rotate.gif",
+      "sha256": "2e980af2cf111158d9a2d9d2ab3878ac789fba15f083d4927f47689c12c8afd2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/spin.gif",
+      "sha256": "bdad411ea733c8137f79c975f7747b6d7cc5b2806b5f364bd604d135f8139d9f"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/st.gif",
+      "sha256": "9c9a3e94c915fcb1b1f898f97a252f42da818ad72d6e030388b25ae5ce214662"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/stop.gif",
+      "sha256": "36ee1fa9eff5f61a8605ae32cb9c865a13e870ce519961db458bf91468db5104"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/targets.gif",
+      "sha256": "bd97d6fe40772aaf79126d945f8d85d6727907c4281f65bfbea85ebd8fec5ae1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/toolbar.gif",
+      "sha256": "e807dc6021e87a2541bc97c3c26c1dedffba739456efc8d34ca93c8609b14362"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/editor/tools.gif",
+      "sha256": "7404a92d5029d00c519a59fc3e964b5ff2618df65e04aba1692192267aab3c80"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/er.png",
+      "sha256": "76a02c51030f61d505e7dc02cf42505bb82e6c6c4e2fb27e53db526a93318804"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/er_aps.png",
+      "sha256": "00e18ac2a83355854bec41d043c176bf365cb14b6eb7f3c56b7ef4ef34d41803"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/er_g.gif",
+      "sha256": "a717db03cce0192e9ea2783487806082e17b8d539445c1c0f41dfa73a0be6146"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/er_g_pattern.gif",
+      "sha256": "3452d101cf329d17a6ec2241e5d238e984e76126395d0e6b97a1938e9620e2eb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/er_p.png",
+      "sha256": "1f1fec39ddf7702f047a1c20146f53fb333df4f987e2df953c20b3c127250ceb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/font.png",
+      "sha256": "ab0b6d850906f121dfb8f44892e2d633a77569cd9bf74a7b7e301b778b87d499"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/font_shadow.png",
+      "sha256": "ebb85cfaeed1f5cd5449210680255cf8036d41470b466fa0ae2725ce5afdd255"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/font_title.png",
+      "sha256": "6a8ed7cd1c8ad88c878ec4092ab752382b23b1b2cdf6c452bbe6a5cc0ec30333"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/fps.png",
+      "sha256": "827abd08d435ee2b4f77288d871814384e530158e2c8b1ba6ce9e790e9e11e92"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/frame_01.png",
+      "sha256": "e97341a144df3a627f771473b10c6245f94e2ee1458cbe00c3f0ff90a849e9ea"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/fx_chip.gif",
+      "sha256": "4215aebc0a256bb411dcea72c6dab323bf28e29a5090577c078bf489a4812a2a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/fx_chip_se.gif",
+      "sha256": "c33f69f3a93de2031e8c1a89f29978ba30b76615b7b4b000f88a1e771183a2db"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/fx_long.gif",
+      "sha256": "bdb92ed24ebc88fb31bf1a255a95c1d5fcb4ce5f34cc1569b14e4a83da3b62cf"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_bg.jpg",
+      "sha256": "a433ccb18190ff1ddde568e7d1550d859085cb6fa0dadbcba7a8e056aa12eac6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_bg_mask_overlay.png",
+      "sha256": "fcb45c9efebdde2b475818fe91e8af5af6a7c90885c54dab45285d767d9368aa"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_downloading.png",
+      "sha256": "12d572dc5b0db004667b9ccf7c727033467767647f617b1a0945a3254b4b3683"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_info.png",
+      "sha256": "fcdec142efbae3e9296c7f1c85795c429637f234520275152191b45e213096b2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item.png",
+      "sha256": "7dd78d0577c7680e55b1064d355e55f52ef838753ab7a1741d79f7ae825561ce"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_cur.png",
+      "sha256": "4bdaf7b65ab74328afd2429cc00d2e2bf6c0c1fcdc925968e048fa64e221644d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_dark.png",
+      "sha256": "4ae3cdab1cff37623d93d9c99c849ebd8d9832a684ea7c0b613dc16762d2ad6c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_empty.png",
+      "sha256": "07d426604cdece82c8ba1fa774f459ca3c540d6658f246a9fc5dc6de0e6458db"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_installed.png",
+      "sha256": "bc0d5a2ccd3d5f89703848c9dff8158c320578fdaccf21efc421857d79952cca"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_installed_en.png",
+      "sha256": "83bdfa1ba42f7ab9c9efd9e85a828ef95a2850316131ace5deae78f7cfe00aab"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_installed_kr.png",
+      "sha256": "bfbd544585fcb59e44579d92667947ed4ae9dc7c24311cd75166e44ab1c93f35"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_locked.png",
+      "sha256": "aa02f4743624c0a767cc10bd0754365fed04459f72ba357f327842182f15a75b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_locked_en.png",
+      "sha256": "72ee9a28ff46937b38aaa32f39583d0749f26cbf6706aeb4531845a147c66123"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_locked_kr.png",
+      "sha256": "1424ff651a0f52955a38a0fbbf3e536e7f72cb1706d7af64dd73011a34a9c64e"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_new.png",
+      "sha256": "d3537c57a38374311564bfba3032a26b645596909c9fdc331dbee8f408047324"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_item_updated.png",
+      "sha256": "cc9d44b3661cf1fd889ffd65d4db58a53978886c7d0979741283df31a337ae88"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_keyinfo.png",
+      "sha256": "35a9c7dd5661f3654bfe86ba04fe51b29156a2eac4a7e6e83094e4456de45558"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_settings.png",
+      "sha256": "09f094d14ad35c781d682d34e03a3aab8205b47478b1e38c6bc687ef47d97da6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_sort.png",
+      "sha256": "cacca0461cd26ec87dabc029bf86b8782fad1c5323d2880c45b0162c58592774"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/gate/gate_top.png",
+      "sha256": "77f068c8628602c725e84e17ee5dd4cc2b860a5339356c50b5310696f427161c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/happypophardcore_react.png",
+      "sha256": "7b706b535b2cab3ec4ff4435d8537f09c127c58c30084bd5282265349f6a4837"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/happypophardcore_reborn.png",
+      "sha256": "2f20fe03e29765a894e8b79c44a8313c4baf4070ae3ddd93d7f436ac798a86c2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/slimatsushi.png",
+      "sha256": "c4d10ee8d2b46c00bc82596bbbf0a1172c8c9a0bc23e480ce738c44a06e4d92a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/slimatsushi_disc1.png",
+      "sha256": "e5ff26846a7525b4d07a5cb36eee5870de09ce0c99b869b3e99b82bd436e95f9"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/slimatsushi_disc2.png",
+      "sha256": "580211472bef450beeac552001b608052ce40f4bb42a1b45e891d780f9106f09"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/slimatsushi_disc3.png",
+      "sha256": "a59c5b9ccf7259eca93985c338c0f49f0c05f41cc311d5ed0102c553926a8e0c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/icon/slimatsushi_disc4.png",
+      "sha256": "433e49b7ec72fb5b0906440ec135f38d7423b1593b832b16dd287ad5638f4434"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/ir_popup.png",
+      "sha256": "aeb525d4c2bddfc719b7db1d9252e34992870396b5bca8b2f20c930c96a93d4b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/ir_signin.png",
+      "sha256": "1de2e80464e965e3bb05714b0d8cbe09a581accdc2636a693482e5d2d3063367"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/ir_signin_cursor.png",
+      "sha256": "e569499902332287b6089095eaa3928a3902a35c76f16e52770d000a30521cf1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/jacket/nowprinting1.jpg",
+      "sha256": "dc89c2ca79e5a139e9c7ecbca62ee71c7db791978815f0a29e96012713e0fd97"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/jacket/nowprinting2.jpg",
+      "sha256": "edee5b74cfe0ba6ad23014dfcef2ec1c91a7aab549812466d7a8b846362ac7d2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/jacket/nowprinting3.jpg",
+      "sha256": "f6d1741805507da748ffdee6d5db91a8324a77d36b02c2a964677e960d357f3b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge.gif",
+      "sha256": "af20bfc63447f05945e74ac29344e03895fda319b0dcdf880cbaa86d6bdf7dad"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge1.gif",
+      "sha256": "fa1ba6c8c8a1034b465a2ed2dda71130999e3255a516688e5aaaa76e1917db98"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge2.gif",
+      "sha256": "ccc5d8ed4e03f877db905931a4ecde5dfa1f1ec33adfdafef3d34b8a8d7ee22c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge3.gif",
+      "sha256": "2d4af9cc47ad86e687eb5efad8066770ec66ec89d5f29490d38f50ec61eb495d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge_p.gif",
+      "sha256": "43722c9d40198664b9d3bc09ad2c4f60882b711353f591ad4c131c056769f861"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judge_p1.gif",
+      "sha256": "44e3e6aa7d784907fa562f672b1eaeca5dc3bfa87ab9afff8f46846a41fe4133"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judgelaser.gif",
+      "sha256": "3e6b435155e936a0d317fa587aa1bdbe34cc5e483db9ed17bef31d494b90a6c9"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judgelaser_d.gif",
+      "sha256": "c2075c83182daf92eaed5720bfaa875137c20f55583de2553251ea6faa19b275"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/judgelong.gif",
+      "sha256": "60d563fa17b8d5c8c78b496136ade886d3e538a9eb232568b5f14386bd65a1bc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/lanelight.gif",
+      "sha256": "950b2609f752c1602c92d082c1ca5eef3c45536b5452907f28323b012928e9af"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laser.gif",
+      "sha256": "204b0d811f88d3eea81b9935c7bdc1e9477057e94b34de97e6c64b322a7883dd"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laser_cur.png",
+      "sha256": "65f5bc845cca3c053eee84611e011fa42f69df3439e583b2123fe3fe0f981941"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laser_mask.gif",
+      "sha256": "8785ff6a247d04a2cb4cf2d90bce3316974aa8f1b54f6992030a1f35fae43a04"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laser_p.png",
+      "sha256": "913a9eaf48bafc667bc7a0107297c3f7290a2988bfe0efe38ec00b4cfdbb27de"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laserl_0.gif",
+      "sha256": "ecde3f5d331ff37d78b8d2cfeb540cfcdd5f3d27705e257225f20fbf2cc0e9b1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/laserr_0.gif",
+      "sha256": "a25384dee49932f73f6345eadbbaf0c0b0f6d027a240e1e8804546e8710c5157"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/loading.png",
+      "sha256": "ca322f02db3c468112b178b75d6bffa4ee4dcd8e1b16e9887bdd3fafecf96716"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/minfo_cur.png",
+      "sha256": "f061d2d998685634f4c8bc88e45f2d439adc83d7496c58605b43f50cf38e336a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/minfo_detail.png",
+      "sha256": "a6739f6146843dfdac8199100c23390e63b74adeb3b227fef2ef0695df61777c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/minfo_label.png",
+      "sha256": "f98e09cb39486ef5b0c3da70e23d1c01df23a35d4febc13aa40a52458cc6e98a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_0.png",
+      "sha256": "97290a5efb743cf943fc6a99cd9836800a2bb903bc13d8e95e03d390918d6b1d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_0_bpmnum.png",
+      "sha256": "a7c17552d739068588bd9528151a5596d682ae6cbdd56a4f3c7c375ec1cc9844"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_0_cur.gif",
+      "sha256": "2ff44e04f10aed86437cfea5dd69a9803f865491fab901e24d0ca4cccba55f20"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_0_difficulty.png",
+      "sha256": "4e7771a5c8b390c110f958f6a52cbdbe2630415106e638e5165541e2ec30e3b8"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_1.png",
+      "sha256": "8b620db29c14a616f9f07fa1e592e6826a0cb5ef4397c960c1db872686ea52fc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_2.png",
+      "sha256": "a58f04138ef024139f8ffcf5d41155bf60f8372e7c3b65516b57efa1d2dc9493"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_bar.png",
+      "sha256": "def058eab30002c1b850e700559212ebdd73bc03a93397b9128eb8b29560b187"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_bar_vertical.png",
+      "sha256": "6e4e4005c3833e891e617985185e234932178a141dae36ae69b1ae03e776d140"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_barcur.png",
+      "sha256": "4cb85dd11fa4af97b71c94fd4870a190dc8b9047df8194b44a1348a29af825e5"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_bgani1.gif",
+      "sha256": "81185d4d59b43e879a0193a3143ce0ac07dafce384267c3fcc379e5df70d4dfb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_course0.png",
+      "sha256": "a8e5d57f3363d682503d09f38cf9d715a3cda17b0ae6422f5b342f22ed192d1a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_course0_item.png",
+      "sha256": "64c0008b01faa51d6f49790d77d661e17913e608779bc63124af6ea1fb500c04"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_course1.png",
+      "sha256": "6c391e008d34b3d72108766ee9e0e52c0bc72c770bef8d23a5735011fb7f897b"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_course2.png",
+      "sha256": "ee945dd06df75a612a82e40eb6b9c81b35f85c9ca870b31a010d5bcf27e215b1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_dir0.png",
+      "sha256": "1f61820d9a6925dddcfb0e1a48c0538f0737b0d2a2a1972b0dbc86778dd6573d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_dir1.png",
+      "sha256": "e3d3cdda0b8b792af95ecd585fd3376e2cbbe3dc240b1aebf4e7fedc2d4e04ca"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_dir2.png",
+      "sha256": "af9fd77d659a22cba91a1d8d253ccb8794bb0e2a45c9def385bd745e00109d6f"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_exscore_1.png",
+      "sha256": "9ef744cc192159dbc0222b4cbabf923c8235ba23a167a6f2a3ac19ad630a655d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_exscore_2.png",
+      "sha256": "76cbe1ac0128bd5bb92f4ed108c2f37b527d1c505e7d05223991e14c0b73f5cb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_exscore_3.png",
+      "sha256": "f56fd9350812523b3faddbbf6a186338d6b5c62ad5c3331fdc1ea0ece28649c6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_fav_add.png",
+      "sha256": "9646a05df3cb3ee98f8dc3008f4019699ce3ed0077f54d8e781bdc35dec3fadc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_fav_add_num.png",
+      "sha256": "6ca5fea47379ba4bcc71dbfd510a18571dbd100e11e400a557d92fa386b64e14"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_fav_del.png",
+      "sha256": "b3bb2d3b3445f42dffd83162ca48daeb7760e52f975a0c5fe0a0606149b5c191"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_grade.png",
+      "sha256": "b288e00c1cd1088941ba1a148159b57bf5a310fd13aac49c0676bfdf0d6ecfce"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_info.gif",
+      "sha256": "b37640cc998c31dc0b1c4a95b84ce35e6b80e20054fffc4d3494e00d8eab1e57"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_lev0.png",
+      "sha256": "6030e309307667e6141834cc8806c8ef786aaa6368d1cc977c8b3a74e38142cc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_lev1.png",
+      "sha256": "912a7ac00db5d22112d5741cffdaac6823256aba98a5b6ca1bdc01657912c78d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_lev2.png",
+      "sha256": "e045e224dc568f5b54376490ae973e5ff5c98b3f00204a066f43db8c48f1f06e"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_level.png",
+      "sha256": "9476ff0f9ca0508b9759c6db403613ebf2509f68e75f7cd48b823c1f7f4767b1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_medal.png",
+      "sha256": "7e76d1a53583aecd2a770f622ee70b58982a3433b87aecb5efdd310196871a21"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_optionbg.png",
+      "sha256": "3dccca07e7f05c1b7ea3a947eb3d67025ea569b046c7c5b76832702c4088407a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_sub0.png",
+      "sha256": "6030e309307667e6141834cc8806c8ef786aaa6368d1cc977c8b3a74e38142cc"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_sub1.png",
+      "sha256": "912a7ac00db5d22112d5741cffdaac6823256aba98a5b6ca1bdc01657912c78d"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/msel_sub2.png",
+      "sha256": "e045e224dc568f5b54376490ae973e5ff5c98b3f00204a066f43db8c48f1f06e"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/num0.png",
+      "sha256": "f71e949f00307a4bfc6223afa3943d5237af5a4701e2ce6c50ca872273137348"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/num1.png",
+      "sha256": "db277e56548caddf371694b949046f475fa6108a5c349a29b8cdf058872e81f4"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/num2.png",
+      "sha256": "5bdbb24fd84bc780ae2b5449ee20cd21fddf80f0d3c36da1d4aab142f90e91a1"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/num2_large.png",
+      "sha256": "0ec380e447923a05e13e7485cb023d2f784241b22930aa0fd9421c1f2bc530a6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_key_config_both_fx.png",
+      "sha256": "4f0d11ab5127c717036427377208af89759a3c5227770e45b2b80488f1319b65"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_setting_header.png",
+      "sha256": "cfd2fb685f1c4d5e31bcb61e00aab805a54fa4729ac6f693a9756df534a3ee79"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_setting_item_cursor.png",
+      "sha256": "11451046b9535d74678ba54026e28b2560f425296cbdd6e82fb6fe50594a1492"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_setting_item_left.png",
+      "sha256": "2d14cec4c18385042492308ce81c3a2feb0b68fedc1f3a8385cceaea78e3219a"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_setting_item_right.png",
+      "sha256": "58694f4f55da091296a1357388997e7966095031f8428ccb938366d91a02c520"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/option_top_item.png",
+      "sha256": "5d92a89698efec2e738c6b09e75e4d7695fb38e910ea7929483f66f58dd2f497"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/pl_difficulty.png",
+      "sha256": "f081ec60a5e513e1662ea79476cbbc26519a9d5de7292f4be9899e76d39151fe"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/pl_hispeed.png",
+      "sha256": "5610fd44415af4a0f0915f95402a61f03d1d1600f1bb9e86697d5f17e9179bdb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/pl_minfo.png",
+      "sha256": "05330982322158bdd64f6af96fe05806f37be443439804e33e91032ee2e03694"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/play_judge_indicator.png",
+      "sha256": "c0c330a67a327153d734bdaa427ca487d873063628e9040c83d8ec25a9967edb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/play_judge_indicator_inversion.png",
+      "sha256": "99af608e1cd6cd7c31e917cc54a82a21ebdd212c4a1031331e88a6938eea3e4c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/play_judge_indicator_minimum.png",
+      "sha256": "8f93a5d5ba137ab833e0983d4f84e8a21246a4298c97ee38c1a990ff101cda6c"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/play_judge_indicator_minimum_inversion.png",
+      "sha256": "9a83a642ff70e602f4394f6f2cb336ebd7efbb97cd1810f0d4e067bf0f155ed4"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/playresult.png",
+      "sha256": "c0036a36a65082f2688c58967251d1320da6d9791600257f39cc10a2c26227e6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result.png",
+      "sha256": "6730c4a5d0ec4a334062153f7ada89ddc2a3b65b5514ee96ecea1254f2c5f5c8"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_bestscore_checker.png",
+      "sha256": "eb9df81d5c8a961bb1ce141ed2157018ec981294b1cb4fb4f55d3d3ceb427688"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_difficulty.png",
+      "sha256": "f06c16e98e862c0d769385105c2aefa12e1cb9d4d3da81ffc61b03f23d05faa7"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_grade.png",
+      "sha256": "98a0f82daa0a4ae62b9264d17f91898be44c8a5540607802656bc54862bd1c48"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_newrecord.png",
+      "sha256": "7a7f0564aad73b84a08f32d1d8c5705509f08da4248d1de73c4f0e6aabeeb1eb"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_scorenum.png",
+      "sha256": "9f33dbd470d235289b626b167c37445bd581a3aff57f44e3dfa22232e0f6bc75"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_top.png",
+      "sha256": "122babf7a4c9111c2bae05fd5d190bea49ad48d10376f613bbfcd94f12e2dba6"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_tweetbtn.png",
+      "sha256": "046baf09f9ca4258cfea477d507812aeb06f9e1732e9ce19ba266047375194ef"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_unlocked.png",
+      "sha256": "977bf84750c302c13d0e9c21fc0fa846b0112a1392b769c3dbdd34176dce2698"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_v2_judge.png",
+      "sha256": "ea0685ce2f592c0cef9fcf92b2ef6b489ef54859990956143533ed273f857ebf"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/result_v2_judge_inversion.png",
+      "sha256": "07940a2173e721997e1cc350a2fe5223382ef60d841e9741e1df680a27e74c03"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/score_header.png",
+      "sha256": "d45a06b508d48577a829030649a3bc1f743bf64ceece574c55aef074eb8e05ae"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/score_header_ex.png",
+      "sha256": "832638cdf87655811704c1e183f54c08e8e5283be3ede76c545ead00536978c2"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/skin.json",
+      "sha256": "3bb8e8b7c25fc35e749f5082e29da1a135819479ad3c389d5d10b47f1c8cb9fa"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/standby.jpg",
+      "sha256": "9688233b4e231d9d3a328ef4e0a5ecc0cd74d75658d6dda266966656fbde5da0"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/standby_cur.gif",
+      "sha256": "0b22b629c73256e969f9d2e89688499128de7bfa91d3c8e7f41bbd985eb28606"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/standby_item.gif",
+      "sha256": "d03acabb73b96fbb822f66d18f30b2fee41bdaec98fd155d7c14bf6dc5e56356"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/standby_vertical.png",
+      "sha256": "16a4ebb9368ee8668e7065cc5e6f990f9027b8db39df6e34bbc379d8671e6310"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/timingadjust.png",
+      "sha256": "1c10feeeb832129801f69fceaa213fb882b30df40e232d29127a0bcd32a9a869"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/timingadjust_ms.png",
+      "sha256": "9ad1a3ea75580927ebf1738cab7f817947399d8ba5104b904a7700251413eaef"
+    },
+    {
+      "path": "kshootmania/App/imgs/default/timingadjust_sign.png",
+      "sha256": "c32778ca370c08174b370cc8bf18ac6c03100a393dbdff30ff0ef84abc995aea"
+    },
+    {
+      "path": "kshootmania/App/imgs/msel_bar_vertical.png",
+      "sha256": "6e4e4005c3833e891e617985185e234932178a141dae36ae69b1ae03e776d140"
+    },
+    {
+      "path": "kshootmania/App/imgs/result_v2_judge.png",
+      "sha256": "ea0685ce2f592c0cef9fcf92b2ef6b489ef54859990956143533ed273f857ebf"
+    },
+    {
+      "path": "kshootmania/App/imgs/result_v2_judge_inversion.png",
+      "sha256": "07940a2173e721997e1cc350a2fe5223382ef60d841e9741e1df680a27e74c03"
+    },
+    {
+      "path": "kshootmania/App/imgs/standby_vertical.png",
+      "sha256": "16a4ebb9368ee8668e7065cc5e6f990f9027b8db39df6e34bbc379d8671e6310"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/Judge_Setting_Mode_banner.png",
+      "sha256": "27f0e1c4fb7bd0fd0c8e8db88dd3ceb504bed08338e12af8571216e0b0109036"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano.kson",
+      "sha256": "484186980c4f9e522f4d885f1e4059adfa8b86186e54b2f8ffaefdf05a54e3bd"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano.mp3",
+      "sha256": "0bd9afd23b185c7a2bf12d8f7f109d335515617b4a04cb657c7a86d99e4b0c20"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano_fade.mp3",
+      "sha256": "10bf92ab83748bc745ead380e196127e71be0d7343fedb3f200c2340ef313d7d"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/hispeed-landscape.noco",
+      "sha256": "e7b06b15f1e8ff0607838d6b491e6ea2ce64b869df41861e77bdd64df289413f"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/judge_setting/hispeed-portrait.noco",
+      "sha256": "320d5f4ff3f296dcd6b833e3c434fd3e108ad002048aa10be4404eff2b05f54f"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/licenses/bassasio-bassasio.txt",
+      "sha256": "e3b94f4c1c8f5a950d54c3cce20b412e739ede163680e43c5143fadd01fd9a0a"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/licenses/bassmix-bassmix.txt",
+      "sha256": "92a75863a88dc43c66e91d0903db98009c68a1091835674757c79c5ea9dbd556"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/licenses/ksmaudio.txt",
+      "sha256": "12685580cdc76cbc3c0dd1299a7b466cc2f5dd195a2ba475018add3c7bd9f55a"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/ui/play_hud.noco",
+      "sha256": "cb90d80f89c79ef5f692c4fd5de3dac191e565a841553d0f019a40b0a394db4f"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/ui/result.noco",
+      "sha256": "fd24bf4095f143d4ae1f9fc3a4a47e89714e441d7aacea36f9ef395a43635462"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/ui/select.noco",
+      "sha256": "68fcf4f659eff2eb26d98a3f70af588e2b40704fd5749dc1e93aa2c5a967a914"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/ui/select_item_center.noco",
+      "sha256": "34d08c157fa78665623293b42ed80ca5f9c95ebb4fc2c09deacdc12ec107bf3b"
+    },
+    {
+      "path": "kshootmania/App/mods/enhanced/ui/timing_feedback.noco",
+      "sha256": "77b6dbc7a35a46ca7a2f5efa6497bc823549509ed05f240cff177f8c447d10d9"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/shaders/LICENSE.txt",
+      "sha256": "4259469da91a3c6d95bc43cdee4ab5efe352da5c42f5cfb24b2be1704f200a95"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/shaders/tunnel_warp.hlsl",
+      "sha256": "bd217141df1f0765a2ab28e8d9ba6a71e4d0847f2495b147b4d786153f14b2ea"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/shaders/wall_projective.hlsl",
+      "sha256": "0b28fae2be688c2972f2c5f88d190d0e60d1954ad002a6b94189f32a56108a8e"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/ingame_layout.json",
+      "sha256": "f4f62adf68e7c3c7d50f8e3a15af07cd136aa0944a8e59e6c57e9527f5640e81"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/option.noco",
+      "sha256": "fdb9a9d5bbd58456736c9ff7728a13ee9eaa3171bdcac361c95797f01565df84"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/option_setting_item.noco",
+      "sha256": "e3311e15f6d9bb3b073b45964818bfd1746d9d05da133ac1ca1d4d3e14c72067"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/play_hud.noco",
+      "sha256": "fedb27c22c1e0c55f2885f963a463cdcb80dfbb3ff2f8520a6af344fe7b69006"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator.noco",
+      "sha256": "7b17b7c167db72489b724787bdc61729cc7aab7e42459633a2d2707f16acd10a"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator_minimum.noco",
+      "sha256": "eac8f011727a1ee51d03445e5465da324081bda56af6e392b2038237bb7ae7d3"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator_minimum_vertical.noco",
+      "sha256": "7dc06c4eb2c40de0509392ef0e653ea51b7cd835680e77d7c5eed6ef5e6078c7"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/play_prepare.noco",
+      "sha256": "f25c652092379ca530505c5ae17eed7048d8061e2c726e7208ca5a38bb96d528"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/result.noco",
+      "sha256": "d3c0e3ae6c78de66920825e5669e3a25a93c40855e9ddb3fa702894f14569fdd"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/select.noco",
+      "sha256": "6c0861328bca8319c62f865985bc4b000f24eed3efa625b4196b66bb9af405a6"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/select_item_bottom.noco",
+      "sha256": "8fcacb647894de9ff679fa89c927038d44b556b43ca5ffe5bc268511fe06504d"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/select_item_center.noco",
+      "sha256": "34d08c157fa78665623293b42ed80ca5f9c95ebb4fc2c09deacdc12ec107bf3b"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/select_item_top.noco",
+      "sha256": "06d7cac4af11480f09bb80bccc65cbfe4308a70e0961164598a9e8621b690deb"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/timing_feedback.noco",
+      "sha256": "3c0b4b657d73c1b88a486f4b9abc4326ef9b36a1433cbeb1e4aa996f638e27ba"
+    },
+    {
+      "path": "kshootmania/App/mods/vertical/ui/title.noco",
+      "sha256": "4a71aab00761044322a364558940fc40b52a2c78cd9fb6f0b079cdb463472cb9"
+    },
+    {
+      "path": "kshootmania/App/shaders/aps_color_dodge.essl.frag",
+      "sha256": "ca2f086dff33316f46ef98dde2716f83a9a911a06c01761f373e59fc74e63a1a"
+    },
+    {
+      "path": "kshootmania/App/shaders/aps_color_dodge.frag",
+      "sha256": "4b80f749cd82c36355788de6551fa537e880b577fbce589290cd6b603082b6af"
+    },
+    {
+      "path": "kshootmania/App/shaders/aps_color_dodge.hlsl",
+      "sha256": "0674cd9e82dc993985b68d16b143d94440854fd38680ac261f70c56faa8ced76"
+    },
+    {
+      "path": "kshootmania/App/skin_preview/Preview_Piano.kson",
+      "sha256": "9a1977fb54bf1c95abfc8587c5727e744b2ff503b539a647c1b4fd498ec2952d"
+    },
+    {
+      "path": "kshootmania/App/skin_preview/Preview_Piano.mp3",
+      "sha256": "0bd9afd23b185c7a2bf12d8f7f109d335515617b4a04cb657c7a86d99e4b0c20"
+    },
+    {
+      "path": "kshootmania/App/skin_preview/Preview_Piano_fade.mp3",
+      "sha256": "10bf92ab83748bc745ead380e196127e71be0d7343fedb3f200c2340ef313d7d"
+    },
+    {
+      "path": "kshootmania/App/ui/menu_custom_icon.png",
+      "sha256": "4e5c96beab7128c3e017214da912d36f12c7aa7776d0f8df75735a9868139dd2"
+    },
+    {
+      "path": "kshootmania/App/ui/menu_judge_icon.png",
+      "sha256": "94096e03aec0a262125aa06b62527215fc3c24c2dcb4c78339904c9f827ca765"
+    },
+    {
+      "path": "kshootmania/App/ui/menu_vertical_icon.png",
+      "sha256": "f57d88f49229df3843e8198bd6315e6eba76b5f503acd08ec188bef9e2cb0c06"
+    },
+    {
+      "path": "kshootmania/App/ui/scene/timing_feedback.noco",
+      "sha256": "77b6dbc7a35a46ca7a2f5efa6497bc823549509ed05f240cff177f8c447d10d9"
+    },
+    {
+      "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
+      "sha256": "b4a8388156621a82d744bd41fe2d8a1740474a8a7a4acf9cc3c1adad96e05a50"
+    },
+    {
+      "path": "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
+      "sha256": "b41aeed26d433e687d5d1755dd4b2a5f4b49b7008113db64f6ac2a4794ad8512"
+    },
+    {
+      "path": "kshootmania/src/Common/AudioOutputSettings.hpp",
+      "sha256": "9064981ae0e866019d51614122091027ac087bb833ece1a6b0aa5b0a6a496547"
+    },
+    {
+      "path": "kshootmania/src/Common/SkinPreset.cpp",
+      "sha256": "a62d278728a5f597546741fca79b09d1bdef2f6b033f1fcd26368f37c53ff03b"
+    },
+    {
+      "path": "kshootmania/src/Common/SkinPreset.hpp",
+      "sha256": "6fe3e2a645373287f5d5fba663896034a195363f6c20d98f9434cba09db47321"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
+      "sha256": "a67706533ad56a102d1400d508ea070b7957eff292bdc69dfcb7733203c18ab0"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
+      "sha256": "1a8ca355615664485104387c528d7f37578f043ee0932c4e40bef167f9d07629"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
+      "sha256": "2a432073b9465bf77567becaff1e09719d377cdc0c79007dddcfdbc123b22ecf"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
+      "sha256": "cdddfc80619b5012a4104e28a2689245d2ff2d9b584de38b275bc1b32d8e6e44"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
+      "sha256": "eb956314eb3d44061bb3f0c541378915f1f2de18cfbb0f6acf9f0508fc6ab838"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/ExScoreFixture.hpp",
+      "sha256": "739eaa05f46189ad60b6c4f424f7107672aae9f999fe72faa8b56413a4f5b40d"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
+      "sha256": "8c775456addac9c74a17c5f4870af29848d6d1ccbfdf26b1fd5bf583228207b8"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
+      "sha256": "a1d2cdfc55665f09447d5322ded8baaafbda29e588f0d63d0edda43b1e7f473e"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/RenderGeometryFixture.hpp",
+      "sha256": "ad5f66ec3d3a0679910f23beb796dc2364737d3edabbbe3a74812c8dee6b6f17"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
+      "sha256": "4a5457bd98950f2f13bb43e60a915bbaac420717347d294a897c31ea903109d0"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
+      "sha256": "2d5d5772ac45d02f73bd70e582a986b39b9bec64d4593b802183cc56fe3830ac"
+    },
+    {
+      "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
+      "sha256": "56f69620471442706e95ca6269657cf3bb241c0b930cff4d5114a24c49b1adc7"
+    },
+    {
+      "path": "kshootmania/src/Graphics/ExScorePanel.hpp",
+      "sha256": "6b19628547867342e8a33a22f9c0f5c2cfa40781a24ac07f0acc77e885f0f396"
+    },
+    {
+      "path": "kshootmania/src/Graphics/GameRenderContext.hpp",
+      "sha256": "15af7e03aa774b3f1f006c7c79108dff4ff99e10c236a3f99478e76b601ec2d0"
+    },
+    {
+      "path": "kshootmania/src/Graphics/ResultBestScorePanel.hpp",
+      "sha256": "08692de782d397c2ab8e41264889469124c54a730d7975af6e0bb06460d10640"
+    },
+    {
+      "path": "kshootmania/src/Ini/AudioCalibration.hpp",
+      "sha256": "1d6d5bf0135c8a784defc9e4c0c34e7ecbab0fdd7b5b81dcdcbd8232b602aa80"
+    },
+    {
+      "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
+      "sha256": "e540d92f49d772ace3f9c5a0b4f921e8da24b3e328ab1e35967771abf236b135"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AudioTailClock.hpp",
+      "sha256": "97dcb0d48d6542a11efb3b9266f6bfd9ad4a39efccdf17f160f2739411dbf9f6"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
+      "sha256": "cc36cb47455f7120ed8325bc2bfcc8faf6837e1167e690ecee517f452792fcc0"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
+      "sha256": "3bc0ee7ce3a088477eebe51c40afe8d14c1245629aca1304448ad6bafd21c2f5"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
+      "sha256": "b178ce7cc5df54610274476eb6d95c5321e801233ae8ae88a5ac44738158ec58"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
+      "sha256": "dd69fc2e7d06b54360e8918830d840dc7c8245fe0c9c0e2041cdf52725e59e91"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
+      "sha256": "b7e4012987d717666a8aed9c740043bcc369d544f5467769f2f293e54d7ae9a4"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
+      "sha256": "5721ffaa7cab43c4abe566ebed68a7c6134090e1f9b360d9e7312152442928c1"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
+      "sha256": "b26786899383d6e0cfffd39ddf79cec08538a5798d995d4778619bddede287f7"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ExScore.cpp",
+      "sha256": "a927f687948da15372e00b62731400fcdb1f55bb0666a73bd2b0d219ad65c58f"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ExScore.hpp",
+      "sha256": "03a80126575b0cc2f775b18b4b5c67a249169adcc7aa926011f296c9ed82a48f"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/InputTimingStats.hpp",
+      "sha256": "1571c5a814baf95405fc4e7359951654a5bdcd6fe248ad1d7cd900a3a10de628"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
+      "sha256": "4b9064db3fc8f9e59a42a0583c98a5838635604fb00b0931f563126a4f6c91f8"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
+      "sha256": "494bf3d5ba852d8b69988502ff0cb2d9eb60cb0015bd984945c63082b6c94938"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
+      "sha256": "cd7cd43435cc0a126f67225fc511b2f5971e32dbc5ee049582fc3a0ef2b9d1f3"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
+      "sha256": "d02fa2995e9bbe8d6e7105939ec278597f0114cd9c0f1400705abc7777c57cee"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
+      "sha256": "8a9718186ff4a16517caca1666009bc5aaea0ac017421dea500d41da51478b18"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
+      "sha256": "ca0242a32ab50d244361e1c60499fc2d2f48131447b7b0ca4d7a2d1acca8d1fb"
+    },
+    {
+      "path": "kshootmania/src/UI/ModMenuStyle.hpp",
+      "sha256": "1449a0472e7c1d22d207edb4e9177f5b8d558bbc02377246c6156d785f683531"
+    },
+    {
+      "path": "kshootmania/src/Vertical/DepthImageSettings.hpp",
+      "sha256": "6531851420ce5c137d5a718213cf1a8aa04991b2ad096f4efca99dbc0b32bc22"
+    },
+    {
+      "path": "kshootmania/src/Vertical/DiagnosticInputReplay.hpp",
+      "sha256": "4a094305b4b523f2a1657bd89e36dbd0120a67d19664974abed350db8962dca9"
+    },
+    {
+      "path": "kshootmania/src/Vertical/DisplayTransitionTest.hpp",
+      "sha256": "67e3fc559662be1f11d6842e1a967898d9e4373aa39fc0a918ff4deb086f359b"
+    },
+    {
+      "path": "kshootmania/src/Vertical/JudgmentReplayTest.hpp",
+      "sha256": "3ac9aba2f8327b219660d78b5e90fa25c651d346ac125d213d501ecad68c9859"
+    },
+    {
+      "path": "kshootmania/src/Vertical/MenuContentLayout.hpp",
+      "sha256": "c482c3c5e599f03a70d0f0b441a5d672d18f5bfb4ccff43ac40ab1daf34db6db"
+    },
+    {
+      "path": "kshootmania/src/Vertical/MenuEntryGate.hpp",
+      "sha256": "1c9bc7dcde0529b590917cf71ed452b762048e4f2a9c16793d59493030ef9567"
+    },
+    {
+      "path": "kshootmania/src/Vertical/MenuInputTest.hpp",
+      "sha256": "afa04888553aa1377e9b3cc28864e4248a04a4003fbc0c85ad4f5c3b064cb96c"
+    },
+    {
+      "path": "kshootmania/src/Vertical/ModOptionsScene.hpp",
+      "sha256": "13ed3d404fc7e4c8018352f7375472bff724f1c689b4d9be153a7b5a7c68daf2"
+    },
+    {
+      "path": "kshootmania/src/Vertical/OptionFlowTest.hpp",
+      "sha256": "a78baf0f4de13e51818272b343e4ea09cba9ce4632e62b5cb4ec01a8fd68328d"
+    },
+    {
+      "path": "kshootmania/src/Vertical/OptionsPresentation.hpp",
+      "sha256": "8c35f15eae8f02c1a4894c3e0d2e34964520a53dd304799b26c83385a81363db"
+    },
+    {
+      "path": "kshootmania/src/Vertical/ProjectiveWall.hpp",
+      "sha256": "690f0096c2ed82839e14009df556031decb65f20a19c11c47caecd0947955524"
+    },
+    {
+      "path": "kshootmania/src/Vertical/SpinRegression.hpp",
+      "sha256": "8963dc62d9ef73a358ef0f6b2ef0b6ece168e610c1c54bb3d9dac678da535bfd"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
+      "sha256": "6e351cd982bbd57a55e1019ad126cd9205136eb2048ae448f3bf29f8d2f63ca0"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalDisplay.hpp",
+      "sha256": "657806e892de67c8379706f62b4f8b7a60a55dd039ad9146c2a72383a154cc63"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalHUDLayout.hpp",
+      "sha256": "6aed70e02c4f8dad8917f3ef383bd4e531ff4edd03344a4f35f8b23a3f3a1db4"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
+      "sha256": "c3fcadd058a2a3c08fee89fd5f971fbc89f26e5cb38378137e4b2b39e425d88d"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
+      "sha256": "7fda76cd61243cf76077cb6c0f27a70ebef1027fe1f7a9ffaf55eb63b67a2161"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalModConfig.hpp",
+      "sha256": "8f537b1e0ffd63a2c0626469553507007b2ac38cfb9721414d1bb13bcd1a530e"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalRenderPreview.hpp",
+      "sha256": "2f8bc4398e1d5dbac8419bc8076276b595bcce08e06f98a04f383082d01704e4"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalResources.hpp",
+      "sha256": "a6112e297581e60870db2cf9223c2dfa12e484e767a1bf2dc6b8a02876c83869"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
+      "sha256": "e0f25dcbac83ae58a32a0ad16cecbdd34133cad6721732f2ee533001207a133f"
+    },
+    {
+      "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
+      "sha256": "76cdae8351caf9e661c579769e2867fc493316e5fd684f3475c6e957243cc70f"
+    },
+    {
+      "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
+      "sha256": "fb7589d65c375556be015913d631839694e2b0463a4361949930e69e95e0adf3"
+    },
+    {
+      "path": "patches/dependencies/ksmaudio.patch",
+      "sha256": "fe07822974877ded179707656a01d53ed71fdf3b86ab12f06854f4fb94bccb77"
+    },
+    {
+      "path": "patches/dependencies/manifest.json",
+      "sha256": "2221f2fb307f22a4a4b56a81526564591b7bc6bc1b9cfcf71dc3c4cf910b81a5"
+    },
+    {
+      "path": "scripts/ApplyDependencyPatches.py",
+      "sha256": "0c0db9922b78f2e774ec561bc6992ee6978b0a3aadb80e55ef65beffe70c0761"
+    },
+    {
+      "path": "scripts/Build.ps1",
+      "sha256": "25da442e7b7fe290a6460c05738a201a4bd67583929b11a2ebc9b7123281d4fc"
+    },
+    {
+      "path": "scripts/ModCompatibility.psm1",
+      "sha256": "57d9741bfd4ff33a14396c3d745d75d2cd2caeb0734a1dde7fe3511367d569ee"
+    },
+    {
+      "path": "scripts/ModInstaller.ps1",
+      "sha256": "6bb561951fe48809173987d018c9b1492e7106f6e2ea746653177bd9ef5305b0"
+    },
+    {
+      "path": "scripts/New-DevelopmentPayload.ps1",
+      "sha256": "93567d350100a1531892ea928e2753cf4170d68e0f1e8adb706b689bc70e1415"
+    }
+  ]
+}

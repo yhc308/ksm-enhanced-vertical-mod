@@ -1,0 +1,4 @@
+patches/dependencies/*.patch -text
+patches/dependencies/manifest.json text eol=lf
+*.py text eol=lf
+*.md text eol=lf

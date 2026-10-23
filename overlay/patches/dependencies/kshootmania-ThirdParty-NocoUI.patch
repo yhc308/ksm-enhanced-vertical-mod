@@ -1,0 +1,12 @@
+diff --git a/src/Asset.cpp b/src/Asset.cpp
+--- a/src/Asset.cpp
++++ b/src/Asset.cpp
+@@ -88,7 +88,7 @@
+ 		if (!table.isRegistered(filePath))
+ 		{
+ 			const FilePath fullPath = GetFullPath(filePath);
+-			if (!FileSystem::IsFile(fullPath))
++			if (!TextureLoader() && !FileSystem::IsFile(fullPath))
+ 			{
+ 				return EmptyTexture;
+ 			}

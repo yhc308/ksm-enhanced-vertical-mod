@@ -1,0 +1,48 @@
+{
+  "upstreamCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
+  "dependencies": [
+    {
+      "path": "ksmaudio",
+      "url": "https://github.com/kshootmania/ksmaudio.git",
+      "baseCommit": "c51865f7757f47cffbd530469977aa94332d9826",
+      "patch": "patches/dependencies/ksmaudio.patch",
+      "sha256": "fe07822974877ded179707656a01d53ed71fdf3b86ab12f06854f4fb94bccb77",
+      "changedFiles": [
+        "THIRD_PARTY_LICENSE.txt",
+        "ThirdParty_Windows/bassasio/bassasio.h",
+        "ThirdParty_Windows/bassasio/bassasio.txt",
+        "ThirdParty_Windows/bassmix/bassmix.h",
+        "ThirdParty_Windows/bassmix/bassmix.txt",
+        "include/ksmaudio/AudioEffect/AudioEffectBus.hpp",
+        "include/ksmaudio/AudioEffect/ParamController.hpp",
+        "include/ksmaudio/Diagnostics.hpp",
+        "include/ksmaudio/Sample.hpp",
+        "include/ksmaudio/Stream.hpp",
+        "include/ksmaudio/StreamWithEffects.hpp",
+        "include/ksmaudio/ksmaudio.hpp",
+        "ksmaudio.vcxproj",
+        "src/AsioOutput.hpp",
+        "src/AudioEffect/AudioEffectBus.cpp",
+        "src/AudioEffect/ParamController.cpp",
+        "src/OutputResources.hpp",
+        "src/Sample.cpp",
+        "src/Stream.cpp",
+        "src/StreamWithEffects.cpp",
+        "src/Web/SampleWeb.cpp",
+        "src/Web/StreamWeb.cpp",
+        "src/Web/ksmaudioWeb.cpp",
+        "src/ksmaudio.cpp"
+      ]
+    },
+    {
+      "path": "kshootmania/ThirdParty/NocoUI",
+      "url": "https://github.com/m4saka/NocoUI.git",
+      "baseCommit": "4a3c64d95beb838a2278069f58f9420d72512a1a",
+      "patch": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
+      "sha256": "fb7589d65c375556be015913d631839694e2b0463a4361949930e69e95e0adf3",
+      "changedFiles": [
+        "src/Asset.cpp"
+      ]
+    }
+  ]
+}

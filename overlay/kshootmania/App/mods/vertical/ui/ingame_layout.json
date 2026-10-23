@@ -1,0 +1,247 @@
+{
+  "referenceSize": [
+    720,
+    1280
+  ],
+  "boxes": {
+    "Jacket": [
+      33,
+      37,
+      117,
+      117
+    ],
+    "TitlePanel": [
+      150,
+      37,
+      539,
+      117
+    ],
+    "Title": [
+      0,
+      8,
+      539,
+      48
+    ],
+    "TitleImg": [
+      0,
+      8,
+      539,
+      48
+    ],
+    "Artist": [
+      0,
+      73,
+      539,
+      30
+    ],
+    "ArtistImg": [
+      0,
+      73,
+      539,
+      30
+    ],
+    "SongInfo": [
+      26,
+      283,
+      258,
+      49
+    ],
+    "Difficulty": [
+      14.333333,
+      2.84058,
+      45.15,
+      12.782609
+    ],
+    "LevelNumber": [
+      85.283333,
+      3.550725,
+      43.0,
+      12.782609
+    ],
+    "BPMNumber": [
+      171.283333,
+      3.550725,
+      71.666667,
+      12.782609
+    ],
+    "HispeedNumber": [
+      108.216667,
+      26.985507,
+      57.333333,
+      12.782609
+    ],
+    "HispeedNumberEffective": [
+      171.283333,
+      26.985507,
+      57.333333,
+      12.782609
+    ],
+    "ScoreCaption": [
+      440,
+      228,
+      271,
+      27
+    ],
+    "ScoreNumber": [
+      439,
+      257,
+      272,
+      34
+    ],
+    "TimingAdjust": [
+      16,
+      1214,
+      240,
+      60
+    ],
+    "FPSLabel": [
+      664,
+      1240,
+      40,
+      20
+    ],
+    "FPSNumber": [
+      604,
+      1240,
+      56,
+      20
+    ],
+    "CompactJacket": [
+      11,
+      234,
+      42,
+      42
+    ],
+    "CompactTitlePanel": [
+      53,
+      234,
+      247,
+      42
+    ],
+    "CompactTitle": [
+      0,
+      1,
+      247,
+      25
+    ],
+    "CompactTitleImg": [
+      4,
+      2,
+      239,
+      22
+    ],
+    "CompactArtist": [
+      0,
+      27,
+      247,
+      14
+    ],
+    "CompactArtistImg": [
+      4,
+      27,
+      239,
+      14
+    ]
+  },
+  "hud": {
+    "Progress": [
+      34,
+      169,
+      655,
+      10
+    ],
+    "HispeedFrame": [
+      132,
+      218,
+      188,
+      34
+    ],
+    "Gauge": [
+      570,
+      304,
+      147,
+      440
+    ],
+    "GaugeHeader": [
+      571,
+      304,
+      146,
+      88
+    ],
+    "GaugeFrame": [
+      597,
+      392,
+      46,
+      353
+    ],
+    "GaugeFill": [
+      600,
+      395,
+      40,
+      347
+    ],
+    "GaugePercent": [
+      652,
+      720,
+      64,
+      22
+    ],
+    "Movie": [
+      16,
+      288,
+      260,
+      146
+    ],
+    "Achievement": [
+      180,
+      568,
+      360,
+      80
+    ]
+  },
+  "backgroundDisplay": {
+    "baseWidth": 1994.4,
+    "baseCenter": [
+      360,
+      475.4
+    ],
+    "layerRect": [
+      0,
+      240,
+      720,
+      576
+    ]
+  },
+  "comboAnchor": [
+    360,
+    752.4
+  ],
+  "laserApproach": {
+    "leftX": 48,
+    "rightX": 672,
+    "offsetY": 94,
+    "size": 81.6
+  },
+  "numberCharacterSizes": {
+    "HispeedNumber": [
+      10.125,
+      10.125
+    ],
+    "HispeedNumberEffective": [
+      10.125,
+      10.125
+    ],
+    "ScoreNumber": [
+      33,
+      34
+    ],
+    "LevelNumber": [
+      12.15,
+      12.15
+    ],
+    "BPMNumber": [
+      12.15,
+      12.15
+    ]
+  }
+}

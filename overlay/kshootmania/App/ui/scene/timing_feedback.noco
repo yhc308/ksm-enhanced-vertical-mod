@@ -1,0 +1,1405 @@
+﻿{
+  "autoFitMode": "FitHeightMatchWidth",
+  "children": [
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingWord",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "wordTop",
+          "gradationColor2_paramRef": "wordBottom",
+          "outlineColor_paramRef": "wordOutline",
+          "shadowColor_paramRef": "wordShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing0Word",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          -73.0,
+          68.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible0"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Right",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingMs",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "msTop",
+          "gradationColor2_paramRef": "msBottom",
+          "outlineColor_paramRef": "msOutline",
+          "shadowColor_paramRef": "msShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing0Ms",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          7.0,
+          68.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible0"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingWord",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "wordTop",
+          "gradationColor2_paramRef": "wordBottom",
+          "outlineColor_paramRef": "wordOutline",
+          "shadowColor_paramRef": "wordShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing1Word",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          -73.0,
+          159.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible1"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Right",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingMs",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "msTop",
+          "gradationColor2_paramRef": "msBottom",
+          "outlineColor_paramRef": "msOutline",
+          "shadowColor_paramRef": "msShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing1Ms",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          7.0,
+          159.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible1"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingWord",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "wordTop",
+          "gradationColor2_paramRef": "wordBottom",
+          "outlineColor_paramRef": "wordOutline",
+          "shadowColor_paramRef": "wordShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing2Word",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          -73.0,
+          289.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible2"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Right",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingMs",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "msTop",
+          "gradationColor2_paramRef": "msBottom",
+          "outlineColor_paramRef": "msOutline",
+          "shadowColor_paramRef": "msShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing2Ms",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          7.0,
+          289.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible2"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Left",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingWord",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "wordTop",
+          "gradationColor2_paramRef": "wordBottom",
+          "outlineColor_paramRef": "wordOutline",
+          "shadowColor_paramRef": "wordShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing3Word",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          -73.0,
+          401.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible3"
+    },
+    {
+      "activeSelf": true,
+      "children": [],
+      "childrenLayout": {
+        "horizontalAlign": "Left",
+        "padding": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spacing": [
+          0.0,
+          0.0
+        ],
+        "type": "FlowLayout",
+        "verticalAlign": "Top"
+      },
+      "clippingEnabled": false,
+      "components": [
+        {
+          "characterSpacing": [
+            0.0,
+            0.0
+          ],
+          "color": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "fontAssetName": "SystemBold",
+          "fontSize": 12.0,
+          "gradationColor1": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationColor2": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "gradationType": "TopBottom",
+          "horizontalAlign": "Right",
+          "horizontalOverflow": "Overflow",
+          "minFontSize": 1.0,
+          "outlineColor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "outlineFactorInner": 0.0,
+          "outlineFactorOuter": 0.105,
+          "padding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shadowColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "shadowOffset": [
+            0.0,
+            0.45
+          ],
+          "sizingMode": "Fixed",
+          "text": "",
+          "text_paramRef": "timingMs",
+          "type": "Label",
+          "underlineColor": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "underlineStyle": "None",
+          "underlineThickness": 1.0,
+          "verticalAlign": "Middle",
+          "verticalOverflow": "Overflow",
+          "gradationColor1_paramRef": "msTop",
+          "gradationColor2_paramRef": "msBottom",
+          "outlineColor_paramRef": "msOutline",
+          "shadowColor_paramRef": "msShadow"
+        }
+      ],
+      "decelerationRate": 0.2,
+      "dragScrollEnabled": true,
+      "hitPadding": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "horizontalScrollable": false,
+      "inheritChildrenHover": false,
+      "inheritChildrenPress": false,
+      "interactable": true,
+      "isHitTarget": false,
+      "name": "Timing3Ms",
+      "region": {
+        "type": "AnchorRegion",
+        "anchorMin": [
+          0.5,
+          0.0
+        ],
+        "anchorMax": [
+          0.5,
+          0.0
+        ],
+        "posDelta": [
+          7.0,
+          401.0
+        ],
+        "sizeDelta": [
+          66.0,
+          20.0
+        ],
+        "sizeDeltaPivot": [
+          0.0,
+          0.0
+        ]
+      },
+      "rubberBandScrollEnabled": true,
+      "scrollBarType": "Overlay",
+      "styleState": "",
+      "transform": {
+        "color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "hitTestAffected": true,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "rotation": 0.0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "translate": [
+          0.0,
+          0.0
+        ]
+      },
+      "verticalScrollable": false,
+      "wheelScrollEnabled": true,
+      "zOrderInSiblings": 0,
+      "activeSelf_paramRef": "timingVisible3"
+    }
+  ],
+  "childrenLayout": {
+    "horizontalAlign": "Left",
+    "padding": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "spacing": [
+      0.0,
+      0.0
+    ],
+    "type": "FlowLayout",
+    "verticalAlign": "Top"
+  },
+  "defaultFontAssetName": "System",
+  "params": {
+    "timingWord": {
+      "type": "String",
+      "value": ""
+    },
+    "timingMs": {
+      "type": "String",
+      "value": ""
+    },
+    "timingVisible0": {
+      "type": "Bool",
+      "value": false
+    },
+    "timingVisible1": {
+      "type": "Bool",
+      "value": false
+    },
+    "timingVisible2": {
+      "type": "Bool",
+      "value": false
+    },
+    "timingVisible3": {
+      "type": "Bool",
+      "value": false
+    },
+    "wordTop": {
+      "type": "Color",
+      "value": [
+        255,
+        255,
+        255,
+        230
+      ]
+    },
+    "wordBottom": {
+      "type": "Color",
+      "value": [
+        240,
+        240,
+        240,
+        230
+      ]
+    },
+    "wordOutline": {
+      "type": "Color",
+      "value": [
+        0,
+        0,
+        0,
+        100
+      ]
+    },
+    "wordShadow": {
+      "type": "Color",
+      "value": [
+        0,
+        0,
+        0,
+        40
+      ]
+    },
+    "msTop": {
+      "type": "Color",
+      "value": [
+        255,
+        255,
+        255,
+        230
+      ]
+    },
+    "msBottom": {
+      "type": "Color",
+      "value": [
+        240,
+        240,
+        240,
+        230
+      ]
+    },
+    "msOutline": {
+      "type": "Color",
+      "value": [
+        0,
+        0,
+        0,
+        100
+      ]
+    },
+    "msShadow": {
+      "type": "Color",
+      "value": [
+        0,
+        0,
+        0,
+        40
+      ]
+    }
+  },
+  "referenceSize": [
+    640.0,
+    480.0
+  ],
+  "serializedVersion": 10,
+  "version": "0.4.3"
+}
