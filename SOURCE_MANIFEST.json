@@ -48,7 +48,7 @@
     },
     {
       "path": "docs/CPP_STYLE_SCOPE.json",
-      "sha256": "c97e10be5525adbfb512d93c3f5128c716826ccae6ad33cf38d8a729c1eb0c99"
+      "sha256": "1b8181e12117e75265ad92be76906e52fcc8c8d3c1c241682da039bf91a0ec53"
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
@@ -596,15 +596,15 @@
     },
     {
       "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
-      "sha256": "11a90f50a0deede5537f13cd99a3a17cb9705d748a5027c93567dbdd124c4b1e"
+      "sha256": "a1c7f9b7ed3311847b25a83088aafd8450be1b08f736c64a6270584de1c7e5a6"
     },
     {
       "path": "patches/dependencies/ksmaudio.patch",
-      "sha256": "1163e70d60f5a9301585e029dc53b493c4aa52d1cb27f9c3a04c72ef1fece05d"
+      "sha256": "17e5cee93cbaf6048db939ad2db7923a43727e54ce76966b6e949de4ddeefc3a"
     },
     {
       "path": "patches/dependencies/manifest.json",
-      "sha256": "a1bbfe945b2973671a9e04828cbf47ddadae66ac9b61a03b448aa30a0cb2787e"
+      "sha256": "13f3e99b14a222e8d3ba15c64fb5457354f34342070bad61b63b63e1daed6018"
     },
     {
       "path": "scripts/ApplyDependencyPatches.py",
