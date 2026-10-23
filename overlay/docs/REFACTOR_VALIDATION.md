@@ -6,7 +6,7 @@ Upstream base: `41bfdaa7331808aff7239a9ec283cdba01b3b406` (KSM 2.1.0).
 
 ## Scope and preservation
 
-Mod source, upstream connection points and modified dependency files were audited. The formatting scope contains 203 C++ files. Untouched upstream/vendor implementation and all license notices remain. `REMOVAL_AUDIT.md` lists the few deleted redundancies; moved implementations are not counted as removed functionality. No main/public-fork merge or release is part of this work.
+Mod source, upstream connection points and modified dependency files were audited. The formatting scope contains 207 C++ files. Untouched upstream/vendor implementation and all license notices remain. `REMOVAL_AUDIT.md` lists the few deleted redundancies; moved implementations are not counted as removed functionality. No main/public-fork merge or release is part of this work.
 
 The original development tree, play-test, settings, score records, authoring resources and releases remain the comparison baseline until the remaining gates below pass. Runtime resources are excluded from the eventual source-only synchronization so checkout newline normalization cannot rewrite the user's asset bytes.
 
@@ -14,10 +14,11 @@ The original development tree, play-test, settings, score records, authoring res
 
 | Gate | Evidence | Result |
 | --- | --- | --- |
-| Windows Catch2, Release | `build/unit-tests/Release/results.xml` | 37 cases, 3,966 assertions passed |
-| Windows Catch2, Debug | `build/unit-tests/Debug/results.xml` | 37 cases, 3,966 assertions passed |
+| Windows Catch2, Release | `build/unit-tests/Release/results.xml` | 43 cases, 3,982 assertions passed |
+| Windows Catch2, Debug | `build/unit-tests/Debug/results.xml` | 43 cases, 3,982 assertions passed |
 | Standalone production rolling window | CMake/CTest and CI | 4 cases, 40,013 assertions passed |
-| Source-package and runner tests | Private repository `tests/` | 15 Python tests passed |
+| Headless Windows timer | Windows CI and local Catch2 | 6 cases, 16 assertions passed |
+| Source-package and runner tests | Private repository `tests/` | 21 Python tests passed |
 | Full functional suite | `build/refactor-functional-verification.json` | All 27 required stages passed |
 | EX, APS and judge setting | Actual executable fixtures | 125 / 142 / 1,617 checks passed |
 | APS appearance | `build/refactor-aps-baseline-pixels.json` | 81 screenshots pixel-identical, no excluded pixels |
@@ -68,3 +69,17 @@ After the final unused-local cleanup, Windows Release and Debug units again pass
 Two isolated timer probes were built from the preserved original source/project/libraries and the candidate source/project/libraries. Only the disposable copies of FrameRateLimit.cpp record work, wait and total intervals; production sources were not instrumented. Three native-play runs per binary retained all samples after a declared 300-frame warmup. Both binaries showed variable work-time tails and substantial sleep/wakeup tails. The unchanged `std::this_thread::sleep_until` pacing therefore needed investigation independently of the refactor's rendering cost; instrumented timings are not substituted for the unmodified DXGI captures.
 
 An isolated Windows high-resolution waitable-timer prototype, retaining the original deadline, target FPS and 10ms drift calculation, was then compared against the preserved unmodified executable using the same 12 native DXGI captures. Both orientations passed the unchanged gate: landscape p99 6.6035 -> 5.8183 ms (-11.89%), portrait 6.5779 -> 6.0882 ms (-7.44%); average submission intervals remained around 3.33ms. This prototype is not a shipping or production-source change. Integrating a regression fix requires explicit source/resource-lifetime tests and repeated full validation. Earlier capped/native FAIL reports remain retained.
+
+## Integrated timer validation update
+
+GitHub Actions run 39964915296 passed both source-and-headless and windows-timer jobs at commit 37312a1. The earlier Windows launcher failure was cmd interpreting a forward-slash script path as a command; the backslash path correction passed the actual timer tests. Earlier failure mail refers to the previous run.
+
+The integrated diagnostic Release build is 20261023-222856-02fe82c4. Release and Debug each pass 43 cases / 3,982 assertions. Its 81 APS screenshots again match the preserved original exactly without exclusions; judge-setting's 110 screenshots and both 2,197-row input traces also match. Full resolution-specific tail checks are still running. A capture interrupted by a multi-second frame stall is retained as a failed setup result rather than a passed screenshot.
+
+RunRefactorPerformance supports an explicit one-subrun protocol for three direct real-clock repetitions, while retaining five subruns as its default. The declared protocol, raw samples and unchanged 5% plus 0.1ms gate are recorded for either choice. The integrated final binary still requires its own performance comparison; prototype results do not replace it.
+
+## Final integrated diagnostic performance: not yet passed
+
+The explicitly declared three direct repetitions completed at build/refactor-performance-batched/20261023-231045. Five of six scenes passed. Portrait-hidden p99 was 5.074 ms baseline versus 5.818 ms candidate (+0.744 ms, +14.66%), exceeding the unchanged gate; mean changed only 3.332294 -> 3.334091 ms. All other scene p99 medians improved by roughly 5.9-12.6%. This FAIL is retained and is not replaced by the earlier prototype PASS. Production synchronization remains withheld. Normal-binary native-play capture and cause analysis remain pending.
+
+All 27 required functional stages now have actual successful reports for the integrated build, combined in build/refactor-paced-functional-verification.json. Three failed setup/harness attempts remain in that report with explanations. The EX HUD sweep passed its original assertions after fixture/live runtime isolation. The original 356 production source files were rehashed unchanged; the source-only copy plan remains prepared and unapplied.

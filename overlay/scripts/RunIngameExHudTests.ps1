@@ -7,10 +7,11 @@ Import-Module (Join-Path $root 'scripts/TestWorkspace.psm1') -Force
 $results=@();$python='python'
 foreach($size in @(@(640,480),@(1280,720),@(1920,1080),@(720,1280),@(1080,1920))){
  $w=$size[0];$h=$size[1];if($w -notin $Widths){continue}
- $session=New-AsioFixture -Values @{vertical_enabled=[int]($h -gt $w);windowsize="$w,$h";vertical_resolution="$w,$h";vertical_width=$w;vertical_height=$h;vsync=1;automaticmute=0} -Song
- $chart=Join-Path $session.appRoot 'songs/K-Shoot MANIA/flavorofyouth/flavorofyouth_ch.ksh'
  foreach($kind in @('fixture','live')){
   if($kind -eq 'live' -and $w -notin @(1280,720)){continue}
+  # Each capture mode owns a fresh directory: missed samples must never reuse fixture files.
+  $session=New-AsioFixture -Values @{vertical_enabled=[int]($h -gt $w);windowsize="$w,$h";vertical_resolution="$w,$h";vertical_width=$w;vertical_height=$h;vsync=1;automaticmute=0} -Song
+  $chart=Join-Path $session.appRoot 'songs/K-Shoot MANIA/flavorofyouth/flavorofyouth_ch.ksh'
   $flags=@('-auto','-from','0','--timing-hud-capture');if($kind -eq 'fixture'){$flags+='--ex-hud-fixture'}
   Start-KsmOwnedProcess -Session $session -Arguments ($flags+@($chart)) -TimeoutSeconds 45
   $dest=Join-Path $root "reference/ingame-ex-score/$w`x$h/$kind"

@@ -44,7 +44,7 @@
     },
     {
       "path": "docs/BASELINE_TEST_FINDINGS.md",
-      "sha256": "8dcf7b85bb9f8fcbb8f28049e4f75fbbf502a36b91d2922441c3ca2e7e1c5f6c"
+      "sha256": "3ed53cd0a98a5d316d284b654a4f4c90c06d6ec09fd4244e483570f10cdf7404"
     },
     {
       "path": "docs/CPP_STYLE_SCOPE.json",
@@ -56,11 +56,11 @@
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
-      "sha256": "238c3fc668438fa74bd5f3f492ed944ad006e2451c3636ea2310641b336b7370"
+      "sha256": "1447a51551d1ee471835bb44f983df431590a9ac6d69a1a8aaf65870a12f49ed"
     },
     {
       "path": "docs/REFACTOR_VALIDATION.md",
-      "sha256": "c8c2d1f7f4e772ebefd73481a8130264e527427d722c840cabcefae7a51bef31"
+      "sha256": "54be5e6db436812ab3368bdeedf8af52ac6b28dbd7c9ac74910654640e866e7c"
     },
     {
       "path": "docs/REMOVAL_AUDIT.md",
@@ -880,7 +880,7 @@
     },
     {
       "path": "scripts/RunIngameExHudTests.ps1",
-      "sha256": "079bd7d32b19713f1a28781653b6b9e72504286ffe6890ea666a6ba4cce08af9"
+      "sha256": "51a3402779eba9f126da5cbbba74cb13f63cc8cc4edd2d92d28a2a8a5ba514e6"
     },
     {
       "path": "scripts/RunJudgeColorTests.ps1",
@@ -916,7 +916,7 @@
     },
     {
       "path": "scripts/RunRefactorPerformance.ps1",
-      "sha256": "1010bdbd29153112e70e6d0df245f87b7a597377a373398fe1a7a55d1aef7a6f"
+      "sha256": "9f7aea0078b01b793580edb8f35b0c964dd50996150a6a41e8da93ab66fca674"
     },
     {
       "path": "scripts/RunRenderGeometryTests.ps1",

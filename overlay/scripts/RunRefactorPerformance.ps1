@@ -1,6 +1,7 @@
 ﻿param(
     [Parameter(Mandatory=$true)][string]$BaselineBuild,
-    [Parameter(Mandatory=$true)][string]$CandidateBuild
+    [Parameter(Mandatory=$true)][string]$CandidateBuild,
+    [ValidateSet(1,5)][int]$SubrunsPerBatch=5
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
@@ -18,8 +19,8 @@ $oldQuiet=$env:KSM_TEST_QUIET;$oldMetrics=$env:KSM_TEST_PROCESS_METRICS
 $env:KSM_TEST_QUIET='1';$env:KSM_TEST_PROCESS_METRICS=$null
 $output=Join-Path $root ('build/refactor-performance-batched/'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
 New-Item -ItemType Directory -Path $output -Force|Out-Null
-[ordered]@{protocol='Three predeclared batches, five 960-frame subruns per scene and build';batchMean='Arithmetic mean of the five frame means';batchP99='Median of the five measured subrun p99 values';subrunFrames=960;batches=3;subruns=5;builds=$states;threshold='Both 5 percent and 0.1 ms must be exceeded';stdout='Buffered to isolated logs outside measured rendering';memorySampling=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $output 'protocol.json') -Encoding UTF8
-function Median([double[]]$Values){$ordered=@($Values|Sort-Object);return $ordered[2]}
+[ordered]@{protocol="Three predeclared batches, $SubrunsPerBatch 960-frame subruns per scene and build";batchMean='Arithmetic mean of the subrun frame means';batchP99='Median of the measured subrun p99 values';subrunFrames=960;batches=3;subruns=$SubrunsPerBatch;builds=$states;threshold='Both 5 percent and 0.1 ms must be exceeded';stdout='Buffered to isolated logs outside measured rendering';memorySampling=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $output 'protocol.json') -Encoding UTF8
+function Median([double[]]$Values){$ordered=@($Values|Sort-Object);if($ordered.Count%2){return $ordered[[int][Math]::Floor($ordered.Count/2)]};return ($ordered[$ordered.Count/2-1]+$ordered[$ordered.Count/2])/2}
 function Reset-Config($Session,[byte[]]$Bytes,[byte[]]$Skin){
     [IO.File]::WriteAllBytes((Join-Path $Session.appRoot 'config.ini'),$Bytes)
     $path=Join-Path $Session.appRoot 'skin_preset.json'
@@ -54,7 +55,7 @@ try{
                 $common=@('--vertical-preview-hud','--vertical-preview-benchmark','--aps-performance-fixture',$sizeFlag)
                 Reset-Config $session $fixture.config $fixture.skin
                 Start-KsmOwnedProcess -Session $session -Arguments ($common+@('--aps-performance-overlap')) -TimeoutSeconds 60
-                foreach($iteration in 1..5){
+                foreach($iteration in 1..$SubrunsPerBatch){
                     $modes=if($iteration%2){@('hidden','idle','overlap')}else{@('overlap','idle','hidden')}
                     foreach($mode in $modes){
                         Reset-Config $session $fixture.config $fixture.skin
@@ -68,15 +69,15 @@ try{
                         $raw|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $output "raw-$batch.json") -Encoding UTF8
                     }
                 }
-                Write-Output "BATCH $batch vertical=$vertical ${side}: five subruns per scene complete"
+                Write-Output "BATCH $batch vertical=$vertical ${side}: $SubrunsPerBatch subruns per scene complete"
             }
         }
         foreach($side in @('baseline','candidate')){
             $summary=@()
             foreach($vertical in @(0,1)){foreach($mode in @('hidden','idle','overlap')){
                 $values=@($raw|Where-Object {$_.side -eq $side -and $_.vertical -eq $vertical -and $_.mode -eq $mode})
-                if($values.Count -ne 5){throw 'A declared benchmark batch is incomplete.'}
-                $summary+=[ordered]@{vertical=$vertical;mode=$mode;mean_ms=($values.mean_ms|Measure-Object -Average).Average;p99_ms=(Median $values.p99_ms);over_8_333ms=($values.over_8_333ms|Measure-Object -Sum).Sum;subruns=5;frames=4800}
+                if($values.Count -ne $SubrunsPerBatch){throw 'A declared benchmark batch is incomplete.'}
+                $summary+=[ordered]@{vertical=$vertical;mode=$mode;mean_ms=($values.mean_ms|Measure-Object -Average).Average;p99_ms=(Median $values.p99_ms);over_8_333ms=($values.over_8_333ms|Measure-Object -Sum).Sum;subruns=$SubrunsPerBatch;frames=(960*$SubrunsPerBatch)}
             }}
             $summary|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $output "$side-$batch.json") -Encoding UTF8
         }

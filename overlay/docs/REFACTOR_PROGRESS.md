@@ -58,3 +58,9 @@ Fresh patch/overlay reconstruction also passed normal Release and Debug builds, 
 ## Isolated frame-pacing correction
 
 The high-resolution Windows wait prototype improved native-play p99 in both orientations. The production correction is separated from style/responsibility changes and documented in FRAME_PACING_FIX.md. Deadline/FPS/drift math is retained; unsupported/failed native timers fall back to the previous sleep path. Six actual Win32 cases / 16 assertions passed headlessly; the combined Release and Debug suites now pass 43 cases / 3,982 assertions. Full functional and final-binary performance checks are running before any production source synchronization.
+
+## Latest checkpoint: CI fixed, production still preserved
+
+Windows workflow launcher correction passed both jobs in Actions run 39964915296. The integrated timer build passes all 27 functional stages, 43 Catch2 cases / 3,982 assertions in each Windows configuration, 81 exact APS images, 110 judge-setting images (exact FPS-label exclusion) and both 2,197-row replays. The final EX capture harness now separates sentinel fixtures and live runtime files, preserving the earlier failures.
+
+The three-direct-repetition diagnostic performance comparison still fails portrait-hidden p99 (5.074 -> 5.818 ms), although the other five scenes improve. No final completion or production-source synchronization is declared. A fresh reconstruction's ordinary Release/Debug builds and normal native-play capture are being checked next.
