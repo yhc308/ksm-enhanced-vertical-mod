@@ -18,7 +18,8 @@ class CatchReportTests(unittest.TestCase):
     def run_report(self, content, returncode=0, stale=False):
         spec = importlib.util.spec_from_file_location("catch_runner", ROOT / "overlay/tests/RunCatch2.py")
         module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        with patch.object(sys, "dont_write_bytecode", True):
+            spec.loader.exec_module(module)
         with tempfile.TemporaryDirectory() as tmp:
             report = Path(tmp) / "result.xml"
             if stale:

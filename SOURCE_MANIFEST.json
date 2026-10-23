@@ -16,11 +16,11 @@
     },
     {
       "path": "README_ENHANCED.md",
-      "sha256": "2817eb0079894daa3ef71e2f048c6d4cacd261b68f76f0374dd60f620a0539e2"
+      "sha256": "24a6e48934e7b0c00dcbef8464a65f823d3e74002e119773f63929dbc43e750c"
     },
     {
       "path": "REVIEW.md",
-      "sha256": "4f6d6a08449ef4938add5c1eb0f380702424134ee72aa17efd7fc05e6d202aac"
+      "sha256": "4db5203ab23fc2a321ca4f3b84417c6b6e5c12f04aef7357763f6a07039ba22b"
     },
     {
       "path": "compatibility/targets.json",
@@ -52,11 +52,15 @@
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
-      "sha256": "4537c963ad16c5a11736cc4771f6fbbc9bdcb6e28d60b11b05b9d0edcb077773"
+      "sha256": "ceba59ba35522ceda884a5f5f13dd7c0cf7978e76c2690d87788df92a1e18adc"
+    },
+    {
+      "path": "docs/REFACTOR_VALIDATION.md",
+      "sha256": "c8c2d1f7f4e772ebefd73481a8130264e527427d722c840cabcefae7a51bef31"
     },
     {
       "path": "docs/REMOVAL_AUDIT.md",
-      "sha256": "890fd17295d509bb2be6dc741088b4511d697d8de8e40a7c33bae21cc8bb7fd8"
+      "sha256": "67f132fd866a98d348e31fcbae7f21fc97fdae074bab3fe5cecf105a7de8f2db"
     },
     {
       "path": "kshootmania/App/imgs/bg2_vertical.png",
@@ -368,7 +372,7 @@
     },
     {
       "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
-      "sha256": "68e60d2c45a84bef6d89fd9bf464f35d74f71576560c533b8de68859a505aeca"
+      "sha256": "fecf1171a0366fad6758123fd57d5eea9b436c52b1319321338ff49e6265ae2e"
     },
     {
       "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
@@ -496,7 +500,7 @@
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
-      "sha256": "f4bdba230f10c692ac0466a9cd30d68c0aef68149a4919417ed7eb2cee83e6f7"
+      "sha256": "b22e55c0a72683fcb33f1bc40311dc0949694cb59fa9e07ddfb0d0ae0acb4b03"
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
@@ -859,6 +863,10 @@
       "sha256": "65f27c8ce4a4428912c0b3124c609ca3ada013a2e1335ccea9495bbb28b6f0a6"
     },
     {
+      "path": "scripts/RunFrameLimitControl.ps1",
+      "sha256": "7017901462af47bb90cb0a6056660a407ea63ecc2d48b703db451b482b74033a"
+    },
+    {
       "path": "scripts/RunHeadlessTests.cmd",
       "sha256": "1bdc8fd9afd4705d62aea2fbb32a0a56de4e531c2195f0f5a6cdb29473a141c9"
     },
@@ -883,6 +891,10 @@
       "sha256": "ec8666c967d305c69d2fcb0027f21dcffd950f068757f8a2eb84d136ba2d2532"
     },
     {
+      "path": "scripts/RunNormalFramePerformance.ps1",
+      "sha256": "b68be8c004d9875f6d8df688bf875aa81ad05ad4edf12ada7860f4f733fabd6d"
+    },
+    {
       "path": "scripts/RunPerfectCriticalEffectTests.ps1",
       "sha256": "117d45d8845474175d55433206ae9e8195f49bac255f60825a02930d7c882b56"
     },
@@ -893,6 +905,10 @@
     {
       "path": "scripts/RunPortraitSceneTests.ps1",
       "sha256": "6db94b8eb0379797b6d639c5c16fc95dff1c57f4e53a864881d57c294dbba1f6"
+    },
+    {
+      "path": "scripts/RunRefactorPerformance.ps1",
+      "sha256": "1010bdbd29153112e70e6d0df245f87b7a597377a373398fe1a7a55d1aef7a6f"
     },
     {
       "path": "scripts/RunRenderGeometryTests.ps1",
@@ -981,6 +997,14 @@
     {
       "path": "tests/ModLocalizationVerifier.py",
       "sha256": "eee65ef9996adb958a6e29455f9fb7cb2b5ae1927ee0f27eda364cf506b17117"
+    },
+    {
+      "path": "tests/NormalRuntimeSmoke.ps1",
+      "sha256": "425b0af87c731cb16041865081269e3ded8b0c21f95231cf3bf4f17c08aaae93"
+    },
+    {
+      "path": "tests/PayloadInstallationSmoke.ps1",
+      "sha256": "7769ac0e9aebf5c2b444c5e63605b0148361de50fbe98f9dc1de5dc24b107b36"
     },
     {
       "path": "tests/PlayJudgeIndicatorVerifier.py",

@@ -14,3 +14,5 @@ Only the following proven redundancies were removed in this pass. No resources, 
 TimingMenuCursor retains its unused delta argument for call-site compatibility; its unnamed parameter documents that current navigation already applies the direction before calling it. Modified external-library code is audited separately; vendor headers and license notices remain intact.
 
 GaugePresentation.cpp was consolidated back into its small header after the frame-path review. Its calculation and fixture accessors remain present and tested; no gauge behavior was deleted. The hot interpolation calculator keeps the original inline structure, with explicit unit names.
+
+The final Debug warning audit also removed two unused pure coordinate locals (`x`/`w`) from SkinOverlay mouse-hit processing and an unused copied `initial` hispeed fixture value. Existing hit rectangles, Unit evaluation, input replay calls and hispeed checks remain. The hispeed accessor only returns the current setting and has no mutation.

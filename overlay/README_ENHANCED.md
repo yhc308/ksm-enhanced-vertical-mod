@@ -58,7 +58,7 @@ Do not overwrite the original `kshootmania.exe` with the mod executable.
 
 ## Refactoring validation
 
-The private branch `refactor/upstream-style-parity` retains the KSM 2.1.0 source base and the mod's file formats/resources. See `docs/REFACTOR_PROGRESS.md`, `BASELINE_TEST_FINDINGS.md`, and `REMOVAL_AUDIT.md` for stage results, known baseline discrepancies and deletion reasons.
+The private branch `refactor/upstream-style-parity` retains the KSM 2.1.0 source base and the mod's file formats/resources. See `docs/REFACTOR_VALIDATION.md`, `REFACTOR_PROGRESS.md`, `BASELINE_TEST_FINDINGS.md`, and `REMOVAL_AUDIT.md` for stage results, known baseline discrepancies and deletion reasons.
 
 General builds disable diagnostic fixture arguments. Use an opt-in diagnostic build for local validation:
 
@@ -77,3 +77,5 @@ Upstream-plus-mod Catch2 tests run with `scripts/BuildUnitTests.ps1 -Configurati
 UI/replay checks can run without external authoring snapshots; this is reported explicitly. Runtime resource preservation can be checked against an immutable snapshot with `VerifyResourceBaseline.py`. Its optional checkout-line-ending mode accepts only CRLF/LF differences in known text formats; image/audio bytes, paths and all other content remain exact. The known authoring/runtime last-note discrepancy is documented separately and is not changed by the refactor.
 
 A fresh checkout is reconstructed with the private repository's `PrepareSource.py`. Source/package integrity and pure production-state tests run in GitHub Actions without uploading an SDK, user records, ordinary songs or binaries. GPU/audio-device checks run locally on Windows; physical ASIO-device validation is separate from the mock-ASIO suite.
+
+The normal executable smoke is `tests/NormalRuntimeSmoke.ps1 -ProjectRoot <prepared source>` after a build without `-Diagnostics`. `tests/PayloadInstallationSmoke.ps1` tests the real payload against a disposable copy of an original compatible runtime. Installer preservation/error paths are covered by `tests/TestModEnvironment.ps1`. Both helpers leave the original runtime untouched. Performance scripts retain raw subruns and any failed comparisons; `RunFrameLimitControl.ps1` is a diagnostic control, not a substitute for the main performance gate.

@@ -755,7 +755,7 @@ void SkinOverlay::update()
 			changeSelection(m_index + m_cursor.deltaCursor() + knobDelta);
 	}
 	{
-		const double u = Unit(), x = Scene::Width() * 2.0 / 3.0 + 20 * u, w = Scene::Width() / 3.0 - 44 * u;
+		const double u = Unit();
 		for (int32 i = 0; i < static_cast<int32>(m_entries.size()); ++i)
 		{
 			const double y = ListCenterY() + (i - m_scroll) * 52 * u;

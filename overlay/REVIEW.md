@@ -2,9 +2,10 @@
 
 Upstream: https://github.com/kshootmania/ksm-v2
 Base: `41bfdaa7331808aff7239a9ec283cdba01b3b406` (KSM 2.1.0)
-Repository: independent private `ksm-enhanced-vertical-mod` (`main`)
+Repository: independent private `ksm-enhanced-vertical-mod`
+Refactoring branch: `refactor/upstream-style-parity` (main/public fork remain unchanged)
 
-The game code matches development build 20261023-171521-0937f555, including EX maximum persistence and the separated skin layout. Runtime
+The behavior baseline is development build 20261023-171521-0937f555, including EX maximum persistence and the separated skin layout. The refactoring branch changes source organization and naming while preserving that baseline; current evidence and remaining gates are in `docs/REFACTOR_VALIDATION.md`. Runtime
 executables and release ZIPs are deliberately excluded from the commit.
 
 ## Main areas

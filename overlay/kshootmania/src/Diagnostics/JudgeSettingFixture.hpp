@@ -585,7 +585,6 @@ namespace JudgeSettingFixture
 			};
 			const auto start = Vertical::DiagnosticInputReplay::Mask(kButtonStart);
 			frame(0);
-			const int initial = overlay.game().settingsHispeed().value;
 			frame(start);
 			check(!overlay.session().menu, U"START press keeps lane play active until release");
 			const int32 savedLaser = ConfigIni::GetInt(ConfigIni::Key::kLaserInputType, 0);

@@ -14,7 +14,7 @@ Branch: refactor/upstream-style-parity. Main and the public fork are unchanged.
 
 ## Pending gates
 
-Dependency style/lifecycle audit, full Debug/Release validation, complete regression/replay and visual comparisons, performance comparison, clean source reconstruction, final production synchronization.
+Final performance comparison, final-payload installation/removal preservation, final package export/CI and source-only production synchronization. See REFACTOR_VALIDATION.md for the completed gates and retained failures.
 
 ## Style gate
 
@@ -23,7 +23,7 @@ Formatted 168 mod/test C++ files using clang-format 19.1.5 and the upstream tab/
 ## Responsibility extraction gate
 
 - Moved JudgeSettingOverlay layout, navigation, persistence and drawing implementations into its registered `.cpp` file. The public surface, coordinates and event order remain unchanged.
-- Moved JudgeSettingSession measurement/state transitions, GaugePresentation interpolation and NormalGaugeState updates into registered `.cpp` files.
+- Moved JudgeSettingSession measurement/state transitions and NormalGaugeState updates into registered `.cpp` files. GaugePresentation was reviewed separately; its small hot math remains inline.
 - Extracted AdditionalScoreIO from KscIO. Existing 10-field and new 11-field supplemental records, atomic replacement and shared-score rules are retained. Main KSC serialization remains in KscIO.
 - RecentTimingWindow owns the incremental time queue/sum and is used by the real setting session. Its standalone Catch2 target passes 4 cases / 40,013 assertions, including comparison against independent filtering over 20,000 frames.
 - DiagnosticRunner separates three startup phases without moving the dispatch points or changing cleanup order. Heavy test implementations no longer sit in Main.cpp.
@@ -39,7 +39,7 @@ These are stage results, not completion of the full plan. The original developme
 - A saved original-binary timing-setting baseline was compared with the candidate: all 110 screenshots were pixel-identical outside the exact runtime FPS label rectangle. Both 2,197-row input replays were identical. No general pixel tolerance was used.
 - Release audio engine and integration tests passed, including failure/fallback, resource churn and concurrent transport. Real-chart EOF cases passed in both orientations and 44.1/48 kHz mock ASIO modes. This does not certify a physical ASIO device.
 - The upstream-plus-mod Debug unit target passed 37 cases / 3,966 assertions before the later token-preserving lambda style pass.
-- General builds default to KSM_ENABLE_DIAGNOSTICS=0; opt-in fixture builds use `scripts/Build.ps1 -Diagnostics`. Original TestPlayArgs parsing is unchanged. Heavyweight startup fixtures are compiled only for diagnostic builds. Diagnostic argument caching is under controlled performance comparison; original test-play parsing remains separate.
+- General builds default to KSM_ENABLE_DIAGNOSTICS=0; opt-in fixture builds use `scripts/Build.ps1 -Diagnostics`. Original TestPlayArgs parsing is unchanged. Heavyweight startup fixtures are compiled only for diagnostic builds. The final diagnostic argument wrapper returns the original SDK const reference; original test-play parsing remains separate.
 - Moved 21 complex ModOptionsScene implementations out of its header while retaining small inline helpers and the original member initializer order. Added the implementation to both project and filter files.
 - Expanded compressed lambda bodies and formatted all mod/test/dependency C++ in the audited scope. Automatic using-declaration sorting is disabled so a formatting pass cannot reorder C++ tokens.
 
@@ -52,3 +52,5 @@ The original external-authoring assertion failure, exact-resource checkout newli
 81 APS screenshots are pixel-identical to the preserved original; 110 timing-setting screenshots and both input replays also match (only the runtime FPS label is excluded in the latter comparison).
 
 Final performance verification is still pending. Short capped runs have unstable p99 values even on the preserved binary; all failures are retained. A by-value argument-wrapper experiment was discarded because the SDK actually returns a const reference. The final diagnostic wrapper delegates that reference directly. Small hot GaugePresentation calculations/accessors are retained inline, matching the original structure and preserving arithmetic. Main now reports actual collected benchmark samples so an interrupted capture cannot appear complete.
+
+Fresh patch/overlay reconstruction also passed normal Release and Debug builds, with diagnostics disabled. Both configurations passed title and original chart-CLI startup/shutdown in both orientations (four cases each). The normal Debug title expectation includes the existing Siv3D suffix.

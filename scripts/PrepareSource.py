@@ -21,7 +21,16 @@ assert hashlib.sha256(patch.read_bytes()).hexdigest() == manifest["mainPatchSha2
 for item in manifest["overlayFiles"]:
     source = root / "overlay" / item["path"]
     assert hashlib.sha256(source.read_bytes()).hexdigest() == item["sha256"], source
-subprocess.run(["git", "clone", "--no-hardlinks", "--no-checkout", args.upstream, str(dest)], check=True)
+clone = ["git"]
+# An explicit local mirror can be on exFAT, which has no ownership metadata.
+# Trust only this requested repository (and its git directory) for this command.
+mirror = Path(args.upstream)
+if mirror.is_dir():
+    mirror = mirror.resolve()
+    clone.extend(["-c", "safe.directory=" + mirror.as_posix(),
+                  "-c", "safe.directory=" + (mirror / ".git").as_posix()])
+clone.extend(["clone", "--no-hardlinks", "--no-checkout", args.upstream, str(dest)])
+subprocess.run(clone, check=True)
 def git(*parts):
     subprocess.run(["git", "-c", "safe.directory=" + dest.as_posix(), "-C", str(dest), *parts], check=True)
 git("checkout", "--detach", manifest["baseCommit"])
