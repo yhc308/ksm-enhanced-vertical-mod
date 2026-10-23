@@ -6,7 +6,7 @@
       "url": "https://github.com/kshootmania/ksmaudio.git",
       "baseCommit": "c51865f7757f47cffbd530469977aa94332d9826",
       "patch": "patches/dependencies/ksmaudio.patch",
-      "sha256": "17e5cee93cbaf6048db939ad2db7923a43727e54ce76966b6e949de4ddeefc3a",
+      "sha256": "ab615a7484495eb0c2cd1895d2cc745a7054f59cd73cdb3de2615193323ae1e9",
       "changedFiles": [
         "THIRD_PARTY_LICENSE.txt",
         "ThirdParty_Windows/bassasio/bassasio.h",

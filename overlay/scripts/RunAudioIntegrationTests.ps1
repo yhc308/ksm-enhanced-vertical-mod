@@ -17,7 +17,7 @@ try {
  Run '--audio-calibration-smoke-test' 'audio-calibration-test.txt'
  Copy-Item -LiteralPath (Join-Path $engine.runtime 'bassasio.dll') -Destination (Join-Path $session.appRoot 'bassasio.dll') -Force
  Copy-Item -LiteralPath (Join-Path $engine.runtime 'test-stereo.wav') -Destination (Join-Path $session.appRoot 'timing-fixture.wav') -Force
- Copy-Item -LiteralPath (Join-Path $root 'play-test/App/songs/K-Shoot MANIA/magicalkittens/magicalkittens.ogg') -Destination (Join-Path $session.appRoot 'eof-regression.ogg') -Force
+ Copy-Item -LiteralPath (Join-Path $root 'tests/fixtures/songs/K-Shoot MANIA/magicalkittens/magicalkittens.ogg') -Destination (Join-Path $session.appRoot 'eof-regression.ogg') -Force
  foreach($mode in @('','48k')){foreach($latency in @(64,128,512)){
   $env:KSM_ASIO_TEST_MODE=$mode;$env:KSM_ASIO_TEST_LATENCY=[string]$latency
   Set-AsioFixtureConfig -Session $session -Values @{audio_backend='asio:KSM Mock ASIO'}

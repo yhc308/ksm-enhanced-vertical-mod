@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..5929d92cb78285a809553552a57ecbb446e6c67e 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..577be4db71c5b9920d47f65ef4bd3b824936d197 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,42 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,46 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -45,6 +45,10 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..5929d92cb78285a809553552a57ecbb4
 +!/docs/REFACTOR_PROGRESS.md
 +!/docs/BASELINE_TEST_FINDINGS.md
 +!/docs/REMOVAL_AUDIT.md
++
++# Locally supplied ordinary songs for integration tests
++/tests/fixtures/
++!/docs/REFACTOR_VALIDATION.md
 diff --git a/README.md b/README.md
 index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e00fbe0e6c 100644
 --- a/README.md
@@ -2389,11 +2393,43 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 +    "NotImplemented": "未實作"
 +  }
  }
+diff --git a/kshootmania/CMakeLists.txt b/kshootmania/CMakeLists.txt
+index f11b016538f34e42c90d856c07116d535466b3b7..cb2297aaf1eda6691521c61200b53a60473c50fe 100644
+--- a/kshootmania/CMakeLists.txt
++++ b/kshootmania/CMakeLists.txt
+@@ -9,6 +9,8 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND
+     set(CMAKE_BUILD_TYPE Release)
+ endif()
+ 
++option(KSM_ENABLE_DIAGNOSTICS "Enable opt-in mod diagnostic command-line fixtures" OFF)
++
+ option(OUTPUT_LICENSE_TXT "Output license.txt on startup" OFF)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/App)
+@@ -31,6 +33,8 @@ add_executable(kshootmania
+ 	src/Main.cpp
+ )
+ 
++target_compile_definitions(kshootmania PRIVATE KSM_ENABLE_DIAGNOSTICS=$<BOOL:${KSM_ENABLE_DIAGNOSTICS}>)
++
+ if(APPLE)
+     set_target_properties(kshootmania PROPERTIES
+         OUTPUT_NAME "K-Shoot MANIA"
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
-index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869c1b9f01d 100644
+index 6d1f63fcc12a2d3110e545d669aefef4b37def79..eb4b9e103e8d9e26a82a3a1be5b34d653f82b36f 100644
 --- a/kshootmania/kshootmania.vcxproj
 +++ b/kshootmania/kshootmania.vcxproj
-@@ -61,6 +61,7 @@
+@@ -18,6 +18,9 @@
+     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+     <ProjectName>kshootmania</ProjectName>
+   </PropertyGroup>
++  <PropertyGroup>
++    <KsmEnableDiagnostics Condition="'$(KsmEnableDiagnostics)' == ''">0</KsmEnableDiagnostics>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+@@ -61,12 +64,13 @@
      <IncludePath>$(SIV3D_0_6_16)\include;$(SIV3D_0_6_16)\include\ThirdParty;$(IncludePath);$(ProjectDir)ThirdParty</IncludePath>
      <LibraryPath>$(SIV3D_0_6_16)\lib\Windows;$(LibraryPath)</LibraryPath>
    </PropertyGroup>
@@ -2401,7 +2437,14 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
      <ClCompile>
        <WarningLevel>Level4</WarningLevel>
-@@ -84,10 +85,8 @@
+       <Optimization>Disabled</Optimization>
+       <SDLCheck>true</SDLCheck>
+-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_ENABLE_EXTENDED_ALIGNED_STORAGE;_SILENCE_CXX20_CISO646_REMOVED_WARNING;_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;SQLITE_ENABLE_COLUMN_METADATA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>KSM_ENABLE_DIAGNOSTICS=$(KsmEnableDiagnostics);_DEBUG;_WINDOWS;_ENABLE_EXTENDED_ALIGNED_STORAGE;_SILENCE_CXX20_CISO646_REMOVED_WARNING;_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;SQLITE_ENABLE_COLUMN_METADATA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <ConformanceMode>true</ConformanceMode>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+@@ -84,10 +88,8 @@
        <SubSystem>Windows</SubSystem>
        <DelayLoadDLLs>advapi32.dll;crypt32.dll;dwmapi.dll;gdi32.dll;imm32.dll;ole32.dll;oleaut32.dll;opengl32.dll;shell32.dll;shlwapi.dll;user32.dll;winmm.dll;ws2_32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
      </Link>
@@ -2413,7 +2456,16 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
      <ClCompile>
        <WarningLevel>Level4</WarningLevel>
-@@ -116,11 +115,9 @@
+@@ -95,7 +97,7 @@
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <SDLCheck>true</SDLCheck>
+-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_ENABLE_EXTENDED_ALIGNED_STORAGE;_SILENCE_CXX20_CISO646_REMOVED_WARNING;_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;SQLITE_ENABLE_COLUMN_METADATA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>KSM_ENABLE_DIAGNOSTICS=$(KsmEnableDiagnostics);NDEBUG;_WINDOWS;_ENABLE_EXTENDED_ALIGNED_STORAGE;_SILENCE_CXX20_CISO646_REMOVED_WARNING;_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;SQLITE_ENABLE_COLUMN_METADATA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <ConformanceMode>true</ConformanceMode>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+@@ -116,11 +118,10 @@
        <DelayLoadDLLs>advapi32.dll;crypt32.dll;dwmapi.dll;gdi32.dll;imm32.dll;ole32.dll;oleaut32.dll;opengl32.dll;shell32.dll;shlwapi.dll;user32.dll;winmm.dll;ws2_32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
        <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
@@ -2422,11 +2474,12 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
 -    </PostBuildEvent>
    </ItemDefinitionGroup>
    <ItemGroup>
++    <ClCompile Include="src\Vertical\ModOptionsScene.cpp" />
 +    <ClCompile Include="src\Diagnostics\DiagnosticRunner.cpp" />
      <ClCompile Include="ThirdParty\SQLiteCpp\sqlite3\sqlite3.c">
        <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
        <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-@@ -205,6 +202,8 @@
+@@ -205,6 +206,8 @@
      <ClCompile Include="src\Input\LaserInput\KeyboardLaserInput.cpp" />
      <ClCompile Include="src\Input\LaserInput\MouseXYLaserInput.cpp" />
      <ClCompile Include="src\Input\LaserInput\SliderLaserInput.cpp" />
@@ -2435,7 +2488,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
      <ClCompile Include="src\Main.cpp" />
      <ClCompile Include="src\RuntimeConfig.cpp" />
      <ClCompile Include="src\TestPlayArgs.cpp" />
-@@ -246,6 +245,7 @@
+@@ -246,6 +249,7 @@
      <ClCompile Include="src\MusicGame\Judgment\ButtonLaneJudgment.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\ComboStatus.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\JudgmentHandler.cpp" />
@@ -2443,15 +2496,16 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
      <ClCompile Include="src\MusicGame\Judgment\JudgmentMain.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\LaserLaneJudgment.cpp" />
      <ClCompile Include="src\MusicGame\Judgment\LaserSlamShake.cpp" />
-@@ -403,6 +403,7 @@
+@@ -403,6 +407,8 @@
      <None Include="App\engine\soundfont\GMGSx.sf2.zstdcmp" />
    </ItemGroup>
    <ItemGroup>
 +    <ClInclude Include="src\Diagnostics\DiagnosticRunner.hpp" />
++    <ClInclude Include="src\Diagnostics\DiagnosticArguments.hpp" />
      <ClInclude Include="src\Addon\AutoMuteAddon.hpp" />
      <ClInclude Include="src\Addon\CommonSEAddon.hpp" />
      <ClInclude Include="src\Addon\DisableIMEAddon.hpp" />
-@@ -428,6 +429,17 @@
+@@ -428,6 +434,17 @@
      <ClInclude Include="src\I18n\I18n.hpp" />
      <ClInclude Include="src\IR\IRHash.hpp" />
      <ClInclude Include="src\Ini\ConfigIni.hpp" />
@@ -2469,7 +2523,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
      <ClInclude Include="src\Ini\FolderConfIni.hpp" />
      <ClInclude Include="src\Ini\KSMIniData.hpp" />
      <ClInclude Include="src\Input\FXButtonUpDetection.hpp" />
-@@ -449,6 +461,7 @@
+@@ -449,6 +466,7 @@
      <ClInclude Include="src\MusicGame\Audio\AudioEffectMain.hpp" />
      <ClInclude Include="src\MusicGame\Audio\AudioEffectUtils.hpp" />
      <ClInclude Include="src\MusicGame\Audio\BGM.hpp" />
@@ -2477,7 +2531,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
      <ClInclude Include="src\MusicGame\Audio\FXChipSE.hpp" />
      <ClInclude Include="src\MusicGame\Audio\LaserSlamSE.hpp" />
      <ClInclude Include="src\MusicGame\Camera\CameraMath.hpp" />
-@@ -482,11 +495,16 @@
+@@ -482,11 +500,16 @@
      <ClInclude Include="src\MusicGame\HispeedUtils.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ButtonLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp" />
@@ -2494,7 +2548,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
      <ClInclude Include="src\MusicGame\Judgment\JudgmentMain.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp" />
-@@ -608,6 +626,57 @@
+@@ -608,6 +631,56 @@
      <Font Include="App\assets\font\corporate-logo\Corporate-Logo-Medium-ver3.otf" />
      <Font Include="App\assets\font\tektur-ksm\Tektur-KSM-Medium.ttf" />
    </ItemGroup>
@@ -2513,7 +2567,6 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
 +    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp" />
 +    <ClInclude Include="src\HighScore\AdditionalScoreIO.hpp" />
 +    <ClInclude Include="src\Input\MenuInputProfiles.hpp" />
-+    <ClCompile Include="src\MusicGame\GaugePresentation.cpp" />
 +    <ClInclude Include="src\MusicGame\GaugePresentation.hpp" />
 +    <ClInclude Include="src\MusicGame\Graphics\ViewportGeometry.hpp" />
 +    <ClCompile Include="src\MusicGame\JudgeSettingSession.cpp" />
@@ -2553,30 +2606,36 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..ead2c77d5784c1854d2173c72f24a869
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
 diff --git a/kshootmania/kshootmania.vcxproj.filters b/kshootmania/kshootmania.vcxproj.filters
-index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..d83a51c43d69a65d997c7114165a0cc23420a134 100644
+index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..1cf901d0a9b3a30de29dc1400d9233d27b24c16c 100644
 --- a/kshootmania/kshootmania.vcxproj.filters
 +++ b/kshootmania/kshootmania.vcxproj.filters
-@@ -318,6 +318,9 @@
+@@ -318,6 +318,12 @@
      </Filter>
    </ItemGroup>
    <ItemGroup>
++    <ClCompile Include="src\Vertical\ModOptionsScene.cpp">
++      <Filter>src\Vertical</Filter>
++    </ClCompile>
 +    <ClCompile Include="src\Diagnostics\DiagnosticRunner.cpp">
 +      <Filter>src\Diagnostics</Filter>
 +    </ClCompile>
      <ClCompile Include="ThirdParty\SQLiteCpp\sqlite3\sqlite3.c">
        <Filter>Source Files\ThirdParty\SQLiteCpp\sqlite3</Filter>
      </ClCompile>
-@@ -1015,6 +1018,9 @@
+@@ -1015,6 +1021,12 @@
      </None>
    </ItemGroup>
    <ItemGroup>
++    <ClInclude Include="src\Diagnostics\DiagnosticArguments.hpp">
++      <Filter>src\Diagnostics</Filter>
++    </ClInclude>
 +    <ClInclude Include="src\Diagnostics\DiagnosticRunner.hpp">
 +      <Filter>src\Diagnostics</Filter>
 +    </ClInclude>
      <ClInclude Include="src\RuntimeConfig.hpp">
        <Filter>Header Files</Filter>
      </ClInclude>
-@@ -1315,6 +1321,18 @@
+@@ -1315,6 +1327,18 @@
      <ClInclude Include="src\MusicGame\Camera\HighwayTilt.hpp">
        <Filter>Header Files\MusicGame\Camera</Filter>
      </ClInclude>
@@ -2595,7 +2654,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..d83a51c43d69a65d997c7114165a0cc2
      <ClInclude Include="src\MusicGame\ViewStatus.hpp">
        <Filter>Header Files\MusicGame</Filter>
      </ClInclude>
-@@ -1348,6 +1366,9 @@
+@@ -1348,6 +1372,9 @@
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
@@ -2605,7 +2664,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..d83a51c43d69a65d997c7114165a0cc2
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
-@@ -1582,4 +1603,55 @@
+@@ -1582,4 +1609,54 @@
        <Filter>Resource Files\assets\font\tektur-ksm</Filter>
      </Font>
    </ItemGroup>
@@ -2624,7 +2683,6 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..d83a51c43d69a65d997c7114165a0cc2
 +    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp"><Filter>Source Files\HighScore</Filter></ClCompile>
 +    <ClInclude Include="src\HighScore\AdditionalScoreIO.hpp"><Filter>Header Files\HighScore</Filter></ClInclude>
 +    <ClInclude Include="src\Input\MenuInputProfiles.hpp"><Filter>Header Files\Input</Filter></ClInclude>
-+    <ClCompile Include="src\MusicGame\GaugePresentation.cpp"><Filter>Source Files\MusicGame</Filter></ClCompile>
 +    <ClInclude Include="src\MusicGame\GaugePresentation.hpp"><Filter>Header Files\MusicGame</Filter></ClInclude>
 +    <ClInclude Include="src\MusicGame\Graphics\ViewportGeometry.hpp"><Filter>Header Files\MusicGame\Graphics</Filter></ClInclude>
 +    <ClCompile Include="src\MusicGame\JudgeSettingSession.cpp"><Filter>Source Files\MusicGame</Filter></ClCompile>
@@ -2772,21 +2830,23 @@ index 1e31f10717357cd4be3e343a0391a6c0c355e338..a76b4e4eba2b8a2cd1a756dab50d6d1f
 +} };
  #endif
 diff --git a/kshootmania/src/Common/FsUtils.cpp b/kshootmania/src/Common/FsUtils.cpp
-index f67c9a3bc364ede10da7f0041dc43d362e2a4a89..13aa91f45f74946f1e7a12e354e86743a6f018a2 100644
+index f67c9a3bc364ede10da7f0041dc43d362e2a4a89..fe21099f5bb450bb6a5265e4d95535f262747197 100644
 --- a/kshootmania/src/Common/FsUtils.cpp
 +++ b/kshootmania/src/Common/FsUtils.cpp
-@@ -120,9 +120,7 @@ namespace FsUtils
+@@ -120,9 +120,9 @@ namespace FsUtils
  	Array<FilePath> GetChartFilePathsPreferringKson(FilePathView directoryPath)
  	{
  		const Array<FilePath> allChartPaths = FileSystem::DirectoryContents(directoryPath, Recursive::No).filter([](FilePathView p)
 -		{
 -			return FileSystem::IsFile(p) && HasChartExtension(p);
 -		});
-+																												 { return FileSystem::IsFile(p) && HasChartExtension(p); });
++																												 {
++																													 return FileSystem::IsFile(p) && HasChartExtension(p);
++																												 });
  
  		Array<FilePath> result;
  		HashTable<String, size_t> baseNameToIndex;
-@@ -167,7 +165,7 @@ namespace FsUtils
+@@ -167,7 +167,7 @@ namespace FsUtils
  
  		if (FileSystem::Extension(jacketFilename).isEmpty())
  		{
@@ -2795,7 +2855,7 @@ index f67c9a3bc364ede10da7f0041dc43d362e2a4a89..13aa91f45f74946f1e7a12e354e86743
  		}
  
  		return FileSystem::PathAppend(parentPath, jacketFilename);
-@@ -182,7 +180,7 @@ namespace FsUtils
+@@ -182,7 +182,7 @@ namespace FsUtils
  
  		if (FileSystem::Extension(iconFilename).isEmpty())
  		{
@@ -2829,10 +2889,10 @@ index 45c1b09107aa7e48118dcc26346d1bef60d0d47f..4fe6ac13e2ab783c3acdb921905294f8
  			}
  		}
 diff --git a/kshootmania/src/Graphics/ScreenUtils.cpp b/kshootmania/src/Graphics/ScreenUtils.cpp
-index 1a58f6aa7b67cdf0ac4b6f32c511a1879da29030..1b2a79b03c2721d9f9fc76b5ffa23c02f0472a1a 100644
+index 1a58f6aa7b67cdf0ac4b6f32c511a1879da29030..87aa096c2ba4024b2fa71c96b3589467690ba27c 100644
 --- a/kshootmania/src/Graphics/ScreenUtils.cpp
 +++ b/kshootmania/src/Graphics/ScreenUtils.cpp
-@@ -1,22 +1,37 @@
+@@ -1,22 +1,39 @@
 -﻿#include "ScreenUtils.hpp"
 +﻿#include "Graphics/GameRenderContext.hpp"
 +#include "ScreenUtils.hpp"
@@ -2867,14 +2927,16 @@ index 1a58f6aa7b67cdf0ac4b6f32c511a1879da29030..1b2a79b03c2721d9f9fc76b5ffa23c02
  	const String resolutionStr{ ConfigIni::GetString(isFullScreen ? ConfigIni::Key::kFullScreenResolution : ConfigIni::Key::kWindowResolution, U"800,600") };
 -	const Array<int32> resolution = resolutionStr.split(U',').map([](const String& str) { return ParseOr<int32>(str, 0); });
 +	const Array<int32> resolution = resolutionStr.split(U',').map([](const String& str)
-+																  { return ParseOr<int32>(str, 0); });
++																  {
++																	  return ParseOr<int32>(str, 0);
++																  });
  	Scene::SetResizeMode(ResizeMode::Keep);
 -	
 +
  	if (resolution.size() == 2U && resolution[0] > 0 && resolution[1] > 0)
  	{
  		Scene::Resize(resolution[0], resolution[1]);
-@@ -45,3 +60,205 @@ void ScreenUtils::ApplyScreenSizeConfig()
+@@ -45,3 +62,205 @@ void ScreenUtils::ApplyScreenSizeConfig()
  	}
  #endif
  }
@@ -3371,7 +3433,7 @@ index e6bcb8364c2ee519e5d4741a2f17ff90066b8c3c..663a6938bfd064bb40b47ebd34c34a73
  }
  
 diff --git a/kshootmania/src/I18n/I18n.hpp b/kshootmania/src/I18n/I18n.hpp
-index d6ba482ad5d35dbb4304f56b677e9f5023839175..a064d59cea44c50f81b881d12b053441bfdb204d 100644
+index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a6952796de353c3 100644
 --- a/kshootmania/src/I18n/I18n.hpp
 +++ b/kshootmania/src/I18n/I18n.hpp
 @@ -43,6 +43,67 @@ namespace I18n
@@ -3473,7 +3535,7 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..a064d59cea44c50f81b881d12b053441
  		DisableIMEOff,
  		DisableIMEOnLow,
  		DisableIMEOnMid,
-@@ -300,13 +367,18 @@ namespace I18n
+@@ -300,13 +367,21 @@ namespace I18n
  		{
  			return GetByCategoryAndKey(EnumUtils::EnumToString(Category::IR), EnumUtils::EnumToString(key));
  		}
@@ -3489,7 +3551,10 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..a064d59cea44c50f81b881d12b053441
  		{
 -			static_assert([] { return false; }(), "I18n::Get(): Unsupported enum type.");
 +			static_assert([]
-+						  { return false; }(), "I18n::Get(): Unsupported enum type.");
++						  {
++							  return false;
++						  }(),
++						  "I18n::Get(): Unsupported enum type.");
  			return U"";
  		}
  	}
@@ -3668,6 +3733,183 @@ index 7cb56b54879c89e6ffb8336cbea7198eac996292..3452d4db23871d499e7260bfd252ecc8
  
  	[[nodiscard]]
  	bool HasValue(StringView key);
+diff --git a/kshootmania/src/Ini/FolderConfIni.cpp b/kshootmania/src/Ini/FolderConfIni.cpp
+index e33256ffbec5def552282e90e5302367b8bb1cc3..d7f5e6d196c63a17ca0eb5ebe6d2a20ef51e0f0a 100644
+--- a/kshootmania/src/Ini/FolderConfIni.cpp
++++ b/kshootmania/src/Ini/FolderConfIni.cpp
+@@ -1,86 +1,86 @@
+-﻿#include "FolderConfIni.hpp"
+-#include "KSMIniData.hpp"
+-#include "Common/FsUtils.hpp"
+-
+-namespace
+-{
+-	constexpr StringView kVolumeKey = U"volume";
+-	constexpr StringView kOffsetKey = U"offset";
+-	constexpr StringView kTweetOptionKey = U"tweet_option";
+-	constexpr int32 kDefaultVolume = 100;
+-	constexpr int32 kDefaultOffset = 0;
+-
+-	HashTable<FilePath, FolderConfIni> s_cache;
+-
+-	// 譜面ファイルパスからパッケージフォルダのパスを取得
+-	FilePath GetPackageFolderPath(FilePathView chartFilePath)
+-	{
+-		const String relativePath = FsUtils::RelativePathFromSongsDir(chartFilePath);
+-		if (relativePath.empty())
+-		{
+-			return {};
+-		}
+-
+-		// 相対パスの最初のセグメント(パッケージフォルダ名)を抽出
+-		const std::size_t separatorPos = relativePath.indexOfAny(U"/\\");
+-		const String packageFolderName = separatorPos == String::npos
+-			? relativePath
+-			: relativePath.substr(0, separatorPos);
+-
+-		return FileSystem::PathAppend(FsUtils::SongsDirectoryPath(), packageFolderName);
+-	}
+-}
+-
+-FolderConfIni FolderConfIni::Load(FilePathView chartFilePath)
+-{
+-	const FilePath packageFolderPath = GetPackageFolderPath(chartFilePath);
+-	if (packageFolderPath.empty())
+-	{
+-		return {};
+-	}
+-
+-	// キャッシュを確認
+-	if (s_cache.contains(packageFolderPath))
+-	{
+-		return s_cache.at(packageFolderPath);
+-	}
+-
+-	FolderConfIni config;
+-
+-	const FilePath confIniPath = FileSystem::PathAppend(packageFolderPath, U"conf.ini");
+-	if (!FileSystem::IsFile(confIniPath))
+-	{
+-		// ファイルが存在しない場合はデフォルト値をキャッシュして返す
+-		s_cache.emplace(packageFolderPath, config);
+-		return config;
+-	}
+-
+-	// conf.iniを読み込み
+-	const KSMIniData iniData(confIniPath);
+-
+-	// volume
+-	const int32 volume = iniData.getInt(kVolumeKey, kDefaultVolume);
+-	if (volume < 0)
+-	{
+-		Logger << U"[ksm warning] Invalid volume value in '{}': {} (must be >= 0)"_fmt(confIniPath, volume);
+-		config.volumeScale = kDefaultVolume / 100.0;
+-	}
+-	else
+-	{
+-		config.volumeScale = volume / 100.0;
+-	}
+-
+-	// offset
+-	config.offsetMs = iniData.getInt(kOffsetKey, kDefaultOffset);
+-
+-	// tweet_option
+-	config.tweetOption = iniData.getString(kTweetOptionKey);
+-
+-	s_cache.emplace(packageFolderPath, config);
+-	return config;
+-}
+-
+-void FolderConfIni::ClearCache()
+-{
+-	s_cache.clear();
+-}
++﻿#include "FolderConfIni.hpp"
++#include "KSMIniData.hpp"
++#include "Common/FsUtils.hpp"
++
++namespace
++{
++	constexpr StringView kVolumeKey = U"volume";
++	constexpr StringView kOffsetKey = U"offset";
++	constexpr StringView kTweetOptionKey = U"tweet_option";
++	constexpr int32 kDefaultVolume = 100;
++	constexpr int32 kDefaultOffset = 0;
++
++	HashTable<FilePath, FolderConfIni> s_cache;
++
++	// 譜面ファイルパスからパッケージフォルダのパスを取得
++	FilePath GetPackageFolderPath(FilePathView chartFilePath)
++	{
++		const String relativePath = FsUtils::RelativePathFromSongsDir(chartFilePath);
++		if (relativePath.empty())
++		{
++			return {};
++		}
++
++		// 相対パスの最初のセグメント(パッケージフォルダ名)を抽出
++		const std::size_t separatorPos = relativePath.indexOfAny(U"/\\");
++		const String packageFolderName = separatorPos == String::npos
++											 ? relativePath
++											 : relativePath.substr(0, separatorPos);
++
++		return FileSystem::PathAppend(FsUtils::SongsDirectoryPath(), packageFolderName);
++	}
++}
++
++FolderConfIni FolderConfIni::Load(FilePathView chartFilePath)
++{
++	const FilePath packageFolderPath = GetPackageFolderPath(chartFilePath);
++	if (packageFolderPath.empty())
++	{
++		return {};
++	}
++
++	// キャッシュを確認
++	if (s_cache.contains(packageFolderPath))
++	{
++		return s_cache.at(packageFolderPath);
++	}
++
++	FolderConfIni config;
++
++	const FilePath confIniPath = FileSystem::PathAppend(packageFolderPath, U"conf.ini");
++	if (!FileSystem::IsFile(confIniPath))
++	{
++		// ファイルが存在しない場合はデフォルト値をキャッシュして返す
++		s_cache.emplace(packageFolderPath, config);
++		return config;
++	}
++
++	// conf.iniを読み込み
++	const KSMIniData iniData(confIniPath);
++
++	// volume
++	const int32 volume = iniData.getInt(kVolumeKey, kDefaultVolume);
++	if (volume < 0)
++	{
++		Logger << U"[ksm warning] Invalid volume value in '{}': {} (must be >= 0)"_fmt(confIniPath, volume);
++		config.volumeScale = kDefaultVolume / 100.0;
++	}
++	else
++	{
++		config.volumeScale = volume / 100.0;
++	}
++
++	// offset
++	config.offsetMs = iniData.getInt(kOffsetKey, kDefaultOffset);
++
++	// tweet_option
++	config.tweetOption = iniData.getString(kTweetOptionKey);
++
++	s_cache.emplace(packageFolderPath, config);
++	return config;
++}
++
++void FolderConfIni::ClearCache()
++{
++	s_cache.clear();
++}
 diff --git a/kshootmania/src/Ini/KSMIniData.cpp b/kshootmania/src/Ini/KSMIniData.cpp
 index 13900516bbe8fe514ce1edc25eec4b4ff9182ec6..7c01259b3bce69aa5a969ffcbff724018031a0de 100644
 --- a/kshootmania/src/Ini/KSMIniData.cpp
@@ -3706,7 +3948,7 @@ index 71f55403c52929a003eed6b2c740a865b753dd3e..d2554b09a37c96fa33fcfcd7827d522c
  	explicit KSMIniData(FilePathView path);
  
 diff --git a/kshootmania/src/Input/KeyConfig.cpp b/kshootmania/src/Input/KeyConfig.cpp
-index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca20255b19 100644
+index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..5643c4f26b2f8e1d4cc69aa4afa5ee00334fe93b 100644
 --- a/kshootmania/src/Input/KeyConfig.cpp
 +++ b/kshootmania/src/Input/KeyConfig.cpp
 @@ -4,6 +4,7 @@
@@ -3748,13 +3990,15 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  		{
  			return false;
  		}
-@@ -466,14 +476,16 @@ void KeyConfig::SetConfigValueByCommaSeparated(ConfigSet targetConfigSet, String
+@@ -466,14 +476,20 @@ void KeyConfig::SetConfigValueByCommaSeparated(ConfigSet targetConfigSet, String
  	Array<int32> intValues;
  	try
  	{
 -		intValues = values.map([](const String& str) { return Parse<int32>(str); });
 +		intValues = values.map([](const String& str)
-+							   { return Parse<int32>(str); });
++							   {
++								   return Parse<int32>(str);
++							   });
  	}
  	catch (const ParseError&)
  	{
@@ -3763,11 +4007,13 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  		{
 -			intValues = String(kDefaultConfigValues[targetConfigSet]).split(U',').map([](const String& str) { return Parse<int32>(str); });
 +			intValues = String(kDefaultConfigValues[targetConfigSet]).split(U',').map([](const String& str)
-+																					  { return Parse<int32>(str); });
++																					  {
++																						  return Parse<int32>(str);
++																					  });
  		}
  		catch (const ParseError&)
  		{
-@@ -600,6 +612,8 @@ void KeyConfig::SaveToConfigIni()
+@@ -600,6 +616,8 @@ void KeyConfig::SaveToConfigIni()
  
  bool KeyConfig::Pressed(Button button)
  {
@@ -3776,7 +4022,7 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  	if (button == kUnspecifiedButton)
  	{
  		return false;
-@@ -681,14 +695,21 @@ Optional<Button> KeyConfig::LastPressedLaserButton(Button button1, Button button
+@@ -681,14 +699,21 @@ Optional<Button> KeyConfig::LastPressedLaserButton(Button button1, Button button
  
  bool KeyConfig::Down(Button button)
  {
@@ -3800,13 +4046,15 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  	}
  
  	const bool ignoreKeyboard = ShouldIgnoreKeyboardInput();
-@@ -824,11 +845,14 @@ Co::Task<void> KeyConfig::WaitUntilDown(Button button)
+@@ -824,11 +849,16 @@ Co::Task<void> KeyConfig::WaitUntilDown(Button button)
  	// 前シーンの入力で多重に反応しないよう、入力をクリア
  	ClearInput(button);
  
 -	return Co::WaitUntil([button]() { return Down(button); });
 +	return Co::WaitUntil([button]()
-+						 { return Down(button); });
++						 {
++							 return Down(button);
++						 });
  }
  
  bool KeyConfig::Up(Button button)
@@ -3816,7 +4064,7 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  	if (button == kUnspecifiedButton)
  	{
  		return false;
-@@ -908,6 +932,8 @@ bool KeyConfig::Up(Button button)
+@@ -908,6 +938,8 @@ bool KeyConfig::Up(Button button)
  
  bool KeyConfig::IsLaserInputDigital()
  {
@@ -3825,7 +4073,7 @@ index 17fcc9f902c604701c55c6f78ea2cfe9c5ecf398..e22220c5d1bde636ef5cee901ba114ca
  	const int32 laserInputType = ConfigIni::GetInt(ConfigIni::Key::kLaserInputType, ConfigIni::Value::LaserInputType::kKeyboard);
  	return laserInputType == ConfigIni::Value::LaserInputType::kKeyboard;
  }
-@@ -920,6 +946,8 @@ bool KeyConfig::IsLaserInputMouse()
+@@ -920,6 +952,8 @@ bool KeyConfig::IsLaserInputMouse()
  
  double KeyConfig::LaserDeltaCursorX(int32 laneIdx, double deltaTimeSec)
  {
@@ -3849,12 +4097,13 @@ index 693926b6a7971d28185b837a136b01db805a4e23..f3487989c2a31cbd64c605dc1a8c24b0
  	void RequestVirtualDown(Button button);
  
 diff --git a/kshootmania/src/Main.cpp b/kshootmania/src/Main.cpp
-index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4e0a3e9e8 100644
+index 58a84afe14813cf45f56bd51f09ad99fe119e412..d3db49f9a01551263676dc67f2724feadb726db0 100644
 --- a/kshootmania/src/Main.cpp
 +++ b/kshootmania/src/Main.cpp
-@@ -1,4 +1,12 @@
+@@ -1,4 +1,13 @@
 -﻿#include <Siv3D.hpp>
-+﻿#include "ksmaudio/Diagnostics.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "ksmaudio/Diagnostics.hpp"
 +#include "Common/AudioOutputSettings.hpp"
 +#include <Siv3D.hpp>
 +#ifdef _WIN32
@@ -3866,7 +4115,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  #include <CoTaskLib.hpp>
  #include <NocoUI.hpp>
  #include "Common/FrameRateLimit.hpp"
-@@ -11,11 +19,24 @@
+@@ -11,11 +20,24 @@
  #include <ksmaxis/ksmaxis.hpp>
  #include "RuntimeConfig.hpp"
  #include "Scenes/Title/TitleScene.hpp"
@@ -3891,7 +4140,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  #ifdef __APPLE__
  #include <ksmplatform_macos/input_method.h>
-@@ -122,14 +143,14 @@ void OutputLicenseTxt()
+@@ -122,14 +144,14 @@ void OutputLicenseTxt()
  	bassFxLicense.title = U"BASS_FX";
  	bassFxLicense.copyright = U"Copyright (c) 2002-2018 Arthur Aminov (JOBnik!)\nhttp://www.jobnik.org";
  	bassFxLicense.text = U"BASS_FX is fully useable in commercial software, as long as credit is given.\n"
@@ -3914,7 +4163,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(bassFxLicense);
  #else
  	// Web版のオーディオバックエンドで使用しているライブラリのライセンス情報を追加
-@@ -137,41 +158,41 @@ void OutputLicenseTxt()
+@@ -137,41 +159,41 @@ void OutputLicenseTxt()
  	miniaudioLicense.title = U"miniaudio";
  	miniaudioLicense.copyright = U"Copyright (c) 2025 David Reid\nhttps://miniaud.io/";
  	miniaudioLicense.text = U"This software is available as a choice of the following licenses (MIT No Attribution / Public Domain).\n"
@@ -3985,7 +4234,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(stbVorbisLicense);
  #endif
  
-@@ -180,22 +201,22 @@ void OutputLicenseTxt()
+@@ -180,22 +202,22 @@ void OutputLicenseTxt()
  	ksonLicense.title = U"libkson";
  	ksonLicense.copyright = U"Copyright (c) 2019-2022 masaka";
  	ksonLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -4024,7 +4273,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(ksonLicense);
  
  	// ksmaxisのライセンス情報を追加
-@@ -203,43 +224,43 @@ void OutputLicenseTxt()
+@@ -203,43 +225,43 @@ void OutputLicenseTxt()
  	ksmaxisLicense.title = U"ksmaxis";
  	ksmaxisLicense.copyright = U"Copyright (c) 2025 masaka";
  	ksmaxisLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -4098,7 +4347,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(ksmFontLicense);
  
  	// SQLiteのライセンス情報を追加
-@@ -247,31 +268,31 @@ void OutputLicenseTxt()
+@@ -247,31 +269,31 @@ void OutputLicenseTxt()
  	sqliteLicense.title = U"SQLite";
  	sqliteLicense.copyright = U"https://www.sqlite.org/copyright.html";
  	sqliteLicense.text = U"SQLite Is Public Domain\n"
@@ -4155,7 +4404,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(sqliteLicense);
  
  	// SQLiteCppのライセンス情報を追加
-@@ -279,21 +300,21 @@ void OutputLicenseTxt()
+@@ -279,21 +301,21 @@ void OutputLicenseTxt()
  	sqliteCppLicense.title = U"SQLiteCpp";
  	sqliteCppLicense.copyright = U"Copyright (c) 2012-2025 Sebastien Rombauts (sebastien.rombauts@gmail.com)";
  	sqliteCppLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
@@ -4192,7 +4441,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	licenses.push_back(sqliteCppLicense);
  
  	// stb_imageのライセンス情報を追加
-@@ -301,29 +322,27 @@ void OutputLicenseTxt()
+@@ -301,29 +323,29 @@ void OutputLicenseTxt()
  	stbImageLicense.title = U"stb_image";
  	stbImageLicense.copyright = U"Copyright (c) 2017 Sean Barrett\nhttps://github.com/nothings/stb\nLicensed under the MIT License (ALTERNATIVE A of stb's dual license).";
  	stbImageLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
@@ -4235,11 +4484,13 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 -	{
 -		return a.title < b.title;
 -	});
-+					 { return a.title < b.title; });
++					 {
++						 return a.title < b.title;
++					 });
  
  	// ファイルに保存
  	TextWriter writer(U"license.txt");
-@@ -354,6 +373,8 @@ void OutputLicenseTxt()
+@@ -354,6 +376,8 @@ void OutputLicenseTxt()
  ksmaudio::AudioBackend GetAudioBackendFromConfig()
  {
  	const StringView value = ConfigIni::GetString(ConfigIni::Key::kAudioBackend, ConfigIni::Value::AudioBackend::kDefault);
@@ -4248,7 +4499,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	return value == ConfigIni::Value::AudioBackend::kDirectSound ? ksmaudio::AudioBackend::DirectSound : ksmaudio::AudioBackend::Default;
  }
  #endif
-@@ -371,11 +392,19 @@ void KSMMain()
+@@ -371,11 +395,19 @@ void KSMMain()
  	LicenseManager::DisableDefaultTrigger();
  
  	// ウィンドウタイトル
@@ -4269,20 +4520,20 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  	// デフォルト色を指定
  	Scene::SetBackground(Palette::Black);
-@@ -390,6 +419,52 @@ void KSMMain()
+@@ -390,6 +422,52 @@ void KSMMain()
  
  	// config.iniを読み込み
  	ConfigIni::Load();
 +	const auto originalVerticalConfig = Vertical::ModConfig::Load();
-+	const bool previewTitle = System::GetCommandLineArgs().contains(U"--vertical-preview-title");
-+	const bool previewOptions = System::GetCommandLineArgs().contains(U"--vertical-preview-options") || System::GetCommandLineArgs().contains(U"--vertical-options-test");
-+	const bool previewHUD = System::GetCommandLineArgs().contains(U"--vertical-preview-hud");
-+	const bool previewLegacyOptions = System::GetCommandLineArgs().contains(U"--vertical-preview-option-scene");
-+	const bool previewPrepare = System::GetCommandLineArgs().contains(U"--vertical-preview-prepare");
-+	const bool previewResult = System::GetCommandLineArgs().contains(U"--vertical-preview-result");
-+	const bool previewSelect = System::GetCommandLineArgs().contains(U"--vertical-preview-select");
-+	const bool previewSettings = System::GetCommandLineArgs().contains(U"--vertical-preview-settings");
-+	const bool displayTest = System::GetCommandLineArgs().contains(U"--vertical-display-test");
++	const bool previewTitle = ModDiagnostics::Arguments().contains(U"--vertical-preview-title");
++	const bool previewOptions = ModDiagnostics::Arguments().contains(U"--vertical-preview-options") || ModDiagnostics::Arguments().contains(U"--vertical-options-test");
++	const bool previewHUD = ModDiagnostics::Arguments().contains(U"--vertical-preview-hud");
++	const bool previewLegacyOptions = ModDiagnostics::Arguments().contains(U"--vertical-preview-option-scene");
++	const bool previewPrepare = ModDiagnostics::Arguments().contains(U"--vertical-preview-prepare");
++	const bool previewResult = ModDiagnostics::Arguments().contains(U"--vertical-preview-result");
++	const bool previewSelect = ModDiagnostics::Arguments().contains(U"--vertical-preview-select");
++	const bool previewSettings = ModDiagnostics::Arguments().contains(U"--vertical-preview-settings");
++	const bool displayTest = ModDiagnostics::Arguments().contains(U"--vertical-display-test");
 +	const bool previewMode = previewResult || previewTitle || previewOptions || previewHUD || previewLegacyOptions || previewSelect || previewPrepare || previewSettings || displayTest;
 +	if (displayTest)
 +		Vertical::SetDisplayConfigPersistence(false);
@@ -4295,22 +4546,22 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +		auto previewConfig = originalVerticalConfig;
 +		previewConfig.ResetLayout();
 +		previewConfig.enabled = true;
-+		if (System::GetCommandLineArgs().contains(U"--vertical-options-test"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-options-test"))
 +		{
 +			previewConfig.backgroundDepthEnabled = true;
 +			previewConfig.ResetDepthImages();
 +		}
-+		if (System::GetCommandLineArgs().contains(U"--vertical-preview-depth-off"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-depth-off"))
 +			previewConfig.backgroundDepthEnabled = false;
-+		previewConfig.displayMode = System::GetCommandLineArgs().contains(U"--vertical-preview-borderless")
++		previewConfig.displayMode = ModDiagnostics::Arguments().contains(U"--vertical-preview-borderless")
 +										? Vertical::DisplayMode::BorderlessFullscreen
 +										: Vertical::DisplayMode::Windowed;
 +		previewConfig.windowSize = { 540, 960 };
-+		if (System::GetCommandLineArgs().contains(U"--vertical-preview-1080"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-1080"))
 +			previewConfig.windowSize = { 1080, 1920 };
-+		if (System::GetCommandLineArgs().contains(U"--vertical-preview-720"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-720"))
 +			previewConfig.windowSize = { 720, 1280 };
-+		if (System::GetCommandLineArgs().contains(U"--vertical-preview-landscape"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-landscape"))
 +		{
 +			previewConfig.enabled = false;
 +			previewConfig.windowSize = { 1280, 720 };
@@ -4322,7 +4573,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  	// ランタイム設定を初期化
  	RuntimeConfig::RestoreJudgmentModesFromConfigIni();
-@@ -400,20 +475,46 @@ void KSMMain()
+@@ -400,20 +478,50 @@ void KSMMain()
  
  	// 音声処理を初期化
  #ifdef _WIN32
@@ -4332,7 +4583,11 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +	const std::string asioDriver = configuredOutput.starts_with(U"asio:") ? configuredOutput.substr(5).toUTF8() : "";
 +	const bool audioInitialized = ksmaudio::InitWithTrace(s3d::Platform::Windows::Window::GetHWND(), GetAudioBackendFromConfig(), asioDriver,
 +														  [](const char* phase)
-+														  { AudioOutputSettings::Log(Unicode::FromUTF8(phase)); ksmaudio::qa::Event("STARTUP_AUDIO",0,0,phase); ksmaudio::qa::Phase("startup.audio"); });
++														  {
++															  AudioOutputSettings::Log(Unicode::FromUTF8(phase));
++															  ksmaudio::qa::Event("STARTUP_AUDIO", 0, 0, phase);
++															  ksmaudio::qa::Phase("startup.audio");
++														  });
  #else
  	const bool audioInitialized = ksmaudio::Init(nullptr);
 +#endif
@@ -4371,12 +4626,12 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	}
  
  	// ハイスコアのバックアップを作成
-@@ -423,8 +524,38 @@ void KSMMain()
+@@ -423,8 +531,38 @@ void KSMMain()
  	Window::SetToggleFullscreenEnabled(false); // Alt+Enter無効化
  	ApplyScreenSizeConfig();
  
 +	// Validate the ordinary Play startup path, without preview-mode overrides.
-+	if (System::GetCommandLineArgs().contains(U"--play-launch-config-check"))
++	if (ModDiagnostics::Arguments().contains(U"--play-launch-config-check"))
 +	{
 +		TextWriter report{ U"play-launch-config-check.csv" };
 +		report.writeln(U"check,actual,expected,status");
@@ -4410,7 +4665,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -479,6 +610,10 @@ void KSMMain()
+@@ -479,6 +617,10 @@ void KSMMain()
  
  	// NocoUIのグローバルデフォルトフォントを設定
  	noco::SetGlobalDefaultFont(AssetManagement::SystemFont());
@@ -4421,7 +4676,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  	// NocoUIの音声再生をゲーム本体と同じ音声バックエンド(BASS)で行う
  	noco::UISound::SetPlayAudioCallback(
-@@ -507,8 +642,8 @@ void KSMMain()
+@@ -507,8 +649,8 @@ void KSMMain()
  	if (testPlayArgs.has_value())
  	{
  		const auto chartData = FsUtils::HasKsonExtension(testPlayArgs->chartFilePath)
@@ -4432,18 +4687,18 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  		if (chartData.error != kson::ErrorType::None)
  		{
  			MessageBoxUtils::ShowOK(I18n::Get(I18n::Play::ErrorChartLoadFailed), MessageBoxStyle::Error);
-@@ -516,9 +651,54 @@ void KSMMain()
+@@ -516,9 +658,54 @@ void KSMMain()
  		}
  	}
  
-+	const bool audioOptionsSmokeTest = System::GetCommandLineArgs().contains(U"--audio-options-smoke-test");
++	const bool audioOptionsSmokeTest = ModDiagnostics::Arguments().contains(U"--audio-options-smoke-test");
 +	if (audioOptionsSmokeTest)
 +	{
 +		ksmaudio::SetMasterVolume(0.0);
 +		ScreenCapture::SetScreenshotDirectory(FsUtils::AppDataDirectoryPath());
 +	}
 +
-+	const bool resultDetailCapture = System::GetCommandLineArgs().contains(U"--result-detail-capture");
++	const bool resultDetailCapture = ModDiagnostics::Arguments().contains(U"--result-detail-capture");
 +	if (resultDetailCapture)
 +	{
 +		if (!FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
@@ -4488,15 +4743,15 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  	{
  		// テストプレイ(-from指定あり)の場合
  		initialSceneFactory = Co::MakeSceneFactory<PlayScene>(
-@@ -543,10 +723,146 @@ void KSMMain()
+@@ -543,10 +730,151 @@ void KSMMain()
  	}
  
  	// メインループ
 +	if (previewOptions)
 +		initialSceneFactory = Co::MakeSceneFactory<ModOptionsScene>(
-+			System::GetCommandLineArgs().contains(U"--vertical-preview-depth") ? 3 : System::GetCommandLineArgs().contains(U"--vertical-preview-graphics") ? 1
-+																				 : System::GetCommandLineArgs().contains(U"--vertical-preview-developer")  ? 2
-+																																						   : 0,
++			ModDiagnostics::Arguments().contains(U"--vertical-preview-depth") ? 3 : ModDiagnostics::Arguments().contains(U"--vertical-preview-graphics") ? 1
++																				: ModDiagnostics::Arguments().contains(U"--vertical-preview-developer")	 ? 2
++																																						 : 0,
 +			0);
 +	if (previewHUD)
 +		initialSceneFactory = Co::MakeSceneFactory<VerticalRenderPreview>();
@@ -4505,7 +4760,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +	if (previewPrepare)
 +	{
 +		FilePath chart = U"../../test-output/ui-v12/fixture/test.ksh";
-+		const auto args = System::GetCommandLineArgs();
++		const auto args = ModDiagnostics::Arguments();
 +		for (size_t i = 0; i + 1 < args.size(); ++i)
 +			if (args[i] == U"--vertical-preview-chart")
 +				chart = args[i + 1];
@@ -4519,7 +4774,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +		fixture.chartData = kson::CreateEditorDefaultChartData();
 +		fixture.chartData.meta.title = "Vertical result preview";
 +		fixture.chartData.meta.artist = "Render-only fixture";
-+		const auto args = System::GetCommandLineArgs();
++		const auto args = ModDiagnostics::Arguments();
 +		for (size_t i = 0; i + 1 < args.size(); ++i)
 +			if (args[i] == U"--vertical-preview-chart")
 +			{
@@ -4546,16 +4801,19 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +	// Keep the display confirmation above scenes and transition fades.
 +	const Co::ScopedDrawer displayConfirmationDrawer{
 +		[]
-+		{ Vertical::DrawDisplayConfirmation(); }, Co::Layer::User_PostTransition_10
++		{
++			Vertical::DrawDisplayConfirmation();
++		},
++		Co::Layer::User_PostTransition_10
 +	};
 +	Stopwatch previewTimer{ StartImmediately::Yes };
 +	bool previewCaptured = false;
 +	bool previewMenuOpened = false;
 +	bool previewSelectMoved = false;
 +	int previewPrepareFrame = 0;
-+	const bool fastPreview = System::GetCommandLineArgs().contains(U"--vertical-preview-fast");
-+	const bool warpBench = previewHUD && System::GetCommandLineArgs().contains(U"--vertical-preview-benchmark");
-+	const bool warpSequence = previewHUD && System::GetCommandLineArgs().contains(U"--vertical-preview-sequence");
++	const bool fastPreview = ModDiagnostics::Arguments().contains(U"--vertical-preview-fast");
++	const bool warpBench = previewHUD && ModDiagnostics::Arguments().contains(U"--vertical-preview-benchmark");
++	const bool warpSequence = previewHUD && ModDiagnostics::Arguments().contains(U"--vertical-preview-sequence");
 +	std::array<double, 960> warpFrameTimes{};
 +	int warpFrame = 0, warpSequenceFrame = 0;
 +	double warpPreviousTime = previewTimer.sF();
@@ -4608,8 +4866,10 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +				ScreenCapture::SaveCurrentFrame(U"audio-options-smoke.png");
 +				audioSmokeCaptured = true;
 +			}
-+			const bool pairTest = System::GetCommandLineArgs().any([](const String& arg)
-+																   { return arg.starts_with(U"--audio-switch-pair="); });
++			const bool pairTest = ModDiagnostics::Arguments().any([](const String& arg)
++																  {
++																	  return arg.starts_with(U"--audio-switch-pair=");
++																  });
 +			if (audioSmokeClock.sF() >= 3.0 && (!pairTest || FileSystem::Exists(FsUtils::GetResourcePath(U"audio-switch-smoke-status.txt"))))
 +				break;
 +		}
@@ -4637,7 +4897,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  		// マウスカーソル非表示設定(全画面での非表示)
  		// プレイ中のみの非表示はPlaySceneで処理する
  		if (ConfigIni::GetInt(ConfigIni::Key::kHideMouseCursor, ConfigIni::Value::HideMouseCursor::kPlayOnly) == ConfigIni::Value::HideMouseCursor::kAll)
-@@ -556,28 +872,109 @@ void KSMMain()
+@@ -556,28 +884,110 @@ void KSMMain()
  
  		if (ksmaxis::IsInitialized())
  		{
@@ -4649,10 +4909,10 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +		ksmaudio::qa::Phase("input.KeyConfig");
  		KeyConfig::Update();
 +		if (previewSelect && !previewSelectMoved && previewTimer.sF() >= 1.95 &&
-+			(System::GetCommandLineArgs().contains(U"--vertical-preview-select-down") ||
-+			 System::GetCommandLineArgs().contains(U"--vertical-preview-select-up")))
++			(ModDiagnostics::Arguments().contains(U"--vertical-preview-select-down") ||
++			 ModDiagnostics::Arguments().contains(U"--vertical-preview-select-up")))
 +		{
-+			KeyConfig::RequestVirtualDown(System::GetCommandLineArgs().contains(U"--vertical-preview-select-up")
++			KeyConfig::RequestVirtualDown(ModDiagnostics::Arguments().contains(U"--vertical-preview-select-up")
 +											  ? kButtonUp
 +											  : kButtonDown);
 +			previewSelectMoved = true;
@@ -4722,7 +4982,8 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
 +		std::sort(warpFrameTimes.begin(), warpFrameTimes.end());
 +		TextWriter writer{ U"vertical-warp-benchmark.csv" };
 +		writer.writeln(U"samples,mean_ms,p99_ms,over_8_333ms,width,height");
-+		writer.writeln(U"960,{},{},{},{},{}"_fmt(sum / 960, warpFrameTimes[950], over, Scene::Width(), Scene::Height()));
++		const int32 actualSamples = Clamp(warpFrame - 240, 0, 960);
++		writer.writeln(U"{},{},{},{},{},{}"_fmt(actualSamples, sum / 960, warpFrameTimes[950], over, Scene::Width(), Scene::Height()));
 +	}
 +	Vertical::RestorePendingDisplayChange();
 +	if (previewMode)
@@ -4748,7 +5009,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  
  #ifdef __APPLE__
  	// macOS: 英数・かなキーのイベントタップを停止
-@@ -589,27 +986,73 @@ void KSMMain()
+@@ -589,27 +999,73 @@ void KSMMain()
  	{
  		ksmaxis::Terminate();
  	}
@@ -4761,22 +5022,22 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..45919d72d67961375fb35cb5cc3f14a4
  void Main()
  {
 +	ksmaudio::qa::SessionGuard qaSession;
-+	if (System::GetCommandLineArgs().contains(U"--vertical-spin-test"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-spin-test"))
 +	{
 +		Vertical::RunSpinRegression();
 +		return;
 +	}
-+	if (System::GetCommandLineArgs().contains(U"--vertical-menu-input-test"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-menu-input-test"))
 +	{
 +		Vertical::RunMenuInputTest();
 +		return;
 +	}
-+	if (System::GetCommandLineArgs().contains(U"--vertical-replay-test"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-replay-test"))
 +	{
 +		Vertical::RunJudgmentReplayTest();
 +		return;
 +	}
-+	if (System::GetCommandLineArgs().contains(U"--vertical-self-test"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-self-test"))
 +	{
 +		Vertical::RunSelfTest();
 +		return;
@@ -5014,7 +5275,7 @@ index 562fcddcb8e16d79ec8a2a558c6df9627283ad6c..ee71d991fe1386655e8e0569bd02b275
  	// (旧バージョンの譜面では別の値を使う)
  	constexpr uint32 kLaserSlamSEMaxPolyphony = 1U;
 diff --git a/kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp b/kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp
-index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cdee3def9f7 100644
+index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..eab4a116cbacbcfebaa549b507f044353eabde85 100644
 --- a/kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp
 +++ b/kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp
 @@ -57,9 +57,8 @@ namespace MusicGame::Audio
@@ -5029,17 +5290,19 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  
  			// legacy.filterGainに0.5以外の値が存在する場合、ビルトインのフィルタエフェクトのgain・qのパラメータ変更として反映
  			// (p音源が指定されているがファイルが存在しない場合、pfiltergainの値を無視して50%で適用)
-@@ -72,7 +71,8 @@ namespace MusicGame::Audio
+@@ -72,7 +71,10 @@ namespace MusicGame::Audio
  				bool hasNonDefaultValue = std::any_of(
  					filterGain.begin(),
  					filterGain.end(),
 -					[](const auto& pair) { return pair.second != 0.5; });
 +					[](const auto& pair)
-+					{ return pair.second != 0.5; });
++					{
++						return pair.second != 0.5;
++					});
  
  				if (hasNonDefaultValue)
  				{
-@@ -184,12 +184,12 @@ namespace MusicGame::Audio
+@@ -184,12 +186,12 @@ namespace MusicGame::Audio
  						const auto& paramChangeDict = chartData.audio.audioEffect.fx.paramChange;
  						const std::set<float> updateTriggerTiming =
  							paramChangeDict.contains(name)
@@ -5056,7 +5319,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  
  						bgm.emplaceAudioEffectFX(name, def, paramChanges, updateTriggerTiming);
  					}
-@@ -237,12 +237,12 @@ namespace MusicGame::Audio
+@@ -237,12 +239,12 @@ namespace MusicGame::Audio
  						// 通常のDSPエフェクトの場合
  						const std::set<float> updateTriggerTiming =
  							laserParamChangeDict.contains(name)
@@ -5073,7 +5336,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  
  						// メイン音源には常に登録
  						bgm.emplaceAudioEffectLaser(name, def, paramChanges, updateTriggerTiming);
-@@ -286,16 +286,16 @@ namespace MusicGame::Audio
+@@ -286,16 +288,16 @@ namespace MusicGame::Audio
  						{
  							// SwitchAudioの場合
  							convertedLongEvent[i].insert_or_assign(y, SwitchAudioInvocation{
@@ -5095,7 +5358,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  						}
  					}
  				}
-@@ -330,16 +330,16 @@ namespace MusicGame::Audio
+@@ -330,16 +332,16 @@ namespace MusicGame::Audio
  					{
  						// SwitchAudioの場合
  						convertedPulseEvent.insert_or_assign(y, SwitchAudioInvocation{
@@ -5117,7 +5380,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  					}
  					else
  					{
-@@ -356,9 +356,9 @@ namespace MusicGame::Audio
+@@ -356,9 +358,9 @@ namespace MusicGame::Audio
  				if (audioEffectBus.audioEffectContainsName(defaultAudioEffectName))
  				{
  					convertedPulseEvent.insert_or_assign(kson::Pulse{ 0 }, DSPAudioEffectInvocation{
@@ -5130,7 +5393,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  				}
  				else
  				{
-@@ -446,9 +446,9 @@ namespace MusicGame::Audio
+@@ -446,9 +448,9 @@ namespace MusicGame::Audio
  			{
  				const auto& dspInvocation = std::get<DSPAudioEffectInvocation>(audioEffectInvocation);
  				m_activeAudioEffectDictFX.emplace(dspInvocation.audioEffectIdx, ksmaudio::AudioEffect::ActiveAudioEffectInvocation{
@@ -5143,7 +5406,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  			}
  		}
  	}
-@@ -462,10 +462,7 @@ namespace MusicGame::Audio
+@@ -462,10 +464,7 @@ namespace MusicGame::Audio
  	}
  
  	AudioEffectMain::AudioEffectMain(BGM& bgm, const kson::ChartData& chartData, const kson::TimingCache& timingCache, const FilePath& parentPath, double audioProcDelaySec, double bgmVolume)
@@ -5155,7 +5418,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  	{
  	}
  
-@@ -473,7 +470,7 @@ namespace MusicGame::Audio
+@@ -473,7 +472,7 @@ namespace MusicGame::Audio
  	{
  		// TODO: SecondsFに統一
  		const double currentTimeSec = bgm.posSec().count();
@@ -5164,7 +5427,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  		const kson::Pulse currentPulseForAudio = kson::SecToPulse(currentTimeSecForAudio, chartData.beat, timingCache);
  		const double currentBPMForAudio = kson::TempoAt(currentPulseForAudio, chartData.beat);
  
-@@ -489,13 +486,11 @@ namespace MusicGame::Audio
+@@ -489,13 +488,11 @@ namespace MusicGame::Audio
  				// 音声エフェクトはバッファサイズによる遅延を回避するため、バッファサイズ分だけ早めに適用し始める必要がある。
  				// これはプレイヤーのキー入力に関係なく実施する必要があるため、下記の「～.value_or(true)」で、longFXPressed[i]がnoneである(つまり判定中のロングFXノーツがまだ存在しない)場合でも、
  				// あたかもロングFXが押されている(trueである)かのように扱っている。
@@ -5181,7 +5444,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  				{
  					currentLongNoteOfLanes[i] = currentLongNoteByTime;
  					bypassFX = false;
-@@ -528,9 +523,7 @@ namespace MusicGame::Audio
+@@ -528,9 +525,7 @@ namespace MusicGame::Audio
  
  		// LASERノーツの音声エフェクト
  		{
@@ -5192,7 +5455,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  			kson::Pulse currentPulseForLaserAudio;
  			if (isPeakingFilter && m_peakingFilterDelaySec != 0.0)
  			{
-@@ -562,7 +555,7 @@ namespace MusicGame::Audio
+@@ -562,7 +557,7 @@ namespace MusicGame::Audio
  
  				// 表示上のX座標の値(0.0:左、1.0:右)を、音声エフェクトで使うためのレーンに依存しない値(0.0～1.0)に変換
  				const float fLaneLaserValue = static_cast<float>(laneLaserValue.value());
@@ -5201,7 +5464,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  				const float v = (i == 0U) ? fLaneLaserValue : (1.0f - fLaneLaserValue); // 右レーンの値を反転
  
  				// 音声エフェクトにはLASERの左右レーンのうち値が大きい方を採用する
-@@ -581,13 +574,13 @@ namespace MusicGame::Audio
+@@ -581,13 +576,13 @@ namespace MusicGame::Audio
  					.playbackSpeed = static_cast<float>(bgm.playbackSpeed()),
  				},
  				activeLaserInvocation.has_value() && std::holds_alternative<DSPAudioEffectInvocation>(*activeLaserInvocation)
@@ -5218,7 +5481,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  		// FXのSwitchAudioチェック
  		for (std::size_t i = 0U; i < kson::kNumFXLanesSZ; ++i)
  		{
-@@ -625,7 +618,7 @@ namespace MusicGame::Audio
+@@ -625,7 +620,7 @@ namespace MusicGame::Audio
  				break;
  			}
  		}
@@ -5227,7 +5490,7 @@ index 6f46f6d7fe33b42bbfb385e2a5967ce568c4936f..c836a601f38deb1226cf468f1d892cde
  		// LASERのSwitchAudioチェック
  		{
  			// いずれかのレーザーがOnかつノーツがある状態か調べる(SwitchAudioは先行発音しないためbypassとは別に調べる)
-@@ -649,7 +642,7 @@ namespace MusicGame::Audio
+@@ -649,7 +644,7 @@ namespace MusicGame::Audio
  				activeSwitchAudioIdxLaser = switchInvocation.switchAudioIdx;
  			}
  		}
@@ -6671,12 +6934,13 @@ index 747520fcbf833a184e1225457f4f27b7612e4108..6ee08a4cf0e3996354e03ff26f4aff06
  	{
  		return Mat4x4::Rotate(Float3::Right(), -60_deg) * TiltTransformMatrix(tiltRadians, kHighwayTiltCenter);
 diff --git a/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp b/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
-index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f02d4bfda 100644
+index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e92e531dc3 100644
 --- a/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
-@@ -1,9 +1,17 @@
+@@ -1,9 +1,18 @@
 -﻿#include "GraphicsMain.hpp"
-+﻿#include "Graphics/GameRenderContext.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "Graphics/GameRenderContext.hpp"
 +#include "GraphicsMain.hpp"
 +#include "Vertical/VerticalLaneGeometry.hpp"
 +#include "GraphicsMain.hpp"
@@ -6693,7 +6957,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  
  namespace MusicGame::Graphics
  {
-@@ -42,14 +50,93 @@ namespace MusicGame::Graphics
+@@ -42,14 +51,93 @@ namespace MusicGame::Graphics
  		constexpr Vec3 kCameraLookAt = kCameraPosition + Vec3{ 0.0, -100.0 * kSin15Deg, 100.0 * kCos15Deg };
  
  		constexpr Float3 kBGBillboardPosition = Float3{ 0, -52.5f, 0 };
@@ -6788,7 +7052,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  		std::array<Texture, 2> LoadBGTextures(const kson::ChartData& chartData, FilePathView parentPath)
  		{
  			std::array<Texture, 2> textures;
-@@ -63,7 +150,7 @@ namespace MusicGame::Graphics
+@@ -63,7 +151,7 @@ namespace MusicGame::Graphics
  					if (i == 0)
  					{
  						// bg[0]が空の場合はデフォルトの背景
@@ -6797,7 +7061,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  					}
  					else
  					{
-@@ -76,7 +163,7 @@ namespace MusicGame::Graphics
+@@ -76,7 +164,7 @@ namespace MusicGame::Graphics
  				if (FileSystem::Extension(filename).empty())
  				{
  					// 標準の背景
@@ -6806,7 +7070,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  					if (FileSystem::Exists(filePath))
  					{
  						textures[i] = Texture(filePath);
-@@ -84,7 +171,7 @@ namespace MusicGame::Graphics
+@@ -84,7 +172,7 @@ namespace MusicGame::Graphics
  					else
  					{
  						// 存在しない場合はデフォルトの背景
@@ -6815,7 +7079,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  					}
  				}
  				else
-@@ -98,7 +185,7 @@ namespace MusicGame::Graphics
+@@ -98,7 +186,7 @@ namespace MusicGame::Graphics
  					else
  					{
  						// 存在しない場合は、デフォルトの背景
@@ -6824,7 +7088,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  					}
  				}
  			}
-@@ -112,7 +199,7 @@ namespace MusicGame::Graphics
+@@ -112,7 +200,7 @@ namespace MusicGame::Graphics
  			if (FileSystem::Extension(filename).empty())
  			{
  				// 標準のレイヤーアニメーション
@@ -6833,7 +7097,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  			}
  
  			// 標準のレイヤーアニメーションでなければ、譜面ファイルと同じディレクトリのファイル名として参照
-@@ -120,7 +207,7 @@ namespace MusicGame::Graphics
+@@ -120,7 +208,7 @@ namespace MusicGame::Graphics
  			if (!FileSystem::Exists(filePath))
  			{
  				// 存在しない場合は、デフォルトのレイヤーアニメーション(arrow)を返す
@@ -6842,7 +7106,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  			}
  			return filePath;
  		}
-@@ -200,7 +287,9 @@ namespace MusicGame::Graphics
+@@ -200,7 +288,9 @@ namespace MusicGame::Graphics
  
  		std::shared_ptr<noco::Canvas> LoadHUDCanvas()
  		{
@@ -6853,7 +7117,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  			const auto canvas = noco::Canvas::LoadFromFile(uiFilePath);
  			if (!canvas)
  			{
-@@ -215,33 +304,30 @@ namespace MusicGame::Graphics
+@@ -215,33 +305,30 @@ namespace MusicGame::Graphics
  
  	void GraphicsMain::drawBG(const ViewStatus& viewStatus) const
  	{
@@ -6899,7 +7163,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  		const int32 layerTextureIndex = viewStatus.gaugePercentageInt >= percentThreshold ? 1 : 0;
  
  		if (!m_layerFrameTextures[layerTextureIndex].empty())
-@@ -274,26 +360,33 @@ namespace MusicGame::Graphics
+@@ -274,26 +361,36 @@ namespace MusicGame::Graphics
  				}
  			}
  
@@ -6929,16 +7193,19 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
 +		: m_camera(GameRender::VerticalEnabled()
 +					   ? Vertical::MakeCamera(GameRender::Size(), Vertical::ModConfig::Load().layout)
 +					   : BasicCamera3D{ GameRender::Size(), kCameraVerticalFOV, kCameraPosition, kCameraLookAt }),
-+		  m_bgBillboardMesh(MeshData::Billboard()), m_verticalLayerMesh(VerticalBackdropMesh(true, Size{ 720, 640 }, &m_camera)), m_vertical(GameRender::VerticalEnabled()), m_depthEnabled(Vertical::EffectiveDepthConfig().backgroundDepthEnabled && !System::GetCommandLineArgs().contains(U"--vertical-preview-warp-off")), m_backgroundOnly(System::GetCommandLineArgs().contains(U"--vertical-preview-background-only")), m_warpDebug(System::GetCommandLineArgs().contains(U"--vertical-preview-warp-mesh")), m_uvTexture([]()
-+																																																																																																																																 {
-+            if(!System::GetCommandLineArgs().contains(U"--vertical-preview-warp-uv")) return Texture{};
-+            Image image{600,480,Color{12,22,32}};
-+            for(int y=0;y<480;++y) for(int x=0;x<600;++x) {
-+                image[y][x]=(x%25==0||y%30==0) ? Color{40,220,240} :
-+                    ((x/25+y/30)%2 ? Color{20,45,55} : Color{50,73,78});
-+            }
-+            return Texture{image}; }()),
-+		  m_tunnelWarp(VerticalBackdropMesh(true, Size{ 720, 640 }, &m_camera), m_vertical && m_depthEnabled), m_bgTextures(LoadBGTextures(chartData, parentPath)), m_verticalBGMeshes{ Mesh{ VerticalBackdropMesh(false, m_bgTextures[0].size()) }, Mesh{ VerticalBackdropMesh(false, m_bgTextures[1].size()) } }, m_bgTransform(GameRender::VerticalEnabled() ? VerticalBackdrop(m_camera, kBGBillboardPosition) : BackgroundBillboard(m_camera, kBGBillboardPosition, kBGBillboardSize)), m_layerFrameTextures(LoadLayerFrameTextures(LayerFilePath(chartData, parentPath))), m_layerTransform(GameRender::VerticalEnabled() ? VerticalBackdrop(m_camera, kLayerBillboardPosition) : m_camera.billboard(kLayerBillboardPosition, kLayerBillboardSize)), m_jdgoverlay3DGraphics(m_camera), m_hudCanvas(LoadHUDCanvas()), m_gaugePanel(ToGaugeCalcType(playOption.gaugeType, playOption.gameMode)), m_laserApproachIndicator(chartData), m_moviePanel(MovieFilePath(chartData, parentPath), chartData.bg.legacy.movie.offset / 1000.0 / playOption.nonZeroPlaybackSpeed(), playOption.playbackSpeed, playOption.movieEnabled), m_playOption(playOption), m_layerTilt(chartData.bg.legacy.layer.rotation.tilt && !System::GetCommandLineArgs().contains(U"--vertical-preview-layer-static")), m_layerSpin(chartData.bg.legacy.layer.rotation.spin && !System::GetCommandLineArgs().contains(U"--vertical-preview-layer-static")), m_layerFrameOriginTimeSec(-TimeSecBeforeStart(m_moviePanel.isEnabled()).count()), m_layerFrameOriginPulse(static_cast<kson::Pulse>(kson::SecToPulseDouble(m_layerFrameOriginTimeSec, chartData.beat, timingCache)))
++		  m_bgBillboardMesh(MeshData::Billboard()), m_verticalLayerMesh(VerticalBackdropMesh(true, Size{ 720, 640 }, &m_camera)), m_vertical(GameRender::VerticalEnabled()), m_depthEnabled(Vertical::EffectiveDepthConfig().backgroundDepthEnabled && !ModDiagnostics::Arguments().contains(U"--vertical-preview-warp-off")), m_backgroundOnly(ModDiagnostics::Arguments().contains(U"--vertical-preview-background-only")), m_warpDebug(ModDiagnostics::Arguments().contains(U"--vertical-preview-warp-mesh")), m_uvTexture([]()
++																																																																																																																															  {
++																																																																																																																																  if (!ModDiagnostics::Arguments().contains(U"--vertical-preview-warp-uv"))
++																																																																																																																																	  return Texture{};
++																																																																																																																																  Image image{ 600, 480, Color{ 12, 22, 32 } };
++																																																																																																																																  for (int y = 0; y < 480; ++y)
++																																																																																																																																	  for (int x = 0; x < 600; ++x)
++																																																																																																																																	  {
++																																																																																																																																		  image[y][x] = (x % 25 == 0 || y % 30 == 0) ? Color{ 40, 220, 240 } : ((x / 25 + y / 30) % 2 ? Color{ 20, 45, 55 } : Color{ 50, 73, 78 });
++																																																																																																																																	  }
++																																																																																																																																  return Texture{ image };
++																																																																																																																															  }()),
++		  m_tunnelWarp(VerticalBackdropMesh(true, Size{ 720, 640 }, &m_camera), m_vertical && m_depthEnabled), m_bgTextures(LoadBGTextures(chartData, parentPath)), m_verticalBGMeshes{ Mesh{ VerticalBackdropMesh(false, m_bgTextures[0].size()) }, Mesh{ VerticalBackdropMesh(false, m_bgTextures[1].size()) } }, m_bgTransform(GameRender::VerticalEnabled() ? VerticalBackdrop(m_camera, kBGBillboardPosition) : BackgroundBillboard(m_camera, kBGBillboardPosition, kBGBillboardSize)), m_layerFrameTextures(LoadLayerFrameTextures(LayerFilePath(chartData, parentPath))), m_layerTransform(GameRender::VerticalEnabled() ? VerticalBackdrop(m_camera, kLayerBillboardPosition) : m_camera.billboard(kLayerBillboardPosition, kLayerBillboardSize)), m_jdgoverlay3DGraphics(m_camera), m_hudCanvas(LoadHUDCanvas()), m_gaugePanel(ToGaugeCalcType(playOption.gaugeType, playOption.gameMode)), m_laserApproachIndicator(chartData), m_moviePanel(MovieFilePath(chartData, parentPath), chartData.bg.legacy.movie.offset / 1000.0 / playOption.nonZeroPlaybackSpeed(), playOption.playbackSpeed, playOption.movieEnabled), m_playOption(playOption), m_layerTilt(chartData.bg.legacy.layer.rotation.tilt && !ModDiagnostics::Arguments().contains(U"--vertical-preview-layer-static")), m_layerSpin(chartData.bg.legacy.layer.rotation.spin && !ModDiagnostics::Arguments().contains(U"--vertical-preview-layer-static")), m_layerFrameOriginTimeSec(-TimeSecBeforeStart(m_moviePanel.isEnabled()).count()), m_layerFrameOriginPulse(static_cast<kson::Pulse>(kson::SecToPulseDouble(m_layerFrameOriginTimeSec, chartData.beat, timingCache)))
  	{
 +		const String layerName = Unicode::FromUTF8(chartData.bg.legacy.layer.filename);
 +		const FilePath logicalLayer = FileSystem::Extension(layerName).isEmpty() ? U"imgs/bg/{}.gif"_fmt(layerName) : FileSystem::PathAppend(parentPath, layerName);
@@ -6948,7 +7215,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  		// HUDのCanvasパラメータを初期設定
  		const double startBPM = chartData.beat.bpm.contains(0) ? chartData.beat.bpm.at(0) : kDefaultBPM;
  
-@@ -342,6 +435,26 @@ namespace MusicGame::Graphics
+@@ -342,6 +439,30 @@ namespace MusicGame::Graphics
  		});
  	}
  
@@ -6956,7 +7223,11 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
 +	{
 +		Array<double> result{ double(GameRender::Width()), double(GameRender::Height()) };
 +		const auto append = [&](Float3 point)
-+		{const auto p=m_camera.worldToScreenPoint(point);result.push_back(p.x);result.push_back(p.y); };
++		{
++			const auto p = m_camera.worldToScreenPoint(point);
++			result.push_back(p.x);
++			result.push_back(p.y);
++		};
 +		const auto& source = m_highway3DGraphics.sourceMesh();
 +		const auto mesh = GameRender::VerticalEnabled() ? Vertical::DisplayHighwayMesh(source, Vertical::DisplayLaneSpan(source, m_camera, view)) : source;
 +		const double angle = Math::ToRadians(view.camStatus.rotationDeg + view.camStatus.rotationDegHighway) + view.tiltRadians;
@@ -6975,7 +7246,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  	void GraphicsMain::prepareMovie(double globalOffsetSec)
  	{
  		m_moviePanel.prepare(globalOffsetSec);
-@@ -352,12 +465,62 @@ namespace MusicGame::Graphics
+@@ -352,12 +473,62 @@ namespace MusicGame::Graphics
  		m_comboOverlay.update(viewStatus, gameStatus.currentTimeSec);
  		m_scoreAnimator.update(viewStatus.score);
  		m_highway3DGraphics.update(viewStatus);
@@ -7010,7 +7281,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
 +			m_tunnelWarp.updateGear(m_camera, layerTransform(viewStatus), quad(source, viewStatus), quad(m_referenceGear, referenceView), scaled / baseline);
 +		}
  		m_laserApproachIndicator.update(gameStatus, timingCache);
-+		if (TimingHudCapture::Enabled() && System::GetCommandLineArgs().contains(U"--play-judge-indicator-fixture"))
++		if (TimingHudCapture::Enabled() && ModDiagnostics::Arguments().contains(U"--play-judge-indicator-fixture"))
 +		{
 +			PlayJudgeIndicatorFixture::Configure();
 +			m_playJudgeIndicator.update(PlayJudgeIndicatorFixture::View(viewStatus), m_playOption.liveTimingHud().judgeColor);
@@ -7029,7 +7300,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  
 +		// EX display reads the existing confirmed total; no interpolation or score recomputation.
 +		int64 hudExScore = viewStatus.exScore;
-+		if (TimingHudCapture::Enabled() && !TimingHudCapture::IsMenu() && System::GetCommandLineArgs().contains(U"--ex-hud-fixture"))
++		if (TimingHudCapture::Enabled() && !TimingHudCapture::IsMenu() && ModDiagnostics::Arguments().contains(U"--ex-hud-fixture"))
 +			hudExScore = std::array<int64, 10>{ 0, 5, 42, 999, 12345, 19999, 19999, 21, 123, 0 }[TimingHudCapture::Stage()];
  		// HUDのCanvasパラメータを更新
  		m_hudCanvas->setParamValues({
@@ -7039,7 +7310,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  			{ U"fpsNumber", static_cast<int32>(Profiler::FPS()) },
  			{ U"bpmNumberText", FormatBPM(gameStatus.currentBPM) },
  			{ U"timingAdjustVisible", viewStatus.timingAdjustMs != 0 },
-@@ -365,15 +528,41 @@ namespace MusicGame::Graphics
+@@ -365,15 +536,41 @@ namespace MusicGame::Graphics
  			{ U"timingAdjustNumber", Abs(viewStatus.timingAdjustMs) },
  		});
  
@@ -7086,7 +7357,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  
  		// 3D空間を描画
  		Graphics3D::SetCameraTransform(m_camera);
-@@ -385,12 +574,28 @@ namespace MusicGame::Graphics
+@@ -385,12 +582,28 @@ namespace MusicGame::Graphics
  		{
  			drawLayer(chartData, gameStatus, viewStatus);
  		}
@@ -7118,7 +7389,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  		{
  			const double preStartOffset = m_moviePanel.isEnabled() ? kPreStartOffsetWithMovieSec : kPreStartOffsetSec;
  			const double totalDurationSec = bgmDuration.count() + preStartOffset;
-@@ -404,11 +609,53 @@ namespace MusicGame::Graphics
+@@ -404,11 +617,53 @@ namespace MusicGame::Graphics
  		}
  
  		m_hudCanvas->draw();
@@ -7176,7 +7447,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..c1e6805d549705374bae189d2ea6534f
  
  		// HARDゲージ落ち時の赤色オーバーレイ
  		if (gameStatus.playFinishStatus.has_value() && gameStatus.playFinishStatus->isHardFailed)
-@@ -420,7 +667,7 @@ namespace MusicGame::Graphics
+@@ -420,7 +675,7 @@ namespace MusicGame::Graphics
  			const Color overlayColor{ 255, g, 0 };
  
  			const ScopedRenderStates2D blend{ BlendState::Additive };
@@ -7753,12 +8024,13 @@ index 993e451c3ae9365861c6169eb39a46230233f0e6..5057d54d49b9359b7c85031ad19a0a1d
  	}
  }
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
-index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b33417ff3 100644
+index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c603d535b 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
-@@ -1,7 +1,9 @@
+@@ -1,7 +1,10 @@
 -﻿#include "Highway3DGraphics.hpp"
-+﻿#include "Graphics/GameRenderContext.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "Graphics/GameRenderContext.hpp"
 +#include "Highway3DGraphics.hpp"
  #include "MusicGame/Graphics/GraphicsDefines.hpp"
  #include "MusicGame/Camera/CameraMath.hpp"
@@ -7767,7 +8039,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  
  namespace MusicGame::Graphics
  {
-@@ -49,10 +51,9 @@ namespace MusicGame::Graphics
+@@ -49,10 +52,9 @@ namespace MusicGame::Graphics
  	}
  
  	Highway3DGraphics::Highway3DGraphics()
@@ -7781,7 +8053,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  	{
  	}
  
-@@ -77,11 +78,10 @@ namespace MusicGame::Graphics
+@@ -77,11 +79,10 @@ namespace MusicGame::Graphics
  			m_meshData.vertices[1].pos.z = m_meshData.vertices[0].pos.z;
  
  			m_meshData.vertices[2].pos.y = -scaledZoomBottom * 100 * Sin(kCameraToJdglineRadians) * kPlaneHeight / kPlaneHeightAboveJdgline // 手前の辺 上方向
@@ -7795,7 +8067,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  			m_meshData.vertices[3].pos.z = m_meshData.vertices[2].pos.z;
  		}
  		else
-@@ -112,6 +112,34 @@ namespace MusicGame::Graphics
+@@ -112,6 +113,34 @@ namespace MusicGame::Graphics
  		}
  
  		m_mesh.fill(m_meshData);
@@ -7808,7 +8080,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
 +			const auto span = Vertical::DisplayLaneSpan(m_meshData, camera, viewStatus);
 +			auto display = Vertical::DisplayHighwayMesh(m_meshData, span);
 +			m_displayNoteAnchor = (display.vertices[2].pos + display.vertices[3].pos) * .5f;
-+			if (System::GetCommandLineArgs().contains(U"--vertical-preview-geometry"))
++			if (ModDiagnostics::Arguments().contains(U"--vertical-preview-geometry"))
 +			{
 +				static bool written = false;
 +				if (!written)
@@ -7830,7 +8102,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  	}
  
  	void Highway3DGraphics::draw2D(const kson::ChartData& chartData, const std::array<HashSet<kson::Pulse>, kson::kNumLaserLanesSZ>& laserCurvedPulses, const PlayOption& playOption, const kson::TimingCache& timingCache, const GameStatus& gameStatus, const ViewStatus& viewStatus, const Scroll::HighwayScrollContext& highwayScrollContext) const
-@@ -121,6 +149,7 @@ namespace MusicGame::Graphics
+@@ -121,6 +150,7 @@ namespace MusicGame::Graphics
  		{
  			const ScopedRenderTarget2D renderTarget(m_renderTexture.additiveTexture());
  			const ScopedRenderStates2D renderState(BlendState::Additive);
@@ -7838,7 +8110,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  
  			const bool isCenterSplitUsed = !MathUtils::AlmostEquals(viewStatus.camStatus.centerSplit, 0.0);
  			const double centerSplitShiftX = isCenterSplitUsed ? Camera::CenterSplitShiftX(viewStatus.camStatus.centerSplit) : 0.0;
-@@ -184,6 +213,7 @@ namespace MusicGame::Graphics
+@@ -184,6 +214,7 @@ namespace MusicGame::Graphics
  			}
  		}
  
@@ -7846,7 +8118,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..b8ac30199089f7148236fd1c7b6f6a2b
  		// BT/FXノーツの描画
  		m_buttonNoteGraphics.draw(chartData, gameStatus, viewStatus, playOption, highwayScrollContext, m_renderTexture);
  
-@@ -199,7 +229,7 @@ namespace MusicGame::Graphics
+@@ -199,7 +230,7 @@ namespace MusicGame::Graphics
  		// レンダーテクスチャを3D空間上へ描画
  		const double radians = Math::ToRadians(viewStatus.camStatus.rotationDeg + viewStatus.camStatus.rotationDegHighway) + viewStatus.tiltRadians;
  		const double shiftX = viewStatus.camStatus.shiftX;
@@ -9074,7 +9346,7 @@ index 8a7a179a8fe4df58cdef98c32e89b5b0c6ca2505..a380a82e588b71c647d0db6c9aad42aa
  
  	namespace TimingWindow
 diff --git a/kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp b/kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp
-index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b88478834f2f0346 100644
+index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..27d64d9c51ff89ede3d4398a971102e4702178bb 100644
 --- a/kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp
 +++ b/kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp
 @@ -1,4 +1,5 @@
@@ -9084,7 +9356,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  #include "ButtonLaneJudgment.hpp"
  #include "LaserLaneJudgment.hpp"
  
-@@ -19,9 +20,12 @@ namespace MusicGame::Judgment
+@@ -19,9 +20,18 @@ namespace MusicGame::Judgment
  
  		int32 TotalCombo(const BTLaneJudgments& btLaneJudgments, const FXLaneJudgments& fxLaneJudgments, const LaserLaneJudgments& laserLaneJudgments)
  		{
@@ -9092,15 +9364,21 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
 -			const int32 fxCombo = ApplyAndSum(fxLaneJudgments, [](const ButtonLaneJudgment& laneJudgment) { return static_cast<int32>(laneJudgment.chipJudgmentCount() + laneJudgment.longJudgmentCount()); });
 -			const int32 laserCombo = ApplyAndSum(laserLaneJudgments, [](const LaserLaneJudgment& laneJudgment) { return static_cast<int32>(laneJudgment.lineJudgmentCount() + laneJudgment.slamJudgmentCount()); });
 +			const int32 btCombo = ApplyAndSum(btLaneJudgments, [](const ButtonLaneJudgment& laneJudgment)
-+											  { return static_cast<int32>(laneJudgment.chipJudgmentCount() + laneJudgment.longJudgmentCount()); });
++											  {
++												  return static_cast<int32>(laneJudgment.chipJudgmentCount() + laneJudgment.longJudgmentCount());
++											  });
 +			const int32 fxCombo = ApplyAndSum(fxLaneJudgments, [](const ButtonLaneJudgment& laneJudgment)
-+											  { return static_cast<int32>(laneJudgment.chipJudgmentCount() + laneJudgment.longJudgmentCount()); });
++											  {
++												  return static_cast<int32>(laneJudgment.chipJudgmentCount() + laneJudgment.longJudgmentCount());
++											  });
 +			const int32 laserCombo = ApplyAndSum(laserLaneJudgments, [](const LaserLaneJudgment& laneJudgment)
-+												 { return static_cast<int32>(laneJudgment.lineJudgmentCount() + laneJudgment.slamJudgmentCount()); });
++												 {
++													 return static_cast<int32>(laneJudgment.lineJudgmentCount() + laneJudgment.slamJudgmentCount());
++												 });
  			return btCombo + fxCombo + laserCombo;
  		}
  
-@@ -56,10 +60,9 @@ namespace MusicGame::Judgment
+@@ -56,10 +66,9 @@ namespace MusicGame::Judgment
  				return TotalGaugeValueLaserLane(laneJudgment, chipValue, longValue);
  			};
  
@@ -9114,7 +9392,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  		}
  
  		int32 GaugeValueMax(
-@@ -96,16 +99,28 @@ namespace MusicGame::Judgment
+@@ -96,16 +105,28 @@ namespace MusicGame::Judgment
  	}
  
  	JudgmentHandler::JudgmentHandler(const kson::ChartData& chartData, const BTLaneJudgments& btLaneJudgments, const FXLaneJudgments& fxLaneJudgments, const LaserLaneJudgments& laserLaneJudgments, const PlayOption& playOption, const Optional<CourseContinuation>& courseContinuation, GameMode gameMode)
@@ -9152,7 +9430,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  	}
  
  	void JudgmentHandler::onChipJudged(JudgmentResult result, Optional<double> timingDiffMs)
-@@ -117,13 +132,16 @@ namespace MusicGame::Judgment
+@@ -117,13 +138,16 @@ namespace MusicGame::Judgment
  			return;
  		}
  
@@ -9175,7 +9453,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  	}
  
  	void JudgmentHandler::onLongJudged(JudgmentResult result)
-@@ -135,7 +153,12 @@ namespace MusicGame::Judgment
+@@ -135,7 +159,12 @@ namespace MusicGame::Judgment
  			return;
  		}
  
@@ -9189,7 +9467,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  	}
  
  	void JudgmentHandler::onLaserLineJudged(JudgmentResult result)
-@@ -147,7 +170,12 @@ namespace MusicGame::Judgment
+@@ -147,7 +176,12 @@ namespace MusicGame::Judgment
  			return;
  		}
  
@@ -9203,7 +9481,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  	}
  
  	void JudgmentHandler::onLaserSlamJudged(JudgmentResult result, kson::Pulse laserSlamPulse, double prevTimeSec, kson::Pulse prevPulse, int32 direction)
-@@ -159,7 +187,12 @@ namespace MusicGame::Judgment
+@@ -159,7 +193,12 @@ namespace MusicGame::Judgment
  			return;
  		}
  
@@ -9217,7 +9495,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  
  		if (result != JudgmentResult::kError)
  		{
-@@ -173,8 +206,16 @@ namespace MusicGame::Judgment
+@@ -173,8 +212,16 @@ namespace MusicGame::Judgment
  
  	void JudgmentHandler::applyToViewStatus(ViewStatus& viewStatusRef, double currentTimeSec, kson::Pulse currentPulse)
  	{
@@ -9234,7 +9512,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  		viewStatusRef.gaugePercentage = m_scoringStatus.gaugePercentage(m_playOption.gaugeType);
  		viewStatusRef.gaugePercentageInt = m_scoringStatus.gaugePercentageInt(m_playOption.gaugeType);
  		const int32 displayCombo = m_scoringStatus.displayCombo();
-@@ -200,6 +241,17 @@ namespace MusicGame::Judgment
+@@ -200,6 +247,17 @@ namespace MusicGame::Judgment
  		m_camPatternMain.applyToCamStatus(viewStatusRef.camStatus, currentPulse);
  	}
  
@@ -9252,7 +9530,7 @@ index 2e7569381f5a6c9da538d504c0b6ae6fba8dceb3..5a376054ed620ee4c14bff85b8847883
  	void JudgmentHandler::lockForExit()
  	{
  		m_isLockedForExit = true;
-@@ -232,20 +284,23 @@ namespace MusicGame::Judgment
+@@ -232,20 +290,23 @@ namespace MusicGame::Judgment
  	PlayResult JudgmentHandler::playResult(double currentTimeSec, double chartEndTimeSec, IsHardFailedYN isHardFailed, bool isAborted) const
  	{
  		const double chartTimeProgress = chartEndTimeSec > 0.0 ? Clamp(currentTimeSec / chartEndTimeSec, 0.0, 1.0) : 1.0;
@@ -9429,10 +9707,10 @@ index 9796f97f0c5cffc69dfccb7074cdbd3c0cc8462b..a54724949a24003da301693bf11773fe
  
  	void JudgmentMain::lockForExit()
 diff --git a/kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp b/kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp
-index 8240a50f522425e5bc8b7b420061f23ff3bf0d93..30ae5ceba279a12f8bc2b63e3865556fc794f640 100644
+index 8240a50f522425e5bc8b7b420061f23ff3bf0d93..1d829b5ab214162be452189a120a8284e21496c7 100644
 --- a/kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp
 +++ b/kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp
-@@ -7,11 +7,61 @@
+@@ -7,11 +7,67 @@
  
  namespace MusicGame::Judgment
  {
@@ -9460,13 +9738,19 @@ index 8240a50f522425e5bc8b7b420061f23ff3bf0d93..30ae5ceba279a12f8bc2b63e3865556f
 +			if (!enabled)
 +				return;
 +			const auto add = [&](const auto& lane, int32 id)
-+			{for(const auto& [pulse,note]:lane)if(note.length==0)m_events.push_back({pulse,id,kson::PulseToSec(pulse,chart.beat,cache)}); };
++			{
++				for (const auto& [pulse, note] : lane)
++					if (note.length == 0)
++						m_events.push_back({ pulse, id, kson::PulseToSec(pulse, chart.beat, cache) });
++			};
 +			for (int32 i = 0; i < 4; ++i)
 +				add(chart.note.bt[i], i);
 +			for (int32 i = 0; i < 2; ++i)
 +				add(chart.note.fx[i], i + 4);
 +			m_events.sort_by([](const auto& a, const auto& b)
-+							 { return a.pulse != b.pulse ? a.pulse < b.pulse : a.lane < b.lane; });
++							 {
++								 return a.pulse != b.pulse ? a.pulse < b.pulse : a.lane < b.lane;
++							 });
 +			for (size_t i = 0; i < m_events.size(); ++i)
 +				m_events[i].phase = i % 7;
 +		}
@@ -9494,7 +9778,7 @@ index 8240a50f522425e5bc8b7b420061f23ff3bf0d93..30ae5ceba279a12f8bc2b63e3865556f
  		BTLaneJudgments m_btLaneJudgments;
  		FXLaneJudgments m_fxLaneJudgments;
  		LaserLaneJudgments m_laserLaneJudgments;
-@@ -24,7 +74,18 @@ namespace MusicGame::Judgment
+@@ -24,7 +80,18 @@ namespace MusicGame::Judgment
  		void update(const kson::ChartData& chartData, GameStatus& gameStatusRef, ViewStatus& viewStatusRef);
  
  		/// @brief プレイ終了のために判定処理をロックし、残りの未判定ノーツをERROR判定にする
@@ -10223,7 +10507,7 @@ index 70f9a25e9360d3522175d6a01e943a77052b0a48..7f80dbb779be15c127be7af00297a110
  
  	/// @brief Backボタンクリックの長押し必要時間を切り替える(noneの場合は長押しなし)
 diff --git a/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp b/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp
-index 7f2f6b58bfb330ed35960c5583b3a924140e5813..14a1a8ce09ab79ec65020c8092fbb8515e0b355f 100644
+index 7f2f6b58bfb330ed35960c5583b3a924140e5813..0dd29008cb123e01ed83a56b13d52335e28ca0b5 100644
 --- a/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp
 +++ b/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp
 @@ -1,4 +1,5 @@
@@ -10249,18 +10533,20 @@ index 7f2f6b58bfb330ed35960c5583b3a924140e5813..14a1a8ce09ab79ec65020c8092fbb851
  	// 前回までのAchievementRateを読み込んでNewRecordパネルを設定
  	const FilePath courseFilePath = m_courseState.courseInfo().filePath;
  	const KscKey kscKey = m_courseState.kscKey();
-@@ -98,7 +95,9 @@ void CourseResultScene::updateCanvasParams()
+@@ -98,7 +95,11 @@ void CourseResultScene::updateCanvasParams()
  
  Co::Task<void> CourseResultScene::start()
  {
 -	const auto updateRunner = Co::UpdaterTask([this] { update(); }).runScoped();
 +	const auto updateRunner = Co::UpdaterTask([this]
-+											  { update(); })
++											  {
++												  update();
++											  })
 +								  .runScoped();
  
  	bool userPressedStartOrBack = false;
  
-@@ -218,6 +217,8 @@ bool CourseResultScene::isClickDecideDown() const
+@@ -218,6 +219,8 @@ bool CourseResultScene::isClickDecideDown() const
  
  void CourseResultScene::update()
  {
@@ -10269,7 +10555,7 @@ index 7f2f6b58bfb330ed35960c5583b3a924140e5813..14a1a8ce09ab79ec65020c8092fbb851
  	// 画面全体がクリック可能なのでカーソルを人差し指に変更
  	Cursor::RequestStyle(CursorStyle::Hand);
  
-@@ -229,12 +230,15 @@ void CourseResultScene::update()
+@@ -229,12 +232,17 @@ void CourseResultScene::update()
  
  void CourseResultScene::draw() const
  {
@@ -10281,18 +10567,21 @@ index 7f2f6b58bfb330ed35960c5583b3a924140e5813..14a1a8ce09ab79ec65020c8092fbb851
  {
 -	const auto canvasUpdateRunner = Co::UpdaterTask([this] { m_canvas->update(noco::HitTestEnabledYN::No); }).runScoped();
 +	const auto canvasUpdateRunner = Co::UpdaterTask([this]
-+													{ m_canvas->update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	co_await Co::ScreenFadeIn(kFadeDuration, Palette::White);
  }
 diff --git a/kshootmania/src/Scenes/Option/OptionScene.cpp b/kshootmania/src/Scenes/Option/OptionScene.cpp
-index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495aa098abd5 100644
+index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..d3e306f7a7e3e0ce0bb8c849196d63beba928c82 100644
 --- a/kshootmania/src/Scenes/Option/OptionScene.cpp
 +++ b/kshootmania/src/Scenes/Option/OptionScene.cpp
-@@ -1,9 +1,18 @@
+@@ -1,9 +1,19 @@
 -﻿#include "OptionScene.hpp"
-+﻿#include "ksmaudio/Diagnostics.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "ksmaudio/Diagnostics.hpp"
 +#include "OptionScene.hpp"
  #include "Common/FrameRateLimit.hpp"
  #include "Common/IMEUtils.hpp"
@@ -10310,7 +10599,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  
  // TODO: TextureIdxまわりどうにかする
  
-@@ -13,7 +22,7 @@ namespace
+@@ -13,7 +23,7 @@ namespace
  
  	FilePath GetOptionSceneUIFilePath()
  	{
@@ -10319,7 +10608,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  	}
  
  	std::shared_ptr<noco::Canvas> LoadOptionSceneCanvas()
-@@ -50,227 +59,302 @@ std::unique_ptr<std::array<OptionMenu, OptionScene::kOptionMenuTypeEnumCount>> O
+@@ -50,227 +60,314 @@ std::unique_ptr<std::array<OptionMenu, OptionScene::kOptionMenuTypeEnumCount>> O
  		availableLanguageStrPairs.emplace_back(language, language);
  	}
  
@@ -10340,7 +10629,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +	}
 +	const String savedOutput{ ConfigIni::GetString(ConfigIni::Key::kAudioBackend) };
 +	if (savedOutput.starts_with(U"asio:") && !audioOutputs.any([&](const StrPair& item)
-+															   { return item.first == savedOutput; }))
++															   {
++																   return item.first == savedOutput;
++															   }))
 +		audioOutputs.emplace_back(savedOutput, savedOutput + U" (unavailable)");
 +#endif
 +
@@ -10380,6 +10671,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 -			CreateInfo::Enum(I18n::Get(I18n::Option::ItemDisplayLanguage), ConfigIni::Key::kLanguage, availableLanguageStrPairs)
 -				.setOnChangeCallback([this]
 -				{
+-					I18n::LoadLanguage(ConfigIni::GetString(ConfigIni::Key::kLanguage));
+-					refreshOptionMenusForLanguageChange();
+-				}),
 +			verticalEnabled ? CreateInfo::Enum(U"VERTICAL DISPLAY", U"vertical_display_mode", Array<IntStrPair>{ { 0, U"WINDOWED" }, { 2, U"BORDERLESS FULLSCREEN" } }) : CreateInfo::Enum(I18n::Get(I18n::Option::ItemScreenMode), ConfigIni::Key::kFullScreen, Array<StringView>{
 +																																																																	 I18n::Get(I18n::Option::FullscreenOff),
 +																																																																	 I18n::Get(I18n::Option::FullscreenOn),
@@ -10413,10 +10707,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +																																																																		   }),
 +			CreateInfo::Enum(I18n::Get(I18n::Option::ItemDisplayLanguage), ConfigIni::Key::kLanguage, availableLanguageStrPairs).setOnChangeCallback([this]
 +																																					 {
- 					I18n::LoadLanguage(ConfigIni::GetString(ConfigIni::Key::kLanguage));
--					refreshOptionMenusForLanguageChange();
--				}),
-+					refreshOptionMenusForLanguageChange(); }),
++																																						 I18n::LoadLanguage(ConfigIni::GetString(ConfigIni::Key::kLanguage));
++																																						 refreshOptionMenusForLanguageChange();
++																																					 }),
  			/*CreateInfo::Enum(ConfigIni::Key::kTextureSize, Array<IntStrPair>{
  				IntStrPair{ ConfigIni::Value::TextureSize::kSmall, I18n::Get(I18n::Option::TextureSizeSmall) },
  				IntStrPair{ ConfigIni::Value::TextureSize::kMedium, I18n::Get(I18n::Option::TextureSizeMedium) },
@@ -10460,15 +10753,17 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 -			CreateInfo::Int(I18n::Get(I18n::Option::ItemMasterVolume), ConfigIni::Key::kMasterVolume, kMasterVolumeMin, kMasterVolumeMax, kMasterVolumeDefault, I18n::Get(I18n::Option::MasterVolumePercent), 5)
 -				.setOnChangeCallback([]
 -				{
+-					const int32 volume = ConfigIni::GetInt(ConfigIni::Key::kMasterVolume, kMasterVolumeDefault);
+-					ksmaudio::SetMasterVolume(volume / 100.0);
+-				}),
 +																									   I18n::Get(I18n::Option::Off),
 +																									   I18n::Get(I18n::Option::On),
 +																								   }),
 +			CreateInfo::Int(I18n::Get(I18n::Option::ItemMasterVolume), ConfigIni::Key::kMasterVolume, kMasterVolumeMin, kMasterVolumeMax, kMasterVolumeDefault, I18n::Get(I18n::Option::MasterVolumePercent), 5).setOnChangeCallback([]
 +																																																									 {
- 					const int32 volume = ConfigIni::GetInt(ConfigIni::Key::kMasterVolume, kMasterVolumeDefault);
--					ksmaudio::SetMasterVolume(volume / 100.0);
--				}),
-+					ksmaudio::SetMasterVolume(volume / 100.0); }),
++																																																										 const int32 volume = ConfigIni::GetInt(ConfigIni::Key::kMasterVolume, kMasterVolumeDefault);
++																																																										 ksmaudio::SetMasterVolume(volume / 100.0);
++																																																									 }),
  #ifdef _WIN32
 -			CreateInfo::Enum(I18n::Get(I18n::Option::ItemAudioBackend), ConfigIni::Key::kAudioBackend, Array<StrPair>{
 -				StrPair{ String{ ConfigIni::Value::AudioBackend::kDefault }, I18n::Get(I18n::Option::AudioBackendDefault) },
@@ -10503,7 +10798,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +																													  I18n::Get(I18n::Option::JudgmentHide),
 +																												  })
 +				.setOnChangeCallback([]()
-+									 { RuntimeConfig::SetJudgmentPlayModeBT(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeBT))); }),
++									 {
++										 RuntimeConfig::SetJudgmentPlayModeBT(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeBT)));
++									 }),
  			CreateInfo::Enum(I18n::Get(I18n::Option::ItemDefaultFXJudgmentMode), ConfigIni::Key::kJudgmentModeFX, Array<StringView>{
 -				I18n::Get(I18n::Option::JudgmentOn),
 -				I18n::Get(I18n::Option::JudgmentOff),
@@ -10518,7 +10815,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +																													  I18n::Get(I18n::Option::JudgmentHide),
 +																												  })
 +				.setOnChangeCallback([]()
-+									 { RuntimeConfig::SetJudgmentPlayModeFX(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeFX))); }),
++									 {
++										 RuntimeConfig::SetJudgmentPlayModeFX(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeFX)));
++									 }),
  			CreateInfo::Enum(I18n::Get(I18n::Option::ItemDefaultLaserJudgmentMode), ConfigIni::Key::kJudgmentModeLaser, Array<StringView>{
 -				I18n::Get(I18n::Option::JudgmentOn),
 -				I18n::Get(I18n::Option::JudgmentOff),
@@ -10533,7 +10832,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +																															I18n::Get(I18n::Option::JudgmentHide),
 +																														})
 +				.setOnChangeCallback([]()
-+									 { RuntimeConfig::SetJudgmentPlayModeLaser(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeLaser))); }),
++									 {
++										 RuntimeConfig::SetJudgmentPlayModeLaser(static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeLaser)));
++									 }),
  			CreateInfo::Enum(I18n::Get(I18n::Option::ItemLaserInputType), ConfigIni::Key::kLaserInputType, Array<IntStrPair>{
 -				IntStrPair{ ConfigIni::Value::LaserInputType::kKeyboard, I18n::Get(I18n::Option::LaserInputTypeKeyboard) },
 -				IntStrPair{ ConfigIni::Value::LaserInputType::kSlider, I18n::Get(I18n::Option::LaserInputTypeSlider) },
@@ -10550,7 +10851,9 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +																											   IntStrPair{ ConfigIni::Value::LaserInputType::kAnalogStickXY, I18n::Get(I18n::Option::LaserInputTypeAnalogStickXY) },
 +																										   })
 +				.setOnChangeCallback([]()
-+									 { InputUtils::InitKsmaxisForCurrentLaserInput(); }),
++									 {
++										 InputUtils::InitKsmaxisForCurrentLaserInput();
++									 }),
  			CreateInfo::Enum(I18n::Get(I18n::Option::ItemDisableIME), ConfigIni::Key::kDisableIME, Array<StringView>{
 -				I18n::Get(I18n::Option::DisableIMEOff),
 -				I18n::Get(I18n::Option::DisableIMEOnLow),
@@ -10724,7 +11027,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +	m_savedOutputSelection = String{ ConfigIni::GetString(ConfigIni::Key::kAudioBackend, U"default") };
 +	m_switchSmokeASIO = m_savedOutputSelection;
 +	m_switchSmokeTargets = { U"default", U"direct_sound", m_switchSmokeASIO };
-+	for (const auto& arg : System::GetCommandLineArgs())
++	for (const auto& arg : ModDiagnostics::Arguments())
 +	{
 +		if (!arg.starts_with(U"--audio-switch-pair="))
 +			continue;
@@ -10735,7 +11038,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +			throw Error{ U"Pair test expects source|target" };
 +		m_switchSmokeTargets = pair;
 +	}
-+	if (System::GetCommandLineArgs().contains(U"--audio-options-smoke-test"))
++	if (ModDiagnostics::Arguments().contains(U"--audio-options-smoke-test"))
 +	{
 +		m_currentOptionMenuIdx = kDisplaySound;
 +		auto& menu = (*m_optionMenus)[kDisplaySound];
@@ -10758,7 +11061,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
 +	}
 +	ksmaudio::qa::Scope qaScope{ "OptionScene.update", false };
 +	ksmaudio::qa::Scene("option");
-+	if (System::GetCommandLineArgs().contains(U"--audio-output-switch-smoke-test") && m_switchSmokeClock.sF() > 0.2 &&
++	if (ModDiagnostics::Arguments().contains(U"--audio-output-switch-smoke-test") && m_switchSmokeClock.sF() > 0.2 &&
 +		m_switchSmokeStage <= static_cast<int32>(m_switchSmokeTargets.size()))
 +	{
 +		if (!FileSystem::Exists(FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"audio-test-fixture")))
@@ -10787,7 +11090,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  	// フェード中はクリックやホバーが効かないようヒットテスト無効
  	const noco::HitTestEnabledYN hitTestEnabled{ !isFadingIn() && !isFadingOut() && InputUtils::IsUIMouseInputEnabled() };
  
-@@ -301,6 +385,13 @@ void OptionScene::update()
+@@ -301,6 +398,13 @@ void OptionScene::update()
  			}
  			else
  			{
@@ -10801,7 +11104,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  				m_currentOptionMenuIdx = none;
  			}
  		}
-@@ -364,12 +455,133 @@ void OptionScene::update()
+@@ -364,12 +468,133 @@ void OptionScene::update()
  	m_topMenu.updateUI(m_canvas.get());
  	m_keyConfigMenu.updateUI(m_canvas.get());
  	m_canvas->update(hitTestEnabled);
@@ -10935,21 +11238,23 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  }
  
  Co::Task<void> OptionScene::fadeIn()
-@@ -380,10 +592,10 @@ Co::Task<void> OptionScene::fadeIn()
+@@ -380,10 +605,11 @@ Co::Task<void> OptionScene::fadeIn()
  Co::Task<void> OptionScene::fadeOut()
  {
  	const auto canvasUpdateRunner = Co::UpdaterTask([this]
 -	{
-+													{
- 		m_canvas->update(noco::HitTestEnabledYN::No);
+-		m_canvas->update(noco::HitTestEnabledYN::No);
 -		m_commonOverlay.update(noco::HitTestEnabledYN::No);
 -	}).runScoped();
-+		m_commonOverlay.update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	m_bgmStream.setFadeOut(kFadeDuration);
  	co_await Co::ScreenFadeOut(kFadeDuration);
-@@ -391,7 +603,12 @@ Co::Task<void> OptionScene::fadeOut()
+@@ -391,7 +617,12 @@ Co::Task<void> OptionScene::fadeOut()
  
  void OptionScene::exitScene()
  {
@@ -10963,7 +11268,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -404,10 +621,23 @@ void OptionScene::exitScene()
+@@ -404,10 +635,23 @@ void OptionScene::exitScene()
  	Addon::GetAddon<FrameRateLimit>(FrameRateLimit::kAddonName)->setTargetFPS(frameRateLimit);
  
  	// 画面サイズ反映
@@ -10989,7 +11294,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..8947bf642f39d6c35e44f6695184495a
  }
  
  void OptionScene::refreshOptionMenusForLanguageChange()
-@@ -448,7 +678,7 @@ void OptionScene::createSettingItemNodes()
+@@ -448,7 +692,7 @@ void OptionScene::createSettingItemNodes()
  	for (const auto& params : (*m_optionMenus)[*m_currentOptionMenuIdx].getSettingItemParamsList())
  	{
  		containerNode->addSubCanvasNodeAsChild(
@@ -11058,7 +11363,7 @@ index 37b7e186b85445a94b8fbfd916acbe0dc9458035..c8fccd900a356fc7f2911c2bf542efb0
  	virtual void update() override;
  
 diff --git a/kshootmania/src/Scenes/Play/PlayScene.cpp b/kshootmania/src/Scenes/Play/PlayScene.cpp
-index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fdb1cd694e 100644
+index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..ee082fbb1d36738db034ec3e91895d81e6cb4855 100644
 --- a/kshootmania/src/Scenes/Play/PlayScene.cpp
 +++ b/kshootmania/src/Scenes/Play/PlayScene.cpp
 @@ -1,4 +1,5 @@
@@ -11086,13 +11391,9 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  				.turnMode = RuntimeConfig::GetTurnMode(),
  				.playbackSpeed = RuntimeConfig::GetPlaybackSpeed(),
  				.btJudgmentPlayMode = RuntimeConfig::GetJudgmentPlayModeBT(),
-@@ -75,23 +75,21 @@ namespace
- 				.noteSkin = [&]()
- 				{
- 					const StringView noteSkinStr = ConfigIni::GetString(ConfigIni::Key::kNoteSkin, U"default");
--					return noteSkinStr == U"note" ? NoteSkinType::kNote : NoteSkinType::kDefault;
--				}(),
-+					return noteSkinStr == U"note" ? NoteSkinType::kNote : NoteSkinType::kDefault; }(),
+@@ -78,7 +78,8 @@ namespace
+ 					return noteSkinStr == U"note" ? NoteSkinType::kNote : NoteSkinType::kDefault;
+ 				}(),
  				.autoSyncMode = static_cast<AutoSyncMode>(ConfigIni::GetInt(ConfigIni::Key::kAutoSync, static_cast<int32>(AutoSyncMode::kOff))),
 -				.fastSlowMode = static_cast<FastSlowMode>(ConfigIni::GetInt(ConfigIni::Key::kShowFastSlow, static_cast<int32>(FastSlowMode::kHide))),
 +				.fastSlowMode = RuntimeConfig::LoadFastSlowModeFromConfigIni(),
@@ -11100,22 +11401,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  				.availableHispeedTypes = LoadAvailableHispeedTypesFromConfigIni(),
  				.hispeedSetting = LoadHispeedSettingFromConfigIni(),
  				.movieEnabled = ConfigIni::GetInt(ConfigIni::Key::kBGMovie, static_cast<int32>(MovieMode::kOn)) == static_cast<int32>(MovieMode::kOn),
- 				.showBG = [&]()
- 				{
- 					const int32 bgDisplayMode = ConfigIni::GetInt(ConfigIni::Key::kBGDisplayMode, ConfigIni::Value::BGDisplayMode::kShowLayer);
--					return bgDisplayMode != ConfigIni::Value::BGDisplayMode::kHide;
--				}(),
-+					return bgDisplayMode != ConfigIni::Value::BGDisplayMode::kHide; }(),
- 				.showLayer = [&]()
- 				{
- 					const int32 bgDisplayMode = ConfigIni::GetInt(ConfigIni::Key::kBGDisplayMode, ConfigIni::Value::BGDisplayMode::kShowLayer);
--					return bgDisplayMode == ConfigIni::Value::BGDisplayMode::kShowLayer;
--				}(),
-+					return bgDisplayMode == ConfigIni::Value::BGDisplayMode::kShowLayer; }(),
- 			},
- 			.assistTickMode = static_cast<AssistTickMode>(ConfigIni::GetInt(ConfigIni::Key::kAssistTick, static_cast<int32>(AssistTickMode::kOff))),
- 			.courseContinuation = courseState.has_value() && courseState->currentChartIdx() > 0 ? MakeOptional(courseState->continuation()) : none,
-@@ -113,14 +111,10 @@ namespace
+@@ -113,14 +114,10 @@ namespace
  }
  
  PlayScene::PlayScene(FilePathView chartFilePath, MusicGame::IsAutoPlayYN isAutoPlay, const Optional<CoursePlayState>& courseState, const Optional<MusicGame::TestPlayOption>& testPlayOption, const Optional<SelectSceneSearchParams>& selectSearchParams)
@@ -11133,7 +11419,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	m_gameMain.start();
  
  	// Playシーンではウィンドウのフォーカスが外れていてもミュートしない
-@@ -132,6 +126,7 @@ PlayScene::PlayScene(FilePathView chartFilePath, MusicGame::IsAutoPlayYN isAutoP
+@@ -132,6 +129,7 @@ PlayScene::PlayScene(FilePathView chartFilePath, MusicGame::IsAutoPlayYN isAutoP
  
  PlayScene::~PlayScene()
  {
@@ -11141,7 +11427,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	m_gameMain.terminate();
  
  	KeyConfig::SetRightClickAsBackSuppressed(false);
-@@ -139,6 +134,7 @@ PlayScene::~PlayScene()
+@@ -139,6 +137,7 @@ PlayScene::~PlayScene()
  
  void PlayScene::update()
  {
@@ -11149,7 +11435,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	// マウスカーソル非表示設定
  	if (ConfigIni::GetInt(ConfigIni::Key::kHideMouseCursor, ConfigIni::Value::HideMouseCursor::kPlayOnly) != ConfigIni::Value::HideMouseCursor::kOff)
  	{
-@@ -154,6 +150,7 @@ void PlayScene::update()
+@@ -154,6 +153,7 @@ void PlayScene::update()
  
  	if (startFadeOut)
  	{
@@ -11157,7 +11443,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  		// 譜面終了時にリザルト画面に遷移
  		m_fadeOutDuration = kPlayFinishFadeOutDuration;
  
-@@ -165,14 +162,16 @@ void PlayScene::update()
+@@ -165,14 +165,16 @@ void PlayScene::update()
  		else if (m_testPlayOption.has_value())
  		{
  			// テストプレイ(-fromなし、手動)の場合はリザルト画面へ
@@ -11177,7 +11463,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  		}
  		else if (m_isAutoPlay)
  		{
-@@ -192,26 +191,32 @@ void PlayScene::update()
+@@ -192,26 +194,32 @@ void PlayScene::update()
  			else
  			{
  				// 次の曲がない場合は選曲画面へ
@@ -11214,7 +11500,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	if (!KeyConfig::Down(kButtonBack))
  	{
  		return;
-@@ -234,35 +239,43 @@ void PlayScene::processBackButtonInput()
+@@ -234,35 +242,43 @@ void PlayScene::processBackButtonInput()
  	else if (m_testPlayOption.has_value())
  	{
  		// テストプレイ(-fromなし、手動)の場合はリザルト画面へ
@@ -11265,7 +11551,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	m_commonOverlay.update(noco::HitTestEnabledYN::No);
  
  	// フェードアウト中もゲームの更新は継続
-@@ -274,6 +287,7 @@ void PlayScene::updateFadeOut()
+@@ -274,6 +290,7 @@ void PlayScene::updateFadeOut()
  
  void PlayScene::draw() const
  {
@@ -11273,7 +11559,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	m_gameMain.draw();
  	m_commonOverlay.draw();
  }
-@@ -385,6 +399,7 @@ namespace
+@@ -385,6 +402,7 @@ namespace
  
  void PlayScene::showAutoSyncSaveDialog()
  {
@@ -11281,7 +11567,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	const int32 offsetMs = m_gameMain.timingAdjustOffsetMs();
  	if (offsetMs == 0 || m_isAutoPlay || m_testPlayOption.has_value())
  	{
-@@ -397,6 +412,7 @@ void PlayScene::showAutoSyncSaveDialog()
+@@ -397,6 +415,7 @@ void PlayScene::showAutoSyncSaveDialog()
  	const String offsetStr = U"{:+}"_fmt(offsetMs);
  	const String message = I18n::Get(I18n::Play::AutoSyncSaveConfirm, offsetStr, currentOffset, newOffset);
  
@@ -11289,7 +11575,7 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	const auto result = MessageBoxUtils::ShowYesNo(message, MessageBoxStyle::Question);
  	if (result == MessageBoxResult::OK)
  	{
-@@ -414,14 +430,18 @@ void PlayScene::showAutoSyncSaveDialog()
+@@ -414,14 +433,22 @@ void PlayScene::showAutoSyncSaveDialog()
  
  Co::Task<void> PlayScene::fadeOut()
  {
@@ -11297,7 +11583,9 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  	// フェードアウト中もBack入力を受け付けるため、updateFadeOutを実行
 -	const auto updateRunner = Co::UpdaterTask([this] { updateFadeOut(); }).runScoped();
 +	const auto updateRunner = Co::UpdaterTask([this]
-+											  { updateFadeOut(); })
++											  {
++												  updateFadeOut();
++											  })
 +								  .runScoped();
  
  	m_gameMain.startBGMFadeOut(m_fadeOutDuration);
@@ -11306,17 +11594,20 @@ index e1686ceaf6b11ab4e5860ccb9197ddbcf38c2198..94005f7a368fee4a28911caa912811fd
  		Co::ScreenFadeOut(m_fadeOutDuration),
 -		Co::WaitUntil([this] { return m_backButtonPressedDuringFadeOut; }));
 +		Co::WaitUntil([this]
-+					  { return m_backButtonPressedDuringFadeOut; }));
++					  {
++						  return m_backButtonPressedDuringFadeOut;
++					  }));
  
  	showAutoSyncSaveDialog();
  }
 diff --git a/kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp b/kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp
-index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129cbf90cf0 100644
+index 4d993e80e2a109e08ed364cf509afe208c17d1d1..b9d033561e6e8796d635b177381357b759452c2d 100644
 --- a/kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp
 +++ b/kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp
-@@ -1,10 +1,13 @@
+@@ -1,10 +1,14 @@
 -﻿#include "PlayPrepareScene.hpp"
-+﻿#include "ksmaudio/Diagnostics.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "ksmaudio/Diagnostics.hpp"
 +#include "PlayPrepareScene.hpp"
  #include "Scenes/Select/SelectScene.hpp"
  #include "Scenes/Play/PlayScene.hpp"
@@ -11329,7 +11620,7 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  
  namespace
  {
-@@ -20,7 +23,7 @@ namespace
+@@ -20,7 +24,7 @@ namespace
  
  	FilePath GetPlayPrepareSceneUIFilePath()
  	{
@@ -11338,7 +11629,7 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  	}
  
  	std::shared_ptr<noco::Canvas> LoadPlayPrepareSceneCanvas()
-@@ -51,18 +54,12 @@ namespace
+@@ -51,18 +55,12 @@ namespace
  }
  
  PlayPrepareScene::PlayPrepareScene(FilePathView chartFilePath, MusicGame::IsAutoPlayYN isAutoPlay, const Optional<CoursePlayState>& courseState, const Optional<MusicGame::TestPlayOption>& testPlayOption, const Optional<SelectSceneSearchParams>& selectSearchParams)
@@ -11362,16 +11653,18 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  	const double startBPM = GetInitialBPM(m_chartData);
  
  	// ハイスピード設定でHighwayScrollを更新
-@@ -118,8 +115,15 @@ PlayPrepareScene::PlayPrepareScene(FilePathView chartFilePath, MusicGame::IsAuto
+@@ -118,8 +116,17 @@ PlayPrepareScene::PlayPrepareScene(FilePathView chartFilePath, MusicGame::IsAuto
  
  Co::Task<void> PlayPrepareScene::start()
  {
 -	const auto updateRunner = Co::UpdaterTask([this] { update(); }).runScoped();
 +	const auto updateRunner = Co::UpdaterTask([this]
-+											  { update(); })
++											  {
++												  update();
++											  })
 +								  .runScoped();
  
-+	if (System::GetCommandLineArgs().contains(U"--vertical-preview-prepare"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-preview-prepare"))
 +	{
 +		while (true)
 +			co_await Co::NextFrame();
@@ -11379,7 +11672,7 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  	CommonSEAddon::Play(CommonSEType::kSelEnter);
  
  	// ハイスピード変更から一定時間経過、またはBackキーで終了
-@@ -171,6 +175,8 @@ Co::Task<void> PlayPrepareScene::start()
+@@ -171,6 +178,8 @@ Co::Task<void> PlayPrepareScene::start()
  
  void PlayPrepareScene::update()
  {
@@ -11388,7 +11681,7 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  	// 画面全体がクリック可能なのでカーソルを人差し指に変更
  	Cursor::RequestStyle(CursorStyle::Hand);
  
-@@ -197,7 +203,16 @@ void PlayPrepareScene::update()
+@@ -197,7 +206,16 @@ void PlayPrepareScene::update()
  
  void PlayPrepareScene::draw() const
  {
@@ -11405,16 +11698,19 @@ index 4d993e80e2a109e08ed364cf509afe208c17d1d1..d59339db324c01704117515d72da7129
  
  	// フェードアウト描画
  	// (途中でハイスピード変更したときにフェードアウトを途中で戻す必要があるため、Co::ScreenFadeOutを使わずに毎フレームの処理で描画)
-@@ -211,9 +226,22 @@ void PlayPrepareScene::draw() const
+@@ -211,9 +229,24 @@ void PlayPrepareScene::draw() const
  
  Co::Task<void> PlayPrepareScene::fadeIn()
  {
 -	const auto canvasUpdateRunner = Co::UpdaterTask([this] { m_canvas->update(noco::HitTestEnabledYN::No); }).runScoped();
-+	const auto canvasUpdateRunner = Co::UpdaterTask([this]
-+													{ m_canvas->update(noco::HitTestEnabledYN::No); })
-+										.runScoped();
- 
+-
 -	co_await Co::ScreenFadeIn(kFadeDuration, Palette::White);
++	const auto canvasUpdateRunner = Co::UpdaterTask([this]
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++													})
++										.runScoped();
++
 +	if (!Vertical::ModConfig::Load().enabled)
 +		co_await Co::ScreenFadeIn(kFadeDuration, Palette::White);
 +	else
@@ -11443,18 +11739,19 @@ index 7384723dc81c2d778b25beb6f1a6edc1ee30def9..e6fd3201185cf41ac2be7d5ee4066ad2
  	MusicGame::HispeedSettingMenu m_hispeedMenu;
  
 diff --git a/kshootmania/src/Scenes/Result/ResultScene.cpp b/kshootmania/src/Scenes/Result/ResultScene.cpp
-index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97dcf5ea99c 100644
+index 96106564dec6e57c870d3232e45a7395a03ae588..3dc1ea9eb007cb2adc6530c6f0a1f8f8cf2c6c09 100644
 --- a/kshootmania/src/Scenes/Result/ResultScene.cpp
 +++ b/kshootmania/src/Scenes/Result/ResultScene.cpp
-@@ -1,4 +1,6 @@
+@@ -1,4 +1,7 @@
 -﻿#include "ResultScene.hpp"
-+﻿#include "Graphics/ExScorePanel.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "Graphics/ExScorePanel.hpp"
 +#include "ksmaudio/Diagnostics.hpp"
 +#include "ResultScene.hpp"
  #include "Scenes/Select/SelectScene.hpp"
  #include "Scenes/PlayPrepare/PlayPrepareScene.hpp"
  #include "Scenes/CourseResult/CourseResultScene.hpp"
-@@ -7,6 +9,7 @@
+@@ -7,6 +10,7 @@
  #include "Common/CommonDefines.hpp"
  #include "Input/InputUtils.hpp"
  #include "Ini/FolderConfIni.hpp"
@@ -11462,7 +11759,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  
  namespace
  {
-@@ -16,7 +19,7 @@ namespace
+@@ -16,7 +20,7 @@ namespace
  
  	FilePath GetResultSceneUIFilePath()
  	{
@@ -11471,7 +11768,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	}
  
  	std::shared_ptr<noco::Canvas> LoadResultSceneCanvas()
-@@ -61,7 +64,10 @@ namespace
+@@ -61,7 +65,10 @@ namespace
  	};
  
  	constexpr std::array<StringView, kNumDifficulties> kDifficultyAbbreviations = {
@@ -11483,7 +11780,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	};
  
  	String SignString(int32 value)
-@@ -254,8 +260,8 @@ namespace
+@@ -254,8 +261,8 @@ namespace
  
  		const int32 diffIdx = chartData.meta.difficulty.idx;
  		const StringView diffAbbr = 0 <= diffIdx && diffIdx < kNumDifficulties
@@ -11494,7 +11791,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  
  		const StringView clearStatus = ClearStatusText(
  			playResult.achievement(),
-@@ -445,14 +451,10 @@ namespace
+@@ -445,14 +452,10 @@ namespace
  }
  
  ResultScene::ResultScene(const ResultSceneArgs& args)
@@ -11512,7 +11809,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	// コースモードの場合は結果を記録
  	if (m_courseState)
  	{
-@@ -463,8 +465,7 @@ ResultScene::ResultScene(const ResultSceneArgs& args)
+@@ -463,8 +466,7 @@ ResultScene::ResultScene(const ResultSceneArgs& args)
  	int32 oldScore = 0;
  	if (m_playResult.playOption.shouldSaveScore())
  	{
@@ -11522,7 +11819,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  			.gaugeType = m_playResult.playOption.gaugeType,
  			.turnMode = m_playResult.playOption.turnMode,
  			.playbackSpeed = m_playResult.playOption.playbackSpeed,
-@@ -477,16 +478,27 @@ ResultScene::ResultScene(const ResultSceneArgs& args)
+@@ -477,16 +479,27 @@ ResultScene::ResultScene(const ResultSceneArgs& args)
  		// スコア保存前に前回までのハイスコアを取得
  		const HighScoreInfo oldHighScore = KscIO::ReadHighScoreInfo(chartFilePath, condition);
  		oldScore = oldHighScore.score(m_playResult.playOption.gaugeType);
@@ -11541,7 +11838,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  
 +	// Render-only preview never reads or writes a high score.
 +	if (m_playResult.playOption.diagnosticSession &&
-+		System::GetCommandLineArgs().contains(U"--vertical-preview-new-record"))
++		ModDiagnostics::Arguments().contains(U"--vertical-preview-new-record"))
 +		m_newRecordPanel.setValue(0, m_playResult.score);
 +
  	updateCanvasParams();
@@ -11551,7 +11848,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	// ジャケット画像を設定
  	const FilePath chartDir = FileSystem::ParentPath(args.chartFilePath);
  	const FilePath jacketPath = FsUtils::ResolveJacketPath(chartDir, Unicode::FromUTF8(m_chartData.meta.jacketFilename));
-@@ -523,8 +535,8 @@ void ResultScene::updateCanvasParams()
+@@ -523,8 +536,8 @@ void ResultScene::updateCanvasParams()
  {
  	// ゲージタイプとパーセンテージに応じてゲージの見た目を変更
  	const int32 percentThreshold = m_playResult.playOption.gaugeType == GaugeType::kHardGauge
@@ -11562,7 +11859,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	const int32 gaugePercentageInt = static_cast<int32>(m_playResult.gaugePercentage);
  	const int32 gaugeTextureIndex = static_cast<int32>(m_playResult.playOption.gaugeType) * 2 + (gaugePercentageInt < percentThreshold ? 0 : 1);
  
-@@ -544,6 +556,13 @@ void ResultScene::updateCanvasParams()
+@@ -544,6 +557,13 @@ void ResultScene::updateCanvasParams()
  		{ U"maxComboNumber", m_playResult.maxCombo },
  		{ U"criticalCount", m_playResult.comboStats.critical },
  		{ U"nearCount", m_playResult.comboStats.totalNear() },
@@ -11576,17 +11873,19 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  		{ U"errorCount", errorCountWithUnjudged },
  		{ U"gaugePercentageNumber", static_cast<int32>(m_playResult.gaugePercentage) },
  		{ U"gaugeTextureIndex", static_cast<double>(gaugeTextureIndex) },
-@@ -564,7 +583,16 @@ void ResultScene::updateCanvasParams()
+@@ -564,7 +584,18 @@ void ResultScene::updateCanvasParams()
  
  Co::Task<void> ResultScene::start()
  {
 -	const auto updateRunner = Co::UpdaterTask([this] { update(); }).runScoped();
 +	const auto updateRunner = Co::UpdaterTask([this]
-+											  { update(); })
++											  {
++												  update();
++											  })
 +								  .runScoped();
 +
 +	// Isolated visual tests must not be dismissed by desktop keyboard/mouse activity.
-+	if (System::GetCommandLineArgs().contains(U"--result-detail-capture") && FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
++	if (ModDiagnostics::Arguments().contains(U"--result-detail-capture") && FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
 +	{
 +		while (true)
 +			co_await Co::NextFrame();
@@ -11594,7 +11893,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  
  	bool userPressedStartOrBack = false;
  
-@@ -718,6 +746,8 @@ bool ResultScene::isClickDecideDown() const
+@@ -718,6 +749,8 @@ bool ResultScene::isClickDecideDown() const
  
  void ResultScene::update()
  {
@@ -11603,7 +11902,7 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  	// 画面全体がクリック可能なのでカーソルを人差し指に変更
  	Cursor::RequestStyle(CursorStyle::Hand);
  
-@@ -731,12 +761,15 @@ void ResultScene::update()
+@@ -731,12 +764,17 @@ void ResultScene::update()
  
  void ResultScene::draw() const
  {
@@ -11615,7 +11914,9 @@ index 96106564dec6e57c870d3232e45a7395a03ae588..59f2992c18561b8a43cb5eea4b57d97d
  {
 -	const auto canvasUpdateRunner = Co::UpdaterTask([this] { m_canvas->update(noco::HitTestEnabledYN::No); }).runScoped();
 +	const auto canvasUpdateRunner = Co::UpdaterTask([this]
-+													{ m_canvas->update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	co_await Co::ScreenFadeIn(kFadeDuration, Palette::White);
@@ -11642,7 +11943,7 @@ index 88533f4f0a57654888b01808447a326fe6a39943..6e6bb8db6cab56dbf43acba85b36f3d4
  
  	Optional<SelectSceneSearchParams> m_selectSearchParams;
 diff --git a/kshootmania/src/Scenes/Select/BTOptionPanel.cpp b/kshootmania/src/Scenes/Select/BTOptionPanel.cpp
-index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc386d4ec8 100644
+index b138647316fda641280650cc29c88c9f9b940178..0d655e58ad855b504eae62ad219304fcb2b83f6c 100644
 --- a/kshootmania/src/Scenes/Select/BTOptionPanel.cpp
 +++ b/kshootmania/src/Scenes/Select/BTOptionPanel.cpp
 @@ -4,6 +4,8 @@
@@ -12192,7 +12493,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  	text += U"\n";
  	text += FormatMenuLine(I18n::Get(I18n::Select::Turn), TurnModeToI18nKey(turnMode), currentItem == BTBMenuItem::kTurn, m_turnMode.cursor(), 0, static_cast<int32>(TurnMode::kCount) - 1);
  	text += U"\n";
-@@ -444,27 +505,58 @@ String BTOptionPanel::generateBTBMenuText() const
+@@ -444,27 +505,61 @@ String BTOptionPanel::generateBTBMenuText() const
  
  String BTOptionPanel::generateBTCMenuText() const
  {
@@ -12246,7 +12547,10 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
 +	const uint8 alpha = static_cast<uint8>(Round(m_extendedAlpha * 255));
 +	const auto palette = m_judgeColor.cursorAs<JudgeColor>();
 +	const auto tint = [&](Color c)
-+	{c.a=alpha;return c; };
++	{
++		c.a = alpha;
++		return c;
++	};
 +	m_canvas->setParamValues({ { U"overlay_btOptionPanelText_C", generateBTCMenuText() },
 +							   { U"newPlusVisible", m_extendedAlpha > 0 },
 +							   { U"newPlusColor", Color{ 255, 255, 255, alpha } },
@@ -12270,7 +12574,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  
  String BTOptionPanel::generateBTDMenuText() const
  {
-@@ -481,7 +573,42 @@ String BTOptionPanel::generateBTDMenuText() const
+@@ -481,7 +576,42 @@ String BTOptionPanel::generateBTDMenuText() const
  
  bool BTOptionPanel::update(double currentChartStdBPM)
  {
@@ -12313,7 +12617,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  
  	// ハイスコア再読み込みが必要な変更があったか
  	bool needsHighScoreReload = false;
-@@ -544,7 +671,7 @@ bool BTOptionPanel::update(double currentChartStdBPM)
+@@ -544,7 +674,7 @@ bool BTOptionPanel::update(double currentChartStdBPM)
  				valueChanged = m_gaugeType.deltaCursor() != 0;
  				if (valueChanged)
  				{
@@ -12322,7 +12626,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  				}
  			}
  			else if (currentItem == BTBMenuItem::kTurn)
-@@ -576,7 +703,10 @@ bool BTOptionPanel::update(double currentChartStdBPM)
+@@ -576,7 +706,10 @@ bool BTOptionPanel::update(double currentChartStdBPM)
  		}
  		else if (currentButton == kButtonBT_C)
  		{
@@ -12333,7 +12637,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  
  			// 現在選択されている項目の値変更用LinearMenuを更新
  			const auto currentItem = m_btCMenu.cursorAs<BTCMenuItem>();
-@@ -597,6 +727,26 @@ bool BTOptionPanel::update(double currentChartStdBPM)
+@@ -597,6 +730,26 @@ bool BTOptionPanel::update(double currentChartStdBPM)
  				m_fastSlow.update();
  				valueChanged = m_fastSlow.deltaCursor() != 0;
  			}
@@ -12360,7 +12664,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  			else if (currentItem == BTCMenuItem::kNoteSkin)
  			{
  				m_noteSkin.update();
-@@ -613,7 +763,7 @@ bool BTOptionPanel::update(double currentChartStdBPM)
+@@ -613,7 +766,7 @@ bool BTOptionPanel::update(double currentChartStdBPM)
  				saveToConfigIni();
  			}
  
@@ -12369,7 +12673,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  		}
  		else if (currentButton == kButtonBT_D)
  		{
-@@ -702,6 +852,9 @@ bool BTOptionPanel::isVisible() const
+@@ -702,6 +855,9 @@ bool BTOptionPanel::isVisible() const
  void BTOptionPanel::hide()
  {
  	m_isVisible = false;
@@ -12379,7 +12683,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  	m_canvas->setParamValue(U"overlay_btOptionPanelVisible_A", false);
  	m_canvas->setParamValue(U"overlay_btOptionPanelVisible_B", false);
  	m_canvas->setParamValue(U"overlay_btOptionPanelVisible_C", false);
-@@ -717,7 +870,7 @@ void BTOptionPanel::loadFromConfigIni()
+@@ -717,7 +873,7 @@ void BTOptionPanel::loadFromConfigIni()
  	m_judgmentModeLaser.setCursor(static_cast<int32>(RuntimeConfig::GetJudgmentPlayModeLaser()));
  
  	// BT-Bメニューの設定(config.iniには保存しない)
@@ -12388,7 +12692,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  	m_turnMode.setCursor(static_cast<int32>(RuntimeConfig::GetTurnMode()));
  	m_playbackSpeed.setCursor(static_cast<int32>(Round(RuntimeConfig::GetPlaybackSpeed() * 100.0)));
  
-@@ -726,6 +879,10 @@ void BTOptionPanel::loadFromConfigIni()
+@@ -726,6 +882,10 @@ void BTOptionPanel::loadFromConfigIni()
  
  	m_autoSync.setCursor(ConfigIni::GetInt(ConfigIni::Key::kAutoSync, static_cast<int32>(AutoSyncMode::kOff)));
  	m_fastSlow.setCursor(ConfigIni::GetInt(ConfigIni::Key::kShowFastSlow, static_cast<int32>(FastSlowMode::kHide)));
@@ -12399,7 +12703,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  
  	// noteskinは文字列として保存される
  	const StringView noteSkinStr = ConfigIni::GetString(ConfigIni::Key::kNoteSkin, U"default");
-@@ -764,7 +921,7 @@ void BTOptionPanel::saveToConfigIni()
+@@ -764,7 +924,7 @@ void BTOptionPanel::saveToConfigIni()
  	RuntimeConfig::SetJudgmentPlayModeLaser(m_judgmentModeLaser.cursorAs<JudgmentPlayMode>());
  
  	// BT-Bメニューの設定(config.iniには保存しない)
@@ -12408,7 +12712,7 @@ index b138647316fda641280650cc29c88c9f9b940178..70f44a75bb70eda2c8362b447a166cbc
  	RuntimeConfig::SetTurnMode(m_turnMode.cursorAs<TurnMode>());
  	RuntimeConfig::SetPlaybackSpeed(m_playbackSpeed.cursor() / 100.0);
  
-@@ -773,6 +930,10 @@ void BTOptionPanel::saveToConfigIni()
+@@ -773,6 +933,10 @@ void BTOptionPanel::saveToConfigIni()
  
  	ConfigIni::SetInt(ConfigIni::Key::kAutoSync, m_autoSync.cursor());
  	ConfigIni::SetInt(ConfigIni::Key::kShowFastSlow, m_fastSlow.cursor());
@@ -12608,7 +12912,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  
  void SelectMenuLevelSongItem::showInFileManager([[maybe_unused]] int32 difficultyIdx) const
 diff --git a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
-index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c06dc517e 100644
+index 60d702f5756503d835966d43ce66ee6592117a00..dbde9887447cc1b930d27be7407705ba6b3cbf45 100644
 --- a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
 +++ b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
 @@ -1,4 +1,5 @@
@@ -12618,7 +12922,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  #include "Graphics/FontUtils.hpp"
  #include "Scenes/Select/SelectDifficultyMenu.hpp"
  #include "RuntimeConfig.hpp"
-@@ -63,10 +64,9 @@ SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath)
+@@ -63,10 +64,11 @@ SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath)
  }
  
  SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath, const std::array<std::shared_ptr<const SelectChartInfo>, kNumDifficulties>& chartInfos, IsSingleChartItemYN isSingleChartItem)
@@ -12627,12 +12931,14 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
 -	, m_isSingleChartItem(isSingleChartItem)
 -	, m_chartInfos(chartInfos)
 +	: m_fullPath(fullPath), m_chartExists(std::any_of(chartInfos.begin(), chartInfos.end(), [](const auto& chartInfo)
-+													  { return chartInfo != nullptr; })),
++													  {
++														  return chartInfo != nullptr;
++													  })),
 +	  m_isSingleChartItem(isSingleChartItem), m_chartInfos(chartInfos)
  {
  }
  
-@@ -156,11 +156,11 @@ const SelectChartInfo* SelectMenuSongItem::chartInfoPtr(int difficultyIdx, Fallb
+@@ -156,11 +158,11 @@ const SelectChartInfo* SelectMenuSongItem::chartInfoPtr(int difficultyIdx, Fallb
  void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& context, noco::Canvas& canvas, int32 difficultyIdx) const
  {
  	canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -12649,7 +12955,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  
  	// 各難易度の存在有無とレベルを設定
  	setDifficultyLevelDisplayParams(canvas);
-@@ -186,6 +186,7 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
+@@ -186,6 +188,7 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
  	if (pChartInfo != nullptr)
  	{
  		const HighScoreInfo highScoreInfo = context.fnGetHighScore(pChartInfo->chartFilePath());
@@ -12657,7 +12963,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  
  		const GaugeType gaugeType = RuntimeConfig::GetGaugeType();
  
-@@ -197,35 +198,35 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
+@@ -197,35 +200,35 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
  		const FilePath artistImgPath = pChartInfo->artistImgFilePath();
  		const bool hasArtistImg = !artistImgPath.isEmpty() && FileSystem::IsFile(artistImgPath);
  		const SongInfoTextDisplayParams titleParams = hasTitleImg
@@ -12719,7 +13025,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  	}
  	else
  	{
-@@ -241,10 +242,10 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+@@ -241,10 +244,10 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
  
  	// 曲名・アーティスト名・ジャケット画像は常に描画するため、代替カーソル値を使用して取得
  	const int32 altDifficultyIdx = SelectDifficultyMenu::GetAlternativeCursor(difficultyIdx,
@@ -12734,7 +13040,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  	const SelectChartInfo* pAltChartInfo = chartInfoPtr(altDifficultyIdx);
  	if (pAltChartInfo == nullptr)
  	{
-@@ -254,8 +255,8 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+@@ -254,8 +257,8 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
  
  	// レベルとメダルは、中央で選択中の難易度がこの曲に存在する場合のみ表示
  	// (単一譜面の場合は常に表示)
@@ -12745,7 +13051,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  	int32 highScoreGradeIndex = 0; // グレードは「-」表示にするため0
  	int32 gaugePercentage = 0;
  	const SelectChartInfo* pDisplayChartInfo = m_isSingleChartItem ? pAltChartInfo : pChartInfo;
-@@ -277,34 +278,34 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+@@ -277,34 +280,34 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
  	const FilePath artistImgPath = pAltChartInfo->artistImgFilePath();
  	const bool hasArtistImg = !artistImgPath.isEmpty() && FileSystem::IsFile(artistImgPath);
  	const SongInfoTextDisplayParams titleParams = hasTitleImg
@@ -12805,7 +13111,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..197354b4f36edd34ead1e112322b094c
  }
  
  void SelectMenuSongItem::showInFileManager(int32 difficultyIdx) const
-@@ -386,9 +387,9 @@ void SelectMenuSongItem::setDifficultyLevelDisplayParams(noco::Canvas& canvas) c
+@@ -386,9 +389,9 @@ void SelectMenuSongItem::setDifficultyLevelDisplayParams(noco::Canvas& canvas) c
  		const bool exists = m_chartInfos[i] != nullptr;
  		const int32 levelIndex = exists ? m_chartInfos[i]->level() - 1 : -1;
  		canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -12955,10 +13261,17 @@ index 3f2aa6e2377781b08584ddf984d7cd6fc3a27a36..e27fc6a6c113fa8e7eb4efed60b6ec26
  	[[nodiscard]]
  	String title() const;
 diff --git a/kshootmania/src/Scenes/Select/SelectMenu.cpp b/kshootmania/src/Scenes/Select/SelectMenu.cpp
-index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c80286302509 100644
+index 1091b57e91048920c9656bcbb40d46a360907f47..d0456249397ed04c662a456f4dce9907875655dc 100644
 --- a/kshootmania/src/Scenes/Select/SelectMenu.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectMenu.cpp
-@@ -21,11 +21,14 @@
+@@ -1,4 +1,5 @@
+-﻿#include "SelectMenu.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "SelectMenu.hpp"
+ #include <cassert>
+ #include "kson/kson.hpp"
+ #include "IR/IRHash.hpp"
+@@ -21,11 +22,14 @@
  #include "RuntimeConfig.hpp"
  #include "SelectMenuCacheDb.hpp"
  #include "UI/MouseMenuUtils.hpp"
@@ -12973,7 +13286,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  		{ U"top4", -4 },
  		{ U"top3", -3 },
  		{ U"top2", -2 },
-@@ -33,6 +36,11 @@ namespace
+@@ -33,6 +37,11 @@ namespace
  		{ U"bottom1", 1 },
  		{ U"bottom2", 2 },
  		{ U"bottom3", 3 },
@@ -12985,7 +13298,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  	};
  
  	/// @brief 上下の項目の押下イベントから相対移動量を取得(発火していない場合は0)
-@@ -76,15 +84,12 @@ namespace
+@@ -76,15 +85,12 @@ namespace
  
  	bool IsAnyTranslitDisplayEnabled()
  	{
@@ -13003,18 +13316,20 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  			.gaugeType = RuntimeConfig::GetGaugeType(),
  			.turnMode = RuntimeConfig::GetTurnMode(),
  			.playbackSpeed = RuntimeConfig::GetPlaybackSpeed(),
-@@ -106,9 +111,7 @@ namespace
+@@ -106,9 +112,9 @@ namespace
  
  		// フォルダ名(小文字変換)の昇順でソート
  		directories.sort_by([](const FilePath& a, const FilePath& b)
 -		{
 -			return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
 -		});
-+							{ return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased(); });
++							{
++								return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							});
  
  		return directories;
  	}
-@@ -154,16 +157,12 @@ namespace
+@@ -154,16 +160,16 @@ namespace
  	{
  		const FilePath songsDir = FsUtils::SongsDirectoryPath();
  		Array<FilePath> favFiles = FileSystem::DirectoryContents(songsDir, Recursive::No)
@@ -13023,18 +13338,22 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 -				return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"fav";
 -			});
 +									   .filter([](FilePathView p)
-+											   { return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"fav"; });
++											   {
++												   return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"fav";
++											   });
  
  		// ファイル名(小文字)でソート
  		favFiles.sort_by([](const FilePath& a, const FilePath& b)
 -		{
 -			return FileSystem::FileName(a).lowercased() < FileSystem::FileName(b).lowercased();
 -		});
-+						 { return FileSystem::FileName(a).lowercased() < FileSystem::FileName(b).lowercased(); });
++						 {
++							 return FileSystem::FileName(a).lowercased() < FileSystem::FileName(b).lowercased();
++						 });
  
  		return favFiles;
  	}
-@@ -224,10 +223,8 @@ namespace
+@@ -224,10 +230,10 @@ namespace
  		Array<std::unique_ptr<SelectMenuCourseItem>> courseItems;
  
  		const Array<FilePath> kcoFiles = FileSystem::DirectoryContents(directoryPath, Recursive::No)
@@ -13043,50 +13362,62 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 -				return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"kco";
 -			});
 +											 .filter([](FilePathView p)
-+													 { return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"kco"; });
++													 {
++														 return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"kco";
++													 });
  
  		if (kcoFiles.isEmpty())
  		{
-@@ -257,9 +254,7 @@ namespace
+@@ -257,9 +263,9 @@ namespace
  		}
  
  		tempCourseItems.sort_by([](const CourseItemInfo& a, const CourseItemInfo& b)
 -		{
 -			return a.lowercasedTitle < b.lowercasedTitle;
 -		});
-+								{ return a.lowercasedTitle < b.lowercasedTitle; });
++								{
++									return a.lowercasedTitle < b.lowercasedTitle;
++								});
  
  		for (const auto& item : tempCourseItems)
  		{
-@@ -339,7 +334,8 @@ namespace
+@@ -339,7 +345,10 @@ namespace
  			result.chartInfos[difficultyIdx] = chartInfo;
  		}
  
 -		if (!std::any_of(result.chartInfos.begin(), result.chartInfos.end(), [](const auto& chartInfo) { return chartInfo != nullptr; }))
 +		if (!std::any_of(result.chartInfos.begin(), result.chartInfos.end(), [](const auto& chartInfo)
-+						 { return chartInfo != nullptr; }))
++						 {
++							 return chartInfo != nullptr;
++						 }))
  		{
  			return none;
  		}
-@@ -400,15 +396,14 @@ namespace
+@@ -400,15 +409,15 @@ namespace
  
  			// ソートキーの昇順でソート
  			charts.sort_by([](const LevelSortChartFileInfo& a, const LevelSortChartFileInfo& b)
 -			{
+-				if (a.sortKey != b.sortKey)
+-				{
+-					return a.sortKey < b.sortKey;
+-				}
 +						   {
- 				if (a.sortKey != b.sortKey)
- 				{
- 					return a.sortKey < b.sortKey;
- 				}
++							   if (a.sortKey != b.sortKey)
++							   {
++								   return a.sortKey < b.sortKey;
++							   }
  
- 				// 同一楽曲内は難易度順
+-				// 同一楽曲内は難易度順
 -				return a.difficultyIdx < b.difficultyIdx;
 -			});
-+				return a.difficultyIdx < b.difficultyIdx; });
++							   // 同一楽曲内は難易度順
++							   return a.difficultyIdx < b.difficultyIdx;
++						   });
  
  			// レベル見出し項目を追加
  			pMenu->push_back(std::make_unique<SelectMenuLevelSectionItem>(level));
-@@ -418,8 +413,8 @@ namespace
+@@ -418,8 +427,8 @@ namespace
  			{
  				const FilePath chartDir = FileSystem::ParentPath(chartInfo.filePath);
  				auto item = chartInfo.chartInfo != nullptr
@@ -13097,7 +13428,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  				if (item->chartExists())
  				{
  					levelItems.push_back({ static_cast<int32>(pMenu->size()), item.get() });
-@@ -629,17 +624,19 @@ void SelectMenu::refreshContentCanvasParams()
+@@ -629,17 +638,19 @@ void SelectMenu::refreshContentCanvasParams()
  	}
  
  	// 上の項目のパラメータを反映
@@ -13121,11 +13452,11 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  	{
  		if (const auto pItem = m_menu.atCyclic(m_menu.cursor() + 1 + i).get())
  		{
-@@ -647,6 +644,15 @@ void SelectMenu::refreshContentCanvasParams()
+@@ -647,6 +658,15 @@ void SelectMenu::refreshContentCanvasParams()
  			pItem->setCanvasParamsTopBottom(m_eventContext, *m_selectSceneCanvas, difficultyIdx, U"bottom{}"_fmt(bottomIdx));
  		}
  	}
-+	if (System::GetCommandLineArgs().contains(U"--vertical-preview-select"))
++	if (ModDiagnostics::Arguments().contains(U"--vertical-preview-select"))
 +	{
 +		JSON state;
 +		state[U"cursor"] = m_menu.cursor();
@@ -13137,7 +13468,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  }
  
  void SelectMenu::refreshSongPreview()
-@@ -692,29 +698,35 @@ SelectMenu::SelectMenu(
+@@ -692,71 +712,92 @@ SelectMenu::SelectMenu(
  	std::function<void(StringView)> fnShowErrorDialog,
  	std::function<void()> fnExitSearchMode,
  	std::function<void()> fnOpenFavoriteDialog)
@@ -13154,46 +13485,33 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 -			.fnMoveToPrevSubDirSection = [this]() { moveToPrevSubDirSection(); },
 -			.fnChangeDifficulty = [this](int32 newDifficultyIdx)
 -			{
-+	: m_eventContext{
-+		  .fnMoveToPlayScene = [fnMoveToPlayScene](FilePath path, MusicGame::IsAutoPlayYN isAutoPlay, const Optional<CoursePlayState>& courseState)
-+		  { fnMoveToPlayScene(path, isAutoPlay, courseState); },
-+		  .fnOpenDirectory = [this](FilePath path)
-+		  { openDirectory(path, PlaySeYN::Yes); },
-+		  .fnOpenAllFolder = [this]()
-+		  { openAllFolder(PlaySeYN::Yes); },
-+		  .fnOpenFavoriteFolder = [this](FilePath specialPath)
-+		  { openFavoriteFolder(specialPath, PlaySeYN::Yes); },
-+		  .fnOpenCoursesFolder = [this]()
-+		  { openCoursesFolder(PlaySeYN::Yes); },
-+		  .fnCloseFolder = [this]()
-+		  { closeFolder(PlaySeYN::Yes); },
-+		  .fnExitSearch = std::move(fnExitSearchMode),
-+		  .fnMoveToNextSubDirSection = [this]()
-+		  { moveToNextSubDirSection(); },
-+		  .fnMoveToPrevSubDirSection = [this]()
-+		  { moveToPrevSubDirSection(); },
-+		  .fnChangeDifficulty = [this](int32 newDifficultyIdx)
-+		  {
- 				const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
- 				m_difficultyMenu.setCursor(newDifficultyIdx);
- 				if (m_difficultyMenu.cursor() != prevDifficultyIdx)
- 				{
- 					resetSongInfoTextDisplayTimer();
- 				}
+-				const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
+-				m_difficultyMenu.setCursor(newDifficultyIdx);
+-				if (m_difficultyMenu.cursor() != prevDifficultyIdx)
+-				{
+-					resetSongInfoTextDisplayTimer();
+-				}
 -				ConfigIni::SetInt(ConfigIni::Key::kSelectDifficulty, newDifficultyIdx);
 -			},
 -			.fnJumpToItemWithDifficulty = [this](int32 jumpMenuIndex, int32 newDifficultyIdx)
 -			{
-+				ConfigIni::SetInt(ConfigIni::Key::kSelectDifficulty, newDifficultyIdx); },
-+		  .fnJumpToItemWithDifficulty = [this](int32 jumpMenuIndex, int32 newDifficultyIdx)
-+		  {
- 				const int32 prevIndex = m_menu.cursor();
- 				const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
- 				m_menu.setCursor(jumpMenuIndex);
-@@ -732,31 +744,29 @@ SelectMenu::SelectMenu(
- 				else if (jumpMenuIndex < prevIndex)
- 				{
- 					playShakeUpTween();
+-				const int32 prevIndex = m_menu.cursor();
+-				const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
+-				m_menu.setCursor(jumpMenuIndex);
+-				m_difficultyMenu.setCursor(newDifficultyIdx);
+-				if (m_menu.cursor() != prevIndex || m_difficultyMenu.cursor() != prevDifficultyIdx)
+-				{
+-					resetSongInfoTextDisplayTimer();
+-				}
+-				ConfigIni::SetInt(ConfigIni::Key::kSelectSongIndex, jumpMenuIndex);
+-				ConfigIni::SetInt(ConfigIni::Key::kSelectDifficulty, newDifficultyIdx);
+-				if (jumpMenuIndex > prevIndex)
+-				{
+-					playShakeDownTween();
+-				}
+-				else if (jumpMenuIndex < prevIndex)
+-				{
+-					playShakeUpTween();
 -				}
 -			},
 -			.fnShowErrorDialog = std::move(fnShowErrorDialog),
@@ -13219,7 +13537,71 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 -			.cyclic = IsCyclicMenuYN::Yes,
 -		})
 -	, m_difficultyMenu(this)
-+				} },
++	: m_eventContext{
++		  .fnMoveToPlayScene = [fnMoveToPlayScene](FilePath path, MusicGame::IsAutoPlayYN isAutoPlay, const Optional<CoursePlayState>& courseState)
++		  {
++			  fnMoveToPlayScene(path, isAutoPlay, courseState);
++		  },
++		  .fnOpenDirectory = [this](FilePath path)
++		  {
++			  openDirectory(path, PlaySeYN::Yes);
++		  },
++		  .fnOpenAllFolder = [this]()
++		  {
++			  openAllFolder(PlaySeYN::Yes);
++		  },
++		  .fnOpenFavoriteFolder = [this](FilePath specialPath)
++		  {
++			  openFavoriteFolder(specialPath, PlaySeYN::Yes);
++		  },
++		  .fnOpenCoursesFolder = [this]()
++		  {
++			  openCoursesFolder(PlaySeYN::Yes);
++		  },
++		  .fnCloseFolder = [this]()
++		  {
++			  closeFolder(PlaySeYN::Yes);
++		  },
++		  .fnExitSearch = std::move(fnExitSearchMode),
++		  .fnMoveToNextSubDirSection = [this]()
++		  {
++			  moveToNextSubDirSection();
++		  },
++		  .fnMoveToPrevSubDirSection = [this]()
++		  {
++			  moveToPrevSubDirSection();
++		  },
++		  .fnChangeDifficulty = [this](int32 newDifficultyIdx)
++		  {
++			  const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
++			  m_difficultyMenu.setCursor(newDifficultyIdx);
++			  if (m_difficultyMenu.cursor() != prevDifficultyIdx)
++			  {
++				  resetSongInfoTextDisplayTimer();
++			  }
++			  ConfigIni::SetInt(ConfigIni::Key::kSelectDifficulty, newDifficultyIdx);
++		  },
++		  .fnJumpToItemWithDifficulty = [this](int32 jumpMenuIndex, int32 newDifficultyIdx)
++		  {
++			  const int32 prevIndex = m_menu.cursor();
++			  const int32 prevDifficultyIdx = m_difficultyMenu.cursor();
++			  m_menu.setCursor(jumpMenuIndex);
++			  m_difficultyMenu.setCursor(newDifficultyIdx);
++			  if (m_menu.cursor() != prevIndex || m_difficultyMenu.cursor() != prevDifficultyIdx)
++			  {
++				  resetSongInfoTextDisplayTimer();
++			  }
++			  ConfigIni::SetInt(ConfigIni::Key::kSelectSongIndex, jumpMenuIndex);
++			  ConfigIni::SetInt(ConfigIni::Key::kSelectDifficulty, newDifficultyIdx);
++			  if (jumpMenuIndex > prevIndex)
++			  {
++				  playShakeDownTween();
++			  }
++			  else if (jumpMenuIndex < prevIndex)
++			  {
++				  playShakeUpTween();
++			  }
++		  },
 +		  .fnShowErrorDialog = std::move(fnShowErrorDialog),
 +		  .fnOpenFavoriteDialog = std::move(fnOpenFavoriteDialog),
 +		  .fnGetHighScore = [this](FilePathView chartFilePath) -> HighScoreInfo
@@ -13231,26 +13613,25 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 +			  return m_highScoreCache.getCourseHighScore(courseFilePath, CreateKscKeyFromConfig());
 +		  },
 +	  },
-+	  m_selectSceneCanvas(selectSceneCanvas), m_menu(
-+												  LinearMenu::CreateInfoWithCursorMinMax{
-+													  .cursorInputCreateInfo = {
-+														  .type = CursorInput::Type::Vertical,
-+														  .buttonFlags = CursorButtonFlags::kArrowOrLaser | CursorButtonFlags::kMouseWheel,
-+														  .buttonIntervalSec = 0.05,
-+														  .buttonIntervalSecFirst = 0.3,
-+													  },
-+													  .cyclic = IsCyclicMenuYN::Yes,
-+												  }),
++	  m_selectSceneCanvas(selectSceneCanvas), m_menu(LinearMenu::CreateInfoWithCursorMinMax{
++												  .cursorInputCreateInfo = {
++													  .type = CursorInput::Type::Vertical,
++													  .buttonFlags = CursorButtonFlags::kArrowOrLaser | CursorButtonFlags::kMouseWheel,
++													  .buttonIntervalSec = 0.05,
++													  .buttonIntervalSecFirst = 0.3,
++												  },
++												  .cyclic = IsCyclicMenuYN::Yes,
++											  }),
 +	  m_difficultyMenu(this)
  {
  	// ConfigIniからソートモードを読み込み
  	const StringView sortModeStr = ConfigIni::GetString(ConfigIni::Key::kSelectSortType, U"");
-@@ -828,6 +838,25 @@ SelectMenu::SelectMenu(
+@@ -828,6 +869,25 @@ SelectMenu::SelectMenu(
  		openDirectory(U"", PlaySeYN::No);
  	}
  
 +	// Preview uses the real menu and chart metadata, with no settings save.
-+	const auto previewArgs = System::GetCommandLineArgs();
++	const auto previewArgs = ModDiagnostics::Arguments();
 +	if (previewArgs.contains(U"--vertical-preview-select"))
 +		for (size_t i = 0; i + 1 < previewArgs.size(); ++i)
 +			if (previewArgs[i] == U"--vertical-preview-chart")
@@ -13271,11 +13652,11 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  	resetSongInfoTextDisplayTimer();
  	refreshContentCanvasParams();
  	refreshSongPreview();
-@@ -891,6 +920,13 @@ void SelectMenu::update(SongPreviewOnlyYN songPreviewOnly)
+@@ -891,6 +951,13 @@ void SelectMenu::update(SongPreviewOnlyYN songPreviewOnly)
  			playShakeUpTween();
  		}
  		refreshContentCanvasParams();
-+		if (System::GetCommandLineArgs().contains(U"--vertical-preview-select"))
++		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-select"))
 +		{
 +			TextWriter report{ U"vertical-select-preview-state.csv" };
 +			report.writeln(U"cursor,delta,chart");
@@ -13285,55 +13666,65 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
  		refreshSongPreview();
  	}
  
-@@ -1689,7 +1725,8 @@ bool SelectMenu::openAllFolderWithNameSort()
+@@ -1689,7 +1756,10 @@ bool SelectMenu::openAllFolderWithNameSort()
  	Array<FilePath> allFolderDirectories;
  	for (const auto& path : searchPaths)
  	{
 -		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
 +		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p)
-+																{ return FileSystem::FullPath(p); }));
++																{
++																	return FileSystem::FullPath(p);
++																}));
  	}
  
  	Array<SelectCachedSongEntry> allSongEntries;
-@@ -1700,9 +1737,7 @@ bool SelectMenu::openAllFolderWithNameSort()
+@@ -1700,9 +1770,9 @@ bool SelectMenu::openAllFolderWithNameSort()
  	}
  
  	allSongEntries.sort_by([](const SelectCachedSongEntry& a, const SelectCachedSongEntry& b)
 -	{
 -		return a.song.songSortKey < b.song.songSortKey;
 -	});
-+						   { return a.song.songSortKey < b.song.songSortKey; });
++						   {
++							   return a.song.songSortKey < b.song.songSortKey;
++						   });
  
  	// 曲の項目を追加
  	for (const auto& entry : allSongEntries)
-@@ -1750,7 +1785,8 @@ bool SelectMenu::openAllFolderWithLevelSort()
+@@ -1750,7 +1820,10 @@ bool SelectMenu::openAllFolderWithLevelSort()
  	Array<FilePath> allFolderDirectories;
  	for (const auto& path : searchPaths)
  	{
 -		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
 +		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p)
-+																{ return FileSystem::FullPath(p); }));
++																{
++																	return FileSystem::FullPath(p);
++																}));
  	}
  
  	for (const auto& folderDirectory : allFolderDirectories)
-@@ -1877,9 +1913,7 @@ bool SelectMenu::openFavoriteFolderWithNameSort(FilePathView specialPath)
+@@ -1877,9 +1950,9 @@ bool SelectMenu::openFavoriteFolderWithNameSort(FilePathView specialPath)
  
  	// 名前(小文字変換)の昇順でソート
  	favoriteSongInfos.sort_by([](const FavoriteSongInfo& a, const FavoriteSongInfo& b)
 -	{
 -		return a.sortKey < b.sortKey;
 -	});
-+							  { return a.sortKey < b.sortKey; });
++							  {
++								  return a.sortKey < b.sortKey;
++							  });
  
  	// 項目を追加
  	for (const auto& favoriteSongInfo : favoriteSongInfos)
-@@ -2138,14 +2172,13 @@ Array<FilePath> SelectMenu::getSortedFolderPaths() const
+@@ -2138,14 +2211,17 @@ Array<FilePath> SelectMenu::getSortedFolderPaths() const
  	Array<FilePath> normalDirectories;
  	for (const auto& path : searchPaths)
  	{
 -		normalDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
 +		normalDirectories.append(GetSubDirectories(path).map([](FilePathView p)
-+															 { return FileSystem::FullPath(p); }));
++															 {
++																 return FileSystem::FullPath(p);
++															 }));
  	}
  
  	// フォルダ名(小文字変換)の昇順でソート
@@ -13341,12 +13732,14 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..b6cb2ce1204e4d9a50c3a24351c3c802
 -	{
 -		return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
 -	});
-+							  { return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased(); });
++							  {
++								  return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							  });
  
  	// ソート済みの通常ディレクトリを追加
  	folderPaths.append(normalDirectories);
 diff --git a/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp b/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
-index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4ea6dc33a 100644
+index b9d581345427a2838c5645c77acc2eddff4bd0b7..47b820f7c6e3256963f0c60caefdb58933dc827a 100644
 --- a/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
 @@ -1,4 +1,5 @@
@@ -13373,23 +13766,27 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  		FolderConfIni folderConfIni;
  	};
  
-@@ -95,12 +97,11 @@ namespace
+@@ -95,12 +97,15 @@ namespace
  	{
  		Array<FilePath> directories =
  			FileSystem::DirectoryContents(path, Recursive::No)
 -				.filter([](FilePathView p) { return FileSystem::IsDirectory(p); });
 +				.filter([](FilePathView p)
-+						{ return FileSystem::IsDirectory(p); });
++						{
++							return FileSystem::IsDirectory(p);
++						});
  
  		directories.sort_by([](const FilePath& a, const FilePath& b)
 -		{
 -			return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
 -		});
-+							{ return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased(); });
++							{
++								return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							});
  
  		return directories;
  	}
-@@ -119,11 +120,7 @@ namespace
+@@ -119,11 +124,7 @@ namespace
  		}
  
  		const String extension = FileSystem::Extension(path).lowercased();
@@ -13402,18 +13799,20 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  	}
  
  	Array<SourceFileInfo> CollectSourceFiles(FilePathView baseDirectoryPath)
-@@ -144,9 +141,7 @@ namespace
+@@ -144,9 +145,9 @@ namespace
  		}
  
  		files.sort_by([](const SourceFileInfo& a, const SourceFileInfo& b)
 -		{
 -			return a.relativePath < b.relativePath;
 -		});
-+					  { return a.relativePath < b.relativePath; });
++					  {
++						  return a.relativePath < b.relativePath;
++					  });
  		return files;
  	}
  
-@@ -271,6 +266,7 @@ namespace
+@@ -271,6 +272,7 @@ namespace
  				.songSortKey = FsUtils::DirectoryNameByDirectoryPath(songDirPath).lowercased(),
  				.chartFileRelativePath = FileSystem::RelativePath(chartFilePath, baseDirectoryPath),
  				.chartData = chartData,
@@ -13421,7 +13820,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  				.folderConfIni = FolderConfIni::Load(chartFilePath),
  			});
  			chartExists = true;
-@@ -330,6 +326,7 @@ namespace
+@@ -330,6 +332,7 @@ namespace
  		db.exec("CREATE TABLE IF NOT EXISTS source_files (relative_path TEXT PRIMARY KEY, mtime_ms INTEGER NOT NULL, size INTEGER NOT NULL)");
  		db.exec(
  			"CREATE TABLE IF NOT EXISTS charts ("
@@ -13429,7 +13828,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  			"chart_path TEXT PRIMARY KEY,"
  			"song_dir TEXT NOT NULL,"
  			"section_dir TEXT NOT NULL,"
-@@ -417,9 +414,7 @@ namespace
+@@ -417,9 +420,7 @@ namespace
  			{
  				return false;
  			}
@@ -13440,7 +13839,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  			{
  				return false;
  			}
-@@ -460,20 +455,21 @@ namespace
+@@ -460,20 +461,21 @@ namespace
  
  		{
  			SQLite::Statement query(db,
@@ -13470,7 +13869,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  				query.bind(columnIndex++, row.chartFileRelativePath.toUTF8());
  				query.bind(columnIndex++, row.songDirectoryRelativePath.toUTF8());
  				query.bind(columnIndex++, row.sectionDirectoryRelativePath.toUTF8());
-@@ -541,10 +537,7 @@ namespace
+@@ -541,10 +543,7 @@ namespace
  	{
  		Array<ChartRowResult> rows;
  
@@ -13482,7 +13881,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  		SQLite::Statement query(db, sql);
  		while (query.executeStep())
  		{
-@@ -580,14 +573,14 @@ namespace
+@@ -580,14 +579,14 @@ namespace
  			const FilePath sectionDirRel = Unicode::FromUTF8(query.getColumn("section_dir").getString());
  
  			rows.push_back(ChartRowResult{
@@ -13501,17 +13900,18 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..4927cbc232f9dedc913442fe8862d1a4
  				.visibleInDirectoryNameSort = query.getColumn("visible_in_directory_name_sort").getInt() != 0,
  				.visibleInAllNameSort = query.getColumn("visible_in_all_name_sort").getInt() != 0,
 diff --git a/kshootmania/src/Scenes/Select/SelectScene.cpp b/kshootmania/src/Scenes/Select/SelectScene.cpp
-index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef765fb64f 100644
+index e48e2f72be6fa20647d26b0db57919fb51b32da7..6504f7943ce2dcdf2ab2a77b05894a9c906a7b8d 100644
 --- a/kshootmania/src/Scenes/Select/SelectScene.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectScene.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
 -﻿#include "SelectScene.hpp"
-+﻿#include "ksmaudio/Diagnostics.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "ksmaudio/Diagnostics.hpp"
 +#include "SelectScene.hpp"
  #include "Scenes/PlayPrepare/PlayPrepareScene.hpp"
  #include "Scenes/Title/TitleScene.hpp"
  #include "Ini/ConfigIni.hpp"
-@@ -13,6 +14,8 @@
+@@ -13,6 +15,8 @@
  #include "Input/InputUtils.hpp"
  #include "NocoExtensions/NocoUtils.hpp"
  #include "SearchInputDialog.hpp"
@@ -13520,7 +13920,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  
  namespace
  {
-@@ -22,7 +25,7 @@ namespace
+@@ -22,7 +26,7 @@ namespace
  
  	FilePath GetSelectSceneUIFilePath()
  	{
@@ -13529,7 +13929,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  	}
  
  	std::shared_ptr<noco::Canvas> LoadSelectSceneCanvas()
-@@ -33,6 +36,8 @@ namespace
+@@ -33,6 +37,8 @@ namespace
  		{
  			throw Error{ U"Failed to load '{}'"_fmt(uiFilePath) };
  		}
@@ -13538,18 +13938,20 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  		return canvas;
  	}
  
-@@ -54,9 +59,7 @@ namespace
+@@ -54,9 +60,9 @@ namespace
  		}
  
  		playerNames.sort_by([](const String& a, const String& b)
 -		{
 -			return a.lowercased() < b.lowercased();
 -		});
-+							{ return a.lowercased() < b.lowercased(); });
++							{
++								return a.lowercased() < b.lowercased();
++							});
  
  		return playerNames;
  	}
-@@ -84,7 +87,7 @@ namespace
+@@ -84,7 +90,7 @@ namespace
  
  		// 該当行を削除
  		bool removed = false;
@@ -13558,7 +13960,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  		{
  			// .fav内にあるパスを正規化
  			FilePath lineFullPath = FileSystem::PathAppend(songsDir, *it);
-@@ -279,9 +282,11 @@ void SelectScene::enterSearchInputPhase()
+@@ -279,9 +285,15 @@ void SelectScene::enterSearchInputPhase()
  
  	const String initialQuery = wasNone ? String{} : m_searchResultQuery;
  	m_dialogRunner = Co::Play<SearchInputDialog>(
@@ -13567,13 +13969,17 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
 -	).runScoped([this](const Optional<String>& result) { onSearchInputDialogClosed(result); });
 +						 initialQuery,
 +						 [this](StringView q)
-+						 { m_menu.setSearchQuery(q); })
++						 {
++							 m_menu.setSearchQuery(q);
++						 })
 +						 .runScoped([this](const Optional<String>& result)
-+									{ onSearchInputDialogClosed(result); });
++									{
++										onSearchInputDialogClosed(result);
++									});
  }
  
  void SelectScene::onSearchInputDialogClosed(const Optional<String>& result)
-@@ -352,22 +357,25 @@ void SelectScene::exitSearchMode()
+@@ -352,22 +364,33 @@ void SelectScene::exitSearchMode()
  
  SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchParams)
  	: m_folderCloseButton(
@@ -13597,13 +14003,21 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
 +	  m_canvas(LoadSelectSceneCanvas()), m_menu(
 +											 m_canvas,
 +											 [this](FilePathView chartFilePath, MusicGame::IsAutoPlayYN isAutoPlayYN, Optional<CoursePlayState> courseState)
-+											 { moveToPlayScene(chartFilePath, isAutoPlayYN, courseState); },
++											 {
++												 moveToPlayScene(chartFilePath, isAutoPlayYN, courseState);
++											 },
 +											 [this](StringView msg)
-+											 { m_dialogRunner = Co::Play<SimpleDialog>(String{ U"ERROR" }, String{ msg }).runScoped(); },
++											 {
++												 m_dialogRunner = Co::Play<SimpleDialog>(String{ U"ERROR" }, String{ msg }).runScoped();
++											 },
 +											 [this]()
-+											 { exitSearchMode(); },
++											 {
++												 exitSearchMode();
++											 },
 +											 [this]()
-+											 { openFavoriteDialogForCursor(); }),
++											 {
++												 openFavoriteDialogForCursor();
++											 }),
 +	  m_playerNames(GetPlayerNames()), m_fxButtonUpDetection({ KeyShift }), m_btOptionPanel(m_canvas), m_playStatsPanel(m_canvas)
  {
 +	ksmaudio::qa::Scope qaConstruct{ "SelectScene.construct", true };
@@ -13613,7 +14027,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  
  	// 検索結果表示ノードを取得
  	m_searchResultNode = NocoUtils::GetNodeByPath(m_canvas, { U"SearchResult" });
-@@ -415,9 +423,11 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
+@@ -415,9 +438,15 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
  		{
  			m_searchPhase = SelectSceneSearchPhase::kInput;
  			m_dialogRunner = Co::Play<SearchInputDialog>(
@@ -13622,13 +14036,17 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
 -			).runScoped([this](const Optional<String>& result) { onSearchInputDialogClosed(result); });
 +								 restoreQuery,
 +								 [this](StringView q)
-+								 { m_menu.setSearchQuery(q); })
++								 {
++									 m_menu.setSearchQuery(q);
++								 })
 +								 .runScoped([this](const Optional<String>& result)
-+											{ onSearchInputDialogClosed(result); });
++											{
++												onSearchInputDialogClosed(result);
++											});
  		}
  		else
  		{
-@@ -434,6 +444,8 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
+@@ -434,6 +463,8 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
  
  void SelectScene::update()
  {
@@ -13637,18 +14055,18 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  	const noco::HitTestEnabledYN hitTestEnabled{ !isFadingIn() && !isFadingOut() && InputUtils::IsUIMouseInputEnabled() };
  
  	// ダイアログ表示中は必要な更新のみ実行
-@@ -446,6 +458,10 @@ void SelectScene::update()
+@@ -446,6 +477,10 @@ void SelectScene::update()
  	}
  
  	// 共通オーバーレイを更新
 +	if (Scene::Height() > Scene::Width())
 +		m_commonOverlay.setModScreenLayout();
-+	if (TimingHudCapture::Enabled() && System::GetCommandLineArgs().contains(U"--back-button-capture"))
++	if (TimingHudCapture::Enabled() && ModDiagnostics::Arguments().contains(U"--back-button-capture"))
 +		m_commonOverlay.setBackButtonFocused(true);
  	m_commonOverlay.update(hitTestEnabled);
  
  	// BTオプションパネル更新
-@@ -486,7 +502,7 @@ void SelectScene::update()
+@@ -486,7 +521,7 @@ void SelectScene::update()
  		return;
  	}
  
@@ -13657,7 +14075,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  
  	// BackSpaceキーまたはBackボタン(Escキー)でフォルダを閉じる
  	if (closeFolder)
-@@ -585,32 +601,58 @@ void SelectScene::update()
+@@ -585,32 +620,58 @@ void SelectScene::update()
  	// Shift+A〜Zでアルファベットジャンプ
  	if (KeyShift.pressed())
  	{
@@ -13742,7 +14160,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  	}
  
  	updateAlphabetJump();
-@@ -728,6 +770,9 @@ void SelectScene::openFavoriteDialogForCursor()
+@@ -728,6 +789,9 @@ void SelectScene::openFavoriteDialogForCursor()
  
  void SelectScene::draw() const
  {
@@ -13752,46 +14170,52 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..ace2c4e12c6d9899b5d52de7560e69ef
  	m_canvas->draw();
  	m_commonOverlay.draw();
  }
-@@ -735,10 +780,10 @@ void SelectScene::draw() const
+@@ -735,10 +799,11 @@ void SelectScene::draw() const
  Co::Task<void> SelectScene::fadeIn()
  {
  	const auto canvasUpdateRunner = Co::UpdaterTask([this]
 -		{
-+													{
- 			m_canvas->update(noco::HitTestEnabledYN::No);
+-			m_canvas->update(noco::HitTestEnabledYN::No);
 -			m_commonOverlay.update(noco::HitTestEnabledYN::No);
 -		}).runScoped();
-+			m_commonOverlay.update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	co_await Co::ScreenFadeIn(kFadeInDuration);
  }
-@@ -751,10 +796,10 @@ Co::Task<void> SelectScene::fadeOut()
+@@ -751,10 +816,11 @@ Co::Task<void> SelectScene::fadeOut()
  	}
  
  	const auto canvasUpdateRunner = Co::UpdaterTask([this]
 -		{
-+													{
- 			m_canvas->update(noco::HitTestEnabledYN::No);
+-			m_canvas->update(noco::HitTestEnabledYN::No);
 -			m_commonOverlay.update(noco::HitTestEnabledYN::No);
 -		}).runScoped();
-+			m_commonOverlay.update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	co_await Co::ScreenFadeOut(kFadeOutDuration, m_fadeOutColor);
  }
 diff --git a/kshootmania/src/Scenes/Title/TitleMenu.cpp b/kshootmania/src/Scenes/Title/TitleMenu.cpp
-index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..248a94308e06d5a457b385cfee78018fc7cdd1d2 100644
+index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..cf204415e774cc53b6f2b7af2c8dba9dd194cc89 100644
 --- a/kshootmania/src/Scenes/Title/TitleMenu.cpp
 +++ b/kshootmania/src/Scenes/Title/TitleMenu.cpp
-@@ -1,4 +1,6 @@
- ﻿#include "TitleMenu.hpp"
+@@ -1,4 +1,7 @@
+-﻿#include "TitleMenu.hpp"
++﻿#include "Diagnostics/DiagnosticArguments.hpp"
++#include "TitleMenu.hpp"
 +#include "ModMenuButtons.hpp"
 +#include "Vertical/VerticalDisplay.hpp"
  #include "UI/MouseMenuUtils.hpp"
  
  namespace
-@@ -17,40 +19,66 @@ namespace
+@@ -17,40 +20,66 @@ namespace
  
  void TitleMenu::refreshCanvasMenuCursor()
  {
@@ -13856,7 +14280,7 @@ index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..248a94308e06d5a457b385cfee78018f
  	if (!m_isAlreadySelected && !backPressed)
  	{
  		m_menu.update();
-+		if (Window::GetState().focused && InputUtils::IsUIMouseInputEnabled() && !System::GetCommandLineArgs().contains(U"--enhanced-menu-test"))
++		if (Window::GetState().focused && InputUtils::IsUIMouseInputEnabled() && !ModDiagnostics::Arguments().contains(U"--enhanced-menu-test"))
 +			hoveredSelection = hoverAt(Cursor::PosF());
  
  		// クリックされた項目へカーソルを移動して決定
@@ -13871,7 +14295,7 @@ index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..248a94308e06d5a457b385cfee78018f
  		clickDecided = clickedItem.has_value();
  		if (clickedItem.has_value())
  		{
-@@ -60,8 +88,21 @@ void TitleMenu::update()
+@@ -60,8 +89,21 @@ void TitleMenu::update()
  		if (m_stopwatch.elapsed() >= kStartIgnoreDuration && (KeyConfig::Down(kButtonStart) || clickDecided))
  		{
  			const auto selectedItem = m_menu.cursorAs<TitleMenuItem>();
@@ -13895,7 +14319,7 @@ index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..248a94308e06d5a457b385cfee78018f
  		}
  	}
  
-@@ -74,7 +115,7 @@ void TitleMenu::update()
+@@ -74,7 +116,7 @@ void TitleMenu::update()
  	if (m_menu.cursor() != beforeCursor)
  	{
  		// カーソル位置が変化した場合はCanvasへ反映し、クリック決定時以外は効果音を鳴らす
@@ -13965,7 +14389,7 @@ index 40acdb0825c3a90215d8f17aeedd474bf2f94553..17a6caa8768bafcf1aebd62dcc7ecd31
  	Co::Task<TitleMenuItem> selectedMenuItemAsync()
  	{
 diff --git a/kshootmania/src/Scenes/Title/TitleScene.cpp b/kshootmania/src/Scenes/Title/TitleScene.cpp
-index bf08d7f69839b4744f81c5add6ab3579e3234f05..5663b3961914c152ed1c27e53315be185554f9d6 100644
+index bf08d7f69839b4744f81c5add6ab3579e3234f05..498a718fcff7f94f3c013fbeed708ed04b7e3e89 100644
 --- a/kshootmania/src/Scenes/Title/TitleScene.cpp
 +++ b/kshootmania/src/Scenes/Title/TitleScene.cpp
 @@ -1,4 +1,5 @@
@@ -13998,7 +14422,7 @@ index bf08d7f69839b4744f81c5add6ab3579e3234f05..5663b3961914c152ed1c27e53315be18
  	}
  
  	std::shared_ptr<noco::Canvas> LoadTitleSceneCanvas()
-@@ -28,27 +36,28 @@ namespace
+@@ -28,27 +36,30 @@ namespace
  		{
  			throw Error{ U"Failed to load '{}'"_fmt(uiFilePath) };
  		}
@@ -14029,12 +14453,14 @@ index bf08d7f69839b4744f81c5add6ab3579e3234f05..5663b3961914c152ed1c27e53315be18
  {
 -	const auto updateRunner = Co::UpdaterTask([this] { update(); }).runScoped();
 +	const auto updateRunner = Co::UpdaterTask([this]
-+											  { update(); })
++											  {
++												  update();
++											  })
 +								  .runScoped();
  
  	if (!m_bgmStream->isPlaying())
  	{
-@@ -71,28 +80,147 @@ Co::Task<void> TitleScene::start()
+@@ -71,28 +82,151 @@ Co::Task<void> TitleScene::start()
  	CommonSEAddon::Play(CommonSEType::kTitleEnter);
  }
  
@@ -14170,7 +14596,9 @@ index bf08d7f69839b4744f81c5add6ab3579e3234f05..5663b3961914c152ed1c27e53315be18
  {
 -	const auto canvasUpdateRunner = Co::UpdaterTask([this] { m_canvas->update(noco::HitTestEnabledYN::No); }).runScoped();
 +	const auto canvasUpdateRunner = Co::UpdaterTask([this]
-+													{ m_canvas->update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	co_await Co::ScreenFadeIn(kFadeDuration);
@@ -14180,12 +14608,14 @@ index bf08d7f69839b4744f81c5add6ab3579e3234f05..5663b3961914c152ed1c27e53315be18
  {
 -	const auto canvasUpdateRunner = Co::UpdaterTask([this] { m_canvas->update(noco::HitTestEnabledYN::No); }).runScoped();
 +	const auto canvasUpdateRunner = Co::UpdaterTask([this]
-+													{ m_canvas->update(noco::HitTestEnabledYN::No); })
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++													})
 +										.runScoped();
  
  	// 次のシーンへ遷移
  	switch (m_selectedMenuItem)
-@@ -125,6 +253,16 @@ Co::Task<void> TitleScene::fadeOut()
+@@ -125,6 +259,16 @@ Co::Task<void> TitleScene::fadeOut()
  		co_await Co::ScreenFadeOut(kFadeDurationExit);
  		break;
  
@@ -14244,9 +14674,18 @@ index b1260230013f8920fa08f9a729218974dbcf60d7..7764e61b33dd73a000683a9fa83e22d3
  #include "Addon/AutoMuteAddon.hpp"
  #include "Addon/CommonSEAddon.hpp"
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index d7e58ded3117ba60a54bb0fcf31a6a0e9f7d7358..fa5a6a65d69c3b5a4a54a6df592bcc7ec3d2c28a 100644
+index d7e58ded3117ba60a54bb0fcf31a6a0e9f7d7358..a87bffe5b40faf98d4c9b9eb3e129db706da6dde 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
+@@ -71,7 +71,7 @@ endif()
+ 
+ target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
+ 
+-target_compile_definitions(${TARGET_NAME} PRIVATE)
++target_compile_definitions(${TARGET_NAME} PRIVATE KSM_ENABLE_DIAGNOSTICS=1)
+ 
+ if(APPLE)
+     # Siv3DのmacOS/Linux版はプリコンパイル済みヘッダ非対応のため通常のヘッダとしてインクルード
 @@ -101,4 +101,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
  endif()
  

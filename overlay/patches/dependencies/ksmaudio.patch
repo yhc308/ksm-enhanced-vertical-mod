@@ -1270,10 +1270,10 @@ index fa671569a693b9500dba74e01dad675ce9d3ef8c..df55ac3b7cadc656390b8fb98469bc15
  
 diff --git a/include/ksmaudio/Diagnostics.hpp b/include/ksmaudio/Diagnostics.hpp
 new file mode 100644
-index 0000000000000000000000000000000000000000..2d017e41bf4bd6da45825ec5d89e14f70ca1d9f3
+index 0000000000000000000000000000000000000000..48772a3071468efa58407bd12ac14238b45b76dd
 --- /dev/null
 +++ b/include/ksmaudio/Diagnostics.hpp
-@@ -0,0 +1,352 @@
+@@ -0,0 +1,354 @@
 +﻿#pragma once
 +// Opt-in QA flight recorder. Producers never do file I/O or acquire a logger lock.
 +// Labels must be static string literals. Each producer owns its bounded ring.
@@ -1436,7 +1436,9 @@ index 0000000000000000000000000000000000000000..2d017e41bf4bd6da45825ec5d89e14f7
 +	auto Call(const char* name, std::uint64_t handle, F&& call)
 +	{
 +		return Call(name, handle, std::forward<F>(call), []
-+					{ return 0; });
++					{
++						return 0;
++					});
 +	}
 +	inline void FrameBegin() noexcept
 +	{
@@ -2066,7 +2068,7 @@ index 0000000000000000000000000000000000000000..3ed4f3972e1f7f26a1a159695812d099
 +	}
 +}
 diff --git a/src/Sample.cpp b/src/Sample.cpp
-index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04c546ca07 100644
+index b2ec294131fdc52d5119418c36a24bb701f63b92..ef3cdad39dd60378f2eca0188526fe263276a345 100644
 --- a/src/Sample.cpp
 +++ b/src/Sample.cpp
 @@ -1,4 +1,9 @@
@@ -2079,7 +2081,7 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
  #include <cassert>
  #include <filesystem>
  #include <utility>
-@@ -13,51 +18,149 @@ namespace
+@@ -13,51 +18,174 @@ namespace
  
  	HSAMPLE LoadSample(const std::string& filePath, DWORD maxPolyphony)
  	{
@@ -2106,8 +2108,13 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
 +				{
 +					if (channel)
 +						qa::Call("BASS_StreamFree.sampleVoice", channel, [&]
-+								 { return BASS_StreamFree(channel); }, []
-+								 { return BASS_ErrorGetCode(); });
++								 {
++									 return BASS_StreamFree(channel);
++								 },
++								 []
++								 {
++									 return BASS_ErrorGetCode();
++								 });
 +					for (const auto value : m_asioChannels)
 +						BASS_StreamFree(value);
 +					BASS_SampleFree(m_hSample);
@@ -2125,11 +2132,21 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
 +	{
 +		detail::OutputResources()[this] = {
 +			[this]
-+			{ if (m_hSample) m_restoreValid = true; },
++			{
++				if (m_hSample)
++					m_restoreValid = true;
++			},
 +			[this]
-+			{ releaseNative(); },
++			{
++				releaseNative();
++			},
 +			[this]
-+			{ rebuildNative(); }, [] {}
++			{
++				rebuildNative();
++			},
++			[]
++			{
++			}
 +		};
 +	}
 +	void Sample::releaseNative()
@@ -2145,19 +2162,29 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
 -			BASS_SampleFree(m_hSample);
 +			detail::ForgetChannel(channel);
 +			qa::Call("BASS_StreamFree.sampleVoice", channel, [&]
-+					 { return BASS_StreamFree(channel); }, []
-+					 { return BASS_ErrorGetCode(); });
-+		}
++					 {
++						 return BASS_StreamFree(channel);
++					 },
++					 []
++					 {
++						 return BASS_ErrorGetCode();
++					 });
+ 		}
 +		m_asioChannels.clear();
 +		m_nextAsioChannel = 0;
 +		if (m_hSample)
 +		{
 +			const auto h = std::exchange(m_hSample, 0);
 +			qa::Call("BASS_SampleFree", h, [&]
-+					 { return BASS_SampleFree(h); }, []
-+					 { return BASS_ErrorGetCode(); });
- 		}
- 	}
++					 {
++						 return BASS_SampleFree(h);
++					 },
++					 []
++					 {
++						 return BASS_ErrorGetCode();
++					 });
++		}
++	}
 +	void Sample::rebuildNative()
 +	{
 +		if (!m_restoreValid)
@@ -2172,7 +2199,7 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
 +	{
 +		detail::OutputResources().erase(this);
 +		releaseNative();
-+	}
+ 	}
  
  	Sample::Sample(Sample&& other) noexcept
 -		: m_hSample(std::exchange(other.m_hSample, 0))
@@ -2240,7 +2267,7 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..60eb93a673be8092d59f5cad2251db04
  		if (hChannel == 0)
  		{
 diff --git a/src/Stream.cpp b/src/Stream.cpp
-index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e37228959e369ce4 100644
+index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1973337e1 100644
 --- a/src/Stream.cpp
 +++ b/src/Stream.cpp
 @@ -1,8 +1,13 @@
@@ -2332,7 +2359,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  			BASS_INFO info{};
  			if (BASS_GetInfo(&info))
  			{
-@@ -129,15 +141,19 @@ namespace ksmaudio
+@@ -129,15 +141,24 @@ namespace ksmaudio
  	}
  
  	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed, bool decode)
@@ -2352,15 +2379,20 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
 +			m_hStream = 0;
 +			if (m_hStreamSource)
 +				qa::Call("BASS_StreamFree.source", *m_hStreamSource, [&]
-+						 { return BASS_StreamFree(*m_hStreamSource); }, []
-+						 { return BASS_ErrorGetCode(); });
++						 {
++							 return BASS_StreamFree(*m_hStreamSource);
++						 },
++						 []
++						 {
++							 return BASS_ErrorGetCode();
++						 });
 +			throw std::runtime_error("Cannot attach audio stream to ASIO mixer");
 +		}
 +		registerResource();
  		// 音量を設定
  		applyVolume();
  
-@@ -152,13 +168,101 @@ namespace ksmaudio
+@@ -152,13 +173,129 @@ namespace ksmaudio
  		}
  	}
  
@@ -2369,13 +2401,31 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
 +	{
 +		detail::OutputResources()[this] = {
 +			[this]
-+			{ if (m_hStream) { m_restorePlaying = isPlaying(); m_restoreValid = true; m_restorePosition = posSec(); } },
++			{
++				if (m_hStream)
++				{
++					m_restorePlaying = isPlaying();
++					m_restoreValid = true;
++					m_restorePosition = posSec();
++				}
++			},
 +			[this]
-+			{ releaseNative(); },
++			{
++				releaseNative();
++			},
 +			[this]
-+			{ rebuildNative(); },
++			{
++				rebuildNative();
++			},
 +			[this]
-+			{ if (m_hStream) { seekPosSec(m_restorePosition); if (m_restorePlaying) play(); } }
++			{
++				if (m_hStream)
++				{
++					seekPosSec(m_restorePosition);
++					if (m_restorePlaying)
++						play();
++				}
++			}
 +		};
 +	}
 +	void Stream::releaseNative()
@@ -2387,18 +2437,27 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
 +		const std::string_view file{ m_filePath };
 +		qa::Event("STREAM_RELEASE", m_hStream, 0, file.substr(file.find_last_of("/\\\\") + 1));
 +		if (m_hStream)
- 		{
--			BASS_StreamFree(m_hStreamSource.value());
++		{
 +			detail::ForgetChannel(m_hStream);
 +			const auto handle = std::exchange(m_hStream, 0);
 +			qa::Call("BASS_StreamFree", handle, [&]
-+					 { return BASS_StreamFree(handle); }, []
-+					 { return BASS_ErrorGetCode(); });
- 		}
++					 {
++						 return BASS_StreamFree(handle);
++					 },
++					 []
++					 {
++						 return BASS_ErrorGetCode();
++					 });
++		}
 +		if (m_hStreamSource)
 +			qa::Call("BASS_StreamFree.source", *m_hStreamSource, [&]
-+					 { return BASS_StreamFree(*m_hStreamSource); }, []
-+					 { return BASS_ErrorGetCode(); });
++					 {
++						 return BASS_StreamFree(*m_hStreamSource);
++					 },
++					 []
++					 {
++						 return BASS_ErrorGetCode();
++					 });
 +		m_hStreamSource.reset();
 +		m_hVolumeAmplifyFX = 0;
 +	}
@@ -2420,11 +2479,12 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
 +		m_effects = effects;
 +		m_nextEffect = nextEffect;
 +		for (auto& [id, effect] : m_effects)
-+		{
+ 		{
+-			BASS_StreamFree(m_hStreamSource.value());
 +			effect.native = BASS_ChannelSetDSP(m_hStream, ProcessAudioEffect, effect.effect, effect.priority);
 +			if (!effect.native)
 +				throw std::runtime_error("Cannot rebind audio DSP");
-+		}
+ 		}
 +		setMuted(muted);
 +	}
 +	Stream::~Stream()
@@ -2466,7 +2526,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  	}
  
  	void Stream::applyVolume()
-@@ -199,22 +303,27 @@ namespace ksmaudio
+@@ -199,22 +336,27 @@ namespace ksmaudio
  
  	void Stream::play() const
  	{
@@ -2498,7 +2558,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  	}
  
  	SecondsF Stream::posSec() const
-@@ -223,14 +332,35 @@ namespace ksmaudio
+@@ -223,14 +365,35 @@ namespace ksmaudio
  		{
  			return SecondsF{ 0.0 };
  		}
@@ -2536,7 +2596,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  	}
  
  	Duration Stream::duration() const
-@@ -245,12 +375,26 @@ namespace ksmaudio
+@@ -245,12 +408,31 @@ namespace ksmaudio
  
  	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
  	{
@@ -2559,13 +2619,18 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
 +		if (it == m_effects.end())
 +			return;
 +		qa::Call("BASS_ChannelRemoveDSP", m_hStream, [&]
-+				 { return BASS_ChannelRemoveDSP(m_hStream, it->second.native); }, []
-+				 { return BASS_ErrorGetCode(); });
++				 {
++					 return BASS_ChannelRemoveDSP(m_hStream, it->second.native);
++				 },
++				 []
++				 {
++					 return BASS_ErrorGetCode();
++				 });
 +		m_effects.erase(it);
  	}
  
  	void Stream::setFadeIn(Duration duration) const
-@@ -280,10 +424,10 @@ namespace ksmaudio
+@@ -280,10 +462,10 @@ namespace ksmaudio
  		applyVolume();
  		setFadeOut(duration);
  	}
@@ -2578,7 +2643,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  		return status == BASS_ACTIVE_PLAYING || status == BASS_ACTIVE_STALLED;
  	}
  
-@@ -349,6 +493,8 @@ namespace ksmaudio
+@@ -349,6 +531,8 @@ namespace ksmaudio
  
  	SecondsF Stream::latency() const
  	{
@@ -2587,7 +2652,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..4349753575fb387b89f0a872e3722895
  		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
  		if (playbuf != (DWORD)-1)
  		{
-@@ -359,16 +505,24 @@ namespace ksmaudio
+@@ -359,16 +543,24 @@ namespace ksmaudio
  
  	void Stream::lockBegin() const
  	{
@@ -2827,10 +2892,10 @@ index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde2
  	{
  		web::Engine().terminate();
 diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
-index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a252381db265b 100644
+index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280557bb30d 100644
 --- a/src/ksmaudio.cpp
 +++ b/src/ksmaudio.cpp
-@@ -1,77 +1,980 @@
+@@ -1,77 +1,1056 @@
 +﻿#include "ksmaudio/Diagnostics.hpp"
  #include "ksmaudio/ksmaudio.hpp"
 +#include "AsioOutput.hpp"
@@ -2860,17 +2925,17 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +		thread_local const std::function<void(const char*)>* s_initTrace = nullptr;
 +		class InitTraceScope
 +		{
-+			const std::function<void(const char*)>* previous;
++			const std::function<void(const char*)>* m_previousTraceObserver;
 +
 +		public:
 +			explicit InitTraceScope(const std::function<void(const char*)>& observer)
-+				: previous(s_initTrace)
++				: m_previousTraceObserver(s_initTrace)
 +			{
 +				s_initTrace = observer ? &observer : nullptr;
 +			}
 +			~InitTraceScope()
 +			{
-+				s_initTrace = previous;
++				s_initTrace = m_previousTraceObserver;
 +			}
 +		};
 +		void ReportInit(const std::string& message) noexcept
@@ -3125,12 +3190,22 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +			{
 +				if (s_api.asioIsStarted())
 +					qa::Call("BASS_ASIO_Stop", 0, [&]
-+							 { return s_api.asioStop(); }, [&]
-+							 { return s_api.asioErrorGetCode(); });
++							 {
++								 return s_api.asioStop();
++							 },
++							 [&]
++							 {
++								 return s_api.asioErrorGetCode();
++							 });
 +				s_api.asioSetNotify(nullptr, nullptr);
 +				qa::Call("BASS_ASIO_Free", 0, [&]
-+						 { return s_api.asioFree(); }, [&]
-+						 { return s_api.asioErrorGetCode(); });
++						 {
++							 return s_api.asioFree();
++						 },
++						 [&]
++						 {
++							 return s_api.asioErrorGetCode();
++						 });
 +				s_asioInitialized = false;
 +			}
 +			if (s_mixer)
@@ -3270,9 +3345,13 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +#endif
 +			const DWORD bassVolume = IsASIOActive() ? 10000 : (s_isMuted ? 0 : static_cast<DWORD>(s_masterVolume * s_transitionGain * 10000.0));
 +			TraceInitCall("BASS_SetConfig(BASS_CONFIG_GVOL_STREAM)", [&]
-+						  { return BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, bassVolume); });
++						  {
++							  return BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, bassVolume);
++						  });
 +			TraceInitCall("BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE)", [&]
-+						  { return BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, bassVolume); });
++						  {
++							  return BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, bassVolume);
++						  });
  		}
  	}
  
@@ -3315,9 +3394,16 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +			CloseASIO();
 +			ReportInit("END close failed ASIO initialization");
 +			TraceInitCall("BASS_Free(after failed ASIO initialization)", []
-+						  { return qa::Call("BASS_Free", 0, []
-+											{ return BASS_Free(); }, []
-+											{ return BASS_ErrorGetCode(); }); });
++						  {
++							  return qa::Call("BASS_Free", 0, []
++											  {
++												  return BASS_Free();
++											  },
++											  []
++											  {
++												  return BASS_ErrorGetCode();
++											  });
++						  });
 +			s_status.backend = AudioBackend::Default;
 +			s_status.driver.clear();
 +			s_status.sampleRate = 0;
@@ -3327,10 +3413,14 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +		const DWORD flags = audioBackend == AudioBackend::DirectSound ? BASS_DEVICE_DSOUND : 0;
 +		const std::string initName = "BASS_Init(device=-1, freq=" + std::to_string(kSampleRate) + ", flags=" + std::to_string(flags) + ")";
 +		BOOL ok = TraceInitCall(initName.c_str(), [&]
-+								{ return BASS_Init(-1, kSampleRate, flags, static_cast<HWND>(hWnd), nullptr); });
++								{
++									return BASS_Init(-1, kSampleRate, flags, static_cast<HWND>(hWnd), nullptr);
++								});
 +		if (!ok && audioBackend == AudioBackend::DirectSound)
 +			ok = TraceInitCall("BASS_Init(DirectSound fallback to default, flags=0)", [&]
-+							   { return BASS_Init(-1, kSampleRate, 0, static_cast<HWND>(hWnd), nullptr); });
++							   {
++								   return BASS_Init(-1, kSampleRate, 0, static_cast<HWND>(hWnd), nullptr);
++							   });
 +		else if (ok && audioBackend == AudioBackend::DirectSound)
 +			s_status.backend = AudioBackend::DirectSound;
  #else
@@ -3339,25 +3429,44 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 -		const BOOL ok = BASS_Init(-1/* default device */, kSampleRate, 0, 0, nullptr);
 +		(void)asioDriver;
 +		const BOOL ok = TraceInitCall("BASS_Init(device=-1, default)", []
-+									  { return BASS_Init(-1, kSampleRate, 0, 0, nullptr); });
++									  {
++										  return BASS_Init(-1, kSampleRate, 0, 0, nullptr);
++									  });
  #endif
  		if (!ok)
 +			return false;
 +		TraceInitCall("BASS_SetConfig(BASS_CONFIG_BUFFER, 200)", []
-+					  { return BASS_SetConfig(BASS_CONFIG_BUFFER, kBufferSizeMs); });
++					  {
++						  return BASS_SetConfig(BASS_CONFIG_BUFFER, kBufferSizeMs);
++					  });
 +		TraceInitCall("BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100)", []
-+					  { return BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs); });
++					  {
++						  return BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs);
++					  });
 +		TraceInitCall("BASS_SetConfig(BASS_CONFIG_FLOATDSP, true)", []
-+					  { return BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE); });
++					  {
++						  return BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
++					  });
 +		TraceInitCall("BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 2)", []
-+					  { return BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads); });
++					  {
++						  return BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads);
++					  });
 +		if (!TraceInitCall("BASS_FX_GetVersion()", []
-+						   { return BASS_FX_GetVersion(); }))
++						   {
++							   return BASS_FX_GetVersion();
++						   }))
  		{
 +			TraceInitCall("BASS_Free(after BASS_FX failure)", []
-+						  { return qa::Call("BASS_Free", 0, []
-+											{ return BASS_Free(); }, []
-+											{ return BASS_ErrorGetCode(); }); });
++						  {
++							  return qa::Call("BASS_Free", 0, []
++											  {
++												  return BASS_Free();
++											  },
++											  []
++											  {
++												  return BASS_ErrorGetCode();
++											  });
++						  });
  			return false;
  		}
 -		BASS_SetConfig(BASS_CONFIG_BUFFER, kBufferSizeMs);
@@ -3369,7 +3478,9 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 -		if (BASS_FX_GetVersion() == 0)
 +		BASS_INFO info{};
 +		if (TraceInitCall("BASS_GetInfo()", [&]
-+						  { return BASS_GetInfo(&info); }))
++						  {
++							  return BASS_GetInfo(&info);
++						  }))
  		{
 -			BASS_Free();
 -			return false;
@@ -3379,10 +3490,14 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
  		}
 +		BASS_DEVICEINFO device{};
 +		const DWORD deviceId = TraceInitCall("BASS_GetDevice()", []
-+											 { return BASS_GetDevice(); });
++											 {
++												 return BASS_GetDevice();
++											 });
 +		const std::string deviceName = "BASS_GetDeviceInfo(device=" + std::to_string(deviceId) + ")";
 +		if (TraceInitCall(deviceName.c_str(), [&]
-+						  { return BASS_GetDeviceInfo(deviceId, &device); }) &&
++						  {
++							  return BASS_GetDeviceInfo(deviceId, &device);
++						  }) &&
 +			device.name)
 +			s_status.driver = device.name;
 +		s_available = true;
@@ -3455,14 +3570,27 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +			return result;
 +		}
 +		const auto progress = [&](const char* phase)
-+		{ if (request.progress) { try { request.progress(phase); } catch (...) {} } };
++		{
++			if (request.progress)
++			{
++				try
++				{
++					request.progress(phase);
++				}
++				catch (...)
++				{
++				}
++			}
++		};
 +		const InitTraceScope initTrace{ request.progress };
 +		progress("capture playback state");
 +		const auto resources = detail::ResourceSnapshot();
 +		for (const auto& resource : resources)
 +			resource.capture();
 +		auto release = [&]
-+		{ ReleaseOutput(progress); };
++		{
++			ReleaseOutput(progress);
++		};
 +		auto rebuild = [&]
 +		{
 +			OutputBatchLock lock;
@@ -3571,13 +3699,21 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +		void ReleaseOutput(const std::function<void(const char*)>& progress)
 +		{
 +			const auto report = [&](const char* phase)
-+			{ if (progress) progress(phase); };
++			{
++				if (progress)
++					progress(phase);
++			};
 +#ifdef _WIN32
 +			report("stop ASIO callbacks");
 +			if (s_asioInitialized && s_api.asioIsStarted())
 +				qa::Call("BASS_ASIO_Stop", 0, [&]
-+						 { return s_api.asioStop(); }, [&]
-+						 { return s_api.asioErrorGetCode(); });
++						 {
++							 return s_api.asioStop();
++						 },
++						 [&]
++						 {
++							 return s_api.asioErrorGetCode();
++						 });
 +#endif
 +			report("release streams and samples");
 +			CancelScheduledSounds();
@@ -3589,8 +3725,13 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..eb900e68e0818fa23168926cbd1a2523
 +#endif
 +			report("free BASS output");
 +			qa::Call("BASS_Free", 0, []
-+					 { return BASS_Free(); }, []
-+					 { return BASS_ErrorGetCode(); });
++					 {
++						 return BASS_Free();
++					 },
++					 []
++					 {
++						 return BASS_ErrorGetCode();
++					 });
 +			s_available = false;
 +			s_reportedValid = false;
 +			s_status = {};

@@ -89,7 +89,11 @@ namespace ModMenuStyle
 				const auto index = chars.indexOf(c);
 				const auto [l, r] = Trim(c);
 				if (c != U' ' && index != StringView::npos)
-					texture((index % 10) * 64, (index / 10) * 64, 64, 64).scaled(scale).draw(x - l * scale, pos.y - 10 * scale);
+				{
+					const double sourceX = static_cast<double>((index % 10) * 64);
+					const double sourceY = static_cast<double>((index / 10) * 64);
+					texture(sourceX, sourceY, 64, 64).scaled(scale).draw(x - l * scale, pos.y - 10 * scale);
+				}
 				x += (64 - l - r + 4) * scale;
 			}
 		}

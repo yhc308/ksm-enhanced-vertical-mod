@@ -97,7 +97,9 @@ namespace Vertical
 		};
 		static thread_local std::vector<Cache> cache;
 		auto found = std::find_if(cache.begin(), cache.end(), [&](const Cache& item)
-								  { return item.size == output && item.layout.laneWidth == layout.laneWidth && item.layout.judgmentLineY == layout.judgmentLineY && item.layout.laneTopY == layout.laneTopY; });
+								  {
+									  return item.size == output && item.layout.laneWidth == layout.laneWidth && item.layout.judgmentLineY == layout.judgmentLineY && item.layout.laneTopY == layout.laneTopY;
+								  });
 		if (found == cache.end())
 		{
 			if (cache.size() >= 32)

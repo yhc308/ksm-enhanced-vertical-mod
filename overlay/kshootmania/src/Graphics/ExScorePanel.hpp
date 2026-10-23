@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include <NocoUI.hpp>
 #include "Common/SkinPreset.hpp"
 #include "Common/FsUtils.hpp"
@@ -115,7 +116,7 @@ namespace ExScorePanel
 		static const bool fixture = FileSystem::IsFile(FsUtils::GetResourcePath(U"audio-test-fixture"));
 		if (fixture)
 		{
-			const auto& args = System::GetCommandLineArgs();
+			const auto& args = ModDiagnostics::Arguments();
 			if (args.contains(U"--ex-example-percent"))
 			{
 				score = 6630;

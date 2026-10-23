@@ -26,12 +26,21 @@ namespace AudioTimingFixture
 		TextWriter report{ FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"audio-timing-test.txt") };
 		size_t checks = 0;
 		const auto check = [&](bool condition, StringView name)
-		{ if(!condition) throw Error{String{name}}; ++checks;report.writeln(U"PASS " + String{name}); };
+		{
+			if (!condition)
+				throw Error{ String{ name } };
+			++checks;
+			report.writeln(U"PASS " + String{ name });
+		};
 		std::vector<float> buffer(256);
 		const auto pump = [&]
-		{ check(render(128, buffer.data()) == 1024, U"complete output block"); };
+		{
+			check(render(128, buffer.data()) == 1024, U"complete output block");
+		};
 		const auto count = []
-		{ return ksmaudio::GetAudioLatencySnapshot().scheduledEvents; };
+		{
+			return ksmaudio::GetAudioLatencySnapshot().scheduledEvents;
+		};
 		const auto context = [&](std::uint64_t generation = 100)
 		{
 			ksmaudio::AudioClockSnapshot clock;

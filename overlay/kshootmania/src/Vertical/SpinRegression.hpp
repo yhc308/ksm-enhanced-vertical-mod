@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "VerticalLaneGeometry.hpp"
 #include "MusicGame/Camera/CamPattern/CamPatternMain.hpp"
 #include "kson/kson.hpp"
@@ -38,7 +39,7 @@ namespace Vertical
 		settings.enabled = true;
 		settings.Save();
 		FilePath path = U"../../test-output/spin-v13/Tornaido Test.kson";
-		const auto args = System::GetCommandLineArgs();
+		const auto args = ModDiagnostics::Arguments();
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-chart")
 				path = args[i + 1];

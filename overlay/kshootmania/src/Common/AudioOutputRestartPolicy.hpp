@@ -13,7 +13,9 @@ namespace AudioOutputRestart
 			return false;
 		auto name = current.driver;
 		std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c)
-					   { return static_cast<char>(std::tolower(c)); });
+					   {
+						   return static_cast<char>(std::tolower(c));
+					   });
 		return name.find("fiio") != std::string::npos;
 	}
 }

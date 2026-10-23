@@ -19,6 +19,7 @@ for group in list(project):
             if node.tag==tag("ProjectName"):node.text="ksm-v2-tests"
             if node.tag==tag("ProjectGuid"):node.text="{56659494-55DD-4D56-A5D9-4F5701900D42}"
             if node.tag==tag("TargetName"):node.text="ksm-v2-tests"
+            if node.tag==tag("KsmEnableDiagnostics"):node.text="1"
 for node in project.iter(tag("AdditionalIncludeDirectories")):
     node.text=str(root/"build/deps/include")+";"+(node.text or "")
 group=ET.Element(tag("ItemGroup"))

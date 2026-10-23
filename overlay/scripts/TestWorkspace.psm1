@@ -202,11 +202,30 @@ function Start-KsmOwnedProcess {
     $info.WindowStyle=[Diagnostics.ProcessWindowStyle]::Hidden
     if($Interactive){$info.WindowStyle=[Diagnostics.ProcessWindowStyle]::Normal}
     foreach($argument in $Arguments){$info.ArgumentList.Add($argument)}
+    $quiet=($env:KSM_TEST_QUIET -eq '1') -and -not $Interactive
+    if($quiet){$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true}
     $process=[Diagnostics.Process]::Start($info)
+    if($quiet){$stdout=$process.StandardOutput.ReadToEndAsync();$stderr=$process.StandardError.ReadToEndAsync()}
     $Session.processIds=@($Session.processIds)+@($process.Id)
     $Session|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $Session.root 'session.json') -Encoding UTF8
     if($Interactive){return $process}
-    if(-not $process.WaitForExit($TimeoutSeconds*1000)){throw "Owned test PID $($process.Id) timed out; left running. Session: $($Session.root)"}
+    if($env:KSM_TEST_PROCESS_METRICS){
+        $samples=[Collections.Generic.List[object]]::new()
+        $watch=[Diagnostics.Stopwatch]::StartNew()
+        while(-not $process.WaitForExit(100)){
+            if($watch.Elapsed.TotalSeconds -gt $TimeoutSeconds){throw "Owned test PID $($process.Id) timed out; left running. Session: $($Session.root)"}
+            $process.Refresh()
+            $samples.Add([ordered]@{seconds=$watch.Elapsed.TotalSeconds;workingSetBytes=$process.WorkingSet64;privateBytes=$process.PrivateMemorySize64})
+        }
+        $metricsRoot=[IO.Path]::GetFullPath($env:KSM_TEST_PROCESS_METRICS)
+        Assert-KsmRuntimePath $metricsRoot (Get-KsmProjectRoot)
+        New-Item -ItemType Directory -Path $metricsRoot -Force|Out-Null
+        [ordered]@{buildId=$Session.buildId;arguments=$Arguments;elapsedSeconds=$watch.Elapsed.TotalSeconds;samples=$samples}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $metricsRoot "$($Session.id)-$($process.Id).json") -Encoding UTF8
+    }elseif(-not $process.WaitForExit($TimeoutSeconds*1000)){throw "Owned test PID $($process.Id) timed out; left running. Session: $($Session.root)"}
+    if($quiet){
+        [IO.File]::WriteAllText((Join-Path $Session.root "$($process.Id)-stdout.log"),$stdout.Result)
+        [IO.File]::WriteAllText((Join-Path $Session.root "$($process.Id)-stderr.log"),$stderr.Result)
+    }
     $process.Refresh()
     if($process.ExitCode -ne 0){throw "Diagnostic failed ($($process.ExitCode)): $Arguments; $($Session.root)"}
 }

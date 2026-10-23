@@ -82,7 +82,10 @@ namespace MusicGame
 		if (!itemEnabled(index) || !delta)
 			return;
 		const auto edit = [delta](auto& value, int32 maximum)
-		{using T=std::decay_t<decltype(value)>;value=static_cast<T>(Clamp(static_cast<int32>(value)+delta,0,maximum)); };
+		{
+			using T = std::decay_t<decltype(value)>;
+			value = static_cast<T>(Clamp(static_cast<int32>(value) + delta, 0, maximum));
+		};
 		const auto before = values;
 		if (index == 0)
 			edit(values.mode, 2);

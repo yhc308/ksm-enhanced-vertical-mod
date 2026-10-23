@@ -1,4 +1,5 @@
-﻿#include "SkinOverlay.hpp"
+﻿#include "Diagnostics/DiagnosticArguments.hpp"
+#include "SkinOverlay.hpp"
 #include "RuntimeConfig.hpp"
 #include "Input/InputUtils.hpp"
 #include "Vertical/MenuContentLayout.hpp"
@@ -607,7 +608,7 @@ void SkinOverlay::update()
 		updateFixture();
 		return;
 	}
-	if (System::GetCommandLineArgs().contains(U"--enhanced-menu-test"))
+	if (ModDiagnostics::Arguments().contains(U"--enhanced-menu-test"))
 	{
 		if (m_fixtureClock.sF() > .5)
 			close(false);
@@ -786,8 +787,13 @@ void SkinOverlay::updateFixture()
 		m_fixtureTrace->writeln(wall, U",", m_game->previewTime(), U",", view.score, U",", view.gaugePercentage, U",", m_draft.folder, U",", static_cast<int>(m_draft.missing), U",", m_draft.background1Brightness, U",", m_draft.background2Opacity, U",", m_draft.laserWidthPercent, U",", m_draft.noteHeightPercent, U",", judged, U",", view.inputTiming.count, U",", view.inputTiming.meanMs(), U",", view.inputTiming.absoluteMeanMs(), U",", view.previewChipDemoCount, U",", d.fastError, U",", d.fastNear, U",", d.fastCritical, U",", d.perfectCritical, U",", d.slowCritical, U",", d.slowNear, U",", d.slowError, U",", view.exScore, U",", view.exMaximum);
 	}
 	const auto once = [&](int32 id, double time)
-	{ if(wall<time || m_fixtureStages.contains(id)) return false; m_fixtureStages.insert(id); return true; };
-	if (System::GetCommandLineArgs().contains(U"--viewport-options-smoke"))
+	{
+		if (wall < time || m_fixtureStages.contains(id))
+			return false;
+		m_fixtureStages.insert(id);
+		return true;
+	};
+	if (ModDiagnostics::Arguments().contains(U"--viewport-options-smoke"))
 	{
 		if (once(100, .25))
 		{
@@ -1099,7 +1105,7 @@ void SkinOverlay::updateFixture()
 		ScreenCapture::SaveCurrentFrame(U"preview-confirm.png");
 	}
 	if (once(12, 39.0))
-		close(System::GetCommandLineArgs().contains(U"--skin-smoke-save"));
+		close(ModDiagnostics::Arguments().contains(U"--skin-smoke-save"));
 }
 
 void SkinOverlay::draw() const

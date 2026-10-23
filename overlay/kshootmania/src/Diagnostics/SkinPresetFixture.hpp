@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "ksmaudio/AudioEffect/ParamController.hpp"
 #include "Common/SkinPreset.hpp"
 #include "MusicGame/Judgment/JudgmentMain.hpp"
@@ -12,7 +13,7 @@ namespace SkinFixture
 {
 	inline bool Requested()
 	{
-		const auto& args = System::GetCommandLineArgs();
+		const auto& args = ModDiagnostics::Arguments();
 		return args.contains(U"--skin-smoke-test") || args.contains(U"--skin-core-test");
 	}
 	inline bool Enabled()
@@ -25,7 +26,7 @@ namespace SkinFixture
 	}
 	inline bool Smoke()
 	{
-		return Enabled() && System::GetCommandLineArgs().contains(U"--skin-smoke-test");
+		return Enabled() && ModDiagnostics::Arguments().contains(U"--skin-smoke-test");
 	}
 	inline int& CheckCount()
 	{
@@ -309,7 +310,9 @@ namespace SkinFixture
 		Check(!entries.isEmpty() && entries.front().folder == U"default", U"default pinned first");
 		Check(entries.size() >= 5 && entries[1].folder == U"Alpha" && entries[2].folder == U"beta" && entries[3].folder == U"z-last", U"case insensitive folder ordering");
 		Check(entries.any([](const Entry& e)
-						  { return e.folder == U"한글 Partial" && e.author == U"테스트 제작자"; }),
+						  {
+							  return e.folder == U"한글 Partial" && e.author == U"테스트 제작자";
+						  }),
 			  U"Unicode metadata");
 		for (const String base : { U"result_v2_judge.png", U"play_judge_indicator.png", U"play_judge_indicator_minimum.png" })
 			for (const auto palette : { JudgeColor::kFastBlue, JudgeColor::kFastRed })
@@ -324,7 +327,9 @@ namespace SkinFixture
 				Check(missing[0][0] == Palette::Yellow, U"missing variant obeys Yellow policy");
 			}
 		Check(!entries.any([](const Entry& e)
-						   { return e.folder == U"Legacy Ignored" || e.folder == U"bg"; }),
+						   {
+							   return e.folder == U"Legacy Ignored" || e.folder == U"bg";
+						   }),
 			  U"imgs directories are never discovered as user skins");
 		Activate({ U"한글 Partial", MissingMode::Default });
 		Check(Resolve(U"score_header.png").includes(U"한글 Partial"), U"selected file");

@@ -17,3 +17,5 @@ FixNamespaceComments: false
 PointerAlignment: Left
 SpaceBeforeParens: ControlStatements
 Cpp11BracedListStyle: false
+AllowShortLambdasOnASingleLine: None
+SortUsingDeclarations: Never

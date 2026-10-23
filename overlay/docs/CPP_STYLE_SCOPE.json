@@ -15,6 +15,7 @@
     "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
     "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
     "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
+    "kshootmania/src/Diagnostics/DiagnosticArguments.hpp",
     "kshootmania/src/Diagnostics/DiagnosticRunner.cpp",
     "kshootmania/src/Diagnostics/DiagnosticRunner.hpp",
     "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
@@ -41,6 +42,8 @@
     "kshootmania/src/Ini/AudioCalibration.hpp",
     "kshootmania/src/Ini/ConfigIni.cpp",
     "kshootmania/src/Ini/ConfigIni.hpp",
+    "kshootmania/src/Ini/FolderConfIni.cpp",
+    "kshootmania/src/Ini/FolderConfIni.hpp",
     "kshootmania/src/Ini/KSMIniData.cpp",
     "kshootmania/src/Ini/KSMIniData.hpp",
     "kshootmania/src/Input/KeyConfig.cpp",
@@ -61,7 +64,6 @@
     "kshootmania/src/MusicGame/Audio/LaserSlamSE.hpp",
     "kshootmania/src/MusicGame/GameMain.cpp",
     "kshootmania/src/MusicGame/GameMain.hpp",
-    "kshootmania/src/MusicGame/GaugePresentation.cpp",
     "kshootmania/src/MusicGame/GaugePresentation.hpp",
     "kshootmania/src/MusicGame/Graphics/GraphicsDefines.hpp",
     "kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp",
@@ -155,6 +157,7 @@
     "kshootmania/src/Vertical/MenuContentLayout.hpp",
     "kshootmania/src/Vertical/MenuEntryGate.hpp",
     "kshootmania/src/Vertical/MenuInputTest.hpp",
+    "kshootmania/src/Vertical/ModOptionsScene.cpp",
     "kshootmania/src/Vertical/ModOptionsScene.hpp",
     "kshootmania/src/Vertical/OptionFlowTest.hpp",
     "kshootmania/src/Vertical/OptionsPresentation.hpp",
@@ -197,6 +200,9 @@
     "tests/TestNoteGraphicsUtils.cpp",
     "tests/TestPlayResult.cpp",
     "tests/TestTurnUtil.cpp",
+    "tests/asio/AudioOutputTest.cpp",
+    "tests/asio/FakeAsio.cpp",
+    "tests/asio/QADiagnosticsTest.cpp",
     "tests/headless/RecentTimingWindowTests.cpp"
   ]
 }

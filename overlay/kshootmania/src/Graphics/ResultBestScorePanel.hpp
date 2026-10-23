@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Graphics/ExScorePanel.hpp"
 #include "HighScore/HighScoreInfo.hpp"
 
@@ -117,7 +118,7 @@ namespace ResultBestScorePanel
 		const bool fixture = FileSystem::IsFile(FsUtils::GetResourcePath(U"audio-test-fixture"));
 		if (fixture)
 		{
-			const auto& args = System::GetCommandLineArgs();
+			const auto& args = ModDiagnostics::Arguments();
 			if (args.contains(U"--best-checker-positive"))
 				data = { true, 159201, 6600, 56665, 30 };
 			if (args.contains(U"--best-checker-negative"))

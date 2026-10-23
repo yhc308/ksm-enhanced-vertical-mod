@@ -12,3 +12,5 @@ Only the following proven redundancies were removed in this pass. No resources, 
 | Main.cpp / overlay headers | Moved implementations | These are relocations into registered `.cpp` files, not deletions. Initialization stages and cleanup order are retained. |
 
 TimingMenuCursor retains its unused delta argument for call-site compatibility; its unnamed parameter documents that current navigation already applies the direction before calling it. Modified external-library code is audited separately; vendor headers and license notices remain intact.
+
+GaugePresentation.cpp was consolidated back into its small header after the frame-path review. Its calculation and fixture accessors remain present and tested; no gauge behavior was deleted. The hot interpolation calculator keeps the original inline structure, with explicit unit names.

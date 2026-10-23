@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Common/FsUtils.hpp"
 #include "Ini/ConfigIni.hpp"
 #include "MusicGame/TimingFeedback.hpp"
@@ -7,19 +8,19 @@ namespace TimingHudCapture
 {
 	inline bool Choices()
 	{
-		static const bool value = System::GetCommandLineArgs().contains(U"--timing-choices-capture");
+		static const bool value = ModDiagnostics::Arguments().contains(U"--timing-choices-capture");
 		return value;
 	}
 	inline bool IsMenu()
 	{
-		static const bool value = System::GetCommandLineArgs().contains(U"--timing-menu-capture");
+		static const bool value = ModDiagnostics::Arguments().contains(U"--timing-menu-capture");
 		return value || Choices();
 	}
 	inline bool Enabled()
 	{
 		static const bool value = []
 		{
-			const bool requested = IsMenu() || System::GetCommandLineArgs().contains(U"--timing-hud-capture");
+			const bool requested = IsMenu() || ModDiagnostics::Arguments().contains(U"--timing-hud-capture");
 			if (requested && !FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
 				throw Error{ U"Visual captures require an isolated fixture directory" };
 			return requested;

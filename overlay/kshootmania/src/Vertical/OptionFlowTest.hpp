@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "VerticalDisplay.hpp"
 namespace Vertical::OptionProbe
 {
@@ -6,7 +7,7 @@ namespace Vertical::OptionProbe
 	inline bool passed = true;
 	inline bool active()
 	{
-		static const bool value = System::GetCommandLineArgs().contains(U"--vertical-options-test");
+		static const bool value = ModDiagnostics::Arguments().contains(U"--vertical-options-test");
 		return value;
 	}
 	inline Stopwatch timer{ StartImmediately::Yes };

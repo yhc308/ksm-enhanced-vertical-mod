@@ -1,4 +1,4 @@
-param([ValidateSet(640,800,1280)][int]$LandscapeWidth=1280,[switch]$LandscapeOnly,[int]$LandscapeHeight=0,[ValidateSet(720,1080)][int]$PortraitWidth=720)
+﻿param([ValidateSet(640,800,1280,1920)][int]$LandscapeWidth=1280,[switch]$LandscapeOnly,[int]$LandscapeHeight=0,[ValidateSet(720,1080)][int]$PortraitWidth=720)
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent

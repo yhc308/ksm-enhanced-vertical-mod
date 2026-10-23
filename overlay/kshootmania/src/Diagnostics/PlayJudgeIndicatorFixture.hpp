@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "TimingHudCapture.hpp"
 #include "MusicGame/ViewStatus.hpp"
 #include "Common/SkinPreset.hpp"
@@ -9,7 +10,7 @@ namespace PlayJudgeIndicatorFixture
 	inline void Configure()
 	{
 		auto settings = SkinPreset::Current();
-		const auto& args = System::GetCommandLineArgs();
+		const auto& args = ModDiagnostics::Arguments();
 		if (args.contains(U"--indicator-both"))
 			settings.indicatorPortrait = SkinPreset::IndicatorPortrait::Both;
 		if (args.contains(U"--indicator-off"))

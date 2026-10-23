@@ -1,4 +1,6 @@
 ﻿#include "DiagnosticRunner.hpp"
+#include "DiagnosticArguments.hpp"
+#if KSM_ENABLE_DIAGNOSTICS
 #include "AudioTimingFixture.hpp"
 #include "AudioEndGameFixture.hpp"
 #include "ApsVideoFixture.hpp"
@@ -16,7 +18,7 @@ namespace DiagnosticRunner
 {
 	bool RunAfterAudioInitialization()
 	{
-		if (System::GetCommandLineArgs().contains(U"--ex-score-test"))
+		if (ModDiagnostics::Arguments().contains(U"--ex-score-test"))
 		{
 			try
 			{
@@ -30,7 +32,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--timing-hud-smoke-test"))
+		if (ModDiagnostics::Arguments().contains(U"--timing-hud-smoke-test"))
 		{
 			try
 			{
@@ -44,7 +46,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--audio-timing-smoke-test"))
+		if (ModDiagnostics::Arguments().contains(U"--audio-timing-smoke-test"))
 		{
 			try
 			{
@@ -58,7 +60,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--audio-calibration-smoke-test"))
+		if (ModDiagnostics::Arguments().contains(U"--audio-calibration-smoke-test"))
 		{
 			AudioCalibration::RunFixtureTests();
 			Vertical::OptionsPresentation::Reset();
@@ -77,7 +79,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (SkinFixture::Enabled() && System::GetCommandLineArgs().contains(U"--skin-core-test"))
+		if (SkinFixture::Enabled() && ModDiagnostics::Arguments().contains(U"--skin-core-test"))
 		{
 			SkinFixture::Core();
 			Vertical::OptionsPresentation::Reset();
@@ -89,7 +91,7 @@ namespace DiagnosticRunner
 
 	bool RunAfterInputInitialization()
 	{
-		if (System::GetCommandLineArgs().contains(U"--judge-setting-test"))
+		if (ModDiagnostics::Arguments().contains(U"--judge-setting-test"))
 		{
 			try
 			{
@@ -103,7 +105,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--aps-video-fixture"))
+		if (ModDiagnostics::Arguments().contains(U"--aps-video-fixture"))
 		{
 			try
 			{
@@ -117,7 +119,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--aps-test"))
+		if (ModDiagnostics::Arguments().contains(U"--aps-test"))
 		{
 			try
 			{
@@ -131,7 +133,7 @@ namespace DiagnosticRunner
 			ksmaudio::Terminate();
 			return true;
 		}
-		if (System::GetCommandLineArgs().contains(U"--audio-end-game-test"))
+		if (ModDiagnostics::Arguments().contains(U"--audio-end-game-test"))
 		{
 			try
 			{
@@ -148,3 +150,21 @@ namespace DiagnosticRunner
 		return false;
 	}
 }
+
+#else
+namespace DiagnosticRunner
+{
+	bool RunAfterAudioInitialization()
+	{
+		return false;
+	}
+	bool RunAfterAssetRegistration()
+	{
+		return false;
+	}
+	bool RunAfterInputInitialization()
+	{
+		return false;
+	}
+}
+#endif

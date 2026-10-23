@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Scenes/Title/TitleMenu.hpp"
 #include "Vertical/OptionsPresentation.hpp"
 namespace EnhancedMenuFixture
@@ -8,7 +9,7 @@ namespace EnhancedMenuFixture
 	inline Stopwatch clock{ StartImmediately::Yes };
 	inline bool Active()
 	{
-		if (!System::GetCommandLineArgs().contains(U"--enhanced-menu-test"))
+		if (!ModDiagnostics::Arguments().contains(U"--enhanced-menu-test"))
 			return false;
 		if (!FileSystem::IsFile(FsUtils::GetResourcePath(U"enhanced-menu-fixture")))
 			throw Error{ U"Menu test requires an isolated fixture" };

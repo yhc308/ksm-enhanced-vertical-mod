@@ -91,9 +91,11 @@ namespace SkinPreset
 			}
 		result.sort_by([](const Entry& a, const Entry& b)
 					   {
-            if (a.folder == U"default" || b.folder == U"default") return a.folder == U"default" && b.folder != U"default";
-            const auto al = a.folder.lowercased(), bl = b.folder.lowercased();
-            return al == bl ? a.folder < b.folder : al < bl; });
+						   if (a.folder == U"default" || b.folder == U"default")
+							   return a.folder == U"default" && b.folder != U"default";
+						   const auto al = a.folder.lowercased(), bl = b.folder.lowercased();
+						   return al == bl ? a.folder < b.folder : al < bl;
+					   });
 		return result;
 	}
 
@@ -150,16 +152,20 @@ namespace SkinPreset
 		settings.sanitize();
 		const auto entries = Discover();
 		if (!entries.any([&](const Entry& e)
-						 { return e.folder == settings.folder; }))
+						 {
+							 return e.folder == settings.folder;
+						 }))
 			settings.folder = U"default";
 		g_currentSettings = settings;
 		g_resolvedImagePaths.clear();
 		noco::Asset::SetTextureLoader([](FilePathView path, noco::MipmapEnabledYN mip)
 									  {
-            String normalized{ path }; normalized.replace(U'\\', U'/');
-            if (normalized.starts_with(U"imgs/"))
-                return LoadTexture(path, mip ? TextureDesc::Mipped : TextureDesc::Unmipped);
-            return Texture{ noco::Asset::GetFullPath(path), mip ? TextureDesc::Mipped : TextureDesc::Unmipped }; });
+										  String normalized{ path };
+										  normalized.replace(U'\\', U'/');
+										  if (normalized.starts_with(U"imgs/"))
+											  return LoadTexture(path, mip ? TextureDesc::Mipped : TextureDesc::Unmipped);
+										  return Texture{ noco::Asset::GetFullPath(path), mip ? TextureDesc::Mipped : TextureDesc::Unmipped };
+									  });
 	}
 
 	FilePath Resolve(FilePathView logicalPath)

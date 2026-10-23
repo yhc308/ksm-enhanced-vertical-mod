@@ -18,7 +18,12 @@ namespace ApsFixture
 		TextWriter report{ FsUtils::GetResourcePath(U"aps-test.txt") };
 		int checks = 0;
 		const auto check = [&](bool ok, StringView name)
-		{if(!ok)throw Error{String{name}}; ++checks;report.writeln(U"PASS "+String{name}); };
+		{
+			if (!ok)
+				throw Error{ String{ name } };
+			++checks;
+			report.writeln(U"PASS " + String{ name });
+		};
 		check(static_cast<bool>(PixelShaderAsset(U"ApsColorDodge")), U"Color Dodge shader compiles");
 		for (double elapsed : { 0.0, .2, .4, .5, .6, .7, .8, 1.0, 1.1, 1.2 })
 		{
@@ -254,7 +259,12 @@ namespace ApsFixture
 			Vertical::DiagnosticInputReplay::Session replay;
 			const auto hold = Vertical::DiagnosticInputReplay::Mask(kButtonBT_B);
 			const auto press = [&](Button key)
-			{Vertical::DiagnosticInputReplay::Frame(hold);panel.update(120);Vertical::DiagnosticInputReplay::Frame(hold|Vertical::DiagnosticInputReplay::Mask(key));panel.update(120); };
+			{
+				Vertical::DiagnosticInputReplay::Frame(hold);
+				panel.update(120);
+				Vertical::DiagnosticInputReplay::Frame(hold | Vertical::DiagnosticInputReplay::Mask(key));
+				panel.update(120);
+			};
 			for (int i = 1; i <= 3; ++i)
 			{
 				press(kButtonRight);

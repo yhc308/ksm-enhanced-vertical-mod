@@ -1,4 +1,4 @@
-param()
+﻿param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
@@ -11,8 +11,8 @@ foreach($vertical in @(0,1)){
  $size=if($vertical){'720,1280'}else{'1280,720'}
  $session=New-AsioFixture -Values @{vertical_enabled=$vertical;windowsize=$size;vertical_resolution=$size;audio_backend='asio:KSM Mock ASIO';automaticmute=0;vsync=0}
  Copy-Item -LiteralPath (Join-Path $engine.runtime 'bassasio.dll') -Destination (Join-Path $session.appRoot 'bassasio.dll') -Force
- Copy-Item -LiteralPath (Join-Path $root 'play-test/App/songs/K-Shoot MANIA/magicalkittens/magicalkittens.ogg') -Destination (Join-Path $session.appRoot 'replay.ogg') -Force
- Copy-Item -LiteralPath (Join-Path $root 'play-test/App/songs/K-Shoot MANIA/magicalkittens/magicalkittens.jpg') -Destination (Join-Path $session.appRoot 'replay-jacket.jpg') -Force
+ Copy-Item -LiteralPath (Join-Path $root 'tests/fixtures/songs/K-Shoot MANIA/magicalkittens/magicalkittens.ogg') -Destination (Join-Path $session.appRoot 'replay.ogg') -Force
+ Copy-Item -LiteralPath (Join-Path $root 'tests/fixtures/songs/K-Shoot MANIA/magicalkittens/magicalkittens.jpg') -Destination (Join-Path $session.appRoot 'replay-jacket.jpg') -Force
  $flags=@('--aps-video-fixture');if($vertical){$flags+='--aps-video-portrait'}
  $report=Invoke-AsioFixture -Session $session -Flags $flags -Report 'aps-video.txt' -Expected 'TOTAL APS video passed' -Timeout 180
  $mode=if($vertical){'portrait'}else{'landscape'}

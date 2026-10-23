@@ -57,7 +57,9 @@ namespace Vertical
 			const float half = static_cast<float>(MusicGame::Graphics::kHighwayPlaneSize.x / 2 / kHighwayUVScaleX);
 			const double scale = res.height / 1280.0;
 			const auto widthAt = [&](double z)
-			{ return Abs(camera.worldToScreenPoint(Float3{ half, 0, static_cast<float>(z) }).x - camera.worldToScreenPoint(Float3{ -half, 0, static_cast<float>(z) }).x) / scale; };
+			{
+				return Abs(camera.worldToScreenPoint(Float3{ half, 0, static_cast<float>(z) }).x - camera.worldToScreenPoint(Float3{ -half, 0, static_cast<float>(z) }).x) / scale;
+			};
 			const double top = camera.worldToScreenPoint(NeutralFarAnchor()).y / scale;
 			const double judge = camera.worldToScreenPoint(kJudgmentBarCenter).y / scale;
 			const double end = camera.worldToScreenPoint(Float3{ 0, 0, static_cast<float>(endZ) }).y / scale;

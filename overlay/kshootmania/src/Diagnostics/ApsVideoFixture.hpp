@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "MusicGame/GameMain.hpp"
 #include "Vertical/DiagnosticInputReplay.hpp"
 #include "kson/IO/KsonIO.hpp"
@@ -23,13 +24,17 @@ namespace ApsVideoFixture
 			}
 		} clockScope;
 		GaugePresentation::FixtureStep() = 1.0 / 60;
-		const bool vertical = System::GetCommandLineArgs().contains(U"--aps-video-portrait");
+		const bool vertical = ModDiagnostics::Arguments().contains(U"--aps-video-portrait");
 		const Size size = vertical ? Size{ 720, 1280 } : Size{ 1280, 720 };
 		Window::Resize(size);
 		Scene::Resize(size);
 		TextWriter report{ FsUtils::GetResourcePath(U"aps-video.txt") };
 		const auto check = [&](bool ok, StringView text)
-		{if(!ok)throw Error{String{text}};report.writeln(U"PASS "+String{text}); };
+		{
+			if (!ok)
+				throw Error{ String{ text } };
+			report.writeln(U"PASS " + String{ text });
+		};
 		kson::ChartData chart;
 		chart.meta.title = "APS TRANSITION REPLAY";
 		chart.meta.artist = "Deterministic input / no score save";
@@ -69,7 +74,11 @@ namespace ApsVideoFixture
 		TextWriter trace{ FsUtils::GetResourcePath(U"aps-video-frames.csv") };
 		trace.writeln(U"frame,time,type,actual,display,dodge,opacity,burn");
 		const auto write = [&](const Image& image)
-		{check(full.writeFrame(image),U"full video frame encoded");check(zoom.writeFrame(image.clipped(crop).scaled(zoomSize)),U"zoom extracted from original full frame");++frames; };
+		{
+			check(full.writeFrame(image), U"full video frame encoded");
+			check(zoom.writeFrame(image.clipped(crop).scaled(zoomSize)), U"zoom extracted from original full frame");
+			++frames;
+		};
 		for (int tick = 0; tick < 1400 && postFrames < 181; ++tick)
 		{
 			if (!System::Update())

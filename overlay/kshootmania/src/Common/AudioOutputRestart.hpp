@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include <Siv3D.hpp>
 #include "AudioOutputRestartPolicy.hpp"
 #include "Common/FsUtils.hpp"
@@ -17,7 +18,7 @@ namespace AudioOutputRestart
 	}
 	inline bool IsChild()
 	{
-		return System::GetCommandLineArgs().contains(U"--audio-output-restarted");
+		return ModDiagnostics::Arguments().contains(U"--audio-output-restarted");
 	}
 	inline void Log(const String& message)
 	{
@@ -28,7 +29,7 @@ namespace AudioOutputRestart
 	}
 	inline bool ForceFixture()
 	{
-		const bool enabled = System::GetCommandLineArgs().contains(U"--audio-force-clean-restart");
+		const bool enabled = ModDiagnostics::Arguments().contains(U"--audio-force-clean-restart");
 		if (enabled && !FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
 			throw Error{ U"Restart fixture requires an isolated test directory" };
 		return enabled;
@@ -39,7 +40,7 @@ namespace AudioOutputRestart
 		if (!IsChild())
 			return;
 		Optional<uint32> parentId;
-		for (const auto& arg : System::GetCommandLineArgs())
+		for (const auto& arg : ModDiagnostics::Arguments())
 		{
 			if (arg.starts_with(U"--audio-restart-parent="))
 				parentId = ParseOpt<uint32>(arg.substr(23));
@@ -71,7 +72,7 @@ namespace AudioOutputRestart
 	inline bool Launch()
 	{
 #ifdef _WIN32
-		if (System::GetCommandLineArgs().contains(U"--audio-restart-fail-launch"))
+		if (ModDiagnostics::Arguments().contains(U"--audio-restart-fail-launch"))
 		{
 			if (!FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
 				throw Error{ U"Restart failure fixture requires an isolated test directory" };
@@ -84,7 +85,7 @@ namespace AudioOutputRestart
 			return false;
 		const std::wstring executable{ module, length };
 		std::wstring command = L"\"" + executable + L"\" --audio-output-restarted --audio-restart-parent=" + std::to_wstring(GetCurrentProcessId());
-		if (System::GetCommandLineArgs().contains(U"--audio-restart-fixture"))
+		if (ModDiagnostics::Arguments().contains(U"--audio-restart-fixture"))
 		{
 			if (!FileSystem::Exists(FsUtils::GetResourcePath(U"audio-test-fixture")))
 				throw Error{ U"Restart fixture requires an isolated test directory" };

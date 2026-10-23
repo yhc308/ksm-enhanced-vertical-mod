@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "MusicGame/Graphics/Highway/Highway3DGraphics.hpp"
 #include "MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.hpp"
 #include "MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.hpp"
@@ -8,7 +9,7 @@ namespace RenderGeometryFixture
 {
 	inline bool Requested()
 	{
-		return System::GetCommandLineArgs().contains(U"--render-geometry-test");
+		return ModDiagnostics::Arguments().contains(U"--render-geometry-test");
 	}
 	inline Rect Bounds(const Image& image)
 	{
@@ -37,7 +38,13 @@ namespace RenderGeometryFixture
 		report.writeln(U"check,actual,expected,status");
 		int count = 0;
 		const auto check = [&](StringView name, double actual, double expected, double tolerance)
-		{const bool ok=std::isfinite(actual)&&Abs(actual-expected)<=tolerance;report.writeln(U"{},{},{},{}"_fmt(name,actual,expected,ok?U"PASS":U"FAIL"));++count;if(!ok)throw Error{U"Render geometry failed: {} actual={} expected={}"_fmt(name,actual,expected)}; };
+		{
+			const bool ok = std::isfinite(actual) && Abs(actual - expected) <= tolerance;
+			report.writeln(U"{},{},{},{}"_fmt(name, actual, expected, ok ? U"PASS" : U"FAIL"));
+			++count;
+			if (!ok)
+				throw Error{ U"Render geometry failed: {} actual={} expected={}"_fmt(name, actual, expected) };
+		};
 		// These independent contracts catch both the wrong plane/texture ratio and a wide-laser center shift.
 		check(U"texture_pixels_per_lane", kHighwayTextureSizeWide.x / (kHighwayPlaneSizeWide.x / kHighwayPlaneSize.x), 256, .001);
 		check(U"wide_and_normal_share_center", kLaserPositionOffsetWide.x + 256, kHighwayTextureWideCenterX, .001);

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "MusicGame/GameMain.hpp"
 #include "Common/FsUtils.hpp"
 #ifdef _WIN32
@@ -17,7 +18,11 @@ namespace AudioEndGameFixture
 			throw Error{ U"Requires mock ASIO" };
 		TextWriter report{ FsUtils::GetResourcePath(U"audio-end-game.txt") };
 		const auto check = [&](bool ok, StringView text)
-		{if(!ok)throw Error{String{text}};report.writeln(U"PASS "+String{text}); };
+		{
+			if (!ok)
+				throw Error{ String{ text } };
+			report.writeln(U"PASS " + String{ text });
+		};
 		for (bool automatic : { false, true })
 		{
 			GameCreateInfo info;
@@ -49,7 +54,7 @@ namespace AudioEndGameFixture
 			check(!info.playOption.shouldSaveScore(), U"diagnostic chart cannot save score");
 			game.terminate();
 		}
-		if (System::GetCommandLineArgs().contains(U"--aps-game-fixture"))
+		if (ModDiagnostics::Arguments().contains(U"--aps-game-fixture"))
 		{
 			for (bool automatic : { false, true })
 			{

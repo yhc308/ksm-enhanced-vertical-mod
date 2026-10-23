@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 Import-Module (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts/TestWorkspace.psm1') -Force
 function Set-AsioFixtureConfig {
@@ -9,6 +9,9 @@ function Set-AsioFixtureConfig {
 }
 function New-AsioFixture {
  param([hashtable]$Values=@{},[switch]$Song)
+ $root=Split-Path $PSScriptRoot -Parent
+ $build=Get-Content -LiteralPath (Join-Path $root 'build/latest.json') -Raw|ConvertFrom-Json
+ if($build.PSObject.Properties.Name -contains 'diagnostics' -and -not $build.diagnostics){throw 'Diagnostic fixtures require scripts/Build.ps1 -Diagnostics; normal gameplay builds do not accept fixture flags.'}
  $session=New-KsmTestRun -Mode Prepare
  New-Item -ItemType File -Path (Join-Path $session.appRoot 'audio-test-fixture')|Out-Null
  Set-AsioFixtureConfig -Session $session -Values $Values

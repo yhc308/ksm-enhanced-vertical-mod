@@ -9,6 +9,7 @@ run=json.loads((root/'build/judge-setting-tests.json').read_text(encoding='utf-8
 folder=Path(run['reference'])
 parser=argparse.ArgumentParser()
 parser.add_argument('--authoring-root',type=Path,default=Path(os.environ.get('KSM_AUTHORING_ROOT', str(root/'authoring/judge-setting'))),help='Explicit immutable authoring snapshot for scoped resource-preservation checks')
+parser.add_argument("--skip-authoring",action="store_true",help="Check UI/replay pixels without an external authoring snapshot; report this limitation explicitly")
 args=parser.parse_args()
 checks=[]
 def check(ok,name):
@@ -136,15 +137,16 @@ for mode in ('landscape','portrait'):
         check(abs(float(row['chartTime'])-expected)<1e-6,f'{mode} repeat time {t:.3f}')
     check(int(rows[-1]['totalSamples'])>int(rows[0]['totalSamples']),f'{mode} real input measurements survive repeats')
     check((folder/f'judge-setting-{mode}.mp4').stat().st_size>10000,f'{mode} comparison video saved')
-author=args.authoring_root
-for src in author.iterdir():
-    if src.suffix.lower() not in ('.kson','.mp3'):continue
-    dst=root/'kshootmania/App/mods/enhanced/judge_setting'/src.name
-    check(hashlib.sha256(src.read_bytes()).digest()==hashlib.sha256(dst.read_bytes()).digest(),'authoring song hash '+src.name)
-src=root/'imgs/menu_judge_icon.png';dst=root/'kshootmania/App/ui/menu_judge_icon.png'
-check(src.read_bytes()==dst.read_bytes(),'authoring menu icon unchanged')
-src=root/'imgs/판정세팅모드/Judge_Setting_Mode_banner.png';dst=root/'kshootmania/App/mods/enhanced/judge_setting/Judge_Setting_Mode_banner.png'
-check(src.read_bytes()==dst.read_bytes(),'authoring menu panel unchanged')
-report={'status':'PASS','count':len(checks),'reference':str(folder),'authoringRoot':str(author),'checks':checks}
+if not args.skip_authoring:
+    author=args.authoring_root
+    for src in author.iterdir():
+        if src.suffix.lower() not in ('.kson','.mp3'):continue
+        dst=root/'kshootmania/App/mods/enhanced/judge_setting'/src.name
+        check(hashlib.sha256(src.read_bytes()).digest()==hashlib.sha256(dst.read_bytes()).digest(),'authoring song hash '+src.name)
+    src=root/'imgs/menu_judge_icon.png';dst=root/'kshootmania/App/ui/menu_judge_icon.png'
+    check(src.read_bytes()==dst.read_bytes(),'authoring menu icon unchanged')
+    src=root/'imgs/판정세팅모드/Judge_Setting_Mode_banner.png';dst=root/'kshootmania/App/mods/enhanced/judge_setting/Judge_Setting_Mode_banner.png'
+    check(src.read_bytes()==dst.read_bytes(),'authoring menu panel unchanged')
+report={'status':'PASS','count':len(checks),'reference':str(folder),'authoringRoot':None if args.skip_authoring else str(args.authoring_root),'authoringChecksSkipped':args.skip_authoring,'checks':checks}
 (root/'build/judge-setting-pixels.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 print(f'TOTAL {len(checks)} judge-setting pixel/trace/resource checks passed')

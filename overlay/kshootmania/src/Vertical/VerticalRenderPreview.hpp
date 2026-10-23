@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "MusicGame/Graphics/GraphicsMain.hpp"
 #include "kson/kson.hpp"
 #include "MusicGame/Camera/CamPattern/CamPatternMain.hpp"
@@ -9,7 +10,7 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 {
 	static FilePath chartPath()
 	{
-		const auto args = System::GetCommandLineArgs();
+		const auto args = ModDiagnostics::Arguments();
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-chart")
 				return args[i + 1];
@@ -23,12 +24,12 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 							 ? kson::LoadKsonChartData(path.toUTF8())
 							 : kson::LoadKshChartData(path.toUTF8()));
 		auto result = kson::CreateEditorDefaultChartData();
-		result.meta.title = System::GetCommandLineArgs().contains(U"--vertical-preview-long-title")
+		result.meta.title = ModDiagnostics::Arguments().contains(U"--vertical-preview-long-title")
 								? "A VERY LONG VERTICAL RENDER CHECK TITLE / Japanese 日本語 Korean 한글"
 								: "VERTICAL RENDER CHECK";
 		result.meta.artist = "Synthetic fixture / no score recording";
 		result.meta.level = 15;
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-movie"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-movie"))
 			result.bg.legacy.movie.filename = "../../test-output/vertical-movie-fixture.avi";
 		result.beat.bpm[0] = 180;
 		for (int lane = 0; lane < 4; ++lane)
@@ -41,7 +42,7 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 		for (int lane = 0; lane < 2; ++lane)
 		{
 			kson::LaserSection section;
-			section.w = System::GetCommandLineArgs().contains(U"--vertical-preview-wide") ? kson::kLaserXScale2x : kson::kLaserXScale1x;
+			section.w = ModDiagnostics::Arguments().contains(U"--vertical-preview-wide") ? kson::kLaserXScale2x : kson::kLaserXScale1x;
 			section.v[0] = lane == 0 ? 0.2 : 0.8;
 			section.v[kson::kResolution4 / 2] = lane == 0 ? 0.8 : 0.2;
 			section.v[kson::kResolution4] = kson::GraphValue{ 0.2, 0.8 };
@@ -52,7 +53,7 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 	}
 	static kson::ChartData theme(kson::ChartData result)
 	{
-		const auto args = System::GetCommandLineArgs();
+		const auto args = ModDiagnostics::Arguments();
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 		{
 			if (args[i] == U"--vertical-preview-bg")
@@ -66,16 +67,16 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 	static MusicGame::PlayOption options()
 	{
 		MusicGame::PlayOption result;
-		result.showLayer = System::GetCommandLineArgs().contains(U"--vertical-preview-layer");
-		result.movieEnabled = System::GetCommandLineArgs().contains(U"--vertical-preview-movie");
+		result.showLayer = ModDiagnostics::Arguments().contains(U"--vertical-preview-layer");
+		result.movieEnabled = ModDiagnostics::Arguments().contains(U"--vertical-preview-movie");
 		result.diagnosticSession = true;
-		const auto args = System::GetCommandLineArgs();
+		const auto args = ModDiagnostics::Arguments();
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-hispeed")
 				result.hispeedSetting.value = Clamp(Parse<int>(args[i + 1]), 25, 2000);
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-hard"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-hard"))
 			result.gaugeType = GaugeType::kHardGauge;
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-course"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-course"))
 			result.gameMode = MusicGame::GameMode::kCourseMode;
 		return result;
 	}
@@ -103,7 +104,7 @@ public:
 	void update() override
 	{
 		m_game.currentBPM = m_chart.beat.bpm.at(0);
-		const auto args = System::GetCommandLineArgs();
+		const auto args = ModDiagnostics::Arguments();
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-progress")
 			{
@@ -114,7 +115,7 @@ public:
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-score")
 				m_view.score = Clamp(Parse<int>(args[i + 1]), 0, 10000000);
-		m_view.gaugePercentage = System::GetCommandLineArgs().contains(U"--vertical-preview-zero") ? 0 : (System::GetCommandLineArgs().contains(U"--vertical-preview-hundred") ? 100 : 70);
+		m_view.gaugePercentage = ModDiagnostics::Arguments().contains(U"--vertical-preview-zero") ? 0 : (ModDiagnostics::Arguments().contains(U"--vertical-preview-hundred") ? 100 : 70);
 		m_view.gaugePercentageInt = static_cast<int>(m_view.gaugePercentage);
 		m_view.effectiveGaugeType = m_options.gaugeType;
 		if (args.contains(U"--aps-visual-fixture"))
@@ -145,7 +146,7 @@ public:
 		m_view.displayCombo = 128;
 		m_game.laserLaneStatus[0].cursorX = 0.25;
 		m_game.laserLaneStatus[1].cursorX = 0.75;
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-effects"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-effects"))
 		{
 			m_game.btLaneStatus[0].keyBeamTimeSec = -0.09;
 			m_game.btLaneStatus[0].chipAnim.push({ -0.12, MusicGame::Judgment::ChipAnimType::kCritical });
@@ -162,10 +163,10 @@ public:
 				lane.rippleAnim.push({ -0.06, lane.cursorWide, lane.cursorX.value_or(0.5) });
 			}
 		}
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-wide"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-wide"))
 			for (auto& lane : m_game.laserLaneStatus)
 				lane.cursorWide = true;
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-motion"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-motion"))
 		{
 			m_view.camStatus.zoomBottom = 0.15;
 			m_view.camStatus.zoomTop = -0.10;
@@ -176,7 +177,7 @@ public:
 			m_view.camStatus.centerSplit = 0.12;
 			m_view.tiltRadians = 0.08;
 			m_view.tiltRadiansForBgLayer = 0.08;
-			m_view.camStatus.useLegacyZoomTop = System::GetCommandLineArgs().contains(U"--vertical-preview-legacy");
+			m_view.camStatus.useLegacyZoomTop = ModDiagnostics::Arguments().contains(U"--vertical-preview-legacy");
 			m_view.camStatus.useLegacyJdgScale = m_view.camStatus.useLegacyZoomTop;
 		}
 		for (size_t i = 0; i + 1 < args.size(); ++i)
@@ -215,9 +216,9 @@ public:
 			m_chart.bg.legacy.layer.rotation.tilt = false;
 			m_chart.bg.legacy.layer.rotation.spin = false;
 		}
-		if (System::GetCommandLineArgs().contains(U"--vertical-preview-clear") || System::GetCommandLineArgs().contains(U"--vertical-preview-fail"))
+		if (ModDiagnostics::Arguments().contains(U"--vertical-preview-clear") || ModDiagnostics::Arguments().contains(U"--vertical-preview-fail"))
 			m_game.playFinishStatus = MusicGame::PlayFinishStatus{ .finishTimeSec = -2,
-																   .achievement = System::GetCommandLineArgs().contains(U"--vertical-preview-clear") ? Achievement::kCleared : Achievement::kNone };
+																   .achievement = ModDiagnostics::Arguments().contains(U"--vertical-preview-clear") ? Achievement::kCleared : Achievement::kNone };
 		m_scroll.update(m_options.hispeedSetting, m_game.currentBPM);
 		for (size_t i = 0; i + 1 < args.size(); ++i)
 			if (args[i] == U"--vertical-preview-event-rate" && !m_chart.camera.cam.pattern.laser.slamEvent.spin.empty())

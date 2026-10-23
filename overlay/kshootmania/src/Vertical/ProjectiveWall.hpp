@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Common/FsUtils.hpp"
 #include "VerticalModConfig.hpp"
 
@@ -192,7 +193,7 @@ namespace Vertical
 		explicit ProjectiveWall(const MeshData& source, bool enabled, bool forceCPU = false)
 			: m_source(source)
 		{
-			const auto args = System::GetCommandLineArgs();
+			const auto args = ModDiagnostics::Arguments();
 			m_disabled = !enabled || args.contains(U"--vertical-preview-warp-off");
 			if (!m_disabled && !forceCPU && !args.contains(U"--vertical-preview-warp-cpu"))
 			{
@@ -369,11 +370,15 @@ namespace Vertical
 				return 1;
 			double ratio = 1;
 			const auto area = [](Vec2 a, Vec2 b, Vec2 c)
-			{ return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x); };
+			{
+				return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+			};
 			for (const auto t : m_data.indices)
 			{
 				const auto base = [&](uint32 i)
-				{ return Vec2{ m_camera.worldToScreenPoint(m_transform.transformPoint(m_local[i])).xy() }; };
+				{
+					return Vec2{ m_camera.worldToScreenPoint(m_transform.transformPoint(m_local[i])).xy() };
+				};
 				const double original = area(base(t.i0), base(t.i1), base(t.i2));
 				if (Abs(original) > 1e-6)
 					ratio = Min(ratio, area(Vec2{ m_screen[t.i0].xy() }, Vec2{ m_screen[t.i1].xy() }, Vec2{ m_screen[t.i2].xy() }) / original);

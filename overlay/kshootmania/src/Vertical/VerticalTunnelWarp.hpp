@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Common/FsUtils.hpp"
 
 namespace Vertical
@@ -154,7 +155,7 @@ namespace Vertical
 		explicit TunnelWarp(const MeshData& source, bool enabled, bool forceCPU = false)
 			: m_source(source)
 		{
-			const auto args = System::GetCommandLineArgs();
+			const auto args = ModDiagnostics::Arguments();
 			m_disabled = !enabled || args.contains(U"--vertical-preview-warp-off");
 			if (!m_disabled && !forceCPU && !args.contains(U"--vertical-preview-warp-cpu"))
 			{
@@ -389,7 +390,10 @@ namespace Vertical
 				const double second = Area(da, db, dc) / area;
 				const double first = (Area(p + da, q + db, r + dc) - area) / area - second;
 				const auto root = [&](double v)
-				{if(v>0 && v<=1) m_alpha=Min(m_alpha,Max(0.0,v-1e-7)); };
+				{
+					if (v > 0 && v <= 1)
+						m_alpha = Min(m_alpha, Max(0.0, v - 1e-7));
+				};
 				if (Abs(second) < 1e-12)
 				{
 					if (first < 0)
@@ -456,7 +460,9 @@ namespace Vertical
 			if (!m_valid)
 				return;
 			const auto point = [&](uint32 i)
-			{ return Vec2{ m_screen[i].xy() } + m_moves[i]; };
+			{
+				return Vec2{ m_screen[i].xy() } + m_moves[i];
+			};
 			for (const auto tri : m_data.indices)
 				Triangle{ point(tri.i0), point(tri.i1), point(tri.i2) }.drawFrame(1, ColorF{ 0, 1, 1, .7 });
 			for (int i = 0; i < 16; ++i)

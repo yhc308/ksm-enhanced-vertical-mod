@@ -8,7 +8,7 @@ $playExe=Join-Path $root 'play-test/App/ksm-enhanced-vertical.exe'
 if(@(Get-CimInstance Win32_Process -Filter "Name='ksm-enhanced-vertical.exe'"|Where-Object {$_.ExecutablePath -eq $playExe}).Count){throw 'Play is running; hardware test deferred'}
 $session=New-AsioFixture -Values @{audio_backend=('asio:'+$Driver);mastervol=0;automaticmute=0;vertical_enabled=1;windowsize='720,1280';vertical_resolution='720,1280'}
 $chartRoot=Join-Path $session.appRoot 'songs/eof-song'
-Copy-Item -LiteralPath (Join-Path $root 'play-test/App/songs/K-Shoot MANIA/magicalkittens') -Destination $chartRoot -Recurse
+Copy-Item -LiteralPath (Join-Path $root 'tests/fixtures/songs/K-Shoot MANIA/magicalkittens') -Destination $chartRoot -Recurse
 Start-KsmOwnedProcess -Session $session -Arguments @('-auto','-from','81',(Join-Path $chartRoot 'magicalkittens_ex.ksh')) -TimeoutSeconds 45
 $logs=@(Get-ChildItem -LiteralPath (Join-Path $session.appRoot 'log') -Filter 'events-*.log' -Recurse)
 $text=($logs|ForEach-Object {Get-Content -LiteralPath $_.FullName -Raw}) -join "`n"

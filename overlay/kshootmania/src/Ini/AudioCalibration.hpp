@@ -125,7 +125,12 @@ namespace AudioCalibration
 		TextWriter report{ FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"audio-calibration-test.txt") };
 		size_t checks = 0;
 		const auto check = [&](bool condition, StringView name)
-		{ if(!condition) throw Error{String{name}}; ++checks; report.writeln(U"PASS " + String{name}); };
+		{
+			if (!condition)
+				throw Error{ String{ name } };
+			++checks;
+			report.writeln(U"PASS " + String{ name });
+		};
 		const auto original = Read();
 		const Values legacy{ 11, 12, 13, 14, 15, 0 }, asio{ 21, 22, 23, 24, 25, 1 }, other{ 31, 32, 33, 34, 35, 0 };
 		Put(U"legacy", legacy);

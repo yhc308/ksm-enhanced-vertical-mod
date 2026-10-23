@@ -2,12 +2,14 @@
 from pathlib import Path
 import argparse
 import json
+import os
 import shutil
 import subprocess
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--formatter", default=shutil.which("clang-format"))
+fallback = Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)")) / "Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/bin/clang-format.exe"
+parser.add_argument("--formatter", default=os.environ.get("KSM_CLANG_FORMAT") or shutil.which("clang-format") or (str(fallback) if fallback.is_file() else None))
 args = parser.parse_args()
 if not args.formatter:
     raise SystemExit("clang-format 19.1.5 is required")

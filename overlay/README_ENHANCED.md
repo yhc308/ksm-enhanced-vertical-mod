@@ -55,3 +55,25 @@ Do not overwrite the original `kshootmania.exe` with the mod executable.
 - Base images live in `imgs/`; custom skins live in `skins/<skin name>/`. The `default` menu entry refers to `imgs/` directly. Move old custom `imgs/<skin name>/` folders into `skins/`.
 - Additional score rows append full-chart EX SCORE MAX after EX SCORE. Ten-field legacy additional records remain readable; the original nine-field `.ksc` format is unchanged. Older mod executables do not read the new eleven-field format.
 - `scripts/RunSkinTests.ps1`, `RunExScoreTests.ps1` and `RunApsTests.ps1` provide isolated checks. Python image checks require Pillow (some also require NumPy). Tests involving original songs, SDK DLLs or authoring snapshots require those inputs separately; ordinary song collections and authoring originals are not stored here.
+
+## Refactoring validation
+
+The private branch `refactor/upstream-style-parity` retains the KSM 2.1.0 source base and the mod's file formats/resources. See `docs/REFACTOR_PROGRESS.md`, `BASELINE_TEST_FINDINGS.md`, and `REMOVAL_AUDIT.md` for stage results, known baseline discrepancies and deletion reasons.
+
+General builds disable diagnostic fixture arguments. Use an opt-in diagnostic build for local validation:
+
+```powershell
+$env:SIV3D_0_6_16 = "C:/path/to/OpenSiv3D_0.6.16"
+scripts/Build.ps1 -Configuration Release -Diagnostics
+scripts/PrepareTestSongs.ps1 -SourceSongs "C:/path/to/K-Shoot MANIA/songs/K-Shoot MANIA"
+scripts/ValidateRefactor.ps1 -Tier Fast -SkipBuild
+scripts/ValidateRefactor.ps1 -Tier Full -SkipBuild
+```
+
+Supply the original standard songs locally for integration tests; they remain ignored by Git. BASSASIO/BASSmix runtime DLLs are obtained separately as described above. Do not point tests at a user's active runtime. The helper copies missing ordinary song inputs into an isolated snapshot and refuses conflicting files. Full validation logs each passing or failing stage under `build/validation/`; a resumed run explicitly requires the preceding report rather than treating skipped steps as passes.
+
+Upstream-plus-mod Catch2 tests run with `scripts/BuildUnitTests.ps1 -Configuration Release` or `Debug`. The runner includes the original Siv3D engine resource script and rejects missing, empty, stale or failed JUnit reports. CMake/CTest uses the same JUnit-aware result check. The standalone `scripts/RunHeadlessTests.cmd` exercises the real incremental timing window without Siv3D. C++ style uses clang-format 19.1.5 with the audited scope in `docs/CPP_STYLE_SCOPE.json`.
+
+UI/replay checks can run without external authoring snapshots; this is reported explicitly. Runtime resource preservation can be checked against an immutable snapshot with `VerifyResourceBaseline.py`. Its optional checkout-line-ending mode accepts only CRLF/LF differences in known text formats; image/audio bytes, paths and all other content remain exact. The known authoring/runtime last-note discrepancy is documented separately and is not changed by the refactor.
+
+A fresh checkout is reconstructed with the private repository's `PrepareSource.py`. Source/package integrity and pure production-state tests run in GitHub Actions without uploading an SDK, user records, ordinary songs or binaries. GPU/audio-device checks run locally on Windows; physical ASIO-device validation is separate from the mock-ASIO suite.

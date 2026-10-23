@@ -10,7 +10,8 @@ if(-not(Test-Path -LiteralPath $include)){
 }
 & $python (Join-Path $PSScriptRoot 'GenerateUnitTestProject.py')
 if($LASTEXITCODE){throw 'Test project generation failed'}
-$msbuild='C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe'
+Import-Module (Join-Path $PSScriptRoot 'WindowsBuildTools.psm1') -Force
+$msbuild=Get-KsmMSBuild
 $output=Join-Path $root ('build/unit-tests/'+$Configuration)
 New-Item -ItemType Directory -Path $output -Force|Out-Null
 & $msbuild (Join-Path $root 'build/unit-project/ksm-v2-tests.vcxproj') /m:2 /p:Platform=x64 "/p:Configuration=$Configuration" "/p:SolutionDir=$root/" "/p:OutDir=$output/" /verbosity:minimal /nologo 2>&1|Tee-Object -FilePath (Join-Path $output 'build.log')

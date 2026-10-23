@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Graphics/GameRenderContext.hpp"
 #include "VerticalCameraProfile.hpp"
 #include "MusicGame/Graphics/ViewportGeometry.hpp"
@@ -34,7 +35,7 @@ namespace Vertical
 	}
 	inline bool OriginalSpinFitProbe()
 	{
-		static const bool probe = System::GetCommandLineArgs().contains(U"--vertical-preview-hud") && System::GetCommandLineArgs().contains(U"--vertical-preview-old-spin-fit");
+		static const bool probe = ModDiagnostics::Arguments().contains(U"--vertical-preview-hud") && ModDiagnostics::Arguments().contains(U"--vertical-preview-old-spin-fit");
 		return probe;
 	}
 	inline Mat4x4 HUDGearOrigin(const MusicGame::ViewStatus& view)

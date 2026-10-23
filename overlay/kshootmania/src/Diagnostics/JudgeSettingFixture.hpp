@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Diagnostics/DiagnosticArguments.hpp"
 #include "Scenes/Title/JudgeSettingOverlay.hpp"
 #include "Scenes/Title/ModMenuButtons.hpp"
 #include "Scenes/Title/TitleMenu.hpp"
@@ -62,7 +63,9 @@ namespace JudgeSettingFixture
 				const double mean = std::accumulate(samples.begin(), samples.end(), 0.0) / samples.size();
 				samples.sort();
 				const auto over = std::count_if(samples.begin(), samples.end(), [](double ms)
-												{ return ms > 8.333; });
+												{
+													return ms > 8.333;
+												});
 				report.writeln(U"{},{},{},{},{},{},{}"_fmt(size.x, size.y, mode, samples.size(), mean, samples[static_cast<size_t>(samples.size() * .99)], over));
 			}
 		}
@@ -73,7 +76,7 @@ namespace JudgeSettingFixture
 		using namespace MusicGame::Judgment;
 		if (!FileSystem::IsFile(FsUtils::GetResourcePath(U"audio-test-fixture")))
 			throw Error{ U"Isolated judge-setting fixture required" };
-		if (System::GetCommandLineArgs().contains(U"--judge-setting-performance"))
+		if (ModDiagnostics::Arguments().contains(U"--judge-setting-performance"))
 		{
 			Performance();
 			return;
@@ -81,7 +84,12 @@ namespace JudgeSettingFixture
 		TextWriter report{ FsUtils::GetResourcePath(U"judge-setting-test.txt") };
 		int checks = 0;
 		const auto check = [&](bool ok, StringView name)
-		{if(!ok)throw Error{String{name}};++checks;report.writeln(U"PASS "+String{name}); };
+		{
+			if (!ok)
+				throw Error{ String{ name } };
+			++checks;
+			report.writeln(U"PASS " + String{ name });
+		};
 		{
 			JudgeSettingSession state;
 			state.chip(JudgmentResult::kCritical, 10);
@@ -462,9 +470,15 @@ namespace JudgeSettingFixture
 			JudgeSettingOverlay overlay;
 			Vertical::DiagnosticInputReplay::Session input;
 			const auto frame = [&](uint32 held, double delta = .05)
-			{Vertical::DiagnosticInputReplay::Frame(held);overlay.update(delta); };
+			{
+				Vertical::DiagnosticInputReplay::Frame(held);
+				overlay.update(delta);
+			};
 			const auto press = [&](Button button)
-			{frame(Vertical::DiagnosticInputReplay::Mask(button));frame(0); };
+			{
+				frame(Vertical::DiagnosticInputReplay::Mask(button));
+				frame(0);
+			};
 			press(kButtonBack);
 			check(overlay.session().menu && !overlay.dialog() && !overlay.finished(), U"ESC first enters menu without opening exit confirmation");
 			frame(0, .25);
@@ -565,7 +579,10 @@ namespace JudgeSettingFixture
 			JudgeSettingOverlay overlay;
 			Vertical::DiagnosticInputReplay::Session input;
 			const auto frame = [&](uint32 held, std::array<double, 2> laser = {})
-			{Vertical::DiagnosticInputReplay::Frame(held,laser);overlay.update(.05); };
+			{
+				Vertical::DiagnosticInputReplay::Frame(held, laser);
+				overlay.update(.05);
+			};
 			const auto start = Vertical::DiagnosticInputReplay::Mask(kButtonStart);
 			frame(0);
 			const int initial = overlay.game().settingsHispeed().value;

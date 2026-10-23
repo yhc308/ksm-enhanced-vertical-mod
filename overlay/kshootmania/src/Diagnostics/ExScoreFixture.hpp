@@ -16,7 +16,12 @@ namespace ExScoreFixture
 		TextWriter report{ FsUtils::GetResourcePath(U"ex-score-test.txt") };
 		int checks = 0;
 		const auto check = [&](bool ok, StringView text)
-		{if(!ok)throw Error{String{text}};++checks;report.writeln(U"PASS "+String{text}); };
+		{
+			if (!ok)
+				throw Error{ String{ text } };
+			++checks;
+			report.writeln(U"PASS " + String{ text });
+		};
 		for (double ms : { -21.0, 0.0, 21.0 })
 			check(ExChipPoints(JudgmentResult::kCritical, ms) == 5, U"inclusive P-CRITICAL chip window");
 		for (double ms : { -21.001, 21.001 })

@@ -1,4 +1,5 @@
-﻿#include "JudgeSettingOverlay.hpp"
+﻿#include "Diagnostics/DiagnosticArguments.hpp"
+#include "JudgeSettingOverlay.hpp"
 
 JudgeSettingOverlay::Layout JudgeSettingOverlay::layout() const
 {
@@ -244,7 +245,9 @@ JSON JudgeSettingOverlay::layoutReport() const
 	const auto l = layout();
 	JSON result;
 	const auto add = [&](StringView name, const RectF& rect)
-	{ result[name] = Array<double>{ rect.x, rect.y, rect.w, rect.h }; };
+	{
+		result[name] = Array<double>{ rect.x, rect.y, rect.w, rect.h };
+	};
 	add(U"left", l.left);
 	add(U"right", l.right);
 	add(U"mini", l.mini);
@@ -389,7 +392,7 @@ void JudgeSettingOverlay::update(double delta)
 	if (m_finished)
 		return;
 	auto& state = *m_session;
-	const bool focused = Window::GetState().focused || System::GetCommandLineArgs().contains(U"--judge-setting-test");
+	const bool focused = Window::GetState().focused || ModDiagnostics::Arguments().contains(U"--judge-setting-test");
 	state.focused = focused;
 	if (!focused)
 	{
