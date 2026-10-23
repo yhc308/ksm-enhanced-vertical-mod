@@ -6,7 +6,7 @@ This is a separate performance correction exposed during the style refactor, not
 
 At a 300fps limit the first normal refactored executable improved average frame intervals but exceeded the accepted p99 threshold in one native-play orientation. Raising the cap removed the difference. Test-only instrumentation showed variable frame-work tails and substantial sleep/wakeup tails on both original and refactored binaries. The original limiter used std::this_thread::sleep_until.
 
-An isolated high-resolution timer prototype passed three native DXGI captures per binary/orientation: landscape p99 6.6035 -> 5.8183 ms; portrait 6.5779 -> 6.0882 ms. These prototype results motivated the correction; the final implementation still requires its own full regression and performance pass.
+An isolated high-resolution timer prototype passed three native DXGI captures per binary/orientation: landscape p99 6.6035 -> 5.8183 ms; portrait 6.5779 -> 6.0882 ms. These prototype results motivated the correction; the final implementation subsequently passed the full functional, exact-appearance, normal-runtime and final native/long-diagnostic performance checks. See REFACTOR_VALIDATION.md for the raw evidence and retained short-capture failures.
 
 ## Preserved behavior and ownership
 
@@ -18,4 +18,4 @@ If timer creation, arming or waiting fails, FrameRateLimit uses the existing std
 
 Six actual Win32 Catch2 cases (16 assertions) cover missing handles, expired/future deadlines, no early return, ownership/close, an invalid native timer-operation fallback, and native high-resolution operation. They run headlessly without Siv3D and inside the Windows game unit suite. A Windows GitHub Actions job runs the same tests independently of the SDK. The original rolling-window and game tests remain.
 
-Full local regression, exact appearance/replay checks, final normal/diagnostic performance comparison and fresh reconstruction must pass before production source synchronization. Prototype timings and instrumented timings do not override a failed final-binary gate.
+Final integrated validation passed: 27 functional stages, 43 cases / 3,982 assertions in each Windows configuration, 81 exact APS images, 110 judge-setting images with the exact FPS-label exclusion, both input replays, fresh ordinary Release/Debug builds and normal smokes, final-payload preservation, native-play captures and the predeclared long diagnostic performance protocol. The source-only destination build also passed. Prototype/instrumented timings and the retained short-capture FAIL are not relabeled as passing final-binary measurements.

@@ -44,7 +44,7 @@
     },
     {
       "path": "docs/BASELINE_TEST_FINDINGS.md",
-      "sha256": "3ed53cd0a98a5d316d284b654a4f4c90c06d6ec09fd4244e483570f10cdf7404"
+      "sha256": "8c82a962561fa7485efc136c7b6ec15cd227335d53983d6fcc747c8bc753da2a"
     },
     {
       "path": "docs/CPP_STYLE_SCOPE.json",
@@ -52,15 +52,15 @@
     },
     {
       "path": "docs/FRAME_PACING_FIX.md",
-      "sha256": "43fe62f87b5f448d15b8090f773d302b8d7643aa458801248ce96330f9fb692f"
+      "sha256": "2751960eea5da6b44dcacd952d5a4adaf1b629318e48c244f13ee90c9d9cec69"
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
-      "sha256": "1447a51551d1ee471835bb44f983df431590a9ac6d69a1a8aaf65870a12f49ed"
+      "sha256": "b72f0803c33c1aae12920c4393f318881c7fc419e068f1026cece8aa5e0e2916"
     },
     {
       "path": "docs/REFACTOR_VALIDATION.md",
-      "sha256": "54be5e6db436812ab3368bdeedf8af52ac6b28dbd7c9ac74910654640e866e7c"
+      "sha256": "de85a6bba892363ea59b22c10bea613ff16b802814315d3f20547788b2d5f70e"
     },
     {
       "path": "docs/REMOVAL_AUDIT.md",
