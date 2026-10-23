@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..577be4db71c5b9920d47f65ef4bd3b824936d197 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..5bf4bd15a25a8bf3a5ae1463f1af62d572c83fad 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,46 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,48 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -49,6 +49,8 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..577be4db71c5b9920d47f65ef4bd3b82
 +# Locally supplied ordinary songs for integration tests
 +/tests/fixtures/
 +!/docs/REFACTOR_VALIDATION.md
++
++!/docs/FRAME_PACING_FIX.md
 diff --git a/README.md b/README.md
 index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e00fbe0e6c 100644
 --- a/README.md

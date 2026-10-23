@@ -89,5 +89,33 @@ class PerformanceGateTests(unittest.TestCase):
         self.assertEqual(self.gate(10, 10.6), "FAIL")
 
 
+class PreviewTraceBoundaryTests(unittest.TestCase):
+    def boundary(self, previous, current, gap):
+        rules = runpy.run_path(str(ROOT / "overlay/tests/PreviewTraceRules.py"))
+        rules["verify_preview_loop_boundary"]({"wall": 1, "chart": previous}, {"wall": 1 + gap, "chart": current})
+
+    def test_normal_wrap(self):
+        self.boundary(17.95, 0.01, 0.05)
+
+    def test_original_binary_frame_hitch_keeps_valid_wrap(self):
+        self.boundary(17.69548, 0.10789, 0.46966)
+
+    def test_premature_reset_is_still_rejected(self):
+        with self.assertRaises(AssertionError):
+            self.boundary(17.3, 0.01, 0.02)
+
+    def test_late_previous_position_is_rejected(self):
+        with self.assertRaises(AssertionError):
+            self.boundary(18.2, 0.01, 0.1)
+
+    def test_invalid_new_position_is_rejected(self):
+        with self.assertRaises(AssertionError):
+            self.boundary(17.99, 0.3, 0.02)
+
+    def test_backwards_wall_clock_is_rejected(self):
+        with self.assertRaises(AssertionError):
+            self.boundary(17.99, 0.01, -0.01)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -51,7 +51,7 @@ jobs:
           build\windows-timer-tests.exe --reporter junit --out build/windows-timer-results.xml
           exit /b %errorlevel%
           "@ | Set-Content build/run-windows-timer.cmd -Encoding utf8
-          & cmd /c build/run-windows-timer.cmd
+          & cmd /c build\run-windows-timer.cmd
           if ($LASTEXITCODE) { throw 'Windows timer tests failed' }
       - uses: actions/upload-artifact@v4
         if: always()

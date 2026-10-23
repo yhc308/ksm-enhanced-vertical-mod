@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv,json,hashlib,sys
 from PIL import Image,ImageDraw
+from PreviewTraceRules import verify_preview_loop_boundary
 def verify_trace(dest):
     rows=[]
     with (dest/'preview-trace.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -30,7 +31,8 @@ def verify_trace(dest):
         for a,b in zip(rows,rows[1:]):
             if b['chart']>=a['chart'] and b['chart']-a['chart']<1.5:
                 assert b['ex']>=a['ex'],'skin/numeric changes reset EX'
-    assert all(17.9<a['chart']<18.1 and 0<=b['chart']<0.2 for a,b in loops)
+    for previous, current in loops:
+        verify_preview_loop_boundary(previous, current)
     assert all(abs((b[1]['wall']-a[1]['wall'])-18.0)<0.12 for a,b in zip(loops,loops[1:])), 'loop duration drift'
     assert all(r['score']==0 and abs(r['gauge'])<1e-5 for r in rows if 17.55<r['chart']<17.95)
     before=[r for r in rows if 16.8<r['chart']<17]

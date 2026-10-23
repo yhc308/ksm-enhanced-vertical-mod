@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261023-171521-0937f555",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "275ba8dc089c656041a288de17970ef1b783d84080de949333534fcce0b3b305",
+  "mainPatchSha256": "9980629c1988bf1261df0b7feab8790c2b0ec7a10dd82ca22537e11042893488",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -44,11 +44,15 @@
     },
     {
       "path": "docs/BASELINE_TEST_FINDINGS.md",
-      "sha256": "9ca1efafda4e791b90521ab7ac79af7cba1f7f33e785f3a9da06bef9f37c240a"
+      "sha256": "8dcf7b85bb9f8fcbb8f28049e4f75fbbf502a36b91d2922441c3ca2e7e1c5f6c"
     },
     {
       "path": "docs/CPP_STYLE_SCOPE.json",
       "sha256": "2464cf81566ed867eb9a2939ab7402c8e178b07d64074ee60f31d66afebc0604"
+    },
+    {
+      "path": "docs/FRAME_PACING_FIX.md",
+      "sha256": "43fe62f87b5f448d15b8090f773d302b8d7643aa458801248ce96330f9fb692f"
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
@@ -1023,6 +1027,10 @@
       "sha256": "b33ed108a53733b12e4736cfba57ccf3da72153756d98f0f8f911fcdc5d55492"
     },
     {
+      "path": "tests/PreviewTraceRules.py",
+      "sha256": "ebc555c48ed4989e9466efc0e9a24375a0b9aedf340fa56f5d87c8aa293d2487"
+    },
+    {
       "path": "tests/ResultBestScoreNativePixels.py",
       "sha256": "e160de0c7126209c892907fb7f81433c0f7cee7155c98301d2a9d5177b0fb4e6"
     },
@@ -1040,7 +1048,7 @@
     },
     {
       "path": "tests/SkinTestVerifier.py",
-      "sha256": "202560dd7e438b03bbe27d2b1d081cc144c39f4c56ed4eccf479c1c3896d0b23"
+      "sha256": "08ab0f577fa430455716cc56adf2b640769bd774ecea383906894f85af783068"
     },
     {
       "path": "tests/TestModBehavior.cpp",
