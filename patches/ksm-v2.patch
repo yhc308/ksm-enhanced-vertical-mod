@@ -2384,546 +2384,6 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 +    "NotImplemented": "未實作"
 +  }
  }
-diff --git a/kshootmania/App/shaders/monochrome_alpha.essl.frag b/kshootmania/App/shaders/monochrome_alpha.essl.frag
-index fd74e3ad0c4eac2f7c4e01285204ed1c998a7570..1b9850973e85a3f4e75310a582efe4a95056f71a 100644
---- a/kshootmania/App/shaders/monochrome_alpha.essl.frag
-+++ b/kshootmania/App/shaders/monochrome_alpha.essl.frag
-@@ -1,31 +1,31 @@
--# version 300 es
--
--precision mediump float;
--
--uniform sampler2D Texture0;
--
--in vec4 Color;
--in vec2 UV;
--
--layout(location = 0) out vec4 FragColor;
--
--layout(std140) uniform PSConstants2D
--{
--	vec4 g_colorAdd;
--	vec4 g_sdfParam;
--	vec4 g_sdfOutlineColor;
--	vec4 g_sdfShadowColor;
--	vec4 g_internal;
--};
--
--void main()
--{
--	vec4 texColor = texture(Texture0, UV);
--	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
--
--	vec4 result;
--	result.rgb = Color.rgb;
--	result.a = luminance * Color.a;
--
--	FragColor = result + g_colorAdd;
--}
-+# version 300 es
-+
-+precision mediump float;
-+
-+uniform sampler2D Texture0;
-+
-+in vec4 Color;
-+in vec2 UV;
-+
-+layout(location = 0) out vec4 FragColor;
-+
-+layout(std140) uniform PSConstants2D
-+{
-+	vec4 g_colorAdd;
-+	vec4 g_sdfParam;
-+	vec4 g_sdfOutlineColor;
-+	vec4 g_sdfShadowColor;
-+	vec4 g_internal;
-+};
-+
-+void main()
-+{
-+	vec4 texColor = texture(Texture0, UV);
-+	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
-+
-+	vec4 result;
-+	result.rgb = Color.rgb;
-+	result.a = luminance * Color.a;
-+
-+	FragColor = result + g_colorAdd;
-+}
-diff --git a/kshootmania/App/shaders/monochrome_alpha.frag b/kshootmania/App/shaders/monochrome_alpha.frag
-index e374e44a65927247a0b5d96da8734aab806cacf7..9b904e23966416f6dd90ad6712ad02e908c6cb6c 100644
---- a/kshootmania/App/shaders/monochrome_alpha.frag
-+++ b/kshootmania/App/shaders/monochrome_alpha.frag
-@@ -1,48 +1,48 @@
--// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
--
--# version 410
--
--//
--//	Textures
--//
--uniform sampler2D Texture0;
--
--//
--//	PSInput
--//
--layout(location = 0) in vec4 Color;
--layout(location = 1) in vec2 UV;
--
--//
--//	PSOutput
--//
--layout(location = 0) out vec4 FragColor;
--
--//
--//	Constant Buffer
--//
--layout(std140) uniform PSConstants2D
--{
--	vec4 g_colorAdd;
--	vec4 g_sdfParam;
--	vec4 g_sdfOutlineColor;
--	vec4 g_sdfShadowColor;
--	vec4 g_internal;
--};
--
--//
--//	Functions
--//
--void main()
--{
--	vec4 texColor = texture(Texture0, UV);
--
--	// BT.601輝度係数でグレースケール化し、アルファとして使用
--	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
--
--	vec4 result;
--	result.rgb = Color.rgb;
--	result.a = luminance * Color.a;
--
--	FragColor = result + g_colorAdd;
--}
-+// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
-+
-+# version 410
-+
-+//
-+//	Textures
-+//
-+uniform sampler2D Texture0;
-+
-+//
-+//	PSInput
-+//
-+layout(location = 0) in vec4 Color;
-+layout(location = 1) in vec2 UV;
-+
-+//
-+//	PSOutput
-+//
-+layout(location = 0) out vec4 FragColor;
-+
-+//
-+//	Constant Buffer
-+//
-+layout(std140) uniform PSConstants2D
-+{
-+	vec4 g_colorAdd;
-+	vec4 g_sdfParam;
-+	vec4 g_sdfOutlineColor;
-+	vec4 g_sdfShadowColor;
-+	vec4 g_internal;
-+};
-+
-+//
-+//	Functions
-+//
-+void main()
-+{
-+	vec4 texColor = texture(Texture0, UV);
-+
-+	// BT.601輝度係数でグレースケール化し、アルファとして使用
-+	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
-+
-+	vec4 result;
-+	result.rgb = Color.rgb;
-+	result.a = luminance * Color.a;
-+
-+	FragColor = result + g_colorAdd;
-+}
-diff --git a/kshootmania/App/shaders/monochrome_alpha.hlsl b/kshootmania/App/shaders/monochrome_alpha.hlsl
-index 83a88e437b8c4f29895317c3a99781e8a2f04794..96bca55c4b8f7c697ffbbacad60b9559cf28fb77 100644
---- a/kshootmania/App/shaders/monochrome_alpha.hlsl
-+++ b/kshootmania/App/shaders/monochrome_alpha.hlsl
-@@ -1,46 +1,46 @@
--// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
--
--//
--//	Textures
--//
--Texture2D		g_texture0 : register(t0);
--SamplerState	g_sampler0 : register(s0);
--
--namespace s3d
--{
--	//
--	//	VS Output / PS Input
--	//
--	struct PSInput
--	{
--		float4 position	: SV_POSITION;
--		float4 color	: COLOR0;
--		float2 uv		: TEXCOORD0;
--	};
--}
--
--//
--//	Constant Buffer
--//
--cbuffer PSConstants2D : register(b0)
--{
--	float4 g_colorAdd;
--	float4 g_sdfParam;
--	float4 g_sdfOutlineColor;
--	float4 g_sdfShadowColor;
--	float4 g_internal;
--}
--
--float4 PS(s3d::PSInput input) : SV_TARGET
--{
--	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
--
--	// BT.601輝度係数でグレースケール化し、アルファとして使用
--	float luminance = dot(texColor.rgb, float3(0.299, 0.587, 0.114));
--
--	float4 result;
--	result.rgb = input.color.rgb;
--	result.a = luminance * input.color.a;
--
--	return result + g_colorAdd;
--}
-+// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
-+
-+//
-+//	Textures
-+//
-+Texture2D		g_texture0 : register(t0);
-+SamplerState	g_sampler0 : register(s0);
-+
-+namespace s3d
-+{
-+	//
-+	//	VS Output / PS Input
-+	//
-+	struct PSInput
-+	{
-+		float4 position	: SV_POSITION;
-+		float4 color	: COLOR0;
-+		float2 uv		: TEXCOORD0;
-+	};
-+}
-+
-+//
-+//	Constant Buffer
-+//
-+cbuffer PSConstants2D : register(b0)
-+{
-+	float4 g_colorAdd;
-+	float4 g_sdfParam;
-+	float4 g_sdfOutlineColor;
-+	float4 g_sdfShadowColor;
-+	float4 g_internal;
-+}
-+
-+float4 PS(s3d::PSInput input) : SV_TARGET
-+{
-+	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
-+
-+	// BT.601輝度係数でグレースケール化し、アルファとして使用
-+	float luminance = dot(texColor.rgb, float3(0.299, 0.587, 0.114));
-+
-+	float4 result;
-+	result.rgb = input.color.rgb;
-+	result.a = luminance * input.color.a;
-+
-+	return result + g_colorAdd;
-+}
-diff --git a/kshootmania/App/shaders/multi_texture_mask.essl.frag b/kshootmania/App/shaders/multi_texture_mask.essl.frag
-index 4e33c379bb520aa931e14cc84ba3a5f56532d40f..776d0d19b760360fc3f3fc39b242a133c413f692 100644
---- a/kshootmania/App/shaders/multi_texture_mask.essl.frag
-+++ b/kshootmania/App/shaders/multi_texture_mask.essl.frag
-@@ -1,28 +1,28 @@
--# version 300 es
--
--precision mediump float;
--
--uniform sampler2D Texture0;
--uniform sampler2D Texture1;
--
--in vec4 Color;
--in vec2 UV;
--
--layout(location = 0) out vec4 FragColor;
--
--layout(std140) uniform PSConstants2D
--{
--	vec4 g_colorAdd;
--	vec4 g_sdfParam;
--	vec4 g_sdfOutlineColor;
--	vec4 g_sdfShadowColor;
--	vec4 g_internal;
--};
--
--void main()
--{
--	vec4 texColor = texture(Texture0, UV);
--	float mask = texture(Texture1, UV).r;
--	texColor.a *= mask;
--	FragColor = (texColor * Color) + g_colorAdd;
--}
-+# version 300 es
-+
-+precision mediump float;
-+
-+uniform sampler2D Texture0;
-+uniform sampler2D Texture1;
-+
-+in vec4 Color;
-+in vec2 UV;
-+
-+layout(location = 0) out vec4 FragColor;
-+
-+layout(std140) uniform PSConstants2D
-+{
-+	vec4 g_colorAdd;
-+	vec4 g_sdfParam;
-+	vec4 g_sdfOutlineColor;
-+	vec4 g_sdfShadowColor;
-+	vec4 g_internal;
-+};
-+
-+void main()
-+{
-+	vec4 texColor = texture(Texture0, UV);
-+	float mask = texture(Texture1, UV).r;
-+	texColor.a *= mask;
-+	FragColor = (texColor * Color) + g_colorAdd;
-+}
-diff --git a/kshootmania/App/shaders/multi_texture_mask.frag b/kshootmania/App/shaders/multi_texture_mask.frag
-index eecb1fc41052a19f99a20ea30794de72e1c050c1..9cf6d0cad081236b3ec45ac6a281eca027207cac 100644
---- a/kshootmania/App/shaders/multi_texture_mask.frag
-+++ b/kshootmania/App/shaders/multi_texture_mask.frag
-@@ -1,48 +1,48 @@
--//	Copyright (c) 2008-2021 Ryo Suzuki.
--//	Copyright (c) 2016-2021 OpenSiv3D Project.
--//	Licensed under the MIT License.
--
--# version 410
--
--//
--//	Textures
--//
--uniform sampler2D Texture0;
--uniform sampler2D Texture1;
--
--//
--//	PSInput
--//
--layout(location = 0) in vec4 Color;
--layout(location = 1) in vec2 UV;
--
--//
--//	PSOutput
--//
--layout(location = 0) out vec4 FragColor;
--
--//
--//	Constant Buffer
--//
--layout(std140) uniform PSConstants2D
--{
--	vec4 g_colorAdd;
--	vec4 g_sdfParam;
--	vec4 g_sdfOutlineColor;
--	vec4 g_sdfShadowColor;
--	vec4 g_internal;
--};
--
--//
--//	Functions
--//
--void main()
--{
--	vec4 texColor = texture(Texture0, UV);
--	
--	float mask = texture(Texture1, UV).r;
--
--	texColor.a *= mask;
--
--	FragColor = (texColor * Color) + g_colorAdd;
--}
-+//	Copyright (c) 2008-2021 Ryo Suzuki.
-+//	Copyright (c) 2016-2021 OpenSiv3D Project.
-+//	Licensed under the MIT License.
-+
-+# version 410
-+
-+//
-+//	Textures
-+//
-+uniform sampler2D Texture0;
-+uniform sampler2D Texture1;
-+
-+//
-+//	PSInput
-+//
-+layout(location = 0) in vec4 Color;
-+layout(location = 1) in vec2 UV;
-+
-+//
-+//	PSOutput
-+//
-+layout(location = 0) out vec4 FragColor;
-+
-+//
-+//	Constant Buffer
-+//
-+layout(std140) uniform PSConstants2D
-+{
-+	vec4 g_colorAdd;
-+	vec4 g_sdfParam;
-+	vec4 g_sdfOutlineColor;
-+	vec4 g_sdfShadowColor;
-+	vec4 g_internal;
-+};
-+
-+//
-+//	Functions
-+//
-+void main()
-+{
-+	vec4 texColor = texture(Texture0, UV);
-+	
-+	float mask = texture(Texture1, UV).r;
-+
-+	texColor.a *= mask;
-+
-+	FragColor = (texColor * Color) + g_colorAdd;
-+}
-diff --git a/kshootmania/App/shaders/multi_texture_mask.hlsl b/kshootmania/App/shaders/multi_texture_mask.hlsl
-index bb17b15f57074c7ae5ef5ea340741aedf9cf7415..bc760f7302c238cc095db11b3b1cf07f87272e19 100644
---- a/kshootmania/App/shaders/multi_texture_mask.hlsl
-+++ b/kshootmania/App/shaders/multi_texture_mask.hlsl
-@@ -1,54 +1,54 @@
--//-----------------------------------------------
--//
--//	This file is part of the Siv3D Engine.
--//
--//	Copyright (c) 2008-2021 Ryo Suzuki
--//	Copyright (c) 2016-2021 OpenSiv3D Project
--//
--//	Licensed under the MIT License.
--//
--//-----------------------------------------------
--
--//
--//	Textures
--//
--Texture2D		g_texture0 : register(t0);
--Texture2D		g_texture1 : register(t1);
--SamplerState	g_sampler0 : register(s0);
--SamplerState	g_sampler1 : register(s1);
--
--namespace s3d
--{
--	//
--	//	VS Output / PS Input
--	//
--	struct PSInput
--	{
--		float4 position	: SV_POSITION;
--		float4 color	: COLOR0;
--		float2 uv		: TEXCOORD0;
--	};
--}
--
--//
--//	Constant Buffer
--//
--cbuffer PSConstants2D : register(b0)
--{
--	float4 g_colorAdd;
--	float4 g_sdfParam;
--	float4 g_sdfOutlineColor;
--	float4 g_sdfShadowColor;
--	float4 g_internal;
--}
--
--float4 PS(s3d::PSInput input) : SV_TARGET
--{
--	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
--	
--	float mask = g_texture1.Sample(g_sampler1, input.uv).r;
--
--	texColor.a *= mask;
--	
--	return (texColor * input.color) + g_colorAdd;
--}
-+//-----------------------------------------------
-+//
-+//	This file is part of the Siv3D Engine.
-+//
-+//	Copyright (c) 2008-2021 Ryo Suzuki
-+//	Copyright (c) 2016-2021 OpenSiv3D Project
-+//
-+//	Licensed under the MIT License.
-+//
-+//-----------------------------------------------
-+
-+//
-+//	Textures
-+//
-+Texture2D		g_texture0 : register(t0);
-+Texture2D		g_texture1 : register(t1);
-+SamplerState	g_sampler0 : register(s0);
-+SamplerState	g_sampler1 : register(s1);
-+
-+namespace s3d
-+{
-+	//
-+	//	VS Output / PS Input
-+	//
-+	struct PSInput
-+	{
-+		float4 position	: SV_POSITION;
-+		float4 color	: COLOR0;
-+		float2 uv		: TEXCOORD0;
-+	};
-+}
-+
-+//
-+//	Constant Buffer
-+//
-+cbuffer PSConstants2D : register(b0)
-+{
-+	float4 g_colorAdd;
-+	float4 g_sdfParam;
-+	float4 g_sdfOutlineColor;
-+	float4 g_sdfShadowColor;
-+	float4 g_internal;
-+}
-+
-+float4 PS(s3d::PSInput input) : SV_TARGET
-+{
-+	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
-+	
-+	float mask = g_texture1.Sample(g_sampler1, input.uv).r;
-+
-+	texColor.a *= mask;
-+	
-+	return (texColor * input.color) + g_colorAdd;
-+}
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
 index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098ae9a19835 100644
 --- a/kshootmania/kshootmania.vcxproj
@@ -10534,3 +9994,112 @@ index b1260230013f8920fa08f9a729218974dbcf60d7..b988ae1506dc75b4b7db09cec3b0dd10
  #include "Common/MessageBoxUtils.hpp"
  #include "Addon/AutoMuteAddon.hpp"
  #include "Addon/CommonSEAddon.hpp"
+diff --git a/tests/Main.cpp b/tests/Main.cpp
+index cc6f318ffaed1913a206e980135e12ff72bfdc4f..4b2ebc898f2aa71bcaf724867abf524a876586c9 100644
+--- a/tests/Main.cpp
++++ b/tests/Main.cpp
+@@ -1,14 +1,10 @@
+ ﻿#define CATCH_CONFIG_RUNNER
+ #include <Siv3D.hpp>
+-
+-// Siv3Dが依存しているDirectXMathのマクロがGCCで標準ライブラリヘッダと衝突するのを回避
+ #ifdef __pre
+ #undef __pre
+ #endif
+-
+ #include <catch2/catch.hpp>
+-
+-// Linux環境でのみヘッドレスモードを使用
++#include <cstdlib>
+ #ifdef __linux__
+ SIV3D_SET(EngineOption::Renderer::Headless)
+ #endif
+@@ -16,36 +12,20 @@ SIV3D_SET(EngineOption::Renderer::Headless)
+ void Main()
+ {
+ 	Catch::Session session;
+-
+-	// コマンドライン引数を取得
+-	const Array<String> args = System::GetCommandLineArgs();
+-
+-	// argc, argvに変換
+-	std::vector<char*> argv;
+-	std::vector<std::string> argStrings;
+-
+-	for (const auto& arg : args)
+-	{
+-		argStrings.push_back(arg.toUTF8());
+-	}
+-
+-	for (auto& argString : argStrings)
+-	{
+-		argv.push_back(const_cast<char*>(argString.c_str()));
+-	}
+-
+-	int32 argc = static_cast<int32>(argv.size());
+-
+-	// Catchにコマンドライン引数を渡す
+-	session.applyCommandLine(argc, argv.data());
+-
+-	int32 numFailed = session.run();
+-	if (numFailed == 0)
+-	{
+-		Console << U"All tests passed!";
+-	}
+-	else
++	#ifdef _WIN32
++	char* report = nullptr;
++	size_t length = 0;
++	_dupenv_s(&report, &length, "KSM_TEST_REPORT");
++#else
++	const char* report = std::getenv("KSM_TEST_REPORT");
++#endif
++	if (report)
+ 	{
+-		Console << U"Tests failed: " << numFailed;
++		session.configData().reporterName = "junit";
++		session.configData().outputFilename = report;
+ 	}
++#ifdef _WIN32
++	std::free(report);
++#endif
++	session.run();
+ }
+diff --git a/tests/TestHighwayScroll.cpp b/tests/TestHighwayScroll.cpp
+index 3e89a09c6f19c600c3e4d0c8c98c86362de0bfa1..f5ff24bc5d53e8c587928d7e575a1dc9ed195707 100644
+--- a/tests/TestHighwayScroll.cpp
++++ b/tests/TestHighwayScroll.cpp
+@@ -1,4 +1,4 @@
+-#include <catch2/catch.hpp>
++﻿#include <catch2/catch.hpp>
+ #include "MusicGame/Scroll/HighwayScroll.hpp"
+ #include "MusicGame/GameStatus.hpp"
+ 
+@@ -96,8 +96,10 @@ TEST_CASE("HighwayScroll integrates partial scroll_speed interpolation across ze
+ 	const int32 posY_480 = highwayScroll.getPositionY(480, chartData.beat, timingCache, gameStatus);
+ 	const int32 posY_720 = highwayScroll.getPositionY(720, chartData.beat, timingCache, gameStatus);
+ 
+-	REQUIRE(posY_240 > posY_480);
+-	REQUIRE(posY_480 > posY_720);
+-	REQUIRE(posY_240 - posY_480 == posY_480 - posY_720);
+-	REQUIRE(posY_240 - posY_480 == 33);
++	// For speed -1 + pulse/480, the signed integrals from the zero-speed
++	// origin (480) to 240 and 720 are both +60 pulse units. Both notes
++	// therefore have the same screen displacement above the judgment line.
++	REQUIRE(posY_240 == posY_720);
++	REQUIRE(posY_480 > posY_240);
++	REQUIRE(posY_480 - posY_240 == 33);
+ }
+diff --git a/tests/TestTurnUtil.cpp b/tests/TestTurnUtil.cpp
+index 97bc7b5821b8c4fb265e578d2d169ff2d48083fb..f89ea25590f81927ff1b8a0d1ab0f8c0312e4045 100644
+--- a/tests/TestTurnUtil.cpp
++++ b/tests/TestTurnUtil.cpp
+@@ -136,6 +136,8 @@ TEST_CASE("MakeSRandomNoteLanes generates valid assignment", "[TurnUtil]")
+ {
+ 	// ロングノーツと同時押しを含む譜面で複数回生成し、常に妥当な配置になることを確認
+ 	kson::ChartData chartData;
++	chartData.beat.bpm.emplace(0, 120.0); // Pulse-to-time conversion requires a BPM at the origin.
++
+ 	chartData.note.bt[0].emplace(0, kson::Interval{ .length = 480 }); // ロング(0〜480)
+ 	chartData.note.bt[1].emplace(0, kson::Interval{ .length = 0 });
+ 	chartData.note.fx[0].emplace(0, kson::Interval{ .length = 240 }); // FXロング(0〜240)

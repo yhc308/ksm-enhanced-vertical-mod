@@ -1,7 +1,8 @@
 diff --git a/THIRD_PARTY_LICENSE.txt b/THIRD_PARTY_LICENSE.txt
+index f30600a8c1a873ada236dfbde3a2f8a0886643c5..00ea3b8b4514fc70c8953550464479992ffe4d67 100644
 --- a/THIRD_PARTY_LICENSE.txt
 +++ b/THIRD_PARTY_LICENSE.txt
-@@ -72,3 +72,13 @@
+@@ -72,3 +72,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
@@ -17,6 +18,7 @@ diff --git a/THIRD_PARTY_LICENSE.txt b/THIRD_PARTY_LICENSE.txt
 +ThirdParty_Windows/bassmix/bassmix.txt.
 diff --git a/ThirdParty_Windows/bassasio/bassasio.h b/ThirdParty_Windows/bassasio/bassasio.h
 new file mode 100644
+index 0000000000000000000000000000000000000000..e0c60de431d82b9983df2f27570a2ca7c0ea2700
 --- /dev/null
 +++ b/ThirdParty_Windows/bassasio/bassasio.h
 @@ -0,0 +1,163 @@
@@ -185,6 +187,7 @@ new file mode 100644
 +#endif
 diff --git a/ThirdParty_Windows/bassasio/bassasio.txt b/ThirdParty_Windows/bassasio/bassasio.txt
 new file mode 100644
+index 0000000000000000000000000000000000000000..d9600ad7f1540aed144486e23af51afeacabbd14
 --- /dev/null
 +++ b/ThirdParty_Windows/bassasio/bassasio.txt
 @@ -0,0 +1,338 @@
@@ -528,6 +531,7 @@ new file mode 100644
 +
 diff --git a/ThirdParty_Windows/bassmix/bassmix.h b/ThirdParty_Windows/bassmix/bassmix.h
 new file mode 100644
+index 0000000000000000000000000000000000000000..6cc418a68d7472b470bfc31b83d6dd8e2637e946
 --- /dev/null
 +++ b/ThirdParty_Windows/bassmix/bassmix.h
 @@ -0,0 +1,154 @@
@@ -687,6 +691,7 @@ new file mode 100644
 +#endif
 diff --git a/ThirdParty_Windows/bassmix/bassmix.txt b/ThirdParty_Windows/bassmix/bassmix.txt
 new file mode 100644
+index 0000000000000000000000000000000000000000..03276a137efc1fce58f9f1085770b3c65e4b1bab
 --- /dev/null
 +++ b/ThirdParty_Windows/bassmix/bassmix.txt
 @@ -0,0 +1,439 @@
@@ -1130,6 +1135,7 @@ new file mode 100644
 +website.
 +
 diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
+index 8e2a90defbe5e06a027fa3a076d11cae5828c0f0..46b8c3b9a92eb50f38342a9d1895e26155750455 100644
 --- a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
 +++ b/include/ksmaudio/AudioEffect/AudioEffectBus.hpp
 @@ -1,4 +1,4 @@
@@ -1138,7 +1144,7 @@ diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/
  #include <memory>
  #include <array>
  #include <set>
-@@ -28,7 +28,7 @@
+@@ -28,7 +28,7 @@ namespace ksmaudio::AudioEffect
      {
  	private:
  		const bool m_isLaser; // TODO: なるべく型で区別したい
@@ -1147,7 +1153,7 @@ diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/
  		std::vector<std::unique_ptr<AudioEffect::IAudioEffect>> m_audioEffects;
  		std::vector<HDSP> m_hDSPs;
  		std::vector<ParamController> m_paramControllers;
-@@ -39,6 +39,7 @@
+@@ -39,6 +39,7 @@ namespace ksmaudio::AudioEffect
  		AudioEffectBus(bool isLaser, Stream* pStream);
  
  		~AudioEffectBus();
@@ -1155,7 +1161,7 @@ diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/
  
  		// ロングFXによる更新
  		void updateByFX(const AudioEffect::Status& status, const ActiveAudioEffectDict& activeAudioEffectDict);
-@@ -97,6 +98,7 @@
+@@ -97,6 +98,7 @@ namespace ksmaudio::AudioEffect
  
  		// シークで時間が飛んだ場合に全エフェクトのDSPの内部状態を初期化
  		void reset();
@@ -1164,6 +1170,7 @@ diff --git a/include/ksmaudio/AudioEffect/AudioEffectBus.hpp b/include/ksmaudio/
  		bool audioEffectContainsName(const std::string& name) const;
  
 diff --git a/include/ksmaudio/AudioEffect/ParamController.hpp b/include/ksmaudio/AudioEffect/ParamController.hpp
+index fa671569a693b9500dba74e01dad675ce9d3ef8c..d205f239819fcf48b538b8aa896c06d5d45f39a4 100644
 --- a/include/ksmaudio/AudioEffect/ParamController.hpp
 +++ b/include/ksmaudio/AudioEffect/ParamController.hpp
 @@ -1,4 +1,4 @@
@@ -1172,7 +1179,7 @@ diff --git a/include/ksmaudio/AudioEffect/ParamController.hpp b/include/ksmaudio
  #include <map>
  #include <memory>
  #include <cassert>
-@@ -38,6 +38,7 @@
+@@ -38,6 +38,7 @@ namespace ksmaudio::AudioEffect
  			{
  			}
  
@@ -1180,7 +1187,7 @@ diff --git a/include/ksmaudio/AudioEffect/ParamController.hpp b/include/ksmaudio
  			bool update(float timeSec)
  			{
  				if (timeSec < m_timeSec) [[unlikely]]
-@@ -98,6 +99,7 @@
+@@ -98,6 +99,7 @@ namespace ksmaudio::AudioEffect
  			const std::unordered_map<ParamID, std::map<float, ValueSet>>& baseParamChanges);
  
  		bool update(float timeSec);
@@ -1190,6 +1197,7 @@ diff --git a/include/ksmaudio/AudioEffect/ParamController.hpp b/include/ksmaudio
  
 diff --git a/include/ksmaudio/Diagnostics.hpp b/include/ksmaudio/Diagnostics.hpp
 new file mode 100644
+index 0000000000000000000000000000000000000000..4ba370bb04845edd44a846ff5fad0c2485b7463e
 --- /dev/null
 +++ b/include/ksmaudio/Diagnostics.hpp
 @@ -0,0 +1,224 @@
@@ -1418,6 +1426,7 @@ new file mode 100644
 +struct SessionGuard { ~SessionGuard() { Stop(); } };
 +} // namespace ksmaudio::qa
 diff --git a/include/ksmaudio/Sample.hpp b/include/ksmaudio/Sample.hpp
+index fd3d8a410802690eb77562d1c2b93dddc3318c05..5f15fe2ce9e681441030668806fb19d350309a12 100644
 --- a/include/ksmaudio/Sample.hpp
 +++ b/include/ksmaudio/Sample.hpp
 @@ -1,6 +1,9 @@
@@ -1431,7 +1440,7 @@ diff --git a/include/ksmaudio/Sample.hpp b/include/ksmaudio/Sample.hpp
  #include "ksmaudio/Backend.hpp"
  
  namespace ksmaudio
-@@ -9,7 +12,15 @@
+@@ -9,7 +12,15 @@ namespace ksmaudio
  	{
  	private:
  #ifdef KSMAUDIO_BACKEND_BASS
@@ -1448,7 +1457,7 @@ diff --git a/include/ksmaudio/Sample.hpp b/include/ksmaudio/Sample.hpp
  #else
  		class Impl;
  		std::unique_ptr<Impl> m_impl;
-@@ -29,6 +40,9 @@
+@@ -29,6 +40,9 @@ namespace ksmaudio
  
  		Sample& operator=(Sample&& other) noexcept;
  
@@ -1460,6 +1469,7 @@ diff --git a/include/ksmaudio/Sample.hpp b/include/ksmaudio/Sample.hpp
  	};
  }
 diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
+index 13d3b241c46acbb5b620c029aeaab35722044365..4c713565ffa2bf3a0bbde816de0ee82e72b187d4 100644
 --- a/include/ksmaudio/Stream.hpp
 +++ b/include/ksmaudio/Stream.hpp
 @@ -4,6 +4,8 @@
@@ -1471,7 +1481,7 @@ diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
  #include "ksmaudio/Backend.hpp"
  #include "ksmaudio/AudioEffect/AudioEffect.hpp"
  
-@@ -12,18 +14,38 @@
+@@ -12,18 +14,38 @@ namespace ksmaudio
  	using SecondsF = std::chrono::duration<double>;
  	using Duration = SecondsF;
  
@@ -1511,7 +1521,7 @@ diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
  		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
  #else
  		class Impl;
-@@ -42,9 +64,9 @@
+@@ -42,9 +64,9 @@ namespace ksmaudio
  		Stream& operator=(const Stream&) = delete;
  
  #ifdef KSMAUDIO_BACKEND_BASS
@@ -1523,19 +1533,20 @@ diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
  #else
  		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
  		Stream(Stream&&);
-@@ -61,6 +83,8 @@
- 		void updateManually() const;
+@@ -62,6 +84,8 @@ namespace ksmaudio
  
  		SecondsF posSec() const;
-+
-+        AudioClockSnapshot clockSnapshot() const;
  
++        AudioClockSnapshot clockSnapshot() const;
++
  		void seekPosSec(SecondsF time) const;
  
+ 		Duration duration() const;
 diff --git a/include/ksmaudio/StreamWithEffects.hpp b/include/ksmaudio/StreamWithEffects.hpp
+index 68351c3a27e9dbec72c426d1205bbf819b4df42a..35c48f15545ddc2ebf795dc77a47f034e849a67b 100644
 --- a/include/ksmaudio/StreamWithEffects.hpp
 +++ b/include/ksmaudio/StreamWithEffects.hpp
-@@ -21,9 +21,9 @@
+@@ -21,9 +21,9 @@ namespace ksmaudio
  
  		StreamWithEffects& operator=(const StreamWithEffects&) = delete;
  
@@ -1547,7 +1558,7 @@ diff --git a/include/ksmaudio/StreamWithEffects.hpp b/include/ksmaudio/StreamWit
  
  		void play() const;
  
-@@ -34,6 +34,7 @@
+@@ -34,6 +34,7 @@ namespace ksmaudio
  		void updateManually() const;
  
  		SecondsF posSec() const;
@@ -1556,6 +1567,7 @@ diff --git a/include/ksmaudio/StreamWithEffects.hpp b/include/ksmaudio/StreamWit
  		void seekPosSec(SecondsF timeSec) const;
  
 diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
+index 3dd875914c9c388585020419096ca942a8ac315a..4f7d600d2dd17b1347664d40e7faf893fe38ab09 100644
 --- a/include/ksmaudio/ksmaudio.hpp
 +++ b/include/ksmaudio/ksmaudio.hpp
 @@ -1,5 +1,6 @@
@@ -1565,7 +1577,7 @@ diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
  #include "StreamWithEffects.hpp"
  #include "Sample.hpp"
  #include "AudioEffect/All.hpp"
-@@ -19,6 +20,8 @@
+@@ -19,6 +20,8 @@ namespace ksmaudio
  
  		/// @brief DirectSound出力を使用(Windowsのみ)
  		DirectSound,
@@ -1574,7 +1586,7 @@ diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
  	};
  
  	/// @brief 音声処理を初期化
-@@ -26,7 +29,58 @@
+@@ -26,7 +29,58 @@ namespace ksmaudio
  	/// @param audioBackend Windowsで使用する音声出力バックエンド。それ以外の環境では無視される
  	/// @return 成功時true、失敗時false(失敗時はGetLastErrorCode()でBASSエラーコードを取得可能)
  	[[nodiscard]]
@@ -1635,6 +1647,7 @@ diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
  	void Terminate();
  
 diff --git a/ksmaudio.vcxproj b/ksmaudio.vcxproj
+index e889afc96022cba5d5d1dda46b802cd16a1eaff5..d3f80de0288f21d00750530fa73898d7ac9c53da 100644
 --- a/ksmaudio.vcxproj
 +++ b/ksmaudio.vcxproj
 @@ -163,6 +163,8 @@
@@ -1648,6 +1661,7 @@ diff --git a/ksmaudio.vcxproj b/ksmaudio.vcxproj
      <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectParam.hpp" />
 diff --git a/src/AsioOutput.hpp b/src/AsioOutput.hpp
 new file mode 100644
+index 0000000000000000000000000000000000000000..c201724ae8c51d1bb6e38b81a74a1004bf219f87
 --- /dev/null
 +++ b/src/AsioOutput.hpp
 @@ -0,0 +1,23 @@
@@ -1675,12 +1689,13 @@ new file mode 100644
 +    DWORD OutputChannelGetData(DWORD channel, void* buffer, DWORD length);
 +}
 diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus.cpp
+index ad5e26cc0981092d0459b7e3ed97652bf23d0e03..c1653b807e48272e6abbbe0a1eb174325d67d44e 100644
 --- a/src/AudioEffect/AudioEffectBus.cpp
 +++ b/src/AudioEffect/AudioEffectBus.cpp
-@@ -1,4 +1,15 @@
+@@ -1,5 +1,16 @@
 +﻿#include "ksmaudio/Diagnostics.hpp"
  #include "ksmaudio/AudioEffect/AudioEffectBus.hpp"
-+
+ 
 +namespace
 +{
 +    struct EffectStateLock
@@ -1690,10 +1705,11 @@ diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus
 +        ~EffectStateLock() { stream->lockEnd(); }
 +    };
 +}
- 
++
  namespace ksmaudio::AudioEffect
  {
-@@ -10,6 +21,7 @@
+ 	AudioEffectBus::AudioEffectBus(bool isLaser, Stream* pStream)
+@@ -10,6 +21,7 @@ namespace ksmaudio::AudioEffect
  
  	AudioEffectBus::~AudioEffectBus()
      {
@@ -1701,7 +1717,7 @@ diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus
  		for (const auto& hDSP : m_hDSPs)
  		{
  			m_pStream->removeAudioEffect(hDSP);
-@@ -18,6 +30,7 @@
+@@ -18,6 +30,7 @@ namespace ksmaudio::AudioEffect
  
  	void AudioEffectBus::updateByFX(const AudioEffect::Status& status, const ActiveAudioEffectDict& activeAudioEffectDict)
  	{
@@ -1709,7 +1725,7 @@ diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus
  		assert(!m_isLaser);
  
  		// Update override params
-@@ -62,6 +75,7 @@
+@@ -62,6 +75,7 @@ namespace ksmaudio::AudioEffect
  
  	void AudioEffectBus::updateByLaser(const AudioEffect::Status& status, std::optional<std::size_t> activeAudioEffectIdx)
  	{
@@ -1717,7 +1733,7 @@ diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus
  		assert(m_isLaser);
  
  		// Update override params
-@@ -106,14 +120,25 @@
+@@ -106,14 +120,25 @@ namespace ksmaudio::AudioEffect
  
  	void AudioEffectBus::setBypass(bool bypass)
  	{
@@ -1744,6 +1760,7 @@ diff --git a/src/AudioEffect/AudioEffectBus.cpp b/src/AudioEffect/AudioEffectBus
  		{
  			audioEffect->reset();
 diff --git a/src/AudioEffect/ParamController.cpp b/src/AudioEffect/ParamController.cpp
+index 1a5bfec113e9441fd89539a3a885b546a2941abc..5a15ff43024e35c25b8d819917750d73ad5c1331 100644
 --- a/src/AudioEffect/ParamController.cpp
 +++ b/src/AudioEffect/ParamController.cpp
 @@ -1,4 +1,4 @@
@@ -1752,7 +1769,7 @@ diff --git a/src/AudioEffect/ParamController.cpp b/src/AudioEffect/ParamControll
  #include <utility>
  
  namespace ksmaudio::AudioEffect
-@@ -43,6 +43,10 @@
+@@ -43,6 +43,10 @@ namespace ksmaudio::AudioEffect
  	{
  	}
  
@@ -1765,6 +1782,7 @@ diff --git a/src/AudioEffect/ParamController.cpp b/src/AudioEffect/ParamControll
  		if (timeSec < m_timeSec)
 diff --git a/src/OutputResources.hpp b/src/OutputResources.hpp
 new file mode 100644
+index 0000000000000000000000000000000000000000..91216f5869e2eaaf0750eefb11680832be8e37a8
 --- /dev/null
 +++ b/src/OutputResources.hpp
 @@ -0,0 +1,19 @@
@@ -1788,6 +1806,7 @@ new file mode 100644
 +}
 +}
 diff --git a/src/Sample.cpp b/src/Sample.cpp
+index b2ec294131fdc52d5119418c36a24bb701f63b92..61179dbc224ab9623c6a815729b5e23e7f4ee0da 100644
 --- a/src/Sample.cpp
 +++ b/src/Sample.cpp
 @@ -1,4 +1,9 @@
@@ -1800,7 +1819,7 @@ diff --git a/src/Sample.cpp b/src/Sample.cpp
  #include <cassert>
  #include <filesystem>
  #include <utility>
-@@ -13,51 +18,105 @@
+@@ -13,51 +18,105 @@ namespace
  
  	HSAMPLE LoadSample(const std::string& filePath, DWORD maxPolyphony)
  	{
@@ -1926,6 +1945,7 @@ diff --git a/src/Sample.cpp b/src/Sample.cpp
  		if (hChannel == 0)
  		{
 diff --git a/src/Stream.cpp b/src/Stream.cpp
+index b221cbc940486c3a5596485120a2e7b928b64a3e..4fe9fa523d3e1ffbdc7c7251a73001cad73037ed 100644
 --- a/src/Stream.cpp
 +++ b/src/Stream.cpp
 @@ -1,8 +1,13 @@
@@ -1942,7 +1962,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  
  namespace
  {
-@@ -39,6 +44,9 @@
+@@ -39,6 +44,9 @@ namespace
  
  	std::unique_ptr<std::vector<char>> Preload(const std::string& filePath)
  	{
@@ -1952,7 +1972,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		std::ifstream ifs(U8Path(filePath), std::ios::in | std::ios::binary);
  		if (!ifs)
  		{
-@@ -54,9 +62,12 @@
+@@ -54,9 +62,12 @@ namespace
  
  	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop, bool forTempo, bool decode)
  	{
@@ -1966,7 +1986,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		if (pPreloadedBinary == nullptr)
  		{
  			const auto fsPath = U8Path(filePath);
-@@ -70,7 +81,8 @@
+@@ -70,7 +81,8 @@ namespace
  
  	HSTREAM CreateTempoStream(HSTREAM hSourceStream, double playbackSpeed)
  	{
@@ -1976,7 +1996,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		const double tempo = (playbackSpeed - 1.0) * 100.0;
  		BASS_ChannelSetAttribute(hTempoStream, BASS_ATTRIB_TEMPO, static_cast<float>(tempo));
  		return hTempoStream;
-@@ -86,6 +98,7 @@
+@@ -86,6 +98,7 @@ namespace
  
  	void ProcessAudioEffect(HDSP handle, DWORD channel, void* buffer, DWORD length, void* user)
  	{
@@ -1984,7 +2004,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		const auto pAudioEffect = reinterpret_cast<ksmaudio::AudioEffect::IAudioEffect*>(user);
  		const auto pData = reinterpret_cast<float*>(buffer);
  		pAudioEffect->process(pData, length / sizeof(float));
-@@ -93,7 +106,7 @@
+@@ -93,7 +106,7 @@ namespace
  
  	double OutputDeviceLatencySec()
  	{
@@ -1993,7 +2013,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  			BASS_INFO info{};
  			if (BASS_GetInfo(&info))
  			{
-@@ -129,15 +142,24 @@
+@@ -129,15 +142,24 @@ namespace ksmaudio
  	}
  
  	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed, bool decode)
@@ -2022,7 +2042,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		// 音量を設定
  		applyVolume();
  
-@@ -152,14 +174,58 @@
+@@ -152,14 +174,58 @@ namespace ksmaudio
  		}
  	}
  
@@ -2089,7 +2109,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  
  	void Stream::applyVolume()
  	{
-@@ -199,22 +265,26 @@
+@@ -199,22 +265,26 @@ namespace ksmaudio
  
  	void Stream::play() const
  	{
@@ -2120,7 +2140,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  	}
  
  	SecondsF Stream::posSec() const
-@@ -223,15 +293,31 @@
+@@ -223,15 +293,31 @@ namespace ksmaudio
  		{
  			return SecondsF{ 0.0 };
  		}
@@ -2155,7 +2175,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  
  	Duration Stream::duration() const
  	{
-@@ -245,12 +331,22 @@
+@@ -245,12 +331,22 @@ namespace ksmaudio
  
  	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
  	{
@@ -2180,7 +2200,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  	}
  
  	void Stream::setFadeIn(Duration duration) const
-@@ -283,7 +379,7 @@
+@@ -283,7 +379,7 @@ namespace ksmaudio
  	
  	bool Stream::isPlaying() const
  	{
@@ -2189,7 +2209,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		return status == BASS_ACTIVE_PLAYING || status == BASS_ACTIVE_STALLED;
  	}
  
-@@ -349,6 +445,7 @@
+@@ -349,6 +445,7 @@ namespace ksmaudio
  
  	SecondsF Stream::latency() const
  	{
@@ -2197,7 +2217,7 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
  		if (playbuf != (DWORD)-1)
  		{
-@@ -359,16 +456,22 @@
+@@ -359,16 +456,22 @@ namespace ksmaudio
  
  	void Stream::lockBegin() const
  	{
@@ -2222,13 +2242,13 @@ diff --git a/src/Stream.cpp b/src/Stream.cpp
  	}
  }
 diff --git a/src/StreamWithEffects.cpp b/src/StreamWithEffects.cpp
+index 0262cf98cacfafa101a2e2d88a54f20c56af4751..f49bd0b4d7eb712d6bf11549f53ecf223cfaac73 100644
 --- a/src/StreamWithEffects.cpp
 +++ b/src/StreamWithEffects.cpp
-@@ -13,6 +13,19 @@
- 		: m_stream(filePath, volume, enableCompressor, preload, false, playbackSpeed, decode)
+@@ -14,6 +14,19 @@ namespace ksmaudio
  	{
  	}
-+
+ 
 +    StreamWithEffects::StreamWithEffects(StreamWithEffects&& other) noexcept
 +        : m_stream(std::move(other.m_stream)), m_audioEffectBuses(std::move(other.m_audioEffectBuses)) {
 +        for (auto& bus : m_audioEffectBuses) bus->rebindStream(&m_stream);
@@ -2241,10 +2261,12 @@ diff --git a/src/StreamWithEffects.cpp b/src/StreamWithEffects.cpp
 +        for (auto& bus : m_audioEffectBuses) bus->rebindStream(&m_stream);
 +        return *this;
 +    }
- 
++
  	void StreamWithEffects::play() const
  	{
+ 		m_stream.play();
 diff --git a/src/Web/SampleWeb.cpp b/src/Web/SampleWeb.cpp
+index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..9423e6ea61230621fba8930e9ea2a3471b037bba 100644
 --- a/src/Web/SampleWeb.cpp
 +++ b/src/Web/SampleWeb.cpp
 @@ -8,6 +8,9 @@
@@ -2258,9 +2280,10 @@ diff --git a/src/Web/SampleWeb.cpp b/src/Web/SampleWeb.cpp
  	{
  	private:
 diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
+index 65a25982b80a368bbb1fa68f9a97729285594dfb..c49ea9d5d16720f0cfa8b231160779640bba3b65 100644
 --- a/src/Web/StreamWeb.cpp
 +++ b/src/Web/StreamWeb.cpp
-@@ -92,6 +92,8 @@
+@@ -92,6 +92,8 @@ namespace
  
  namespace ksmaudio
  {
@@ -2270,9 +2293,10 @@ diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
  	{
  	private:
 diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
+index 884d8b75bb66d089835870283ab83e7527085e91..491d0f0bc6bc04cc0418ee07886f49c6df89e124 100644
 --- a/src/Web/ksmaudioWeb.cpp
 +++ b/src/Web/ksmaudioWeb.cpp
-@@ -6,10 +6,21 @@
+@@ -6,11 +6,22 @@
  
  namespace ksmaudio
  {
@@ -2281,7 +2305,7 @@ diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
  	{
  		return web::Engine().init();
  	}
-+
+ 
 +    AudioLatencySnapshot GetAudioLatencySnapshot() { return {}; }
 +    AudioOutputChangeResult ApplyOutputChange(void*, const AudioOutputRequest&) { return {}; }
 +    void SetOutputTransitionGain(double) {}
@@ -2292,10 +2316,12 @@ diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
 +    const AudioOutputStatus& GetAudioOutputStatus() { static const AudioOutputStatus status{}; return status; }
 +    bool IsASIOActive() { return false; }
 +    std::string GetAudioOutputFailure() { return {}; }
- 
++
  	void Terminate()
  	{
+ 		web::Engine().terminate();
 diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
+index d7e33131e22bc11268797909e69b4c7e38fe3c09..6832203bd88c2cff2003701e1b3d7b3b1fcb8adb 100644
 --- a/src/ksmaudio.cpp
 +++ b/src/ksmaudio.cpp
 @@ -1,77 +1,656 @@
@@ -2665,6 +2691,31 @@ diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
 -		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs);
 -		BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
 -		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads);
+-
+-		// bass_fx.dllをロードするために呼ぶ必要あり(失敗時は0が返る)
+-		if (BASS_FX_GetVersion() == 0)
+-		{
+-			BASS_Free();
+-			return false;
+-		}
+-		return true;
+-	}
+-
+-	void Terminate()
+-	{
+-		BASS_Free();
+-	}
+-
+-	int GetLastErrorCode()
+-	{
+-		return BASS_ErrorGetCode();
+-	}
+-
+-	void SetMute(bool isMute)
+-	{
+-		s_isMuted = isMute;
+-		ApplyVolume();
+-	}
 +        (void)hWnd; (void)audioBackend; (void)asioDriver;
 +        const BOOL ok = TraceInitCall("BASS_Init(device=-1, default)", [] { return BASS_Init(-1, kSampleRate, 0, 0, nullptr); });
 +#endif
@@ -2699,31 +2750,6 @@ diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
 +        return Init(hWnd, backend, driver);
 +    }
  
--		// bass_fx.dllをロードするために呼ぶ必要あり(失敗時は0が返る)
--		if (BASS_FX_GetVersion() == 0)
--		{
--			BASS_Free();
--			return false;
--		}
--		return true;
--	}
--
--	void Terminate()
--	{
--		BASS_Free();
--	}
--
--	int GetLastErrorCode()
--	{
--		return BASS_ErrorGetCode();
--	}
--
--	void SetMute(bool isMute)
--	{
--		s_isMuted = isMute;
--		ApplyVolume();
--	}
--
 -	void SetMasterVolume(double volume)
 -	{
 -		s_masterVolume = volume;

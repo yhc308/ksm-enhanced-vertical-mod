@@ -4,7 +4,7 @@ $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 Import-Module (Join-Path $root 'tests/AsioHarness.psm1') -Force
 Import-Module (Join-Path $root 'scripts/TestWorkspace.psm1') -Force
-$results=@();$python=(Get-Command python -ErrorAction Stop).Source
+$results=@();$python='python'
 foreach($size in @(@(640,480),@(1280,720),@(1920,1080),@(720,1280),@(1080,1920))){
  $w=$size[0];$h=$size[1];if($w -notin $Widths){continue}
  $session=New-AsioFixture -Values @{vertical_enabled=[int]($h -gt $w);windowsize="$w,$h";vertical_resolution="$w,$h";vertical_width=$w;vertical_height=$h;vsync=1;automaticmute=0} -Song
