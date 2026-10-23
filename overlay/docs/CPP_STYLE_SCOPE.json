@@ -7,9 +7,11 @@
     "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
     "kshootmania/src/Common/AudioOutputSettings.hpp",
     "kshootmania/src/Common/CommonDefines.hpp",
+    "kshootmania/src/Common/FrameRateLimit.cpp",
     "kshootmania/src/Common/FsUtils.cpp",
     "kshootmania/src/Common/SkinPreset.cpp",
     "kshootmania/src/Common/SkinPreset.hpp",
+    "kshootmania/src/Common/WindowsWaitableTimer.hpp",
     "kshootmania/src/Course/CourseInfo.cpp",
     "kshootmania/src/Diagnostics/ApsFixture.hpp",
     "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
@@ -200,9 +202,11 @@
     "tests/TestNoteGraphicsUtils.cpp",
     "tests/TestPlayResult.cpp",
     "tests/TestTurnUtil.cpp",
+    "tests/WindowsWaitableTimerTests.cpp",
     "tests/asio/AudioOutputTest.cpp",
     "tests/asio/FakeAsio.cpp",
     "tests/asio/QADiagnosticsTest.cpp",
-    "tests/headless/RecentTimingWindowTests.cpp"
+    "tests/headless/RecentTimingWindowTests.cpp",
+    "tests/headless/WindowsWaitableTimerTests.cpp"
   ]
 }

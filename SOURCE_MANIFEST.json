@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261023-171521-0937f555",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "15c7d33f2cec0227c24a6fbabb9300801f1ac4c2ed25e5e76df1564b13fe2804",
+  "mainPatchSha256": "275ba8dc089c656041a288de17970ef1b783d84080de949333534fcce0b3b305",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -16,7 +16,7 @@
     },
     {
       "path": "README_ENHANCED.md",
-      "sha256": "24a6e48934e7b0c00dcbef8464a65f823d3e74002e119773f63929dbc43e750c"
+      "sha256": "6df557bf3676e6b5154af2df88e1b5fb9d2a5da9792ae15b3841d53d0c6137b3"
     },
     {
       "path": "REVIEW.md",
@@ -48,11 +48,11 @@
     },
     {
       "path": "docs/CPP_STYLE_SCOPE.json",
-      "sha256": "b1623d4fc03fdb645fb19c9fd9acfc42def3722fe6dc581de17c98a55852d34a"
+      "sha256": "2464cf81566ed867eb9a2939ab7402c8e178b07d64074ee60f31d66afebc0604"
     },
     {
       "path": "docs/REFACTOR_PROGRESS.md",
-      "sha256": "ceba59ba35522ceda884a5f5f13dd7c0cf7978e76c2690d87788df92a1e18adc"
+      "sha256": "238c3fc668438fa74bd5f3f492ed944ad006e2451c3636ea2310641b336b7370"
     },
     {
       "path": "docs/REFACTOR_VALIDATION.md",
@@ -333,6 +333,10 @@
     {
       "path": "kshootmania/src/Common/SkinPreset.hpp",
       "sha256": "03e0c480d97466107beabacf227e5652918914dbff5cf2629ada80df71ec6475"
+    },
+    {
+      "path": "kshootmania/src/Common/WindowsWaitableTimer.hpp",
+      "sha256": "32447964679c92a0d35a42a3e5ad618a8d73659f757b86cc275916b7dabc85a1"
     },
     {
       "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
@@ -868,7 +872,7 @@
     },
     {
       "path": "scripts/RunHeadlessTests.cmd",
-      "sha256": "1bdc8fd9afd4705d62aea2fbb32a0a56de4e531c2195f0f5a6cdb29473a141c9"
+      "sha256": "ce15476a95dc1b7f0c8ec946e4276703a096903b64b3c712161c197447981125"
     },
     {
       "path": "scripts/RunIngameExHudTests.ps1",
@@ -1059,6 +1063,10 @@
       "sha256": "e2994bc1ee464e6460f3f5a56ea1b1984254e2715e783e44e81e815dbeb0d2ab"
     },
     {
+      "path": "tests/WindowsWaitableTimerTests.cpp",
+      "sha256": "e36af09516b601bc6db97eb26936310cea5654cd4fe7f16c84e1681621a82359"
+    },
+    {
       "path": "tests/asio/AudioOutputTest.cpp",
       "sha256": "33db8fdc774dc79abbb69fa11a9b68639b21f6402d8c356cb45bc4cb3c4e9ec7"
     },
@@ -1073,6 +1081,10 @@
     {
       "path": "tests/headless/RecentTimingWindowTests.cpp",
       "sha256": "f02e8c7937d9b383ef835081c267cb2d5803093b93c569c16a5155dc19cb20f5"
+    },
+    {
+      "path": "tests/headless/WindowsWaitableTimerTests.cpp",
+      "sha256": "3d81ff662d29c50efab23fe56bc35d7ffdaa1ab7b9b64dcdb5fd5f6dbf215cfe"
     }
   ],
   "refactorBranch": "refactor/upstream-style-parity"

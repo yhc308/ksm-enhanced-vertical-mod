@@ -54,3 +54,7 @@ The original external-authoring assertion failure, exact-resource checkout newli
 Final performance verification is still pending. Short capped runs have unstable p99 values even on the preserved binary; all failures are retained. A by-value argument-wrapper experiment was discarded because the SDK actually returns a const reference. The final diagnostic wrapper delegates that reference directly. Small hot GaugePresentation calculations/accessors are retained inline, matching the original structure and preserving arithmetic. Main now reports actual collected benchmark samples so an interrupted capture cannot appear complete.
 
 Fresh patch/overlay reconstruction also passed normal Release and Debug builds, with diagnostics disabled. Both configurations passed title and original chart-CLI startup/shutdown in both orientations (four cases each). The normal Debug title expectation includes the existing Siv3D suffix.
+
+## Isolated frame-pacing correction
+
+The high-resolution Windows wait prototype improved native-play p99 in both orientations. The production correction is separated from style/responsibility changes and documented in FRAME_PACING_FIX.md. Deadline/FPS/drift math is retained; unsupported/failed native timers fall back to the previous sleep path. Six actual Win32 cases / 16 assertions passed headlessly; the combined Release and Debug suites now pass 43 cases / 3,982 assertions. Full functional and final-binary performance checks are running before any production source synchronization.
