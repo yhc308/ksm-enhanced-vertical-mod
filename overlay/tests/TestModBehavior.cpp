@@ -11,7 +11,7 @@ using namespace MusicGame::Judgment;
 
 TEST_CASE("EX chip scoring preserves inclusive P-CRITICAL boundaries", "[EX][Boundary]")
 {
-	for (const double offsetMs : {-21.0, 0.0, 21.0})
+	for (const double offsetMs : { -21.0, 0.0, 21.0 })
 	{
 		REQUIRE(ExChipPoints(JudgmentResult::kCritical, offsetMs) == 5);
 	}
@@ -100,7 +100,7 @@ TEST_CASE("Sixteen ms color setting excludes its exact boundary", "[Timing][Comp
 	TimingHudSettings settings;
 	settings.color = TimingMsColor::kSixteenMs;
 	settings.display = TimingMsDisplay::kAll;
-	TimingFeedback event{JudgmentResult::kCritical, 16.0, 0};
+	TimingFeedback event{ JudgmentResult::kCritical, 16.0, 0 };
 	REQUIRE(PresentTiming(settings, event, 0).color == Color(178, 178, 178));
 	event.signedMs = 16.001;
 	REQUIRE(PresentTiming(settings, event, 0).color == JudgeDirectionColor(settings.judgeColor, true));

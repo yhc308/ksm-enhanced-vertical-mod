@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261023-171521-0937f555",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "ab34cc48e63e48b37324c61586b0003b89eb9a20af173e0631f78ba0c2be4b2e",
+  "mainPatchSha256": "37127cf35b8ac324e22c4feda650a77ba014782fcd483c63ebcb33b786fcae77",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -41,6 +41,10 @@
     {
       "path": "config/release.json",
       "sha256": "612acf8a11552f8774fdfc6c636f9cf5e575c93b2247fcc620b1200ebe553799"
+    },
+    {
+      "path": "docs/CPP_STYLE_SCOPE.json",
+      "sha256": "f92a11adbf6dcc5505364311a7b053e5adc9cca0da5371f465067cafe8ea16d7"
     },
     {
       "path": "kshootmania/App/imgs/bg2_vertical.png",
@@ -296,251 +300,251 @@
     },
     {
       "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
-      "sha256": "b4a8388156621a82d744bd41fe2d8a1740474a8a7a4acf9cc3c1adad96e05a50"
+      "sha256": "0dfdc1afdcfd275ab2033e4b38a43f55a44ee6ab96eed7ee109404920c678c55"
     },
     {
       "path": "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
-      "sha256": "b41aeed26d433e687d5d1755dd4b2a5f4b49b7008113db64f6ac2a4794ad8512"
+      "sha256": "d8d6c319a071ee47afee17357e10ca4af82a6f0400cd30c36f41381f28e043e5"
     },
     {
       "path": "kshootmania/src/Common/AudioOutputSettings.hpp",
-      "sha256": "9064981ae0e866019d51614122091027ac087bb833ece1a6b0aa5b0a6a496547"
+      "sha256": "f2adf217d156e9332a63b30025670567022fff988f89c7bd794e54d72b897377"
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.cpp",
-      "sha256": "4239591f4c6a6e8005dd580d99dd6ef24a6e3dc826c8b31c7e18eb2ffeac93b9"
+      "sha256": "528f5390d9fef1f837481a7fcc989d4b142f85975aa4382bcb910f6f29b31899"
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.hpp",
-      "sha256": "6fe3e2a645373287f5d5fba663896034a195363f6c20d98f9434cba09db47321"
+      "sha256": "03e0c480d97466107beabacf227e5652918914dbff5cf2629ada80df71ec6475"
     },
     {
       "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
-      "sha256": "d170885f07a8a88521a20869bebca952660574f58569eab60c4c855880877fa1"
+      "sha256": "dd62b0e5183d51416977d47798422a795ab18bc6ca64c8411bf8bff0c0026b9e"
     },
     {
       "path": "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
-      "sha256": "1a8ca355615664485104387c528d7f37578f043ee0932c4e40bef167f9d07629"
+      "sha256": "f11645aa1ccd1db8a64bf6f51b3ae4da0e6c856ad5b2d0f475bb2c25fb0c13d2"
     },
     {
       "path": "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
-      "sha256": "2a432073b9465bf77567becaff1e09719d377cdc0c79007dddcfdbc123b22ecf"
+      "sha256": "c9469c589d6db3e121687b7898e361b4776647b36c7f37a54c5c923aed3ff10d"
     },
     {
       "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
-      "sha256": "cdddfc80619b5012a4104e28a2689245d2ff2d9b584de38b275bc1b32d8e6e44"
+      "sha256": "d7a00eadece904081094dc437f59c0b13752ca4620ea9897ed9bbe22a4fb9b0f"
     },
     {
       "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
-      "sha256": "eb956314eb3d44061bb3f0c541378915f1f2de18cfbb0f6acf9f0508fc6ab838"
+      "sha256": "bd5d59e425590bf705f63ad95cbfc3cc881e132061af876f3acf116391286d2a"
     },
     {
       "path": "kshootmania/src/Diagnostics/ExScoreFixture.hpp",
-      "sha256": "73ac20dbb9658fbc1369ca74321f2deae5ca2783fea2048b47740a949f80f455"
+      "sha256": "b5a50b25678a524813fea470237c78120c615d508b248afa3fb401bdfb0a7dfe"
     },
     {
       "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
-      "sha256": "8c775456addac9c74a17c5f4870af29848d6d1ccbfdf26b1fd5bf583228207b8"
+      "sha256": "32024460caaabb8c0f4a01893b685b9e559e62762c4a6f965cf0ef53da5219b7"
     },
     {
       "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
-      "sha256": "a1d2cdfc55665f09447d5322ded8baaafbda29e588f0d63d0edda43b1e7f473e"
+      "sha256": "f4fca7d2f7b940200f97263681e322ab321f444e4434ae2e083e350cb3cc7e0d"
     },
     {
       "path": "kshootmania/src/Diagnostics/RenderGeometryFixture.hpp",
-      "sha256": "ad5f66ec3d3a0679910f23beb796dc2364737d3edabbbe3a74812c8dee6b6f17"
+      "sha256": "924c388091937946049b555d0590bb0bc1daf70b2709d5aa7d3ecc4337128c8c"
     },
     {
       "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
-      "sha256": "7997ffe2d15aabedfb50254a7a58697117091ada3bdc9f14e6f0ce97f870100b"
+      "sha256": "69476909ed472e64fe5c396a1d14a71eb3580c1c2e573884ab824ec2900269f4"
     },
     {
       "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
-      "sha256": "2d5d5772ac45d02f73bd70e582a986b39b9bec64d4593b802183cc56fe3830ac"
+      "sha256": "3d8c93fd5568f73e70480331425074d0ae06bb99e4ee7787b63cef9d1c4726e6"
     },
     {
       "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
-      "sha256": "56f69620471442706e95ca6269657cf3bb241c0b930cff4d5114a24c49b1adc7"
+      "sha256": "e5063fad1f6af2949f331abeaab62865705aad923a51db1d84bf779790b1cc87"
     },
     {
       "path": "kshootmania/src/Graphics/ExScorePanel.hpp",
-      "sha256": "6b19628547867342e8a33a22f9c0f5c2cfa40781a24ac07f0acc77e885f0f396"
+      "sha256": "2e7adb4e0e6f36cc764cb63a6d74118af2741bf3161de1065e7361e29d05f7cd"
     },
     {
       "path": "kshootmania/src/Graphics/GameRenderContext.hpp",
-      "sha256": "15af7e03aa774b3f1f006c7c79108dff4ff99e10c236a3f99478e76b601ec2d0"
+      "sha256": "40f2c4982fb4ef3fce2c0e8ff0262004d7dae6d16d0de7f57fca3471b022d8d4"
     },
     {
       "path": "kshootmania/src/Graphics/ResultBestScorePanel.hpp",
-      "sha256": "08692de782d397c2ab8e41264889469124c54a730d7975af6e0bb06460d10640"
+      "sha256": "721b9599dac2f7a18ef861e64a5d90c728b829a9b8503ff9564b5bac5517e3d6"
     },
     {
       "path": "kshootmania/src/Ini/AudioCalibration.hpp",
-      "sha256": "1d6d5bf0135c8a784defc9e4c0c34e7ecbab0fdd7b5b81dcdcbd8232b602aa80"
+      "sha256": "57b724d2dc8ee71f107b4e9ef9c6b5eb454edd98cee342cd073ffd30355f06f3"
     },
     {
       "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
-      "sha256": "e540d92f49d772ace3f9c5a0b4f921e8da24b3e328ab1e35967771abf236b135"
+      "sha256": "205dd3176037ef95e39e57644e4ba7fb83a474ee0537aed9dbc09a576c9b9c63"
     },
     {
       "path": "kshootmania/src/MusicGame/Audio/AudioTailClock.hpp",
-      "sha256": "97dcb0d48d6542a11efb3b9266f6bfd9ad4a39efccdf17f160f2739411dbf9f6"
+      "sha256": "324cb2887c02a23520e920f060d86a91bf384bf954db4517e73560679867a8c4"
     },
     {
       "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
-      "sha256": "cc36cb47455f7120ed8325bc2bfcc8faf6837e1167e690ecee517f452792fcc0"
+      "sha256": "5fe4b90ffec75ba048d5c61e0dda5d1464b63e533942773f18648aff2eddea1e"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
-      "sha256": "3bc0ee7ce3a088477eebe51c40afe8d14c1245629aca1304448ad6bafd21c2f5"
+      "sha256": "3af9da156de8916d314fd05d2fc98af808c056935a1775d5acd7e9b519faa5eb"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
-      "sha256": "b178ce7cc5df54610274476eb6d95c5321e801233ae8ae88a5ac44738158ec58"
+      "sha256": "34f6939dcade367bf522aba81565c83b61ff85fd5594a0693ebc2c8c9bf4882d"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
-      "sha256": "dd69fc2e7d06b54360e8918830d840dc7c8245fe0c9c0e2041cdf52725e59e91"
+      "sha256": "2898f71e5a2f2f47867645d0ef8cd7deb6277a82b29563dceeff62b2c4dc2d9d"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
-      "sha256": "b7e4012987d717666a8aed9c740043bcc369d544f5467769f2f293e54d7ae9a4"
+      "sha256": "5af2e6b090c1d893e0f89f2262019c8a173fd7a73e17493f201b25c7563748b8"
     },
     {
       "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
-      "sha256": "5721ffaa7cab43c4abe566ebed68a7c6134090e1f9b360d9e7312152442928c1"
+      "sha256": "9495f59a1a7d21c085a5e58fbe6313c9ff6201a9ecfb4ae24a4142d793c5897a"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
-      "sha256": "b26786899383d6e0cfffd39ddf79cec08538a5798d995d4778619bddede287f7"
+      "sha256": "5998db730788ca98ee089ebe9fa816917d48755e2667337f0a78058bf19a4859"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/ExScore.cpp",
-      "sha256": "a927f687948da15372e00b62731400fcdb1f55bb0666a73bd2b0d219ad65c58f"
+      "sha256": "0f7753552366d47d38e6c827c74ad665b47f56eae47d1b392f14be3eb9caa6ec"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/ExScore.hpp",
-      "sha256": "03a80126575b0cc2f775b18b4b5c67a249169adcc7aa926011f296c9ed82a48f"
+      "sha256": "306b9d1e9fcfe93595bd1b35f77ba64c388f123fc4584e840fae84c33c1d9fb1"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/InputTimingStats.hpp",
-      "sha256": "1571c5a814baf95405fc4e7359951654a5bdcd6fe248ad1d7cd900a3a10de628"
+      "sha256": "2107623770eb3ec5f0321662279c772652cf94cfa3c14d44d5878e4a34f76406"
     },
     {
       "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
-      "sha256": "4b9064db3fc8f9e59a42a0583c98a5838635604fb00b0931f563126a4f6c91f8"
+      "sha256": "8ffe640f876371df25d7f4679994f4ab4b15e86f266b8e1e6e41b43497e3006f"
     },
     {
       "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
-      "sha256": "494bf3d5ba852d8b69988502ff0cb2d9eb60cb0015bd984945c63082b6c94938"
+      "sha256": "915a69ea45ebab4b528e370f741b277b76052407e95b54b485e787672720f31d"
     },
     {
       "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
-      "sha256": "cd7cd43435cc0a126f67225fc511b2f5971e32dbc5ee049582fc3a0ef2b9d1f3"
+      "sha256": "308912590361c5ffc3a4ad0b519e6e0041a61352a651d3a6556304528618eeee"
     },
     {
       "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
-      "sha256": "d02fa2995e9bbe8d6e7105939ec278597f0114cd9c0f1400705abc7777c57cee"
+      "sha256": "7e3118106e6d33300ab81b6b26b1dd723a6f74db7fd86ae0a5eea42b3a0fd401"
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
-      "sha256": "8a9718186ff4a16517caca1666009bc5aaea0ac017421dea500d41da51478b18"
+      "sha256": "8940ef57283a408ef72a0e4c6c402430f6dfbc5414c7bbf0f9d5539cfb61d8f7"
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
-      "sha256": "ca0242a32ab50d244361e1c60499fc2d2f48131447b7b0ca4d7a2d1acca8d1fb"
+      "sha256": "8064e5c25e6a147a338f0ece92ca470c481d17bea96207c35014a30c89e23520"
     },
     {
       "path": "kshootmania/src/UI/ModMenuStyle.hpp",
-      "sha256": "1449a0472e7c1d22d207edb4e9177f5b8d558bbc02377246c6156d785f683531"
+      "sha256": "c3cf7d7e1a81f9f7ce1d8447495b2168680b22e41998fb4638412fe29377e55e"
     },
     {
       "path": "kshootmania/src/Vertical/DepthImageSettings.hpp",
-      "sha256": "6531851420ce5c137d5a718213cf1a8aa04991b2ad096f4efca99dbc0b32bc22"
+      "sha256": "2b60fd6b7d0203075151f2d737f396d804375b47269621ef01ad47eb0e5c03a4"
     },
     {
       "path": "kshootmania/src/Vertical/DiagnosticInputReplay.hpp",
-      "sha256": "4a094305b4b523f2a1657bd89e36dbd0120a67d19664974abed350db8962dca9"
+      "sha256": "d6924989cda441fb104510bb6cf828dcc847b2f3abc9baca6cd1bac05159dec7"
     },
     {
       "path": "kshootmania/src/Vertical/DisplayTransitionTest.hpp",
-      "sha256": "67e3fc559662be1f11d6842e1a967898d9e4373aa39fc0a918ff4deb086f359b"
+      "sha256": "efc99b226cee21a1d71e248216c4ed27d1a43fccfe5d2c0c35a2dd79d048bbf5"
     },
     {
       "path": "kshootmania/src/Vertical/JudgmentReplayTest.hpp",
-      "sha256": "3ac9aba2f8327b219660d78b5e90fa25c651d346ac125d213d501ecad68c9859"
+      "sha256": "7ca22ac9a403a1e7a49214dfe0ea1c47b18c8d8653c540738534d2c51322d0a1"
     },
     {
       "path": "kshootmania/src/Vertical/MenuContentLayout.hpp",
-      "sha256": "c482c3c5e599f03a70d0f0b441a5d672d18f5bfb4ccff43ac40ab1daf34db6db"
+      "sha256": "c6ed954a4e8e152852f7b87a4cb667b62363b8322c2dc4349c50152438c7b7fd"
     },
     {
       "path": "kshootmania/src/Vertical/MenuEntryGate.hpp",
-      "sha256": "1c9bc7dcde0529b590917cf71ed452b762048e4f2a9c16793d59493030ef9567"
+      "sha256": "b98cfa614d6f468ec6f059ae2e9a3a7153ce06a9eb6ee487cd105e308170cee3"
     },
     {
       "path": "kshootmania/src/Vertical/MenuInputTest.hpp",
-      "sha256": "afa04888553aa1377e9b3cc28864e4248a04a4003fbc0c85ad4f5c3b064cb96c"
+      "sha256": "9c756133cb2715a2a5c802d2b62a9a7263c9bb5273579291fa918fbf67673836"
     },
     {
       "path": "kshootmania/src/Vertical/ModOptionsScene.hpp",
-      "sha256": "13ed3d404fc7e4c8018352f7375472bff724f1c689b4d9be153a7b5a7c68daf2"
+      "sha256": "37d4dc0d60750478e79d3421728b6766065aaa7327cf9a73c1bde5e14657c0b6"
     },
     {
       "path": "kshootmania/src/Vertical/OptionFlowTest.hpp",
-      "sha256": "a78baf0f4de13e51818272b343e4ea09cba9ce4632e62b5cb4ec01a8fd68328d"
+      "sha256": "c3ef762c451e8ff7840ebf84b092663adb76668394373a88f38a4e5537019456"
     },
     {
       "path": "kshootmania/src/Vertical/OptionsPresentation.hpp",
-      "sha256": "8c35f15eae8f02c1a4894c3e0d2e34964520a53dd304799b26c83385a81363db"
+      "sha256": "8a11f4625c4aa833b954e09a9d6e71dbdd063401bcbdcd29842af342ceefd737"
     },
     {
       "path": "kshootmania/src/Vertical/ProjectiveWall.hpp",
-      "sha256": "690f0096c2ed82839e14009df556031decb65f20a19c11c47caecd0947955524"
+      "sha256": "b32966c148cf3823b36cb33488ba193c0a3d0040ac1e8096f1f73b887318b430"
     },
     {
       "path": "kshootmania/src/Vertical/SpinRegression.hpp",
-      "sha256": "8963dc62d9ef73a358ef0f6b2ef0b6ece168e610c1c54bb3d9dac678da535bfd"
+      "sha256": "7e9d0148007dafadd48ea6b3ef64bfa7b1f79c54807ee0d5f3ceb9523e02aff1"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
-      "sha256": "6e351cd982bbd57a55e1019ad126cd9205136eb2048ae448f3bf29f8d2f63ca0"
+      "sha256": "5ad21b789abe0bdfc871ffc1b3d5ed8d8e9dff832910b73a99a8e13a615b84e1"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalDisplay.hpp",
-      "sha256": "657806e892de67c8379706f62b4f8b7a60a55dd039ad9146c2a72383a154cc63"
+      "sha256": "a4201b3946ede6604af729b543cd1a102345ba33cfb259c071d61bf4eaa739fa"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalHUDLayout.hpp",
-      "sha256": "6aed70e02c4f8dad8917f3ef383bd4e531ff4edd03344a4f35f8b23a3f3a1db4"
+      "sha256": "d911096bf9ca966b1b9c41e049f41f1e02eb0ce93cbe9dfa304e80ae2be6bb18"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
-      "sha256": "c3fcadd058a2a3c08fee89fd5f971fbc89f26e5cb38378137e4b2b39e425d88d"
+      "sha256": "8c9f8a8b4cbbf111459d8efc16257cb16923e78ed2f20e55dcf57f36a559bbb5"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
-      "sha256": "7fda76cd61243cf76077cb6c0f27a70ebef1027fe1f7a9ffaf55eb63b67a2161"
+      "sha256": "2c3f1e72be4635a34dda027994e4c2c1ae28cd7dacb42a264f360e6224ce59ed"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalModConfig.hpp",
-      "sha256": "8f537b1e0ffd63a2c0626469553507007b2ac38cfb9721414d1bb13bcd1a530e"
+      "sha256": "4e29a6a7efa429776cf519ef0aedafc415ad3419d2d2367283e82bb3e93ac6ce"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalRenderPreview.hpp",
-      "sha256": "2f8bc4398e1d5dbac8419bc8076276b595bcce08e06f98a04f383082d01704e4"
+      "sha256": "b2cfe1d2d99edf2b85b14d6d5eb6a548d455a6ef721c80ea1fbec4b148088844"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalResources.hpp",
-      "sha256": "a6112e297581e60870db2cf9223c2dfa12e484e767a1bf2dc6b8a02876c83869"
+      "sha256": "7b880c49c529a6102c4a9bb0e547897f4a2ece76e0e17977560707ade46c0495"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
-      "sha256": "e0f25dcbac83ae58a32a0ad16cecbdd34133cad6721732f2ee533001207a133f"
+      "sha256": "6348016bb40ffb3adf46cec6ab1ee7079808011fdd19d7e97488c2b9a25e7f46"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
-      "sha256": "76cdae8351caf9e661c579769e2867fc493316e5fd684f3475c6e957243cc70f"
+      "sha256": "a766b6b679b3ee19d35aa205a18bb1e2f3f2d8e4a8407fa4cc62f0ff3e18f21f"
     },
     {
       "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
@@ -613,6 +617,10 @@
     {
       "path": "scripts/BuildWallSampleGallery.py",
       "sha256": "82dd8968b83a3824a566ccf703abdefbf564c81a3f397cc719351deda187985c"
+    },
+    {
+      "path": "scripts/CheckCppStyle.py",
+      "sha256": "e525195596cb05dfd38dcaae7bce5f24693ddb457efb02c6c9138d468329bb05"
     },
     {
       "path": "scripts/GenerateComboHUDSamples.ps1",
@@ -924,7 +932,7 @@
     },
     {
       "path": "tests/TestModBehavior.cpp",
-      "sha256": "44f2ddd362b7d6a84e7030eacfa003bd2e7d5a36ecd016c591e39daa052b20a0"
+      "sha256": "503503dedb863bfaaebce54db130a2cb5fc66a893f83e5fda13c0eac0f9b02ba"
     },
     {
       "path": "tests/TestModEnvironment.ps1",
