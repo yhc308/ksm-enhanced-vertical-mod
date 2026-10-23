@@ -2,9 +2,9 @@
 
 Upstream: https://github.com/kshootmania/ksm-v2
 Base: `41bfdaa7331808aff7239a9ec283cdba01b3b406` (KSM 2.1.0)
-Branch: `enhanced-vertical`
+Repository: independent private `ksm-enhanced-vertical-mod` (`main`)
 
-The game code on this branch matches the local 0.4.0-beta.1 mod source. Runtime
+The game code matches development build 20261023-171521-0937f555, including EX maximum persistence and the separated skin layout. Runtime
 executables and release ZIPs are deliberately excluded from the commit.
 
 ## Main areas
@@ -12,7 +12,7 @@ executables and release ZIPs are deliberately excluded from the commit.
 - `kshootmania/src/Vertical`: portrait camera/viewport geometry and configuration.
 - `MusicGame`: APS, detailed judgments, EX SCORE and presentation state.
 - `Scenes/Title`: Judge Timing Setting and skin/viewport preview overlays.
-- `App/mods`, `App/ui`, `App/imgs/default`: mod UI definitions and image resources.
+- `App/mods`, `App/ui`, `App/imgs`, `App/skins`: mod UI definitions and image resources.
 - `patches/dependencies`: ksmaudio audio changes and the NocoUI texture-loader fix.
 - `scripts/ModInstaller.ps1`: compatibility-checked install/verify/remove backend.
 

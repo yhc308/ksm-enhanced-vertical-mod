@@ -6,7 +6,7 @@
       "id": "ksm-2.1.0-win-x64",
       "upstreamVersion": "2.1.0",
       "sourceBaseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
-      "runtimeContract": "ksm-2.1.0-enhanced-skin-v1",
+      "runtimeContract": "ksm-2.1.0-enhanced-skin-v2",
       "status": "baseline",
       "executableHashes": [
         "8EAC0DC17EA31E405F61746CCA2ADC0CD6A198C88DBCED25C1ED360BDF793757"

@@ -35,7 +35,8 @@ function Test-KsmModTarget {
 }
 function Assert-KsmPayloadPath {
     param([string]$Path)
-    if($Path -match '^shaders/aps_color_dodge\.(hlsl|frag|essl\.frag)$' -or $Path -match '^(imgs/default|skin_preview)/[a-zA-Z0-9_./-]+$' -or $Path -in @('ui/menu_custom_icon.png','ui/menu_judge_icon.png','ui/menu_vertical_icon.png','ui/viewport_info_icon.png') -or $Path -eq 'ksm-enhanced-vertical.exe' -or $Path -match '^mods/(vertical|enhanced)/[a-zA-Z0-9_./-]+$' -or $Path -in @('imgs/bg_vertical.png','imgs/standby_vertical.png','imgs/bg2_vertical.png','imgs/msel_bar_vertical.png','imgs/result_v2_judge.png','imgs/result_v2_judge_inversion.png','bassasio.dll','bassmix.dll','lang/English.json','lang/Japanese.json','lang/Korean.json','lang/Simplified Chinese.json','lang/Traditional Chinese.json')){return}
+    if($Path -match '^(imgs|skins)/default/'){throw "Retired default skin layout: $Path"}
+    if($Path -match '^shaders/aps_color_dodge\.(hlsl|frag|essl\.frag)$' -or $Path -match '^(imgs|skins|skin_preview)/[a-zA-Z0-9_./-]+$' -or $Path -in @('ui/menu_custom_icon.png','ui/menu_judge_icon.png','ui/menu_vertical_icon.png','ui/viewport_info_icon.png') -or $Path -eq 'ksm-enhanced-vertical.exe' -or $Path -match '^mods/(vertical|enhanced)/[a-zA-Z0-9_./-]+$' -or $Path -in @('imgs/bg_vertical.png','imgs/standby_vertical.png','imgs/bg2_vertical.png','imgs/msel_bar_vertical.png','imgs/result_v2_judge.png','imgs/result_v2_judge_inversion.png','bassasio.dll','bassmix.dll','lang/English.json','lang/Japanese.json','lang/Korean.json','lang/Simplified Chinese.json','lang/Traditional Chinese.json')){return}
     throw "Disallowed mod payload: $Path"
 }
 Export-ModuleMember -Function Resolve-KsmSafePath,Test-KsmModTarget,Assert-KsmPayloadPath

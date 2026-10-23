@@ -155,12 +155,12 @@ inline void Run() {
     check(KscIO::WriteHighScoreInfo(song,result,KscKey{}),U"later failed fallback saves NORMAL attempt");info=KscIO::ReadHighScoreInfo(song,KscKey{});
     check(info.medal()==Medal::kHardClear && info.playCount(GaugeType::kNormalGauge)==3 && info.exScore(GaugeType::kNormalGauge)==Optional<int64>{90},U"fallback preserves previous HARD clear and independent EX with one save per play");
     ConfigIni::SetString(ConfigIni::Key::kCurrentPlayer,player);
-    const auto skin=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"imgs");
+    const auto skin=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"skins");const auto baseRoot=FsUtils::GetResourcePath(U"imgs");
     FileSystem::CreateDirectories(FileSystem::PathAppend(root,U"APS Complete"));FileSystem::CreateDirectories(FileSystem::PathAppend(root,U"APS Partial"));
     for(const auto name:{U"er_aps.png"}){
-        FileSystem::Copy(FileSystem::PathAppend(root,U"default/"+String{name}),FileSystem::PathAppend(root,U"APS Complete/"+String{name}));
+        FileSystem::Copy(FileSystem::PathAppend(baseRoot,String{name}),FileSystem::PathAppend(root,U"APS Complete/"+String{name}));
         SkinPreset::Activate({U"APS Complete",SkinPreset::MissingMode::Default});check(SkinPreset::Resolve(name).includes(U"APS Complete"),U"selected skin owns APS resource");
-        SkinPreset::Activate({U"APS Partial",SkinPreset::MissingMode::Default});check(SkinPreset::Resolve(name).includes(U"default"),U"partial skin APS uses Default fallback");
+        SkinPreset::Activate({U"APS Partial",SkinPreset::MissingMode::Default});check(SkinPreset::Resolve(name).starts_with(FsUtils::GetResourcePath(U"imgs/")),U"partial skin APS uses Default fallback");
         SkinPreset::Activate({U"APS Partial",SkinPreset::MissingMode::Error});check(Image{SkinPreset::Resolve(name)}[0][0]==Palette::Yellow,U"partial skin APS uses Yellow marker");
     }
     SkinPreset::Activate(skin);

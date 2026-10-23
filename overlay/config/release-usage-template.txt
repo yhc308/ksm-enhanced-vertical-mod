@@ -1,0 +1,50 @@
+﻿KSM Enhanced Vertical Mod {version} - 공유 테스트 플레이 패키지
+
+빌드: {buildId} / Windows 64비트 / 기반 K-Shoot MANIA 2.1.0
+
+
+패치노트
+
+- 버티컬 플레이 모드와 ASIO 호환 모드
+- HARD+APS 게이지: HARD 실패 시 병행 계산한 NORMAL 게이지로 전환
+- EX SCORE 표시·기록 및 BEST SCORE 배너 개선
+- 판정 세부 표시 P-CRITICAL, ±ms 색상·표시 옵션과 ±16ms 기준 추가
+- JUDGE TIMING SETTING: 반복 재생 중 판정·시각 보정 및 하이스피드 조절
+- VERTICAL OPTION과 VIEWPORT CUSTOM 메뉴·BACK·다국어 안내 개선
+- 뷰포트 프리뷰의 레인·HUD를 인게임과 동일한 비율로 표시하고 배속 450 고정
+- 일반 K-Shoot MANIA 악곡 10곡·36개 채보 포함 (TEST 악곡 제외)
+
+이용방법
+1. ZIP 전체를 쓰기 가능한 폴더에 압축 해제합니다.
+2. App 폴더의 ksm-enhanced-vertical.exe를 직접 실행합니다. 별도 설치나 개발 도구는 필요하지 않습니다.
+3. 기본은 세로 창 모드 720×1280, 일본어, Windows 기본 오디오 출력입니다.
+   창 크기와 가로/세로 전환은 메인화면 버티컬 버튼에서 설정할 수 있습니다.
+
+언어 변경
+- OPTION → DISPLAY / SOUND SETTINGS → 表示言語(Language)에서 English 등 원하는 언어를 선택하세요.
+- 지원 언어: English / Japanese / Korean / Simplified Chinese / Traditional Chinese
+
+키보드 기본 조작
+- 메뉴 이동: 방향키 / 결정·START: Enter / 뒤로: Esc
+- BT A/B/C/D: S / D / K / L
+- FX L/R: C / M
+- 왼쪽 레이저: Q / W, 오른쪽 레이저: O / P
+- 화면 저장: F11
+키 배치·컨트롤러는 OPTION → KEY CONFIGURATION에서 변경하세요.
+
+오디오
+- ASIO 장비가 없어도 기본 출력으로 플레이할 수 있습니다.
+- ASIO 사용 시 본인 PC의 드라이버를 설치하고 오디오 옵션에서 선택하세요.
+- 개인 장비별 보정값과 ASIO 드라이버 선택 정보는 포함하지 않았습니다.
+
+버그리포트
+- 버그 및 오류 발생시 App/log 폴더의 로그파일을 전송부탁드립니다.
+
+
+
+
+사용자 스킨
+- 기본 이미지: App/imgs/. 사용자 스킨: App/skins/스킨명/.
+- 이전 imgs/스킨명/에 넣은 사용자 스킨은 폴더째 skins/로 옮겨 주세요.
+- 내부 이미지 경로는 유지하고 VIEWPORT CUSTOM에서 스킨을 선택합니다.
+- default 선택은 imgs를 직접 사용합니다. skins/default는 만들지 않습니다.

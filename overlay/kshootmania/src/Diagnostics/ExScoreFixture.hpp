@@ -49,6 +49,28 @@ inline void Run(){
     check(!KscIO::ReadHighScoreInfo(song,KscKey{}).exScore(GaugeType::kNormalGauge),U"legacy records have no fabricated EX");
     PlayResult result;result.score=9000000;result.exScore=90;result.exMaximum=100;result.totalCombo=10;result.comboStats.critical=10;
     check(KscIO::WriteHighScoreInfo(song,result,KscKey{}),U"first additional record writes successfully");
+    const auto additional=FsUtils::EliminateExtension(original)+U"_additional.ksc";
+    String legacyAdditional;
+    {TextReader reader{additional};String row;
+        while(reader.readLine(row)){
+            if(row.isEmpty())continue;
+            const auto fields=row.substr(row.indexOf(U'=')+1).split(U',');
+            check(fields.size()==11 && fields[10]==U"100",U"every additional option row ends in full chart EX maximum");
+            legacyAdditional+=row.substr(0,row.lastIndexOf(U','))+U"\n";
+        }
+    }
+    {TextWriter writer{additional,TextEncoding::UTF8_NO_BOM};writer.write(legacyAdditional);}
+    check(KscIO::ReadHighScoreInfo(song,KscKey{}).exScore(GaugeType::kNormalGauge)==Optional<int64>{90},U"legacy ten-field additional records retain EX best");
+    check(TextReader{additional}.readAll()==legacyAdditional,U"reading legacy additional records does not rewrite them");
+    for(const String maximum:{String{},String{U"invalid"}}){
+        String variant;TextReader reader{additional};String row;
+        while(reader.readLine(row)){if(!row.isEmpty())variant+=row+U","+maximum+U"\n";}
+        reader.close();
+        {TextWriter writer{additional,TextEncoding::UTF8_NO_BOM};writer.write(variant);}
+        check(KscIO::ReadHighScoreInfo(song,KscKey{}).exScore(GaugeType::kNormalGauge)==Optional<int64>{90},U"missing or invalid maximum never discards valid EX best");
+        {TextWriter writer{additional,TextEncoding::UTF8_NO_BOM};writer.write(legacyAdditional);}
+    }
+
     result.score=8800000;result.exScore=95;check(KscIO::WriteHighScoreInfo(song,result,KscKey{}),U"EX-only new record writes successfully");
     auto info=KscIO::ReadHighScoreInfo(song,KscKey{});
     check(info.score(GaugeType::kNormalGauge)==9000000 && info.exScore(GaugeType::kNormalGauge)==Optional<int64>{95},U"independent EX best does not replace ordinary best");
@@ -63,9 +85,15 @@ inline void Run(){
     check(!all[U"normal,x09,on,on,on"].exScore(GaugeType::kNormalGauge),U"copied legacy option row remains unrecorded");
     const String oldFile=TextReader{original}.readAll();result.playOption.isAutoPlay=IsAutoPlayYN::Yes;
     check(!KscIO::WriteHighScoreInfo(song,result,easy) && TextReader{original}.readAll()==oldFile,U"ordinary AUTO cannot modify either record");
-    const auto additional=FsUtils::EliminateExtension(original)+U"_additional.ksc";
     TextReader a{original},b{additional};String line,extra;
-    while(a.readLine(line)){if(line.isEmpty())continue;check(b.readLine(extra) && extra.substr(0,extra.lastIndexOf(U','))==line,U"additional first nine fields mirror every original option row");}
+    while(a.readLine(line)){
+        if(line.isEmpty())continue;
+        check(b.readLine(extra),U"additional mirrors every original option row");
+        const auto finalComma=extra.lastIndexOf(U',');
+        const auto exRow=extra.substr(0,finalComma);
+        check(exRow.substr(0,exRow.lastIndexOf(U','))==line,U"additional first nine fields mirror every original option row");
+        check(extra.substr(finalComma+1)==U"100",U"legacy upgrade preserves full chart maximum for every gauge and option");
+    }
     ConfigIni::SetString(ConfigIni::Key::kCurrentPlayer,U"EX Other");check(!KscIO::ReadHighScoreInfo(song,KscKey{}).exScore(GaugeType::kNormalGauge),U"player records remain isolated");
     ConfigIni::SetString(ConfigIni::Key::kCurrentPlayer,U"EX Fixture");
     const auto blockedSong=FileSystem::PathAppend(FsUtils::SongsDirectoryPath(),U"EX/blocked.ksh");
@@ -80,17 +108,17 @@ inline void Run(){
         image.save(FsUtils::GetResourcePath(U"ex-panel-{}.png"_fmt(pair.first)));
     }
     {
-        const auto saved=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"imgs");
+        const auto saved=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"skins");const auto baseRoot=FsUtils::GetResourcePath(U"imgs");
         for(const auto folder:{U"EX Complete",U"EX Partial"})FileSystem::CreateDirectories(FileSystem::PathAppend(root,folder));
-        FileSystem::Copy(FileSystem::PathAppend(root,U"default/num0.png"),FileSystem::PathAppend(root,U"EX Complete/num0.png"));
-        FileSystem::Copy(FileSystem::PathAppend(root,U"default/num0.png"),FileSystem::PathAppend(root,U"EX Partial/num0.png"));
+        FileSystem::Copy(FileSystem::PathAppend(baseRoot,U"num0.png"),FileSystem::PathAppend(root,U"EX Complete/num0.png"));
+        FileSystem::Copy(FileSystem::PathAppend(baseRoot,U"num0.png"),FileSystem::PathAppend(root,U"EX Partial/num0.png"));
         for(int i=1;i<=3;++i){
             const String name=U"msel_exscore_{}.png"_fmt(i);
-            FileSystem::Copy(FileSystem::PathAppend(root,U"default/"+name),FileSystem::PathAppend(root,U"EX Complete/"+name));
+            FileSystem::Copy(FileSystem::PathAppend(baseRoot,name),FileSystem::PathAppend(root,U"EX Complete/"+name));
             SkinPreset::Activate({U"EX Complete",SkinPreset::MissingMode::Default});
             check(SkinPreset::Resolve(name).includes(U"EX Complete"),U"complete user skin owns EX resource");
             SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Default});
-            check(SkinPreset::Resolve(name).includes(U"default"),U"partial EX skin uses Default resource");
+            check(SkinPreset::Resolve(name).starts_with(FsUtils::GetResourcePath(U"imgs/")),U"partial EX skin uses Default resource");
             SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Error});
             check(Image{SkinPreset::Resolve(name)}[0][0]==Palette::Yellow,U"partial EX skin uses Yellow missing resource");
         }
@@ -122,12 +150,12 @@ inline void Run(){
             check(!ResultBestScoreComparison::Capture(previous,excluded).visible,U"checker hidden for every non-saving play mode");
         }
         {
-            const auto savedSkin=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"imgs");
-            FileSystem::Copy(FileSystem::PathAppend(root,U"default/result_bestscore_checker.png"),FileSystem::PathAppend(root,U"EX Complete/result_bestscore_checker.png"));
+            const auto savedSkin=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"skins");const auto baseRoot=FsUtils::GetResourcePath(U"imgs");
+            FileSystem::Copy(FileSystem::PathAppend(baseRoot,U"result_bestscore_checker.png"),FileSystem::PathAppend(root,U"EX Complete/result_bestscore_checker.png"));
             SkinPreset::Activate({U"EX Complete",SkinPreset::MissingMode::Default});
             check(SkinPreset::Resolve(U"result_bestscore_checker.png").includes(U"EX Complete"),U"checker prefers selected skin background");
             SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Default});
-            check(SkinPreset::Resolve(U"result_bestscore_checker.png").includes(U"default"),U"checker partial skin uses Default background");
+            check(SkinPreset::Resolve(U"result_bestscore_checker.png").starts_with(FsUtils::GetResourcePath(U"imgs/")),U"checker partial skin uses Default background");
             SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Error});
             check(Image{SkinPreset::Resolve(U"result_bestscore_checker.png")}[0][0]==Palette::Yellow,U"checker partial skin uses Yellow missing marker");
             SkinPreset::Activate(savedSkin);
@@ -150,12 +178,12 @@ inline void Run(){
         ConfigIni::SetString(ConfigIni::Key::kCurrentPlayer,savedPlayer);
     }
     {
-        const auto saved=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"imgs");
-        FileSystem::Copy(FileSystem::PathAppend(root,U"default/score_header_ex.png"),FileSystem::PathAppend(root,U"EX Complete/score_header_ex.png"));
+        const auto saved=SkinPreset::Current();const auto root=FsUtils::GetResourcePath(U"skins");const auto baseRoot=FsUtils::GetResourcePath(U"imgs");
+        FileSystem::Copy(FileSystem::PathAppend(baseRoot,U"score_header_ex.png"),FileSystem::PathAppend(root,U"EX Complete/score_header_ex.png"));
         SkinPreset::Activate({U"EX Complete",SkinPreset::MissingMode::Default});
         check(SkinPreset::Resolve(U"score_header_ex.png").includes(U"EX Complete"),U"ingame EX banner prefers selected skin");
         SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Default});
-        check(SkinPreset::Resolve(U"score_header_ex.png").includes(U"default"),U"ingame EX banner follows Default missing policy");
+        check(SkinPreset::Resolve(U"score_header_ex.png").starts_with(FsUtils::GetResourcePath(U"imgs/")),U"ingame EX banner follows Default missing policy");
         SkinPreset::Activate({U"EX Partial",SkinPreset::MissingMode::Error});
         check(Image{SkinPreset::Resolve(U"score_header_ex.png")}[0][0]==Palette::Yellow,U"ingame EX banner follows Yellow missing policy");
         SkinPreset::Activate(saved);

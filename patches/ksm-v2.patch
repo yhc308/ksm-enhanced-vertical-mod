@@ -50,6 +50,35 @@ index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e0
  K-Shoot MANIA v2
  ========================
  
+diff --git a/dist_scripts/files_win.tsv b/dist_scripts/files_win.tsv
+index 950cfc8783c061e5410d225d06534df434e994b0..94fcfe2863281bba779242753f744130316852c6 100644
+--- a/dist_scripts/files_win.tsv
++++ b/dist_scripts/files_win.tsv
+@@ -412,3 +412,24 @@ kshootmania/App/ui/scene/play_prepare.noco	ui/scene/play_prepare.noco
+ kshootmania/App/ui/scene/result.noco	ui/scene/result.noco
+ kshootmania/App/ui/scene/select.noco	ui/scene/select.noco
+ kshootmania/App/ui/scene/title.noco	ui/scene/title.noco
++kshootmania/App/imgs/result_v2_judge.png	imgs/result_v2_judge.png
++kshootmania/App/imgs/bg2_vertical.png	imgs/bg2_vertical.png
++kshootmania/App/imgs/bg3_vertical.png	imgs/bg3_vertical.png
++kshootmania/App/imgs/bg_vertical.png	imgs/bg_vertical.png
++kshootmania/App/imgs/er_aps.png	imgs/er_aps.png
++kshootmania/App/imgs/judge_p.gif	imgs/judge_p.gif
++kshootmania/App/imgs/judge_p1.gif	imgs/judge_p1.gif
++kshootmania/App/imgs/msel_bar_vertical.png	imgs/msel_bar_vertical.png
++kshootmania/App/imgs/msel_exscore_1.png	imgs/msel_exscore_1.png
++kshootmania/App/imgs/msel_exscore_2.png	imgs/msel_exscore_2.png
++kshootmania/App/imgs/msel_exscore_3.png	imgs/msel_exscore_3.png
++kshootmania/App/imgs/play_judge_indicator.png	imgs/play_judge_indicator.png
++kshootmania/App/imgs/play_judge_indicator_inversion.png	imgs/play_judge_indicator_inversion.png
++kshootmania/App/imgs/play_judge_indicator_minimum.png	imgs/play_judge_indicator_minimum.png
++kshootmania/App/imgs/play_judge_indicator_minimum_inversion.png	imgs/play_judge_indicator_minimum_inversion.png
++kshootmania/App/imgs/result_bestscore_checker.png	imgs/result_bestscore_checker.png
++kshootmania/App/imgs/result_v2_judge_inversion.png	imgs/result_v2_judge_inversion.png
++kshootmania/App/imgs/score_header_ex.png	imgs/score_header_ex.png
++kshootmania/App/imgs/skin.json	imgs/skin.json
++kshootmania/App/imgs/standby_vertical.png	imgs/standby_vertical.png
++kshootmania/App/skins/README.txt	skins/README.txt
 diff --git a/kshootmania/App/lang/English.json b/kshootmania/App/lang/English.json
 index ec1f82326e62527737930a7d531a67d6de278d2f..7537d2e0098c4a491606d601b6a57abc6466e753 100644
 --- a/kshootmania/App/lang/English.json
@@ -2355,6 +2384,546 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 +    "NotImplemented": "未實作"
 +  }
  }
+diff --git a/kshootmania/App/shaders/monochrome_alpha.essl.frag b/kshootmania/App/shaders/monochrome_alpha.essl.frag
+index fd74e3ad0c4eac2f7c4e01285204ed1c998a7570..1b9850973e85a3f4e75310a582efe4a95056f71a 100644
+--- a/kshootmania/App/shaders/monochrome_alpha.essl.frag
++++ b/kshootmania/App/shaders/monochrome_alpha.essl.frag
+@@ -1,31 +1,31 @@
+-# version 300 es
+-
+-precision mediump float;
+-
+-uniform sampler2D Texture0;
+-
+-in vec4 Color;
+-in vec2 UV;
+-
+-layout(location = 0) out vec4 FragColor;
+-
+-layout(std140) uniform PSConstants2D
+-{
+-	vec4 g_colorAdd;
+-	vec4 g_sdfParam;
+-	vec4 g_sdfOutlineColor;
+-	vec4 g_sdfShadowColor;
+-	vec4 g_internal;
+-};
+-
+-void main()
+-{
+-	vec4 texColor = texture(Texture0, UV);
+-	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+-
+-	vec4 result;
+-	result.rgb = Color.rgb;
+-	result.a = luminance * Color.a;
+-
+-	FragColor = result + g_colorAdd;
+-}
++# version 300 es
++
++precision mediump float;
++
++uniform sampler2D Texture0;
++
++in vec4 Color;
++in vec2 UV;
++
++layout(location = 0) out vec4 FragColor;
++
++layout(std140) uniform PSConstants2D
++{
++	vec4 g_colorAdd;
++	vec4 g_sdfParam;
++	vec4 g_sdfOutlineColor;
++	vec4 g_sdfShadowColor;
++	vec4 g_internal;
++};
++
++void main()
++{
++	vec4 texColor = texture(Texture0, UV);
++	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
++
++	vec4 result;
++	result.rgb = Color.rgb;
++	result.a = luminance * Color.a;
++
++	FragColor = result + g_colorAdd;
++}
+diff --git a/kshootmania/App/shaders/monochrome_alpha.frag b/kshootmania/App/shaders/monochrome_alpha.frag
+index e374e44a65927247a0b5d96da8734aab806cacf7..9b904e23966416f6dd90ad6712ad02e908c6cb6c 100644
+--- a/kshootmania/App/shaders/monochrome_alpha.frag
++++ b/kshootmania/App/shaders/monochrome_alpha.frag
+@@ -1,48 +1,48 @@
+-// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
+-
+-# version 410
+-
+-//
+-//	Textures
+-//
+-uniform sampler2D Texture0;
+-
+-//
+-//	PSInput
+-//
+-layout(location = 0) in vec4 Color;
+-layout(location = 1) in vec2 UV;
+-
+-//
+-//	PSOutput
+-//
+-layout(location = 0) out vec4 FragColor;
+-
+-//
+-//	Constant Buffer
+-//
+-layout(std140) uniform PSConstants2D
+-{
+-	vec4 g_colorAdd;
+-	vec4 g_sdfParam;
+-	vec4 g_sdfOutlineColor;
+-	vec4 g_sdfShadowColor;
+-	vec4 g_internal;
+-};
+-
+-//
+-//	Functions
+-//
+-void main()
+-{
+-	vec4 texColor = texture(Texture0, UV);
+-
+-	// BT.601輝度係数でグレースケール化し、アルファとして使用
+-	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+-
+-	vec4 result;
+-	result.rgb = Color.rgb;
+-	result.a = luminance * Color.a;
+-
+-	FragColor = result + g_colorAdd;
+-}
++// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
++
++# version 410
++
++//
++//	Textures
++//
++uniform sampler2D Texture0;
++
++//
++//	PSInput
++//
++layout(location = 0) in vec4 Color;
++layout(location = 1) in vec2 UV;
++
++//
++//	PSOutput
++//
++layout(location = 0) out vec4 FragColor;
++
++//
++//	Constant Buffer
++//
++layout(std140) uniform PSConstants2D
++{
++	vec4 g_colorAdd;
++	vec4 g_sdfParam;
++	vec4 g_sdfOutlineColor;
++	vec4 g_sdfShadowColor;
++	vec4 g_internal;
++};
++
++//
++//	Functions
++//
++void main()
++{
++	vec4 texColor = texture(Texture0, UV);
++
++	// BT.601輝度係数でグレースケール化し、アルファとして使用
++	float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
++
++	vec4 result;
++	result.rgb = Color.rgb;
++	result.a = luminance * Color.a;
++
++	FragColor = result + g_colorAdd;
++}
+diff --git a/kshootmania/App/shaders/monochrome_alpha.hlsl b/kshootmania/App/shaders/monochrome_alpha.hlsl
+index 83a88e437b8c4f29895317c3a99781e8a2f04794..96bca55c4b8f7c697ffbbacad60b9559cf28fb77 100644
+--- a/kshootmania/App/shaders/monochrome_alpha.hlsl
++++ b/kshootmania/App/shaders/monochrome_alpha.hlsl
+@@ -1,46 +1,46 @@
+-// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
+-
+-//
+-//	Textures
+-//
+-Texture2D		g_texture0 : register(t0);
+-SamplerState	g_sampler0 : register(s0);
+-
+-namespace s3d
+-{
+-	//
+-	//	VS Output / PS Input
+-	//
+-	struct PSInput
+-	{
+-		float4 position	: SV_POSITION;
+-		float4 color	: COLOR0;
+-		float2 uv		: TEXCOORD0;
+-	};
+-}
+-
+-//
+-//	Constant Buffer
+-//
+-cbuffer PSConstants2D : register(b0)
+-{
+-	float4 g_colorAdd;
+-	float4 g_sdfParam;
+-	float4 g_sdfOutlineColor;
+-	float4 g_sdfShadowColor;
+-	float4 g_internal;
+-}
+-
+-float4 PS(s3d::PSInput input) : SV_TARGET
+-{
+-	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
+-
+-	// BT.601輝度係数でグレースケール化し、アルファとして使用
+-	float luminance = dot(texColor.rgb, float3(0.299, 0.587, 0.114));
+-
+-	float4 result;
+-	result.rgb = input.color.rgb;
+-	result.a = luminance * input.color.a;
+-
+-	return result + g_colorAdd;
+-}
++// テクスチャのRGB輝度をアルファ値として使用し、描画色(input.color)で塗りつぶすシェーダー
++
++//
++//	Textures
++//
++Texture2D		g_texture0 : register(t0);
++SamplerState	g_sampler0 : register(s0);
++
++namespace s3d
++{
++	//
++	//	VS Output / PS Input
++	//
++	struct PSInput
++	{
++		float4 position	: SV_POSITION;
++		float4 color	: COLOR0;
++		float2 uv		: TEXCOORD0;
++	};
++}
++
++//
++//	Constant Buffer
++//
++cbuffer PSConstants2D : register(b0)
++{
++	float4 g_colorAdd;
++	float4 g_sdfParam;
++	float4 g_sdfOutlineColor;
++	float4 g_sdfShadowColor;
++	float4 g_internal;
++}
++
++float4 PS(s3d::PSInput input) : SV_TARGET
++{
++	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
++
++	// BT.601輝度係数でグレースケール化し、アルファとして使用
++	float luminance = dot(texColor.rgb, float3(0.299, 0.587, 0.114));
++
++	float4 result;
++	result.rgb = input.color.rgb;
++	result.a = luminance * input.color.a;
++
++	return result + g_colorAdd;
++}
+diff --git a/kshootmania/App/shaders/multi_texture_mask.essl.frag b/kshootmania/App/shaders/multi_texture_mask.essl.frag
+index 4e33c379bb520aa931e14cc84ba3a5f56532d40f..776d0d19b760360fc3f3fc39b242a133c413f692 100644
+--- a/kshootmania/App/shaders/multi_texture_mask.essl.frag
++++ b/kshootmania/App/shaders/multi_texture_mask.essl.frag
+@@ -1,28 +1,28 @@
+-# version 300 es
+-
+-precision mediump float;
+-
+-uniform sampler2D Texture0;
+-uniform sampler2D Texture1;
+-
+-in vec4 Color;
+-in vec2 UV;
+-
+-layout(location = 0) out vec4 FragColor;
+-
+-layout(std140) uniform PSConstants2D
+-{
+-	vec4 g_colorAdd;
+-	vec4 g_sdfParam;
+-	vec4 g_sdfOutlineColor;
+-	vec4 g_sdfShadowColor;
+-	vec4 g_internal;
+-};
+-
+-void main()
+-{
+-	vec4 texColor = texture(Texture0, UV);
+-	float mask = texture(Texture1, UV).r;
+-	texColor.a *= mask;
+-	FragColor = (texColor * Color) + g_colorAdd;
+-}
++# version 300 es
++
++precision mediump float;
++
++uniform sampler2D Texture0;
++uniform sampler2D Texture1;
++
++in vec4 Color;
++in vec2 UV;
++
++layout(location = 0) out vec4 FragColor;
++
++layout(std140) uniform PSConstants2D
++{
++	vec4 g_colorAdd;
++	vec4 g_sdfParam;
++	vec4 g_sdfOutlineColor;
++	vec4 g_sdfShadowColor;
++	vec4 g_internal;
++};
++
++void main()
++{
++	vec4 texColor = texture(Texture0, UV);
++	float mask = texture(Texture1, UV).r;
++	texColor.a *= mask;
++	FragColor = (texColor * Color) + g_colorAdd;
++}
+diff --git a/kshootmania/App/shaders/multi_texture_mask.frag b/kshootmania/App/shaders/multi_texture_mask.frag
+index eecb1fc41052a19f99a20ea30794de72e1c050c1..9cf6d0cad081236b3ec45ac6a281eca027207cac 100644
+--- a/kshootmania/App/shaders/multi_texture_mask.frag
++++ b/kshootmania/App/shaders/multi_texture_mask.frag
+@@ -1,48 +1,48 @@
+-//	Copyright (c) 2008-2021 Ryo Suzuki.
+-//	Copyright (c) 2016-2021 OpenSiv3D Project.
+-//	Licensed under the MIT License.
+-
+-# version 410
+-
+-//
+-//	Textures
+-//
+-uniform sampler2D Texture0;
+-uniform sampler2D Texture1;
+-
+-//
+-//	PSInput
+-//
+-layout(location = 0) in vec4 Color;
+-layout(location = 1) in vec2 UV;
+-
+-//
+-//	PSOutput
+-//
+-layout(location = 0) out vec4 FragColor;
+-
+-//
+-//	Constant Buffer
+-//
+-layout(std140) uniform PSConstants2D
+-{
+-	vec4 g_colorAdd;
+-	vec4 g_sdfParam;
+-	vec4 g_sdfOutlineColor;
+-	vec4 g_sdfShadowColor;
+-	vec4 g_internal;
+-};
+-
+-//
+-//	Functions
+-//
+-void main()
+-{
+-	vec4 texColor = texture(Texture0, UV);
+-	
+-	float mask = texture(Texture1, UV).r;
+-
+-	texColor.a *= mask;
+-
+-	FragColor = (texColor * Color) + g_colorAdd;
+-}
++//	Copyright (c) 2008-2021 Ryo Suzuki.
++//	Copyright (c) 2016-2021 OpenSiv3D Project.
++//	Licensed under the MIT License.
++
++# version 410
++
++//
++//	Textures
++//
++uniform sampler2D Texture0;
++uniform sampler2D Texture1;
++
++//
++//	PSInput
++//
++layout(location = 0) in vec4 Color;
++layout(location = 1) in vec2 UV;
++
++//
++//	PSOutput
++//
++layout(location = 0) out vec4 FragColor;
++
++//
++//	Constant Buffer
++//
++layout(std140) uniform PSConstants2D
++{
++	vec4 g_colorAdd;
++	vec4 g_sdfParam;
++	vec4 g_sdfOutlineColor;
++	vec4 g_sdfShadowColor;
++	vec4 g_internal;
++};
++
++//
++//	Functions
++//
++void main()
++{
++	vec4 texColor = texture(Texture0, UV);
++	
++	float mask = texture(Texture1, UV).r;
++
++	texColor.a *= mask;
++
++	FragColor = (texColor * Color) + g_colorAdd;
++}
+diff --git a/kshootmania/App/shaders/multi_texture_mask.hlsl b/kshootmania/App/shaders/multi_texture_mask.hlsl
+index bb17b15f57074c7ae5ef5ea340741aedf9cf7415..bc760f7302c238cc095db11b3b1cf07f87272e19 100644
+--- a/kshootmania/App/shaders/multi_texture_mask.hlsl
++++ b/kshootmania/App/shaders/multi_texture_mask.hlsl
+@@ -1,54 +1,54 @@
+-//-----------------------------------------------
+-//
+-//	This file is part of the Siv3D Engine.
+-//
+-//	Copyright (c) 2008-2021 Ryo Suzuki
+-//	Copyright (c) 2016-2021 OpenSiv3D Project
+-//
+-//	Licensed under the MIT License.
+-//
+-//-----------------------------------------------
+-
+-//
+-//	Textures
+-//
+-Texture2D		g_texture0 : register(t0);
+-Texture2D		g_texture1 : register(t1);
+-SamplerState	g_sampler0 : register(s0);
+-SamplerState	g_sampler1 : register(s1);
+-
+-namespace s3d
+-{
+-	//
+-	//	VS Output / PS Input
+-	//
+-	struct PSInput
+-	{
+-		float4 position	: SV_POSITION;
+-		float4 color	: COLOR0;
+-		float2 uv		: TEXCOORD0;
+-	};
+-}
+-
+-//
+-//	Constant Buffer
+-//
+-cbuffer PSConstants2D : register(b0)
+-{
+-	float4 g_colorAdd;
+-	float4 g_sdfParam;
+-	float4 g_sdfOutlineColor;
+-	float4 g_sdfShadowColor;
+-	float4 g_internal;
+-}
+-
+-float4 PS(s3d::PSInput input) : SV_TARGET
+-{
+-	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
+-	
+-	float mask = g_texture1.Sample(g_sampler1, input.uv).r;
+-
+-	texColor.a *= mask;
+-	
+-	return (texColor * input.color) + g_colorAdd;
+-}
++//-----------------------------------------------
++//
++//	This file is part of the Siv3D Engine.
++//
++//	Copyright (c) 2008-2021 Ryo Suzuki
++//	Copyright (c) 2016-2021 OpenSiv3D Project
++//
++//	Licensed under the MIT License.
++//
++//-----------------------------------------------
++
++//
++//	Textures
++//
++Texture2D		g_texture0 : register(t0);
++Texture2D		g_texture1 : register(t1);
++SamplerState	g_sampler0 : register(s0);
++SamplerState	g_sampler1 : register(s1);
++
++namespace s3d
++{
++	//
++	//	VS Output / PS Input
++	//
++	struct PSInput
++	{
++		float4 position	: SV_POSITION;
++		float4 color	: COLOR0;
++		float2 uv		: TEXCOORD0;
++	};
++}
++
++//
++//	Constant Buffer
++//
++cbuffer PSConstants2D : register(b0)
++{
++	float4 g_colorAdd;
++	float4 g_sdfParam;
++	float4 g_sdfOutlineColor;
++	float4 g_sdfShadowColor;
++	float4 g_internal;
++}
++
++float4 PS(s3d::PSInput input) : SV_TARGET
++{
++	float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
++	
++	float mask = g_texture1.Sample(g_sampler1, input.uv).r;
++
++	texColor.a *= mask;
++	
++	return (texColor * input.color) + g_colorAdd;
++}
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
 index 6d1f63fcc12a2d3110e545d669aefef4b37def79..8abdde0fe60f696562029e7d58f0098ae9a19835 100644
 --- a/kshootmania/kshootmania.vcxproj
@@ -2948,7 +3517,7 @@ index 5fc99279ed9aec7f455f9a6f8cae0f3a87bda331..c01c6c5f14bc0579e175fbb3d86216a1
  
  	KscValue easyGauge;
 diff --git a/kshootmania/src/HighScore/KscIO.cpp b/kshootmania/src/HighScore/KscIO.cpp
-index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c9509143ab8 100644
+index ad29bef731603cc9d84976d1780fcbaee804a716..0f6cc40d1225b04c0435948a9b3f4bb80367aeb4 100644
 --- a/kshootmania/src/HighScore/KscIO.cpp
 +++ b/kshootmania/src/HighScore/KscIO.cpp
 @@ -1,4 +1,5 @@
@@ -2958,7 +3527,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
  #include "Common/FsUtils.hpp"
  #include "Ini/ConfigIni.hpp"
  #include "Course/CoursePlayState.hpp"
-@@ -8,6 +9,51 @@ namespace KscIO
+@@ -8,6 +9,53 @@ namespace KscIO
  {
  	namespace
  	{
@@ -2968,7 +3537,8 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
 +            while(reader && reader.readLine(line)){
 +                const auto eq=line.indexOf(U'=');if(eq==String::npos)continue;
 +                const auto fields=line.substr(eq+1).split(U',');
-+                if(fields.size()!=10 || fields[9].isEmpty())continue;
++                // The final maximum is optional in legacy additional records.
++                if((fields.size()!=10 && fields.size()!=11) || fields[9].isEmpty())continue;
 +                if(const auto value=ParseOpt<int64>(fields[9]);value && *value>=0)values[line.substr(0,eq)]=*value;
 +            }
 +            return values;
@@ -2992,7 +3562,8 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
 +                if(line.isEmpty())continue;
 +                const auto eq=line.indexOf(U'=');if(eq==String::npos)continue;
 +                const auto it=values.find(line.substr(0,eq));
-+                content+=line+U","+(it==values.end()?String{}:Format(it->second))+U"\n";
++                content+=line+U","+(it==values.end()?String{}:Format(it->second))
++                    +U","+(result.exMaximum>0?Format(result.exMaximum):String{})+U"\n";
 +            }
 +            const auto destination=AdditionalPath(path);
 +            const auto temporary=destination+U".{}.tmp"_fmt(Time::GetMicrosec());
@@ -3010,7 +3581,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
  		bool TryConvertChartFilePathToKscPath(FilePathView chartFilePath, FilePath* pFilePath)
  		{
  			if (pFilePath == nullptr)
-@@ -297,6 +343,7 @@ namespace KscIO
+@@ -297,6 +345,7 @@ namespace KscIO
  			return HighScoreInfo{};
  		}
  
@@ -3018,7 +3589,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
  		return highScoreInfo;
  	}
  
-@@ -310,6 +357,8 @@ namespace KscIO
+@@ -310,6 +359,8 @@ namespace KscIO
  		}
  
  		ReadAllHighScoreInfoFromKscFile(kscFilePath, pHighScoreInfoMap);
@@ -3027,7 +3598,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..7f371627751683df9cafe9b2001b5c95
  	}
  
  	bool WriteHighScoreInfo(FilePathView chartFilePath, const MusicGame::PlayResult& playResult, const KscKey& condition)
-@@ -327,16 +376,21 @@ namespace KscIO
+@@ -327,16 +378,21 @@ namespace KscIO
  			return false;
  		}
  

@@ -36,3 +36,7 @@ license notices are retained.
 
 Repository access must remain private unless the owner explicitly chooses to
 publish it. No binary releases are published by this repository setup.
+
+## Latest source update
+
+Development build `20261023-171521-0937f555` adds EX maximum persistence to additional score records and restores base images to `imgs/`, with user skins in `skins/<skin name>/`. Legacy ten-field additional records are readable. Original `.ksc` files retain their format. Source reconstruction and existing user data remain separate.

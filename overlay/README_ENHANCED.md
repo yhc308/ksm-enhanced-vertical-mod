@@ -1,7 +1,7 @@
 # KSM Enhanced Vertical Mod
 
 Unofficial Windows mod for **K-Shoot MANIA 2.1.0**, based on upstream commit
-`41bfdaa7331808aff7239a9ec283cdba01b3b406`. This branch is intended for code review.
+`41bfdaa7331808aff7239a9ec283cdba01b3b406`. This source is maintained in the independent private mod repository.
 The original K-Shoot MANIA project and its copyright notices remain intact.
 
 ## Features
@@ -16,7 +16,7 @@ The original K-Shoot MANIA project and its copyright notices remain intact.
 
 ## Reviewing the changes
 
-Compare `enhanced-vertical` with the upstream commit above. Main game changes are
+Reconstruct the source using the private repository root scripts/PrepareSource.py. Compare the result with the upstream commit above. Main game changes are
 ordinary source diffs. The original dependency submodule pointers are retained;
 local changes to ksmaudio and NocoUI are in `patches/dependencies/` and are applied
 by the script below. Generated executables, packages, local paths/reports, user
@@ -25,7 +25,7 @@ settings, credentials, scores, and ordinary/TEST song collections are excluded.
 ## Build (Windows x64)
 
 1. Install Git, Python 3, Visual Studio 2022 C++ build tools, and OpenSiv3D SDK 0.6.16.
-2. Clone this fork and check out the `enhanced-vertical` branch.
+2. Clone the private mod repository and run `python scripts/PrepareSource.py`; work in the generated source directory.
 3. Run `git submodule update --init --recursive`.
 4. Run `python scripts/ApplyDependencyPatches.py` (safe to run again).
 5. Set `SIV3D_0_6_16` to the SDK directory. Open `kshootmania.sln` and build Release/x64,
@@ -49,3 +49,9 @@ are not added by this branch. See the upstream LICENSE and dependency notices.
 A separate folder-selection installer for users who already have KSM 2.1.0 is
 being prepared; `scripts/ModInstaller.ps1` currently provides the validated backend.
 Do not overwrite the original `kshootmania.exe` with the mod executable.
+
+## Current source changes
+
+- Base images live in `imgs/`; custom skins live in `skins/<skin name>/`. The `default` menu entry refers to `imgs/` directly. Move old custom `imgs/<skin name>/` folders into `skins/`.
+- Additional score rows append full-chart EX SCORE MAX after EX SCORE. Ten-field legacy additional records remain readable; the original nine-field `.ksc` format is unchanged. Older mod executables do not read the new eleven-field format.
+- `scripts/RunSkinTests.ps1`, `RunExScoreTests.ps1` and `RunApsTests.ps1` provide isolated checks. Python image checks require Pillow (some also require NumPy). Tests involving original songs, SDK DLLs or authoring snapshots require those inputs separately; ordinary song collections and authoring originals are not stored here.

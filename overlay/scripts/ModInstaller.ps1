@@ -64,6 +64,7 @@ try {
                 $applied+=$entry
                 Copy-Checked (Resolve-KsmSafePath $root $entry.stage) (Resolve-KsmSafePath $root $entry.path) $entry.sha256
             }
+            New-Item -ItemType Directory -Path (Resolve-KsmSafePath $root 'skins') -Force|Out-Null
             [ordered]@{schemaVersion=2;modId='ksm-enhanced-vertical';profileId=$target.profileId;upstreamHash=$target.executableHash;runtimeContract=$manifest.runtimeContract;buildId=$manifest.buildId;transaction=$transaction;files=$entries}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Resolve-KsmSafePath $root "$backupRoot/state.json") -Encoding UTF8
             Copy-Item -LiteralPath (Resolve-KsmSafePath $root "$backupRoot/state.json") -Destination $statePath
         } catch {

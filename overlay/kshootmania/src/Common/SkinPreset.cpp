@@ -18,6 +18,7 @@ namespace SkinPreset
             return json.isObject() && json.hasElement(key) ? json[key].getOr<T>(fallback) : fallback;
         }
         FilePath Root() { return FsUtils::GetResourcePath(U"imgs/"); }
+        FilePath SkinsRoot() { return FsUtils::GetResourcePath(U"skins/"); }
         FilePath SettingsPath() { return FileSystem::PathAppend(FsUtils::AppDataDirectoryPath(), U"skin_preset.json"); }
         bool IsImage(FilePathView path)
         {
@@ -50,26 +51,25 @@ namespace SkinPreset
     Array<Entry> Discover()
     {
         Array<Entry> result;
-        for (const auto& path : FileSystem::DirectoryContents(Root(), Recursive::No))
-        {
-            if (!FileSystem::IsDirectory(path)) continue;
-            const String name=FsUtils::DirectoryNameByDirectoryPath(path);
-            const HashSet<String> legacy{U"bg",U"editor",U"gate",U"icon",U"jacket"};
-            if(legacy.contains(name) && !FileSystem::IsFile(FileSystem::PathAppend(path,U"skin.json")))continue;
-            Entry entry{ name, U"", U"" };
-            const auto metaPath = FileSystem::PathAppend(path, U"skin.json");
-            if (FileSystem::IsFile(metaPath))
-            {
-                const auto meta = JSON::Load(metaPath);
-                if (meta && meta.isObject())
-                {
-                    entry.author = Read<String>(meta,U"author",U"");
-                    entry.description = Read<String>(meta,U"description",U"");
-                }
-                else entry.description = I18n::Get(I18n::Mod::SkinReadError);
+        const auto addEntry=[&](const String& name,FilePathView path){
+            Entry entry{name,U"",U""};
+            const auto metaPath=FileSystem::PathAppend(path,U"skin.json");
+            if(FileSystem::IsFile(metaPath)){
+                const auto meta=JSON::Load(metaPath);
+                if(meta && meta.isObject()){
+                    entry.author=Read<String>(meta,U"author",U"");
+                    entry.description=Read<String>(meta,U"description",U"");
+                }else entry.description=I18n::Get(I18n::Mod::SkinReadError);
             }
             result.push_back(std::move(entry));
-        }
+        };
+        addEntry(U"default",Root());
+        if(FileSystem::IsDirectory(SkinsRoot()))
+            for(const auto& path:FileSystem::DirectoryContents(SkinsRoot(),Recursive::No)){
+                if(!FileSystem::IsDirectory(path))continue;
+                const String name=FsUtils::DirectoryNameByDirectoryPath(path);
+                if(name.lowercased()!=U"default")addEntry(name,path);
+            }
         result.sort_by([](const Entry& a, const Entry& b)
         {
             if (a.folder == U"default" || b.folder == U"default") return a.folder == U"default" && b.folder != U"default";
@@ -106,8 +106,8 @@ namespace SkinPreset
 
     void Initialize()
     {
-        if (!FileSystem::IsDirectory(FileSystem::PathAppend(Root(), U"default")))
-            throw Error{ I18n::Get(I18n::Mod::DefaultSkinMissing ,U"imgs/default") };
+        if (!FileSystem::IsDirectory(Root()))
+            throw Error{ I18n::Get(I18n::Mod::DefaultSkinMissing ,U"imgs") };
         const auto json = JSON::Load(SettingsPath());
         Settings settings;
         if (json)
@@ -140,8 +140,8 @@ namespace SkinPreset
     {
         const String name = LogicalName(logicalPath);
         if (const auto it = g_resolved.find(name); it != g_resolved.end()) return it->second;
-        const auto base = FileSystem::PathAppend(Root(), U"default/" + name);
-        const auto selected = FileSystem::PathAppend(Root(), g_settings.folder + U"/" + name);
+        const auto base = FileSystem::PathAppend(Root(), name);
+        const auto selected = g_settings.folder==U"default" ? base : FileSystem::PathAppend(SkinsRoot(), g_settings.folder + U"/" + name);
         // Unknown legacy background/icon names retain the original caller's fallback.
         if (!FileSystem::IsFile(base) && !FileSystem::IsFile(selected)) return selected;
         FilePath path;
@@ -165,9 +165,9 @@ namespace SkinPreset
         for (const auto& key : g_keys) TextureAsset::Unregister(key);
         g_keys.clear();
         HashSet<String> names;
-        for (const auto& folder : { String{ U"default" }, g_settings.folder })
+        for (const auto& root : { Root(), g_settings.folder==U"default" ? Root() : FileSystem::PathAppend(SkinsRoot(), g_settings.folder + U"/") })
         {
-            const auto root = FileSystem::PathAppend(Root(), folder + U"/");
+            if(!FileSystem::IsDirectory(root))continue;
             for (const auto& path : FileSystem::DirectoryContents(root, Recursive::Yes))
                 if (FileSystem::IsFile(path) && IsImage(path))
                 {

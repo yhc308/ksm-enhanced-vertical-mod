@@ -1,0 +1,45 @@
+﻿KSM Enhanced Vertical Mod {version} - Shared Test Build
+
+Build: {buildId} / Windows 64-bit / Based on K-Shoot MANIA 2.1.0
+
+Release notes
+- Vertical gameplay mode and ASIO support.
+- HARD+APS gauge: when HARD fails, play continues using a NORMAL gauge calculated in parallel.
+- EX SCORE display and records, with improved BEST SCORE banners.
+- P-CRITICAL feedback, configurable timing-error text and colors, and a ±16ms color threshold.
+- JUDGE TIMING SETTING: looping practice with live judgment/visual offsets and hi-speed adjustment.
+- Improved VERTICAL OPTION and VIEWPORT CUSTOM menus, BACK controls, and localized instructions.
+- Viewport previews use the same lane/HUD proportions as gameplay, with preview hi-speed fixed at 450.
+- Includes 10 standard K-Shoot MANIA songs and 36 charts. TEST songs are excluded.
+
+Getting started
+1. Extract the entire ZIP to a writable folder.
+2. Run App/ksm-enhanced-vertical.exe directly. No installer or development tools are required.
+3. Defaults: Japanese, a 720×1280 vertical window, and Windows default audio output.
+   Use the vertical-mode button on the main menu to change window size or orientation.
+
+Changing the language
+- Open OPTION → DISPLAY / SOUND SETTINGS → 表示言語(Language), then select English.
+- Supported languages: English / Japanese / Korean / Simplified Chinese / Traditional Chinese.
+
+Default keyboard controls
+- Navigate menus: arrow keys / Confirm or START: Enter / Back: Esc
+- BT A/B/C/D: S / D / K / L
+- FX L/R: C / M
+- Left laser: Q / W; right laser: O / P
+- Screenshot: F11
+Change keyboard/controller mappings under OPTION → KEY CONFIGURATION.
+
+Audio
+- Default audio output works without an ASIO device.
+- To use ASIO, install your device's driver and select it in the audio settings.
+- Personal device calibration data and ASIO driver selections are not included.
+
+Bug reports
+- When reporting a bug or error, include the log files from App/log.
+
+Custom skins
+- Base images: App/imgs/. Custom skins: App/skins/<skin name>/.
+- Move custom skins from the old imgs/<skin name>/ location into skins/.
+- Keep internal image paths unchanged; choose the skin in VIEWPORT CUSTOM.
+- The default selection uses imgs directly. Do not create skins/default/.

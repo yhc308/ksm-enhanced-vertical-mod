@@ -2,3 +2,6 @@
 *.json text eol=lf
 *.py text eol=lf
 *.md text eol=lf
+
+# Overlay hashes must survive checkout regardless of core.autocrlf.
+/overlay/** -text

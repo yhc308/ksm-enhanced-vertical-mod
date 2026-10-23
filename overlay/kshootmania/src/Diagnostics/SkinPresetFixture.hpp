@@ -200,6 +200,14 @@ namespace SkinFixture
         if (!Enabled()) return;
         using namespace SkinPreset;
         const auto original=Current();
+        const auto skins=FsUtils::GetResourcePath(U"skins");
+        const auto parked=FsUtils::GetResourcePath(U"skin-fixture-parked");
+        Check(FileSystem::Rename(skins,parked),U"temporarily remove skins directory");
+        Initialize();
+        Check(Discover().size()==1 && Current().folder==U"default",U"startup without skins uses virtual default");
+        Check(Resolve(U"base.gif")==FileSystem::PathAppend(FsUtils::GetResourcePath(U"imgs"),U"base.gif"),U"default resolves directly to imgs");
+        Check(FileSystem::Rename(parked,skins),U"restore user skins directory");
+        Initialize();
         const auto entries=Discover();
         Check(!entries.isEmpty() && entries.front().folder==U"default",U"default pinned first");
         Check(entries.size()>=5 && entries[1].folder==U"Alpha" && entries[2].folder==U"beta" && entries[3].folder==U"z-last",U"case insensitive folder ordering");
@@ -207,13 +215,14 @@ namespace SkinFixture
         for(const String base:{U"result_v2_judge.png",U"play_judge_indicator.png",U"play_judge_indicator_minimum.png"})for(const auto palette:{JudgeColor::kFastBlue,JudgeColor::kFastRed}){
             const auto name=MusicGame::JudgeImage(base,palette);
             Activate({U"Alpha",MissingMode::Default});Check(Resolve(name).includes(U"Alpha"),U"complete skin variant wins");
-            Activate({U"한글 Partial",MissingMode::Default});Check(Resolve(name).includes(U"default"),U"missing variant falls back to same-color default");
+            Activate({U"한글 Partial",MissingMode::Default});Check(Resolve(name).starts_with(FsUtils::GetResourcePath(U"imgs/")),U"missing variant falls back to same-color default");
             Activate({U"한글 Partial",MissingMode::Error});const Image missing{Resolve(name)};Check(missing[0][0]==Palette::Yellow,U"missing variant obeys Yellow policy");
         }
+        Check(!entries.any([](const Entry& e){return e.folder==U"Legacy Ignored" || e.folder==U"bg";}),U"imgs directories are never discovered as user skins");
         Activate({U"한글 Partial",MissingMode::Default});
         Check(Resolve(U"score_header.png").includes(U"한글 Partial"),U"selected file");
-        Check(Resolve(U"imgs/bg.jpg").includes(U"default"),U"missing file fallback");
-        Check(Resolve(U"standby.jpg").includes(U"default"),U"corrupt file fallback");
+        Check(Resolve(U"imgs/bg.jpg").starts_with(FsUtils::GetResourcePath(U"imgs/")),U"missing file fallback");
+        Check(Resolve(U"standby.jpg").starts_with(FsUtils::GetResourcePath(U"imgs/")),U"corrupt file fallback");
         const auto physical=Resolve(U"score_header.png");
         Check(!noco::Asset::GetOrLoadTexture(physical,noco::MipmapEnabledYN::No).isEmpty(),U"physical image paths are not resolved twice");
         const auto baseInfo=ImageDecoder::GetImageInfo(Resolve(U"bt_chip.gif"));
