@@ -1,0 +1,31 @@
+{
+  "version": "0.5.1-beta1",
+  "installerRevision": "20261026-cleanup1",
+  "gameBuildId": "20261023-234835-524ce9c3",
+  "gameSha256": "f5e014b9e6de87037403a49f1652c9b6de308a61de49bee4b66100882d232f70",
+  "setupSha256": "fe63a77a082875ee159365351de5e8fc5246cfd5382cd7730bba5eaf4ad40224",
+  "zipSha256": "9dca1f2daae642fe381da849bd7177929ad7c6e8d1fd1ce36a7556226e101a14",
+  "nativeAssertions": 255,
+  "compiledInstallerInputs": {
+    "installer/src/InstallerCore.cpp": "0af0952e90a9c2c809d557c3bcf8a78065bf1245cd2414ae55b030385c96e028",
+    "installer/src/InstallerCore.hpp": "61021a469d7f66fbca7952700d65497f3c306b71601485407c7da3db8b08d812",
+    "installer/src/Main.cpp": "15e42c78d4d12e45cb8470ba790041fdfdc277039603aa485fe9e295f09de4a9",
+    "installer/Setup.rc": "8bca0c647a95d2d041b72c84e9182e2899886f96303fd84e406a804eae31a992",
+    "installer/Setup.manifest": "684565b6443ec52206798ea74aaea4a0307ff6bef6424cab17c01d2d262d026e",
+    "installer/assets/setup.ico": "b518ae7d8af7715a6e9954953a0f00989405e984f89ae89f09652fd5c40267fb"
+  },
+  "gameReviewBase": "1d9b5b13361386d53a785150b8de31bbe6a86ded",
+  "validation": "Native engine, normal landscape/portrait runtime, legacy installation removal and real directory-lock GUI tests passed locally.",
+  "limits": [
+    "UAC consent round trip and physical ASIO hardware were not re-tested.",
+    "Synthetic fault tests are separate from real production runtime and GUI tests."
+  ],
+  "compiledInstallerInputsLf": {
+    "installer/src/InstallerCore.cpp": "5d4f396d8fcca1408bcc1465dd8fd176a49924dadddc5aa451ebe63dd7b0a4d6",
+    "installer/src/InstallerCore.hpp": "7bb3de71d30d2a588e3c75e7b3390d954ea879ee0434baf177f72b66612af165",
+    "installer/src/Main.cpp": "24e65b92adfe3320214e9b6ac132ae70cfd8a102146af666f76a6120f3e16cdd",
+    "installer/Setup.rc": "35b30feb9da690924b191388dea17b42a4faf67c7d7f5407cca7b7a968890c31",
+    "installer/Setup.manifest": "684565b6443ec52206798ea74aaea4a0307ff6bef6424cab17c01d2d262d026e",
+    "installer/assets/setup.ico": "b518ae7d8af7715a6e9954953a0f00989405e984f89ae89f09652fd5c40267fb"
+  }
+}

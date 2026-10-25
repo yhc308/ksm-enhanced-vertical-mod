@@ -2,3 +2,10 @@ patches/dependencies/*.patch -text
 patches/dependencies/manifest.json text eol=lf
 *.py text eol=lf
 *.md text eol=lf
+
+# Serialized UI resources remain available; collapse their generated data in review.
+kshootmania/App/mods/**/*.noco linguist-generated=true
+
+# Preserve the upstream single-header library bytes and identify vendored code.
+installer/third_party/json.hpp -text
+installer/third_party/** linguist-vendored=true

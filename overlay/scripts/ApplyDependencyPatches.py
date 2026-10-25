@@ -14,6 +14,10 @@ for item in manifest["dependencies"]:
         return subprocess.run(["git", "-c", "safe.directory=" + repo.as_posix(), "-C", str(repo), *args], check=check, capture_output=True, text=True)
     if git("rev-parse", "HEAD").stdout.strip() != item["baseCommit"]:
         raise SystemExit("Unexpected dependency revision: " + item["path"])
+    inventory = git("apply", "--numstat", str(patch)).stdout.splitlines()
+    paths = {line.split("\t", 2)[2] for line in inventory}
+    if paths != set(item["changedFiles"]):
+        raise SystemExit("Dependency patch inventory differs from its manifest: " + item["path"])
     if git("apply", "--reverse", "--check", str(patch), check=False).returncode == 0:
         print(item["path"] + ": already applied")
         continue

@@ -1,7 +1,7 @@
 from pathlib import Path
 import csv,json,hashlib,sys
 from PIL import Image,ImageDraw
-from PreviewTraceRules import verify_preview_loop_boundary
+from PreviewTraceRules import verify_preview_loop_boundary, verify_preview_loop_period, verify_preview_edit_clock
 def verify_trace(dest):
     rows=[]
     with (dest/'preview-trace.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -33,7 +33,8 @@ def verify_trace(dest):
                 assert b['ex']>=a['ex'],'skin/numeric changes reset EX'
     for previous, current in loops:
         verify_preview_loop_boundary(previous, current)
-    assert all(abs((b[1]['wall']-a[1]['wall'])-18.0)<0.12 for a,b in zip(loops,loops[1:])), 'loop duration drift'
+    for first, second in zip(loops, loops[1:]):
+        verify_preview_loop_period(first, second)
     assert all(r['score']==0 and abs(r['gauge'])<1e-5 for r in rows if 17.55<r['chart']<17.95)
     before=[r for r in rows if 16.8<r['chart']<17]
     half=[r for r in rows if 17.2<r['chart']<17.3]
@@ -41,10 +42,12 @@ def verify_trace(dest):
     assert 0<half[0]['score']<before[0]['score']
     changes=[(a,b) for a,b in zip(rows,rows[1:]) if (a['folder'],a['policy'])!=(b['folder'],b['policy'])]
     assert len(changes)>=3
-    assert all(b['chart']>=a['chart'] and b['chart']-a['chart']<1.5 for a,b in changes),changes
+    for previous, current in changes:
+        verify_preview_edit_clock(previous, current)
     numeric_changes=[(a,b) for a,b in zip(rows,rows[1:]) if any(a[k]!=b[k] for k in ['bg1','bg2','laser','note'])]
     assert len(numeric_changes)>=8
-    assert all(b['chart']>=a['chart'] and b['chart']-a['chart']<0.25 for a,b in numeric_changes), 'numeric edits restart or stall playback'
+    for previous, current in numeric_changes:
+        verify_preview_edit_clock(previous, current)
     assert {0,50,75,100}.issubset({r['bg1'] for r in rows})
     assert {0,40,50,100}.issubset({r['bg2'] for r in rows})
     assert {50,100,125,200}.issubset({r['note'] for r in rows})

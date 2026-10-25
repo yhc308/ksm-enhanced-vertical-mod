@@ -2,9 +2,9 @@
   "upstream": "https://github.com/kshootmania/ksm-v2.git",
   "baseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
-  "sourceBuildId": "20261023-171521-0937f555",
+  "sourceBuildId": "20261023-234835-524ce9c3",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "9980629c1988bf1261df0b7feab8790c2b0ec7a10dd82ca22537e11042893488",
+  "mainPatchSha256": "e9d6f246c6b78f5f9b9efbd2806bce95e604de1e3c37b14491364e8e3715ab03",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -12,15 +12,19 @@
     },
     {
       "path": ".gitattributes",
-      "sha256": "e85ccbaa588dd8b9f982bb50dc2a9fbe9a037288e5f5c7790f0bf4267b0a72fa"
+      "sha256": "bc58cab924f07be307f143fb69e6b87e5f7736e4cbd2b16888298af8d73acd47"
+    },
+    {
+      "path": ".github/workflows/review-source.yml",
+      "sha256": "d4083c5e723a3bfb88b69180157143d2fa4b52affc6bb69dd7bfdcf5c2c68ff5"
     },
     {
       "path": "README_ENHANCED.md",
-      "sha256": "6df557bf3676e6b5154af2df88e1b5fb9d2a5da9792ae15b3841d53d0c6137b3"
+      "sha256": "ae41bac030c9e83f0392af42e87088716d7cff902f0a954c589c1cd493826a6d"
     },
     {
       "path": "REVIEW.md",
-      "sha256": "4db5203ab23fc2a321ca4f3b84417c6b6e5c12f04aef7357763f6a07039ba22b"
+      "sha256": "1294cde34604170a83bba43e00dc4cdc74da558da6d7b65071813ef3c6abaf53"
     },
     {
       "path": "compatibility/targets.json",
@@ -55,6 +59,34 @@
       "sha256": "2751960eea5da6b44dcacd952d5a4adaf1b629318e48c244f13ee90c9d9cec69"
     },
     {
+      "path": "docs/MOD_INSTALLER_EMPTY_DIRECTORIES_IMPLEMENTATION.md",
+      "sha256": "094366f784eb9cb43c925805ee37132db3f6262e7d51e7975db7add04c1370e4"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_EMPTY_DIRECTORIES_PLAN.md",
+      "sha256": "3d07b84c1604727a23a8b8ed5ceb12a73a3e30adf49b35672a59d1b556998567"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_IMPLEMENTATION.md",
+      "sha256": "06552cc53b57310597e20c2c1abfc17ca77fbfc8968fbee0f925fe873f01c31b"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_PLAN.md",
+      "sha256": "0a8921d848370803c9b38beb4ece423612b58f35556d61f8fcb300a7bde49cd4"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_UI_REVISION.md",
+      "sha256": "48f051674170f60156b046c98205627ddd9badadd0840925bb5b37280f538cb7"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_VERSION_0.5.1-beta1.md",
+      "sha256": "f830e85f522711cce5a8dd175fb6cff21f4d6282bcf3a71cc3fdf0bf49df4f66"
+    },
+    {
+      "path": "docs/MOD_INSTALLER_WORDING_REVISION.md",
+      "sha256": "e90a2bf7941b2e1ba80530a7e1336c7437e5cb6d7f3c628a8e9573dbd3d40282"
+    },
+    {
       "path": "docs/REFACTOR_PROGRESS.md",
       "sha256": "b72f0803c33c1aae12920c4393f318881c7fc419e068f1026cece8aa5e0e2916"
     },
@@ -63,8 +95,136 @@
       "sha256": "de85a6bba892363ea59b22c10bea613ff16b802814315d3f20547788b2d5f70e"
     },
     {
+      "path": "docs/RELEASE_0.5.1-beta1.json",
+      "sha256": "d98e44e642d802778e6845eeb786529d6f4147349eef265156b04d7f0be046b2"
+    },
+    {
+      "path": "docs/RELEASE_0.5.1-beta1.md",
+      "sha256": "3cafa5c9272fe80aed969d9df0b3e433d3b6b524de0079f7e79ce59f074d5481"
+    },
+    {
       "path": "docs/REMOVAL_AUDIT.md",
       "sha256": "67f132fd866a98d348e31fcbae7f21fc97fdae074bab3fe5cecf105a7de8f2db"
+    },
+    {
+      "path": "docs/review/CORE_TARGET.json",
+      "sha256": "fdae47cf348363281bb86fad6aa5ed03dfd48f8d3b1e0a4e5c9078fcc3455b1d"
+    },
+    {
+      "path": "docs/review/D7_SOURCE_REFERENCE.json",
+      "sha256": "0e7479a9af1607e76213d0fc0e056d60b077ab3fb54d36739368054adaa960c3"
+    },
+    {
+      "path": "docs/review/SAMPLING_CONTROL.json",
+      "sha256": "7cf7f33a46fcd04dbcbe281d8b9cee46e7ebd8b2003c3b186cca1048ea3849f3"
+    },
+    {
+      "path": "docs/review/STATISTICS.json",
+      "sha256": "bb7beb9abdd06028a16b6b0019d7ee5e35d622b4aa2c34e86b117a3e53ac2dc5"
+    },
+    {
+      "path": "docs/review/VALIDATION.json",
+      "sha256": "d8fc4a6400f0a0083d6ef02fc9123335356aaef99ceb23ee59092d4c46bec3b3"
+    },
+    {
+      "path": "docs/review/VALIDATION.md",
+      "sha256": "8dbb20a2bc01461214366cbc543a0d0681da79ab9f6fb2b17b6f8aa308ba802a"
+    },
+    {
+      "path": "installer/Build.ps1",
+      "sha256": "45ba171968723f83aef974f11d31396198a3bf1749bcd977677d7733fdff9522"
+    },
+    {
+      "path": "installer/BuildPackage.py",
+      "sha256": "63bae72dd91e5861e825154edce254d75908498ffeeba0190387329710d9e675"
+    },
+    {
+      "path": "installer/PackageRelease.py",
+      "sha256": "b6b5b1c447411f6c4ed27aa280b7bc70df833936d500345e830f9d8859a623fd"
+    },
+    {
+      "path": "installer/README.md",
+      "sha256": "fe63a14c60d45e26064de1542b43b13eed72b3f9cc9203a66586f832e61bb069"
+    },
+    {
+      "path": "installer/Setup.manifest",
+      "sha256": "684565b6443ec52206798ea74aaea4a0307ff6bef6424cab17c01d2d262d026e"
+    },
+    {
+      "path": "installer/Setup.rc",
+      "sha256": "35b30feb9da690924b191388dea17b42a4faf67c7d7f5407cca7b7a968890c31"
+    },
+    {
+      "path": "installer/assets/README.md",
+      "sha256": "e8d60a3faf6d3a83a1761312bbcbc3bbc5f6f59ea459b80e569911c5e61c1014"
+    },
+    {
+      "path": "installer/assets/setup-preview.png",
+      "sha256": "d98e32bd8cae3309989a8dc191230bf629b649a46ced35590687695931438f20"
+    },
+    {
+      "path": "installer/assets/setup.ico",
+      "sha256": "b518ae7d8af7715a6e9954953a0f00989405e984f89ae89f09652fd5c40267fb"
+    },
+    {
+      "path": "installer/assets/setup.svg",
+      "sha256": "487313b5e29f926cbf7bbc08b17e124f338f9749017d19496311978d5492fbd5"
+    },
+    {
+      "path": "installer/readme/README_EN.txt",
+      "sha256": "e9f347ff462c57f1414d474157477d4ed78b0a3a41025b62e048d09e995cfa29"
+    },
+    {
+      "path": "installer/readme/README_JA.txt",
+      "sha256": "6ca1866b6d00edfee01163bc324deef17ae20c91cafb309e7cbb537af55de5a2"
+    },
+    {
+      "path": "installer/readme/README_KO.txt",
+      "sha256": "82e9b8a8295f969eb9bc5501b454ed07c40e257bfb0aa0df1fd4d2a88fdec45e"
+    },
+    {
+      "path": "installer/src/InstallerCore.cpp",
+      "sha256": "5d4f396d8fcca1408bcc1465dd8fd176a49924dadddc5aa451ebe63dd7b0a4d6"
+    },
+    {
+      "path": "installer/src/InstallerCore.hpp",
+      "sha256": "7bb3de71d30d2a588e3c75e7b3390d954ea879ee0434baf177f72b66612af165"
+    },
+    {
+      "path": "installer/src/Main.cpp",
+      "sha256": "24e65b92adfe3320214e9b6ac132ae70cfd8a102146af666f76a6120f3e16cdd"
+    },
+    {
+      "path": "installer/tests/CancelEngine.cpp",
+      "sha256": "516765e08fd07f523e396ea135436d84d5f34b61f017f0fc6ab98dbd4d3ddd5e"
+    },
+    {
+      "path": "installer/tests/GuiDirectoryWarning.py",
+      "sha256": "ec9053ab368323b4589301d760edbd94c77334e68adc748a72793d035b72ecc6"
+    },
+    {
+      "path": "installer/tests/LegacyDirectoryRemoval.py",
+      "sha256": "419800de88e69b4768a4b0c41ffe44853692c9dd5d17674cad65fa097415d4e7"
+    },
+    {
+      "path": "installer/tests/RealRuntime.ps1",
+      "sha256": "af53312df15522d1094a05d300c4fc107f023441aae5977b2dd84d7355122566"
+    },
+    {
+      "path": "installer/tests/TestEngine.py",
+      "sha256": "c2a33aef57dc5db003fd73bd1c12a75d71bf15b7a994a9f1b1321aa98278e7d2"
+    },
+    {
+      "path": "installer/third_party/LICENSE.json.txt",
+      "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14"
+    },
+    {
+      "path": "installer/third_party/README.md",
+      "sha256": "64b072794c583f9cb1632b765f99e6c732aa4b5232ccf03946f2d4d4fd20e16e"
+    },
+    {
+      "path": "installer/third_party/json.hpp",
+      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
     },
     {
       "path": "kshootmania/App/imgs/bg2_vertical.png",
@@ -612,19 +772,19 @@
     },
     {
       "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
-      "sha256": "a1c7f9b7ed3311847b25a83088aafd8450be1b08f736c64a6270584de1c7e5a6"
+      "sha256": "11a90f50a0deede5537f13cd99a3a17cb9705d748a5027c93567dbdd124c4b1e"
     },
     {
       "path": "patches/dependencies/ksmaudio.patch",
-      "sha256": "ab615a7484495eb0c2cd1895d2cc745a7054f59cd73cdb3de2615193323ae1e9"
+      "sha256": "b9be8d5555a33fbfc78320d90ac7ae8a387781645d11151696c3f71781740fa9"
     },
     {
       "path": "patches/dependencies/manifest.json",
-      "sha256": "0536cadd34b48602a8eb8ae2d38cf1ad01b2eda1a5e5e66dd34cb9595bccf801"
+      "sha256": "df7ef970d589ee51cf3bd1d6a6dc2bbf496622efdaeac900b0bc929729865492"
     },
     {
       "path": "scripts/ApplyDependencyPatches.py",
-      "sha256": "0c0db9922b78f2e774ec561bc6992ee6978b0a3aadb80e55ef65beffe70c0761"
+      "sha256": "aff1bcc8d97be7760f0c6736e6ea9e7fb89312d0928a4f8e46654f664ad8e616"
     },
     {
       "path": "scripts/BenchmarkTunnel.ps1",
@@ -684,7 +844,11 @@
     },
     {
       "path": "scripts/CheckCppStyle.py",
-      "sha256": "e93258b9b6e8684558f668e6d8065acdb1e57bcab4878fd4e3d0fb5c357183dc"
+      "sha256": "89de75b596eb505e71739bf743ac1e339b8cba3b545e344473504bdfbe63e790"
+    },
+    {
+      "path": "scripts/CheckReviewCppStyle.py",
+      "sha256": "96e24c28815e4934ab28799d7d658accfb7a60a13f9c9456e1d33dfcd38d3ba7"
     },
     {
       "path": "scripts/CompareFramePerformance.py",
@@ -955,12 +1119,20 @@
       "sha256": "30cf4c65fc4d48203d9e3aa94c3588415769b09638195eb985257fe17379cc4d"
     },
     {
+      "path": "scripts/VerifyReviewSource.py",
+      "sha256": "22401b8b9d9a4dfd65b90b5da60acbec04103e36e0859a4bb6f405b621bb51cf"
+    },
+    {
       "path": "scripts/VerticalTestLauncher.ps1",
       "sha256": "7c1f6d09e25dbc3b1ee3c59aa3b4181957b4e61a4ac59608abfdbba304d32a9a"
     },
     {
       "path": "scripts/WindowsBuildTools.psm1",
       "sha256": "01d2a8aec1d24894cff4c9c25c18b1a18a103a2bab1b0705653194f39f7b8ae3"
+    },
+    {
+      "path": "scripts/compiler_parity.py",
+      "sha256": "e5f596946de77520e5ae3288cb64040641fbf987faec112724c3c54f6ba77896"
     },
     {
       "path": "tests/ApsAnimationVerifier.py",
@@ -1028,7 +1200,7 @@
     },
     {
       "path": "tests/PreviewTraceRules.py",
-      "sha256": "ebc555c48ed4989e9466efc0e9a24375a0b9aedf340fa56f5d87c8aa293d2487"
+      "sha256": "6f2e9082e0160d4b62f1b8dfb1861c5177f84966a638a2e865b779d5be4030bd"
     },
     {
       "path": "tests/ResultBestScoreNativePixels.py",
@@ -1048,7 +1220,7 @@
     },
     {
       "path": "tests/SkinTestVerifier.py",
-      "sha256": "08ab0f577fa430455716cc56adf2b640769bd774ecea383906894f85af783068"
+      "sha256": "3bed1039beff024ce2b4fdb3ffc264170da75891c33ff6297a8a119487fbc313"
     },
     {
       "path": "tests/TestModBehavior.cpp",
@@ -1093,7 +1265,19 @@
     {
       "path": "tests/headless/WindowsWaitableTimerTests.cpp",
       "sha256": "3d81ff662d29c50efab23fe56bc35d7ffdaa1ab7b9b64dcdb5fd5f6dbf215cfe"
+    },
+    {
+      "path": "tests/test_compiler_parity.py",
+      "sha256": "6fea3bf3bc82de223fcdaec259976447961e0017f916da0aed8ed1760e92b161"
+    },
+    {
+      "path": "tests/test_preview_trace_rules.py",
+      "sha256": "b3d47b5cde27e2b9a2125dd3e5669b737b8ce1d4543a95f1af85c2369bd84240"
     }
   ],
-  "refactorBranch": "refactor/upstream-style-parity"
+  "refactorBranch": "refactor/upstream-style-parity",
+  "releaseVersion": "0.5.1-beta1",
+  "releaseBranch": "release/0.5.1-beta1",
+  "reviewSourceBase": "1d9b5b13361386d53a785150b8de31bbe6a86ded",
+  "installerRevision": "20261026-cleanup1"
 }

@@ -1,42 +1,46 @@
-# KSM Enhanced Vertical Mod — private source repository
+# KSM Enhanced Vertical Mod
 
-This is an independent private repository, not a GitHub fork. It stores the mod's
-new files and changes against **K-Shoot MANIA 2.1.0** without including a complete
-copy of upstream source or history. The original public review fork is separate.
+Unofficial Windows x64 mod for **K-Shoot Mania 2.1.0**. This independent public
+repository stores the mod as a patch plus overlay, not a complete prebuilt game.
+Original upstream copyright notices and the license remain intact.
 
-## Prepare the complete source
+## Install / remove
 
-Install Git and Python 3, then run:
+Download [0.5.1-beta1](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1),
+extract the ZIP, and run KsmEnhancedVerticalSetup.exe. Select the folder containing
+kshootmania.exe. The original executable remains available; start the mod using
+ksm-enhanced-vertical.exe. Use the same setup EXE to remove the mod.
+Normal/EX/course records, songs, user skins and settings are preserved. Recorded
+empty mod-created directories are cleaned only after removal commits. Folders
+containing user files are kept; backups/recovery data and protected folders remain.
+KO/EN/JA guides are in the ZIP. Setup defaults to JP and supports EN/JP/KR/SC/TC.
+
+## Source / build
+
+The release source is on **release/0.5.1-beta1**. The historical default main branch
+is preserved; select the release branch before reconstructing or reviewing it.
 
 ```sh
+git clone --branch release/0.5.1-beta1 https://github.com/yhc308/ksm-enhanced-vertical-mod.git
+cd ksm-enhanced-vertical-mod
+python scripts/VerifySource.py
 python scripts/PrepareSource.py
 ```
 
-The script checks the supplied file hashes, obtains the pinned official upstream
-commit, applies the main patch, copies `overlay/`, initializes the original
-submodules and applies the dependency patches. The generated `upstream-worktree/`
-is ignored by Git. An existing destination is never overwritten.
+PrepareSource.py verifies SOURCE_MANIFEST.json, obtains the pinned official upstream
+commit 41bfdaa7331808aff7239a9ec283cdba01b3b406, applies the patch and overlay,
+initializes original submodules and applies dependency patches. An existing
+reconstruction directory is never overwritten. Full game build instructions are in
+upstream-worktree/README_ENHANCED.md and REVIEW.md. Visual Studio 2022 C++ tools,
+OpenSiv3D 0.6.16, Python 3 and PowerShell 7 are development prerequisites.
+Installer engine builds require Windows C++ tools but not Siv3D; see installer/README.md
+inside the reconstructed tree. End users need no Python, PowerShell or .NET installation.
 
-Build instructions are in `upstream-worktree/README_ENHANCED.md`. Windows x64,
-Visual Studio 2022 C++ build tools and OpenSiv3D 0.6.16 are required. Set
-`SIV3D_0_6_16` before using the build script. Runtime dependencies and an original
-KSM installation are obtained separately; this source repository is not a game ZIP.
+The [public fork release branch](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1)
+provides an equivalent full-source view with upstream history. Binary releases are
+published only here. Existing review/refactor branches retain their historical roles.
 
-## Layout
-
-- `SOURCE_MANIFEST.json`: pinned upstream revision and source integrity hashes.
-- `patches/ksm-v2.patch`: changes to existing upstream files.
-- `overlay/`: new mod source, UI resources, dependency patches and build helpers.
-- `scripts/PrepareSource.py`: reproducible source reconstruction.
-
-Ordinary/TEST song collections, prebuilt executables, packages, user settings,
-records, logs and credentials are excluded. Preview_Piano test charts/audio are
-included as requested; chart metadata credits Hyung. Original copyright and
-license notices are retained.
-
-Repository access must remain private unless the owner explicitly chooses to
-publish it. No binary releases are published by this repository setup.
-
-## Latest source update
-
-Development build `20261023-171521-0937f555` adds EX maximum persistence to additional score records and restores base images to `imgs/`, with user skins in `skins/<skin name>/`. Legacy ten-field additional records are readable. Original `.ksc` files retain their format. Source reconstruction and existing user data remain separate.
+SDKs, compiled executables/DLLs, build outputs, normal/TEST song collections,
+user settings, records, execution logs and credentials are excluded from Git.
+Approved Preview_Piano resources credit Hyung in their chart metadata.
+See the reconstructed docs/RELEASE_0.5.1-beta1.md for validation and limitations.

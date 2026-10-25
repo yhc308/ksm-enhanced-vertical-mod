@@ -1,18 +1,7 @@
 diff --git a/src/Asset.cpp b/src/Asset.cpp
-index c98fb0b0e3b8ebed2255f5531f724626a2779bea..bb128fbef4a4b47793d7e666b7184017a35bf55a 100644
+index c98fb0b0e3b8ebed2255f5531f724626a2779bea..f59c9de6947186d489d2f99ca89065dffeb91481 100644
 --- a/src/Asset.cpp
 +++ b/src/Asset.cpp
-@@ -71,8 +71,8 @@ namespace noco
- 	FilePath Asset::GetFullPath(FilePathView filePath)
- 	{
- 		return IsAbsolutePath(filePath)
--			? FilePath{ filePath }
--			: FileSystem::PathAppend(BaseDirectoryPathConst(), filePath);
-+				   ? FilePath{ filePath }
-+				   : FileSystem::PathAppend(BaseDirectoryPathConst(), filePath);
- 	}
- 
- 	const Texture& Asset::GetOrLoadTexture(FilePathView filePath, MipmapEnabledYN mipmapEnabled)
 @@ -88,7 +88,7 @@ namespace noco
  		if (!table.isRegistered(filePath))
  		{

@@ -1,7 +1,7 @@
 name: Mod source checks
 on:
   push:
-    branches: [refactor/upstream-style-parity]
+    branches: [refactor/upstream-style-parity, release/0.5.1-beta1]
   pull_request:
 permissions:
   contents: read
@@ -17,7 +17,7 @@ jobs:
       - run: python -m unittest discover -s tests -p 'test_source_*.py'
       - run: python scripts/PrepareSource.py --destination build/source
       - run: pip install clang-format==19.1.5
-      - run: python build/source/scripts/CheckCppStyle.py --formatter clang-format
+      - run: python build/source/scripts/CheckReviewCppStyle.py
       - name: Compile production rolling-window tests without Siv3D
         run: |
           mkdir -p build/deps/catch2

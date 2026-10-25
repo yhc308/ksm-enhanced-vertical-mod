@@ -2714,7 +2714,7 @@ index 0262cf98cacfafa101a2e2d88a54f20c56af4751..ee21f6df94992ec6db4fa4e3e0d8b27c
  	{
  		m_stream.play();
 diff --git a/src/Web/SampleWeb.cpp b/src/Web/SampleWeb.cpp
-index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..a6e407bfa07b088b0dae1accf694d5e096c1b0a9 100644
+index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..58f16da5e3d488c79d69d78e46237198a1793021 100644
 --- a/src/Web/SampleWeb.cpp
 +++ b/src/Web/SampleWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2738,23 +2738,8 @@ index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..a6e407bfa07b088b0dae1accf694d5e0
  	class Sample::Impl : public web::IMixSource
  	{
  	private:
-@@ -94,10 +102,10 @@ namespace ksmaudio
- 			if (pTargetVoice == nullptr)
- 			{
- 				const auto it = std::max_element(m_voices.begin(), m_voices.end(),
--					[](const Voice& a, const Voice& b)
--					{
--						return a.cursorFrame < b.cursorFrame;
--					});
-+												 [](const Voice& a, const Voice& b)
-+												 {
-+													 return a.cursorFrame < b.cursorFrame;
-+												 });
- 				pTargetVoice = &(*it);
- 			}
- 
 diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
-index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796f000fb78 100644
+index 65a25982b80a368bbb1fa68f9a97729285594dfb..c71d9bca670cd6eb905c1b2422f6d20dd99a7c62 100644
 --- a/src/Web/StreamWeb.cpp
 +++ b/src/Web/StreamWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2789,21 +2774,6 @@ index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796
  	class Stream::Impl : public web::IMixSource
  	{
  	private:
-@@ -136,10 +144,10 @@ namespace ksmaudio
- 		{
- 			// 優先度の降順を保ち、同順位では後から追加した方を後ろに挿入(BASSと同じ呼び出し順)
- 			const auto it = std::find_if(m_dspChain.begin(), m_dspChain.end(),
--				[&entry](const DSPEntry& e)
--				{
--					return e.priority < entry.priority;
--				});
-+										 [&entry](const DSPEntry& e)
-+										 {
-+											 return e.priority < entry.priority;
-+										 });
- 			m_dspChain.insert(it, entry);
- 		}
- 
 @@ -176,8 +184,7 @@ namespace ksmaudio
  
  	public:
@@ -2814,21 +2784,6 @@ index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796
  		{
  			ma_decoder_config config = ma_decoder_config_init(ma_format_f32, web::kEngineNumChannels, web::kEngineSampleRate);
  			m_decoderOk = ma_decoder_init_file(filePath.c_str(), &config, &m_decoder) == MA_SUCCESS;
-@@ -357,10 +364,10 @@ namespace ksmaudio
- 			web::Engine().lock();
- 			m_dspChain.erase(
- 				std::remove_if(m_dspChain.begin(), m_dspChain.end(),
--					[hDSP](const DSPEntry& e)
--					{
--						return e.type == DSPType::UserEffect && e.handle == hDSP;
--					}),
-+							   [hDSP](const DSPEntry& e)
-+							   {
-+								   return e.type == DSPType::UserEffect && e.handle == hDSP;
-+							   }),
- 				m_dspChain.end());
- 			web::Engine().unlock();
- 		}
 diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
 index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde29c268f67 100644
 --- a/src/Web/ksmaudioWeb.cpp

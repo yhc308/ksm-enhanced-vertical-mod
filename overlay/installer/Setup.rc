@@ -1,0 +1,24 @@
+#include <windows.h>
+1 RT_MANIFEST "Setup.manifest"
+101 ICON "assets/setup.ico"
+1 VERSIONINFO
+FILEVERSION 0,5,1,1
+PRODUCTVERSION 0,5,1,1
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+ BLOCK "StringFileInfo"
+ BEGIN
+  BLOCK "040904b0"
+  BEGIN
+   VALUE "FileDescription", "KSM Enhanced Vertical Mod Setup\0"
+   VALUE "ProductName", "KSM Enhanced Vertical Mod\0"
+   VALUE "ProductVersion", "0.5.1-beta1\0"
+   VALUE "OriginalFilename", "KsmEnhancedVerticalSetup.exe\0"
+  END
+ END
+ BLOCK "VarFileInfo"
+ BEGIN
+  VALUE "Translation", 0x409, 1200
+ END
+END
