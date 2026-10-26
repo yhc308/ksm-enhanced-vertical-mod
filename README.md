@@ -5,6 +5,10 @@ Features include vertical play, skin presets, viewport customization, EX scoring
 
 [Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [Source structure and build guide](docs/DEVELOPMENT.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
+▶ English manual: https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/release/0.5.1-beta1/overlay/installer/readme/README_EN.txt<br>
+▶ 日本語マニュアル: https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/release/0.5.1-beta1/overlay/installer/readme/README_JA.txt<br>
+▶ 한국어 매뉴얼: https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/release/0.5.1-beta1/overlay/installer/readme/README_KO.txt
+
 ## Features
 
 ### ◆ Vertical play
