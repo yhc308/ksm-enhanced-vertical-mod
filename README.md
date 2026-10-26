@@ -1,42 +1,55 @@
-# KSM Enhanced Vertical Mod — private source repository
+# KSM Enhanced Vertical Mod (Windows x64 only)
 
-This is an independent private repository, not a GitHub fork. It stores the mod's
-new files and changes against **K-Shoot MANIA 2.1.0** without including a complete
-copy of upstream source or history. The original public review fork is separate.
+**An unofficial mod that brings vertical play to K-Shoot Mania 2.1.0.**
+Features include vertical play, skin presets, viewport customization, EX scoring, HARD+APS, judgment timing settings and partial ASIO support.
 
-## Prepare the complete source
+[Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [Source structure and build guide](docs/DEVELOPMENT.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
-Install Git and Python 3, then run:
+## Features
 
-```sh
-python scripts/PrepareSource.py
-```
+### Vertical play
 
-The script checks the supplied file hashes, obtains the pinned official upstream
-commit, applies the main patch, copies `overlay/`, initializes the original
-submodules and applies the dependency patches. The generated `upstream-worktree/`
-is ignored by Git. An existing destination is never overwritten.
+Play with lane and HUD layouts adapted for portrait displays. Landscape play is also supported, and display settings can be adjusted in Vertical Option.
+The UI assets and additional features designed for vertical play also support landscape mode.
 
-Build instructions are in `upstream-worktree/README_ENHANCED.md`. Windows x64,
-Visual Studio 2022 C++ build tools and OpenSiv3D 0.6.16 are required. Set
-`SIV3D_0_6_16` before using the build script. Runtime dependencies and an original
-KSM installation are obtained separately; this source repository is not a game ZIP.
+### Judgment counters
 
-## Layout
+Judgment indicators are available in both landscape and portrait modes, with layouts suited to each orientation.
 
-- `SOURCE_MANIFEST.json`: pinned upstream revision and source integrity hashes.
-- `patches/ksm-v2.patch`: changes to existing upstream files.
-- `overlay/`: new mod source, UI resources, dependency patches and build helpers.
-- `scripts/PrepareSource.py`: reproducible source reconstruction.
+### P-CRITICAL and EX scoring
 
-Ordinary/TEST song collections, prebuilt executables, packages, user settings,
-records, logs and credentials are excluded. Preview_Piano test charts/audio are
-included as requested; chart metadata credits Hyung. Original copyright and
-license notices are retained.
+Adds the P-CRITICAL judgment, along with EX scoring, result displays and additional record saving. EX records are stored separately from the original game records, and include the chart's theoretical maximum EX score.
 
-Repository access must remain private unless the owner explicitly chooses to
-publish it. No binary releases are published by this repository setup.
+### Viewport customization / user skins
 
-## Latest source update
+Adjust background brightness, lane and note width, judgment indicators, skins and more while viewing an in-game preview.
 
-Development build `20261023-171521-0937f555` adds EX maximum persistence to additional score records and restores base images to `imgs/`, with user skins in `skins/<skin name>/`. Legacy ten-field additional records are readable. Original `.ksc` files retain their format. Source reconstruction and existing user data remain separate.
+Default images are loaded from `imgs/`, and user skins from `skins/<skin name>/`. Select a skin in Viewport Custom and check it in the preview.
+Missing skin images can fall back to the default images in `imgs/`, so you do not need to replace every image.
+
+### HARD+APS
+
+APS switches to NORMAL when the HARD gauge fails. The gauge and percentage display transition together, with a transition effect on the APS banner.
+
+### Judgment timing settings
+
+Adjust judgment and display settings while playing a dedicated test chart on repeat.
+
+## Reporting issues
+
+Please [open an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues) with your Windows version, game and mod versions, and steps to reproduce the problem. Screenshots or error logs are also helpful.
+
+- Game logs: `<game folder>/log/session-<number>-pid<PID>/events-0.log`
+- Installer report: `%TEMP%/KsmEnhancedVerticalSetup-last-result.json`
+
+## Credits and license
+
+Developed in collaboration with Codex. All images and audio used in the project were created by hand.
+
+Original game: [K-Shoot Mania](https://www.kshootmania.com/) / [Official source](https://github.com/kshootmania/ksm-v2)
+
+- Special thanks: [KSM's developer](https://x.com/masaka_k)
+- UI skin design and mod contributions: [chesia_game](https://x.com/chesia_game)
+- Music for the preview and judgment timing settings: [Hyung](https://open.spotify.com/artist/2soZF7u1mCALXnpwCbyGvh?si=7gvRzWqdTeqV2lEYtfmo5w)
+
+This is an unofficial mod. Original copyright notices and licenses are retained.
