@@ -1,64 +1,59 @@
-# KSM Enhanced Vertical Mod 0.5.1-beta1 설치가이드
+# KSM Enhanced Vertical Mod (Windows x64 전용)
 
-지원 대상:  K-Shoot Mania 2.1.0 Windows x64
+**K-Shoot Mania 2.1.0을 세로 화면에서도 즐길 수 있도록 확장한 비공식 모드입니다.**
+버티컬 플레이, 스킨 프리셋, 화면 커스터마이징, EX 스코어, HARD+APS, 판정 타이밍 설정과 일부 ASIO 기능을 제공합니다.
 
-## 설치
+[다운로드](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [소스 구조 및 빌드 안내](../DEVELOPMENT.md) · [전체 소스](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1) · [문제 제보](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
-1. 실행중인 `kshootmania.exe` 가 있다면 종료하셔야합니다.
-2. KsmEnhancedVerticalSetup.exe를 실행하세요.
-3. kshootmania.exe가 있는 폴더를 선택하고 [모드 설치]를 누르세요. (설치 EXE를 KSM 폴더에 두면 해당 폴더를 자동 선택합니다)
-4. 설치 후 같은 폴더의 ksm-enhanced-vertical.exe로 모드를 실행합니다.
-5. 원본 kshootmania.exe은 유지됩니다.
+▶ English : **[Open](README_EN.md)**<br>
+▶ 日本語 : **[開く](README_JA.md)**<br>
+▶ 한국어 : **[바로가기](README_KO.md)** **(지금 열고있음)**
 
-## 제거와 재설치
+## 주요 기능
 
-* 설치기 EXE로 설치하지 않은 수동 설치는, 설치기로 제거할 수 없습니다.
+### ◆ 버티컬 플레이
 
-1. 같은 설치 EXE를 다시 실행해 KSM 폴더를 선택하고 [모드 제거]를 누르세요.
-2. 별도 제거 프로그램과 시작 메뉴 항목은 설치하지 않으니 이 EXE를 보관하세요.
-3. 다른 모드 버전으로 바꿀 때는 먼저 제거한 뒤 재설치하세요.
+세로 화면에 맞춘 레인과 HUD 배치로 플레이할 수 있습니다. 기존 가로 플레이도 지원하며, Vertical Option에서 화면 관련 설정을 조정할 수 있습니다.
+버티컬을 위해 마련한 UI 이미지와 추가 기능들도 가로모드를 지원합니다.
 
-## 모드 삭제시 주의사항
+### ◆ 판정 카운터
 
-설치 기록(`.ksm-enhanced-install.json`)과 백업은 편집하지 마세요. 복구가 불가능해집니다.
-수정한 언어·기타 모드 파일(기본에 추가된 이미지 등)은 `.ksm-enhanced-recovery/<작업번호>/`에 백업을 남깁니다
-백업/복구 자료는 안전을 위해 남기며, 설치기 사용 중에 삭제하지 마세요.
+가로·세로 모드 각각의 화면에 맞춘 판정 인디케이터를 제공합니다.
 
-일반·EX·코스 기록과 설치 후 달성한 기록, 점수 백업, 설정, 악곡, 사용자 스킨은 보존합니다.
-직접 수정하거나 삭제한 이미지는 그 상태로 유지합니다.
+### ◆ 세부 판정 추가 및 EX 스코어
 
-수정하지 않은 설치 이미지는 원본으로 복원하거나 모드에서 설치한 파일만 제거합니다.
+P-CRITICAL 판정과 EX 스코어, 리절트 표시, 추가 기록 저장을 지원합니다. EX 기록은 기존 게임 기록과 별도로 보관하며, 해당 채보의 EX 스코어 이론치도 저장합니다.
 
-## 오류와 안내
+### ◆ 뷰포트 커스텀 / 사용자 스킨
 
-게임 종료 여부·폴더·여유 공간을 확인하세요. 중단됐다면 같은 EXE로 같은 폴더를 선택해 복구합니다.
-백업 손상·지원하지 않는 원본은 덮어쓰지 않고 중단합니다. 쓰기 권한이 부족하면 관리자 실행을 요청합니다.
-테스트용 서명 없는 설치기이며 자동 업데이트는 제공하지 않습니다.
+게임 화면의 프리뷰를 보면서 배경 밝기, 레인과 노트의 굵기, 판정 인디케이터, 스킨 등을 조정할 수 있습니다.
 
-## Mods 추가 컨텐츠
+기본 이미지는 `imgs/`, 사용자 스킨은 `skins/<skin name>/`에서 읽습니다. Viewport Custom에서 스킨을 선택하고 프리뷰로 확인할 수 있습니다.
+스킨에 누락된 이미지는 `imgs/`의 기본 이미지로 대체할 수 있으므로 모든 이미지를 교체할 필요는 없습니다.
 
-- 버티컬 플레이
-- 뷰포트 커스텀, 스킨 기능추가 (추가되는 skins 폴더 사용)
-- EX 스코어 점수 및 리절트 개선
-- HARD+APS
-- 판정 세팅모드
+### ◆ HARD+APS 게이지
 
-## 스킨에 관하여
+HARD 게이지 실패 시 NORMAL로 전환하는 APS 기능을 제공합니다. 게이지와 퍼센트 표시가 함께 전환되며, APS 배너에 전환 연출을 적용했습니다.
 
-- 모드 이미지 또한 imgs 에 추가됩니다.
-- 이미지와 같은 이름으로 skins 폴더에 스킨 이미지를 추가하면 적용가능합니다.
+### ◆ 판정 타이밍 설정
 
-문제 제보 시 빌드 번호·Windows 버전·원본 KSM 버전·재현 순서·오류를 GIT 에 알려주세요.
+전용 테스트 채보를 반복 플레이하면서 판정과 표시 설정을 조정할 수 있습니다.
 
-- 오류 로그: `[게임경로]\log\session-숫자-pid번호\events-0.log`
-- GUI 마지막 작업 결과: `%TEMP%/KsmEnhancedVerticalSetup-last-result.json`
-- 라이선스: `설치 폴더의 [게임경로]\mods/enhanced\ 및 [게임경로]\mods\enhanced\licenses\`
+## 문제 제보
 
-## 제거 후 빈 폴더 정리
+문제가 발생하면 [Issues](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)에 사용 중인 Windows 버전, 게임·모드 버전, 재현 방법을 알려주세요. 스크린샷이나 오류 로그도 확인에 도움이 됩니다.
 
-모드 파일 제거가 완료된 뒤, 이번 설치에서 새로 추가했다고 기록된 폴더가 비어 있으면 하위 폴더부터 정리합니다.
-폴더 생성 기록이 없는 기존 설치는 설치 목록으로 확인되는 `mods/enhanced`, `mods/vertical`, `skin_preview` 영역만 정리하며, 공용 부모 mods는 유지합니다.
-파일(숨김 파일 포함)이나 다른 폴더가 남아 있으면 지우지 않습니다. 폴더 내용물을 통째로 삭제하지 않습니다.
-기존 공용 폴더, 악곡, 사용자 스킨, 기록, 설정, 로그, 설치 백업과 복구 자료는 보존합니다.
-권한이나 잠금 때문에 정리하지 못한 폴더는 유지하고 완료 화면과 마지막 작업 결과 JSON에 경고를 표시합니다.
-폴더 정리 중 중단됐다면 같은 설치기로 같은 폴더를 선택해 남은 정리를 복구하세요.
+- 게임 로그: `<game folder>/log/session-<number>-pid<PID>/events-0.log`
+- 설치기 결과: `%TEMP%/KsmEnhancedVerticalSetup-last-result.json`
+
+## 크레딧 및 라이선스
+
+Codex와 협업하여 제작했으며, 사용된 이미지와 음원은 모두 수작업으로 제작되었습니다.
+
+원본 게임: [K-Shoot Mania](https://www.kshootmania.com/) / [공식 소스](https://github.com/kshootmania/ksm-v2)
+
+- Special thanks: [KSM 개발자](https://x.com/masaka_k)
+- UI 스킨 제작 및 모드 제작 기여: [chesia_game](https://x.com/chesia_game)
+- 프리뷰·판정 타이밍 설정용 음악 제공: [Hyung](https://open.spotify.com/artist/2soZF7u1mCALXnpwCbyGvh?si=7gvRzWqdTeqV2lEYtfmo5w)
+
+이 프로젝트는 비공식 모드입니다. 원본의 저작권 고지와 라이선스를 유지합니다.
