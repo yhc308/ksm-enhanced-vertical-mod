@@ -4,7 +4,7 @@ $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 Import-Module (Join-Path $root 'tests/AsioHarness.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'TestWorkspace.psm1') -Force
-$python=(Get-Command python -ErrorAction Stop).Source
+$python='python'
 $verifier=Join-Path $root 'tests/SkinTestVerifier.py'
 $results=@()
 foreach($case in $Cases){

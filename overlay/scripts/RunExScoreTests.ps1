@@ -4,7 +4,7 @@ $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 Import-Module (Join-Path $root 'tests/AsioHarness.psm1') -Force
 Import-Module (Join-Path $root 'scripts/TestWorkspace.psm1') -Force
-$python=(Get-Command python -ErrorAction Stop).Source
+$python='python'
 if($Group -eq 'core'){
  $session=New-AsioFixture
  $report=Invoke-AsioFixture -Session $session -Flags @('--ex-score-test') -Report 'ex-score-test.txt' -Expected 'TOTAL \d+ EX checks passed' -Timeout 45

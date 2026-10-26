@@ -1,0 +1,72 @@
+name: Review full source checks
+on:
+  push:
+    branches: [review/current-features-tests, release/0.5.1-beta1]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  full-source-and-headless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: pip install libclang==18.1.1 clang-format==19.1.5
+      - run: python scripts/ApplyDependencyPatches.py
+      - name: Verify actual game source, pinned core commit, and immutable resources
+        run: python scripts/VerifyReviewSource.py
+      - name: Test the compiler-token restoration safeguards
+        run: python -m unittest discover -s tests -p 'test_compiler_parity.py' -v
+      - name: Test preview clock sampling against unchanged-reference frame gaps
+        run: python -m unittest discover -s tests -p 'test_preview_trace_rules.py' -v
+      - name: Check added C++ style while preserving original formatting
+        run: python scripts/CheckReviewCppStyle.py
+      - name: Compile production rolling-window tests directly from this source tree
+        run: |
+          mkdir -p build/deps/catch2
+          curl --fail --location https://raw.githubusercontent.com/catchorg/Catch2/v2.13.6/single_include/catch2/catch.hpp --output build/deps/catch2/catch.hpp
+          g++ -std=c++20 -O2 -Ibuild/deps -Ikshootmania/src tests/headless/RecentTimingWindowTests.cpp -o build/recent-tests
+          build/recent-tests --reporter junit --out build/headless-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: review-source-and-headless-results
+          path: |
+            build/review-parity.json
+            build/headless-results.xml
+  windows-timer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and run native Win32 timer tests from the review source
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path build/deps/include/catch2 -Force | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/catchorg/Catch2/v2.13.6/single_include/catch2/catch.hpp -OutFile build/deps/include/catch2/catch.hpp
+          $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+          $install = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $install) { throw 'Visual C++ tools missing' }
+          $developer = Join-Path $install 'VC/Auxiliary/Build/vcvars64.bat'
+          @"
+          @echo off
+          call "$developer" >nul
+          cl /nologo /std:c++20 /EHsc /MT /utf-8 /Ibuild/deps/include /Ikshootmania/src tests/headless/WindowsWaitableTimerTests.cpp /Fobuild/windows-timer-tests.obj /Febuild/windows-timer-tests.exe
+          if errorlevel 1 exit /b 1
+          build\windows-timer-tests.exe --reporter junit --out build/windows-timer-results.xml
+          exit /b %errorlevel%
+          "@ | Set-Content build/run-windows-timer.cmd -Encoding utf8
+          & cmd /c build\run-windows-timer.cmd
+          if ($LASTEXITCODE) { throw 'Windows timer tests failed' }
+      - name: Record exactly which feature commit was tested
+        shell: pwsh
+        run: Get-Content docs/review/CORE_TARGET.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: review-native-windows-timer-results
+          path: build/windows-timer-results.xml

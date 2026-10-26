@@ -1,0 +1,33 @@
+{
+  "referenceExeSha256": "83055F2DD278C21F99D8CA29E63FDE9F5ACC6EEA7AB8A83E16232A9D438EC2DE",
+  "finiteOwnedRendererPauseMilliseconds": 600,
+  "ownership": "Only a thread of the exact process started for the isolated fixture was paused; it was resumed in finally.",
+  "wraps": [
+    {
+      "previous": {
+        "wall": 18.30359,
+        "chart": 17.91602
+      },
+      "current": {
+        "wall": 18.47562,
+        "chart": 0.03159
+      }
+    },
+    {
+      "previous": {
+        "wall": 36.36333,
+        "chart": 17.87756
+      },
+      "current": {
+        "wall": 37.02431,
+        "chart": 0.48397
+      }
+    }
+  ],
+  "originalVerifier": "Rejected the delayed first observed frame because it exceeded 0.2 seconds.",
+  "correctedVerifier": "Nominal 18-second clock progress and actual observation intervals; original 0.12-second clock tolerance retained.",
+  "unitCases": 13,
+  "firstCandidateAttempt": "An 8-second gap also missed required numeric edits; retained as an incomplete capture, not accepted.",
+  "secondCandidateAttempt": "Raw first-new-frame wall timestamps exceeded the period tolerance by 9 ms; retained.",
+  "freshRevalidation": "All wide, classic and portrait skin cases passed with all required transitions and edits."
+}

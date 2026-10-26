@@ -1,7 +1,8 @@
 diff --git a/src/Asset.cpp b/src/Asset.cpp
+index c98fb0b0e3b8ebed2255f5531f724626a2779bea..f59c9de6947186d489d2f99ca89065dffeb91481 100644
 --- a/src/Asset.cpp
 +++ b/src/Asset.cpp
-@@ -88,7 +88,7 @@
+@@ -88,7 +88,7 @@ namespace noco
  		if (!table.isRegistered(filePath))
  		{
  			const FilePath fullPath = GetFullPath(filePath);

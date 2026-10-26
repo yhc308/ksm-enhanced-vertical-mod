@@ -1,0 +1,415 @@
+{
+  "status": "PASS",
+  "coreCommit": "1c96d26c1477ade1efdfc70180b578e40b3f8c68",
+  "referenceModCommit": "d7fa0f09a15a124609269d97f093eb2befa84a76",
+  "upstreamCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
+  "sourceParity": {
+    "status": "PASS",
+    "testedCommit": "cd50c4769511478f3e54c0fb6a03170fe2676969",
+    "coreCommit": "1c96d26c1477ade1efdfc70180b578e40b3f8c68",
+    "referenceModCommit": "d7fa0f09a15a124609269d97f093eb2befa84a76",
+    "gameCppFiles": 367,
+    "dependencyCppFiles": 21,
+    "runtimeResources": 431,
+    "binaryResourceComparison": "Exact SHA256",
+    "textResourceComparison": "Only CRLF/LF normalized",
+    "originalGameSourceDeletions": 0,
+    "compilerLexer": "libclang 18.1.1"
+  },
+  "unitTests": {
+    "Release": {
+      "cases": 43,
+      "assertions": 3982
+    },
+    "Debug": {
+      "cases": 43,
+      "assertions": 3982
+    }
+  },
+  "functionalStages": [
+    {
+      "name": "Release-build",
+      "status": "PASS",
+      "seconds": 182.4976285
+    },
+    {
+      "name": "Cpp-style",
+      "status": "PASS",
+      "seconds": 1.3203736
+    },
+    {
+      "name": "Release-units",
+      "status": "PASS",
+      "seconds": 191.0035612
+    },
+    {
+      "name": "Headless-units",
+      "status": "PASS",
+      "seconds": 6.8515957
+    },
+    {
+      "name": "EX",
+      "status": "PASS",
+      "seconds": 5.0289195
+    },
+    {
+      "name": "APS",
+      "status": "PASS",
+      "seconds": 8.0064459
+    },
+    {
+      "name": "Judge-setting",
+      "status": "PASS",
+      "seconds": 42.1595744
+    },
+    {
+      "name": "Judge-pixels",
+      "status": "PASS",
+      "seconds": 2.9655282
+    },
+    {
+      "name": "Runtime-resources",
+      "status": "PASS",
+      "seconds": 0.1786991
+    },
+    {
+      "name": "Judge-baseline",
+      "status": "PASS",
+      "seconds": 5.9808685
+    },
+    {
+      "name": "Debug-units",
+      "status": "PASS",
+      "seconds": 207.8107776
+    },
+    {
+      "name": "Audio-engine",
+      "status": "PASS",
+      "seconds": 15.4231338
+    },
+    {
+      "name": "Audio-integration",
+      "status": "PASS",
+      "seconds": 14.761701
+    },
+    {
+      "name": "Audio-game-EOF",
+      "status": "PASS",
+      "seconds": 56.9294866
+    },
+    {
+      "name": "Menus",
+      "status": "PASS",
+      "seconds": 18.5778726
+    },
+    {
+      "name": "Skins",
+      "status": "PASS",
+      "revalidatedCases": [
+        "wide",
+        "classic",
+        "vertical"
+      ],
+      "evidence": "build/skin-tests-latest.json; independent baseline sampling control and unchanged game source"
+    },
+    {
+      "name": "Skins-1080x1920",
+      "status": "PASS",
+      "seconds": 49.7475232
+    },
+    {
+      "name": "Viewport",
+      "status": "PASS",
+      "seconds": 96.1511033
+    },
+    {
+      "name": "Viewport-640x480",
+      "status": "PASS",
+      "seconds": 48.6033535
+    },
+    {
+      "name": "Viewport-1920x1080",
+      "status": "PASS",
+      "seconds": 48.3435292
+    },
+    {
+      "name": "Viewport-1080x1920",
+      "status": "PASS",
+      "seconds": 93.9615828
+    },
+    {
+      "name": "Render-geometry",
+      "status": "PASS",
+      "seconds": 10.7963485
+    },
+    {
+      "name": "Portrait-scenes",
+      "status": "PASS",
+      "seconds": 50.3884693
+    },
+    {
+      "name": "Timing-choices",
+      "status": "PASS",
+      "seconds": 20.6917854
+    },
+    {
+      "name": "EX-landscape",
+      "status": "PASS",
+      "seconds": 115.3417082
+    },
+    {
+      "name": "EX-portrait",
+      "status": "PASS",
+      "seconds": 77.160138
+    },
+    {
+      "name": "EX-ingame",
+      "status": "PASS",
+      "seconds": 149.9707561
+    }
+  ],
+  "apsExactRgbaImages": 81,
+  "judgeImagesWithOnlyFpsLabelExcluded": 110,
+  "identicalReplayRowsPerOrientation": 2197,
+  "privatePackagePythonCases": 21,
+  "compilerLexerSafeguardCases": 11,
+  "previewSamplingCases": 13,
+  "retainedInitialFailedStages": [
+    {
+      "name": "Skins",
+      "status": "FAIL",
+      "seconds": 47.6615725,
+      "error": "Skin verification failed: F:\\ksh_vertical_project\\review-20261024\\verification\\test-runs\\20261024-015440-0082fd3bc86542f28abe6fc0028dfdce"
+    }
+  ],
+  "samplingControl": {
+    "referenceExeSha256": "83055F2DD278C21F99D8CA29E63FDE9F5ACC6EEA7AB8A83E16232A9D438EC2DE",
+    "finiteOwnedRendererPauseMilliseconds": 600,
+    "ownership": "Only a thread of the exact process started for the isolated fixture was paused; it was resumed in finally.",
+    "wraps": [
+      {
+        "previous": {
+          "wall": 18.30359,
+          "chart": 17.91602
+        },
+        "current": {
+          "wall": 18.47562,
+          "chart": 0.03159
+        }
+      },
+      {
+        "previous": {
+          "wall": 36.36333,
+          "chart": 17.87756
+        },
+        "current": {
+          "wall": 37.02431,
+          "chart": 0.48397
+        }
+      }
+    ],
+    "originalVerifier": "Rejected the delayed first observed frame because it exceeded 0.2 seconds.",
+    "correctedVerifier": "Nominal 18-second clock progress and actual observation intervals; original 0.12-second clock tolerance retained.",
+    "unitCases": 13,
+    "firstCandidateAttempt": "An 8-second gap also missed required numeric edits; retained as an incomplete capture, not accepted.",
+    "secondCandidateAttempt": "Raw first-new-frame wall timestamps exceeded the period tolerance by 9 ms; retained.",
+    "freshRevalidation": "All wide, classic and portrait skin cases passed with all required transitions and edits."
+  },
+  "nativePerformance": {
+    "status": "PASS",
+    "repetitions": 3,
+    "aggregation": "Per-case median of three real-clock measurements",
+    "gate": "Regress only when the increase exceeds both 5 percent and 0.1 ms",
+    "cases": [
+      {
+        "case": [
+          "0",
+          "native-play"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.3280209999999966,
+          "candidateMedian": 3.4172489952971348,
+          "deltaMs": 0.08922799529713821,
+          "deltaPercent": 2.6811127483011163,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.7825,
+          "candidateMedian": 5.848,
+          "deltaMs": 0.06550000000000011,
+          "deltaPercent": 1.1327280587980997,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 0,
+        "longFramesCandidateMedian": 1
+      },
+      {
+        "case": [
+          "1",
+          "native-play"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.4300366638078943,
+          "candidateMedian": 3.420339734816081,
+          "deltaMs": -0.00969692899181318,
+          "deltaPercent": -0.282706278161121,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.9873,
+          "candidateMedian": 5.9546,
+          "deltaMs": -0.03270000000000017,
+          "deltaPercent": -0.5461560302640618,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 2,
+        "longFramesCandidateMedian": 1
+      }
+    ]
+  },
+  "longPerformance": {
+    "status": "PASS",
+    "repetitions": 3,
+    "aggregation": "Per-case median of three real-clock measurements",
+    "gate": "Regress only when the increase exceeds both 5 percent and 0.1 ms",
+    "cases": [
+      {
+        "case": [
+          "0",
+          "hidden"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.3690454166666677,
+          "candidateMedian": 3.3731418750000004,
+          "deltaMs": 0.00409645833333272,
+          "deltaPercent": 0.12159106888460275,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.918000000000312,
+          "candidateMedian": 5.932000000000048,
+          "deltaMs": 0.013999999999736445,
+          "deltaPercent": 0.23656640756565914,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 3,
+        "longFramesCandidateMedian": 2
+      },
+      {
+        "case": [
+          "0",
+          "idle"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.359489791666668,
+          "candidateMedian": 3.3338768750000014,
+          "deltaMs": -0.025612916666666763,
+          "deltaPercent": -0.7624049559608872,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.975999999999981,
+          "candidateMedian": 6.045999999999996,
+          "deltaMs": 0.0700000000000145,
+          "deltaPercent": 1.171352074966779,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 5,
+        "longFramesCandidateMedian": 1
+      },
+      {
+        "case": [
+          "0",
+          "overlap"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.342672499999998,
+          "candidateMedian": 3.3337270833333372,
+          "deltaMs": -0.008945416666660932,
+          "deltaPercent": -0.2676127160725718,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.846000000000018,
+          "candidateMedian": 5.811000000000011,
+          "deltaMs": -0.03500000000000725,
+          "deltaPercent": -0.5986999657886956,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 4,
+        "longFramesCandidateMedian": 0
+      },
+      {
+        "case": [
+          "1",
+          "hidden"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.353812708333335,
+          "candidateMedian": 3.344713749999998,
+          "deltaMs": -0.00909895833333696,
+          "deltaPercent": -0.27130192186130314,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.805999999999756,
+          "candidateMedian": 5.774000000000168,
+          "deltaMs": -0.031999999999587914,
+          "deltaPercent": -0.5511539786357089,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 4,
+        "longFramesCandidateMedian": 2
+      },
+      {
+        "case": [
+          "1",
+          "idle"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.3372747916666667,
+          "candidateMedian": 3.3442487499999993,
+          "deltaMs": 0.006973958333332586,
+          "deltaPercent": 0.20897165407975665,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.818000000000545,
+          "candidateMedian": 5.854999999999944,
+          "deltaMs": 0.036999999999398625,
+          "deltaPercent": 0.6359573736575311,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 2,
+        "longFramesCandidateMedian": 4
+      },
+      {
+        "case": [
+          "1",
+          "overlap"
+        ],
+        "mean_ms": {
+          "baselineMedian": 3.3545579166666664,
+          "candidateMedian": 3.344152916666667,
+          "deltaMs": -0.010404999999999553,
+          "deltaPercent": -0.3101749994627823,
+          "regressed": false
+        },
+        "p99_ms": {
+          "baselineMedian": 5.946000000000229,
+          "candidateMedian": 6.143999999999927,
+          "deltaMs": 0.19799999999969842,
+          "deltaPercent": 3.329969727542731,
+          "regressed": false
+        },
+        "longFramesBaselineMedian": 5,
+        "longFramesCandidateMedian": 2
+      }
+    ]
+  },
+  "limitations": [
+    "No physical ASIO device certification",
+    "No other-OS gameplay certification",
+    "Portable CI does not substitute for local SDK/GPU/runtime verification"
+  ]
+}

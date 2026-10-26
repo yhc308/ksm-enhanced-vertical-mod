@@ -1,0 +1,3685 @@
+{
+  "upstreamCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
+  "referenceModCommit": "d7fa0f09a15a124609269d97f093eb2befa84a76",
+  "coreCommit": "1c96d26c1477ade1efdfc70180b578e40b3f8c68",
+  "upstreamTrackedFiles": 697,
+  "coreTrackedFiles": 842,
+  "unchangedSubmoduleGitlinks": 6,
+  "gameCppFiles": 367,
+  "originalGameSourceDeleted": 0,
+  "beforeFormattingRestorationGameCpp": {
+    "changedFiles": 173,
+    "insertions": 17076,
+    "deletions": 1789,
+    "files": [
+      {
+        "path": "kshootmania/src/Common/AssetManagement.cpp",
+        "insertions": 8,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
+        "insertions": 113,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputSettings.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/CommonDefines.hpp",
+        "insertions": 38,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Common/FrameRateLimit.cpp",
+        "insertions": 9,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Common/FsUtils.cpp",
+        "insertions": 5,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.cpp",
+        "insertions": 269,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.hpp",
+        "insertions": 76,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/WindowsWaitableTimer.hpp",
+        "insertions": 55,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Course/CourseInfo.cpp",
+        "insertions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
+        "insertions": 400,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
+        "insertions": 158,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
+        "insertions": 102,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
+        "insertions": 487,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticArguments.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.cpp",
+        "insertions": 170,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.hpp",
+        "insertions": 9,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ExScoreFixture.hpp",
+        "insertions": 319,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
+        "insertions": 703,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
+        "insertions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/RenderGeometryFixture.hpp",
+        "insertions": 341,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
+        "insertions": 376,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
+        "insertions": 87,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
+        "insertions": 352,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ExScorePanel.hpp",
+        "insertions": 165,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/GameRenderContext.hpp",
+        "insertions": 65,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ResultBestScorePanel.hpp",
+        "insertions": 142,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.cpp",
+        "insertions": 223,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.hpp",
+        "insertions": 13,
+        "deletions": 12
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.cpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.hpp",
+        "insertions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.cpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscIO.cpp",
+        "insertions": 29,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscValue.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.cpp",
+        "insertions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.hpp",
+        "insertions": 78,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/Ini/AudioCalibration.hpp",
+        "insertions": 178,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.cpp",
+        "insertions": 64,
+        "deletions": 14
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/FolderConfIni.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.hpp",
+        "insertions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.cpp",
+        "insertions": 43,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Main.cpp",
+        "insertions": 608,
+        "deletions": 152
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.cpp",
+        "insertions": 49,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioDefines.hpp",
+        "insertions": 63,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp",
+        "insertions": 42,
+        "deletions": 47
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioTailClock.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.cpp",
+        "insertions": 180,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.hpp",
+        "insertions": 13,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.cpp",
+        "insertions": 31,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.hpp",
+        "insertions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.cpp",
+        "insertions": 50,
+        "deletions": 11
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.cpp",
+        "insertions": 263,
+        "deletions": 74
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.hpp",
+        "insertions": 45,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
+        "insertions": 99,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsDefines.hpp",
+        "insertions": 21,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp",
+        "insertions": 308,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/AchievementPanel.cpp",
+        "insertions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ComboOverlay.cpp",
+        "insertions": 10,
+        "deletions": 16
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/FrameRateMonitor.cpp",
+        "insertions": 5,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.cpp",
+        "insertions": 103,
+        "deletions": 28
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.cpp",
+        "insertions": 26,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/MoviePanel.cpp",
+        "insertions": 16,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
+        "insertions": 157,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ScorePanel.cpp",
+        "insertions": 5,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
+        "insertions": 54,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp",
+        "insertions": 41,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp",
+        "insertions": 18,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/HighwayRenderTexture.cpp",
+        "insertions": 41,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp",
+        "insertions": 14,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp",
+        "insertions": 28,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp",
+        "insertions": 53,
+        "deletions": 44
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp",
+        "insertions": 15,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.cpp",
+        "insertions": 101,
+        "deletions": 62
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.hpp",
+        "insertions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.cpp",
+        "insertions": 60,
+        "deletions": 34
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
+        "insertions": 89,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.cpp",
+        "insertions": 112,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
+        "insertions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.cpp",
+        "insertions": 89,
+        "deletions": 39
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
+        "insertions": 77,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.cpp",
+        "insertions": 33,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.hpp",
+        "insertions": 30,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/InputTimingStats.hpp",
+        "insertions": 37,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentDefines.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp",
+        "insertions": 93,
+        "deletions": 32
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.hpp",
+        "insertions": 20,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.cpp",
+        "insertions": 55,
+        "deletions": 13
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp",
+        "insertions": 67,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.cpp",
+        "insertions": 51,
+        "deletions": 14
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.hpp",
+        "insertions": 7,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.cpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
+        "insertions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/RecentTimingWindow.hpp",
+        "insertions": 51,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.cpp",
+        "insertions": 46,
+        "deletions": 37
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.hpp",
+        "insertions": 19,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayOption.hpp",
+        "insertions": 30,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayResult.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
+        "insertions": 148,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/ViewStatus.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.cpp",
+        "insertions": 34,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.hpp",
+        "insertions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.cpp",
+        "insertions": 32,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.hpp",
+        "insertions": 18,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp",
+        "insertions": 17,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.cpp",
+        "insertions": 421,
+        "deletions": 177
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.hpp",
+        "insertions": 26,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Play/PlayScene.cpp",
+        "insertions": 56,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp",
+        "insertions": 50,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.cpp",
+        "insertions": 57,
+        "deletions": 19
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.cpp",
+        "insertions": 376,
+        "deletions": 212
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.hpp",
+        "insertions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp",
+        "insertions": 53,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp",
+        "insertions": 74,
+        "deletions": 71
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SearchInputDialog.cpp",
+        "insertions": 4,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.cpp",
+        "insertions": 23,
+        "deletions": 26
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenu.cpp",
+        "insertions": 191,
+        "deletions": 115
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp",
+        "insertions": 31,
+        "deletions": 32
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectScene.cpp",
+        "insertions": 127,
+        "deletions": 61
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.cpp",
+        "insertions": 638,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
+        "insertions": 126,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
+        "insertions": 60,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
+        "insertions": 1271,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
+        "insertions": 68,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.cpp",
+        "insertions": 59,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.hpp",
+        "insertions": 26,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.cpp",
+        "insertions": 156,
+        "deletions": 12
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/UI/ModMenuStyle.hpp",
+        "insertions": 212,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DepthImageSettings.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DiagnosticInputReplay.hpp",
+        "insertions": 58,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DisplayTransitionTest.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/JudgmentReplayTest.hpp",
+        "insertions": 188,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuContentLayout.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuEntryGate.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuInputTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.cpp",
+        "insertions": 581,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.hpp",
+        "insertions": 69,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionFlowTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionsPresentation.hpp",
+        "insertions": 40,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ProjectiveWall.hpp",
+        "insertions": 445,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/SpinRegression.hpp",
+        "insertions": 100,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalDisplay.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalHUDLayout.hpp",
+        "insertions": 25,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
+        "insertions": 131,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
+        "insertions": 70,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalModConfig.hpp",
+        "insertions": 116,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalRenderPreview.hpp",
+        "insertions": 256,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalResources.hpp",
+        "insertions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
+        "insertions": 438,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
+        "insertions": 594,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/stdafx.h",
+        "insertions": 1,
+        "deletions": 0
+      }
+    ],
+    "statusCounts": {
+      "A": 73,
+      "M": 100,
+      "D": 0
+    }
+  },
+  "reviewGameCpp": {
+    "changedFiles": 172,
+    "insertions": 16619,
+    "deletions": 1414,
+    "files": [
+      {
+        "path": "kshootmania/src/Common/AssetManagement.cpp",
+        "insertions": 8,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
+        "insertions": 113,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputSettings.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/CommonDefines.hpp",
+        "insertions": 38,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Common/FrameRateLimit.cpp",
+        "insertions": 9,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Common/FsUtils.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.cpp",
+        "insertions": 269,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.hpp",
+        "insertions": 76,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/WindowsWaitableTimer.hpp",
+        "insertions": 55,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Course/CourseInfo.cpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
+        "insertions": 400,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
+        "insertions": 158,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
+        "insertions": 102,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
+        "insertions": 487,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticArguments.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.cpp",
+        "insertions": 170,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.hpp",
+        "insertions": 9,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ExScoreFixture.hpp",
+        "insertions": 319,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
+        "insertions": 703,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
+        "insertions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/RenderGeometryFixture.hpp",
+        "insertions": 341,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
+        "insertions": 376,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
+        "insertions": 87,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
+        "insertions": 352,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ExScorePanel.hpp",
+        "insertions": 165,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/GameRenderContext.hpp",
+        "insertions": 65,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ResultBestScorePanel.hpp",
+        "insertions": 142,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.cpp",
+        "insertions": 223,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.hpp",
+        "insertions": 13,
+        "deletions": 12
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.cpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.hpp",
+        "insertions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.cpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscIO.cpp",
+        "insertions": 26,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscValue.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.cpp",
+        "insertions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.hpp",
+        "insertions": 78,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/Ini/AudioCalibration.hpp",
+        "insertions": 178,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.cpp",
+        "insertions": 56,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.hpp",
+        "insertions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.cpp",
+        "insertions": 25,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Main.cpp",
+        "insertions": 466,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.cpp",
+        "insertions": 49,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioDefines.hpp",
+        "insertions": 63,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp",
+        "insertions": 12,
+        "deletions": 19
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioTailClock.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.cpp",
+        "insertions": 173,
+        "deletions": 18
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.hpp",
+        "insertions": 13,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.cpp",
+        "insertions": 27,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.hpp",
+        "insertions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.cpp",
+        "insertions": 47,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.cpp",
+        "insertions": 255,
+        "deletions": 64
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.hpp",
+        "insertions": 45,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
+        "insertions": 99,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsDefines.hpp",
+        "insertions": 21,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp",
+        "insertions": 308,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/AchievementPanel.cpp",
+        "insertions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ComboOverlay.cpp",
+        "insertions": 10,
+        "deletions": 16
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/FrameRateMonitor.cpp",
+        "insertions": 5,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.cpp",
+        "insertions": 103,
+        "deletions": 28
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.cpp",
+        "insertions": 26,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/MoviePanel.cpp",
+        "insertions": 16,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
+        "insertions": 157,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ScorePanel.cpp",
+        "insertions": 5,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
+        "insertions": 54,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp",
+        "insertions": 41,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp",
+        "insertions": 18,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/HighwayRenderTexture.cpp",
+        "insertions": 41,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp",
+        "insertions": 14,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp",
+        "insertions": 28,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp",
+        "insertions": 53,
+        "deletions": 44
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp",
+        "insertions": 15,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.cpp",
+        "insertions": 101,
+        "deletions": 62
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.hpp",
+        "insertions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.cpp",
+        "insertions": 60,
+        "deletions": 34
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
+        "insertions": 89,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.cpp",
+        "insertions": 112,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
+        "insertions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.cpp",
+        "insertions": 89,
+        "deletions": 39
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
+        "insertions": 77,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.cpp",
+        "insertions": 33,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.hpp",
+        "insertions": 30,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/InputTimingStats.hpp",
+        "insertions": 37,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentDefines.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp",
+        "insertions": 78,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.hpp",
+        "insertions": 20,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.cpp",
+        "insertions": 55,
+        "deletions": 13
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp",
+        "insertions": 67,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.cpp",
+        "insertions": 50,
+        "deletions": 13
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.hpp",
+        "insertions": 7,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.cpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
+        "insertions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/RecentTimingWindow.hpp",
+        "insertions": 51,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.cpp",
+        "insertions": 46,
+        "deletions": 37
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.hpp",
+        "insertions": 19,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayOption.hpp",
+        "insertions": 28,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayResult.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
+        "insertions": 148,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/ViewStatus.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.cpp",
+        "insertions": 34,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.hpp",
+        "insertions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.cpp",
+        "insertions": 32,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.hpp",
+        "insertions": 18,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp",
+        "insertions": 7,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.cpp",
+        "insertions": 416,
+        "deletions": 173
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.hpp",
+        "insertions": 26,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Play/PlayScene.cpp",
+        "insertions": 56,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp",
+        "insertions": 50,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.cpp",
+        "insertions": 50,
+        "deletions": 16
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.cpp",
+        "insertions": 326,
+        "deletions": 187
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.hpp",
+        "insertions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp",
+        "insertions": 53,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp",
+        "insertions": 39,
+        "deletions": 36
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SearchInputDialog.cpp",
+        "insertions": 4,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.cpp",
+        "insertions": 21,
+        "deletions": 24
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenu.cpp",
+        "insertions": 137,
+        "deletions": 70
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp",
+        "insertions": 19,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectScene.cpp",
+        "insertions": 104,
+        "deletions": 46
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.cpp",
+        "insertions": 638,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
+        "insertions": 126,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
+        "insertions": 60,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
+        "insertions": 1271,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
+        "insertions": 68,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.cpp",
+        "insertions": 59,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.hpp",
+        "insertions": 26,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.cpp",
+        "insertions": 145,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/UI/ModMenuStyle.hpp",
+        "insertions": 212,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DepthImageSettings.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DiagnosticInputReplay.hpp",
+        "insertions": 58,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DisplayTransitionTest.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/JudgmentReplayTest.hpp",
+        "insertions": 188,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuContentLayout.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuEntryGate.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuInputTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.cpp",
+        "insertions": 581,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.hpp",
+        "insertions": 69,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionFlowTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionsPresentation.hpp",
+        "insertions": 40,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ProjectiveWall.hpp",
+        "insertions": 445,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/SpinRegression.hpp",
+        "insertions": 100,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalDisplay.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalHUDLayout.hpp",
+        "insertions": 25,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
+        "insertions": 131,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
+        "insertions": 70,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalModConfig.hpp",
+        "insertions": 116,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalRenderPreview.hpp",
+        "insertions": 256,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalResources.hpp",
+        "insertions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
+        "insertions": 438,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
+        "insertions": 594,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/stdafx.h",
+        "insertions": 1,
+        "deletions": 0
+      }
+    ],
+    "statusCounts": {
+      "A": 73,
+      "M": 99,
+      "D": 0
+    }
+  },
+  "fullReviewIncludingUiAndPatchContainers": {
+    "changedFiles": 254,
+    "insertions": 101905,
+    "deletions": 2402,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "insertions": 7,
+        "deletions": 0
+      },
+      {
+        "path": ".gitignore",
+        "insertions": 45,
+        "deletions": 0
+      },
+      {
+        "path": "README.md",
+        "insertions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "README_ENHANCED.md",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "REVIEW.md",
+        "insertions": 78,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/imgs/bg2_vertical.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/bg3_vertical.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/bg_vertical.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/er_aps.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/judge_p.gif",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/judge_p1.gif",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/msel_bar_vertical.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/msel_exscore_1.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/msel_exscore_2.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/msel_exscore_3.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/play_judge_indicator.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/play_judge_indicator_inversion.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/play_judge_indicator_minimum.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/play_judge_indicator_minimum_inversion.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/result_bestscore_checker.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/result_v2_judge.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/result_v2_judge_inversion.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/score_header_ex.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/imgs/skin.json",
+        "insertions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/imgs/standby_vertical.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/lang/English.json",
+        "insertions": 259,
+        "deletions": 196
+      },
+      {
+        "path": "kshootmania/App/lang/Japanese.json",
+        "insertions": 259,
+        "deletions": 196
+      },
+      {
+        "path": "kshootmania/App/lang/Korean.json",
+        "insertions": 259,
+        "deletions": 196
+      },
+      {
+        "path": "kshootmania/App/lang/Simplified Chinese.json",
+        "insertions": 259,
+        "deletions": 196
+      },
+      {
+        "path": "kshootmania/App/lang/Traditional Chinese.json",
+        "insertions": 259,
+        "deletions": 196
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/Judge_Setting_Mode_banner.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano.kson",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano.mp3",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/Preview_Piano_fade.mp3",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/hispeed-landscape.noco",
+        "insertions": 388,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/judge_setting/hispeed-portrait.noco",
+        "insertions": 388,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/licenses/bassasio-bassasio.txt",
+        "insertions": 338,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/licenses/bassmix-bassmix.txt",
+        "insertions": 439,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/licenses/ksmaudio.txt",
+        "insertions": 84,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/ui/play_hud.noco",
+        "insertions": 3446,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/ui/result.noco",
+        "insertions": 5014,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/ui/select.noco",
+        "insertions": 7399,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/ui/select_item_center.noco",
+        "insertions": 9492,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/enhanced/ui/timing_feedback.noco",
+        "insertions": 1405,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/shaders/LICENSE.txt",
+        "insertions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/shaders/tunnel_warp.hlsl",
+        "insertions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/shaders/wall_projective.hlsl",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/ingame_layout.json",
+        "insertions": 247,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/option.noco",
+        "insertions": 3520,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/option_setting_item.noco",
+        "insertions": 1138,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/play_hud.noco",
+        "insertions": 4394,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator.noco",
+        "insertions": 1138,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator_minimum.noco",
+        "insertions": 1138,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/play_judge_indicator_minimum_vertical.noco",
+        "insertions": 1138,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/play_prepare.noco",
+        "insertions": 1925,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/result.noco",
+        "insertions": 5014,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/select.noco",
+        "insertions": 8535,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/select_item_bottom.noco",
+        "insertions": 4193,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/select_item_center.noco",
+        "insertions": 9492,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/select_item_top.noco",
+        "insertions": 4183,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/timing_feedback.noco",
+        "insertions": 1405,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/mods/vertical/ui/title.noco",
+        "insertions": 2175,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/shaders/aps_color_dodge.essl.frag",
+        "insertions": 30,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/shaders/aps_color_dodge.frag",
+        "insertions": 45,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/shaders/aps_color_dodge.hlsl",
+        "insertions": 43,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/skin_preview/Preview_Piano.kson",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/skin_preview/Preview_Piano.mp3",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/skin_preview/Preview_Piano_fade.mp3",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/skins/README.txt",
+        "insertions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/App/ui/menu_custom_icon.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/ui/menu_judge_icon.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/ui/menu_vertical_icon.png",
+        "insertions": null,
+        "deletions": null
+      },
+      {
+        "path": "kshootmania/App/ui/scene/timing_feedback.noco",
+        "insertions": 1405,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/CMakeLists.txt",
+        "insertions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/kshootmania.vcxproj",
+        "insertions": 82,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/kshootmania.vcxproj.filters",
+        "insertions": 80,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AssetManagement.cpp",
+        "insertions": 8,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
+        "insertions": 113,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputRestartPolicy.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/AudioOutputSettings.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/CommonDefines.hpp",
+        "insertions": 38,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Common/FrameRateLimit.cpp",
+        "insertions": 9,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Common/FsUtils.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.cpp",
+        "insertions": 269,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/SkinPreset.hpp",
+        "insertions": 76,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Common/WindowsWaitableTimer.hpp",
+        "insertions": 55,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Course/CourseInfo.cpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsFixture.hpp",
+        "insertions": 400,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ApsVideoFixture.hpp",
+        "insertions": 158,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioEndGameFixture.hpp",
+        "insertions": 102,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/AudioTimingFixture.hpp",
+        "insertions": 487,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticArguments.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.cpp",
+        "insertions": 170,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/DiagnosticRunner.hpp",
+        "insertions": 9,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/EnhancedMenuFixture.hpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/ExScoreFixture.hpp",
+        "insertions": 319,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/JudgeSettingFixture.hpp",
+        "insertions": 703,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/PlayJudgeIndicatorFixture.hpp",
+        "insertions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/RenderGeometryFixture.hpp",
+        "insertions": 341,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
+        "insertions": 376,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
+        "insertions": 87,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
+        "insertions": 352,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ExScorePanel.hpp",
+        "insertions": 165,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/GameRenderContext.hpp",
+        "insertions": 65,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ResultBestScorePanel.hpp",
+        "insertions": 142,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.cpp",
+        "insertions": 223,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/Graphics/ScreenUtils.hpp",
+        "insertions": 13,
+        "deletions": 12
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.cpp",
+        "insertions": 93,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/AdditionalScoreIO.hpp",
+        "insertions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.cpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/HighScoreInfo.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscIO.cpp",
+        "insertions": 26,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/HighScore/KscValue.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.cpp",
+        "insertions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/I18n/I18n.hpp",
+        "insertions": 78,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/Ini/AudioCalibration.hpp",
+        "insertions": 178,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.cpp",
+        "insertions": 56,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Ini/ConfigIni.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.cpp",
+        "insertions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Ini/KSMIniData.hpp",
+        "insertions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.cpp",
+        "insertions": 25,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/Input/KeyConfig.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
+        "insertions": 21,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Main.cpp",
+        "insertions": 466,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.cpp",
+        "insertions": 49,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AssistTick.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioDefines.hpp",
+        "insertions": 63,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp",
+        "insertions": 12,
+        "deletions": 19
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/AudioTailClock.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.cpp",
+        "insertions": 173,
+        "deletions": 18
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/BGM.hpp",
+        "insertions": 13,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.cpp",
+        "insertions": 27,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/FXChipSE.hpp",
+        "insertions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.cpp",
+        "insertions": 47,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.cpp",
+        "insertions": 255,
+        "deletions": 64
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GameMain.hpp",
+        "insertions": 45,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/GaugePresentation.hpp",
+        "insertions": 99,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsDefines.hpp",
+        "insertions": 21,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp",
+        "insertions": 308,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.hpp",
+        "insertions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/AchievementPanel.cpp",
+        "insertions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ComboOverlay.cpp",
+        "insertions": 10,
+        "deletions": 16
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/FrameRateMonitor.cpp",
+        "insertions": 5,
+        "deletions": 6
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.cpp",
+        "insertions": 103,
+        "deletions": 28
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.cpp",
+        "insertions": 26,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/MoviePanel.cpp",
+        "insertions": 16,
+        "deletions": 8
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/PlayJudgeIndicator.hpp",
+        "insertions": 157,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/ScorePanel.cpp",
+        "insertions": 5,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
+        "insertions": 54,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp",
+        "insertions": 41,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp",
+        "insertions": 18,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/HighwayRenderTexture.cpp",
+        "insertions": 41,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp",
+        "insertions": 14,
+        "deletions": 4
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp",
+        "insertions": 28,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp",
+        "insertions": 53,
+        "deletions": 44
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp",
+        "insertions": 15,
+        "deletions": 9
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.cpp",
+        "insertions": 101,
+        "deletions": 62
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.hpp",
+        "insertions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.cpp",
+        "insertions": 60,
+        "deletions": 34
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.hpp",
+        "insertions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
+        "insertions": 89,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.cpp",
+        "insertions": 112,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/JudgeSettingSession.hpp",
+        "insertions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.cpp",
+        "insertions": 89,
+        "deletions": 39
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.hpp",
+        "insertions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/DetailedJudgmentStats.hpp",
+        "insertions": 77,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.cpp",
+        "insertions": 33,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ExScore.hpp",
+        "insertions": 30,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/InputTimingStats.hpp",
+        "insertions": 37,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentDefines.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp",
+        "insertions": 78,
+        "deletions": 25
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.hpp",
+        "insertions": 20,
+        "deletions": 3
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.cpp",
+        "insertions": 55,
+        "deletions": 13
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp",
+        "insertions": 67,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.cpp",
+        "insertions": 50,
+        "deletions": 13
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.hpp",
+        "insertions": 7,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.cpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/NormalGaugeState.hpp",
+        "insertions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/RecentTimingWindow.hpp",
+        "insertions": 51,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.cpp",
+        "insertions": 46,
+        "deletions": 37
+      },
+      {
+        "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.hpp",
+        "insertions": 19,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayOption.hpp",
+        "insertions": 28,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/MusicGame/PlayResult.hpp",
+        "insertions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
+        "insertions": 148,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/MusicGame/ViewStatus.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.cpp",
+        "insertions": 34,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/RuntimeConfig.hpp",
+        "insertions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.cpp",
+        "insertions": 32,
+        "deletions": 5
+      },
+      {
+        "path": "kshootmania/src/Scenes/Common/CommonOverlay.hpp",
+        "insertions": 18,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp",
+        "insertions": 7,
+        "deletions": 7
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.cpp",
+        "insertions": 416,
+        "deletions": 173
+      },
+      {
+        "path": "kshootmania/src/Scenes/Option/OptionScene.hpp",
+        "insertions": 26,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Play/PlayScene.cpp",
+        "insertions": 56,
+        "deletions": 29
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp",
+        "insertions": 50,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.hpp",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.cpp",
+        "insertions": 50,
+        "deletions": 16
+      },
+      {
+        "path": "kshootmania/src/Scenes/Result/ResultScene.hpp",
+        "insertions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.cpp",
+        "insertions": 326,
+        "deletions": 187
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/BTOptionPanel.hpp",
+        "insertions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp",
+        "insertions": 53,
+        "deletions": 53
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp",
+        "insertions": 39,
+        "deletions": 36
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SearchInputDialog.cpp",
+        "insertions": 4,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.cpp",
+        "insertions": 21,
+        "deletions": 24
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectChartInfo.hpp",
+        "insertions": 6,
+        "deletions": 1
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenu.cpp",
+        "insertions": 137,
+        "deletions": 70
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp",
+        "insertions": 19,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/Select/SelectScene.cpp",
+        "insertions": 104,
+        "deletions": 46
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.cpp",
+        "insertions": 638,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp",
+        "insertions": 126,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/ModMenuButtons.hpp",
+        "insertions": 60,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
+        "insertions": 1271,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
+        "insertions": 68,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.cpp",
+        "insertions": 59,
+        "deletions": 17
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleMenu.hpp",
+        "insertions": 26,
+        "deletions": 2
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.cpp",
+        "insertions": 145,
+        "deletions": 10
+      },
+      {
+        "path": "kshootmania/src/Scenes/Title/TitleScene.hpp",
+        "insertions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/UI/ModMenuStyle.hpp",
+        "insertions": 212,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DepthImageSettings.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DiagnosticInputReplay.hpp",
+        "insertions": 58,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/DisplayTransitionTest.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/JudgmentReplayTest.hpp",
+        "insertions": 188,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuContentLayout.hpp",
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuEntryGate.hpp",
+        "insertions": 20,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/MenuInputTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.cpp",
+        "insertions": 581,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ModOptionsScene.hpp",
+        "insertions": 69,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionFlowTest.hpp",
+        "insertions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/OptionsPresentation.hpp",
+        "insertions": 40,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/ProjectiveWall.hpp",
+        "insertions": 445,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/SpinRegression.hpp",
+        "insertions": 100,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
+        "insertions": 122,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalDisplay.hpp",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalHUDLayout.hpp",
+        "insertions": 25,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
+        "insertions": 131,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
+        "insertions": 70,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalModConfig.hpp",
+        "insertions": 116,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalRenderPreview.hpp",
+        "insertions": 256,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalResources.hpp",
+        "insertions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
+        "insertions": 438,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
+        "insertions": 594,
+        "deletions": 0
+      },
+      {
+        "path": "kshootmania/src/stdafx.h",
+        "insertions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
+        "insertions": 13,
+        "deletions": 0
+      },
+      {
+        "path": "patches/dependencies/ksmaudio.patch",
+        "insertions": 3938,
+        "deletions": 0
+      },
+      {
+        "path": "patches/dependencies/manifest.json",
+        "insertions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/ApplyDependencyPatches.py",
+        "insertions": 28,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/Build.ps1",
+        "insertions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/WindowsBuildTools.psm1",
+        "insertions": 17,
+        "deletions": 0
+      }
+    ]
+  },
+  "remainingFormatting": [
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Common/AssetManagement.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SearchInputDialog.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/ViewStatus.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Common/FsUtils.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Ini/ConfigIni.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/BGM.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SelectMenu.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/PlayResult.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Input/KeyConfig.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Graphics/ScreenUtils.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AudioEffectMain.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/TitleScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SelectChartInfo.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Ini/KSMIniData.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/ComboOverlay.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/BTOptionPanel.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/GraphicsDefines.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Common/FrameRateLimit.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/MoviePanel.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/HighScore/KscIO.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/LaserApproachIndicator.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/AchievementPanel.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/PlayPrepare/PlayPrepareScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Common/CommonOverlay.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ScoringStatus.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/stdafx.h",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/FXChipSE.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/JudgmentMain.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/FXChipSE.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/RuntimeConfig.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/HighScore/KscValue.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/GameMain.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Result/ResultScene.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/LaserLaneJudgment.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AssistTick.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AssistTick.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/JudgmentDefines.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/ButtonLaneJudgment.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Option/OptionScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Play/PlayScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/GameMain.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/GaugePanel.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/LaserCursor3DGraphics.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/TitleMenu.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/FrameRateMonitor.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/I18n/I18n.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/HighScore/HighScoreInfo.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/I18n/I18n.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Option/OptionScene.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/HighwayRenderTexture.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/AudioDefines.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Course/CourseInfo.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Ini/KSMIniData.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/HUD/ScorePanel.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Jdgline/Jdgoverlay3DGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/RuntimeConfig.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/BGM.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Common/CommonOverlay.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Common/CommonDefines.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SelectScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Input/KeyConfig.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/SelectChartInfo.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/TitleScene.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Judgment/JudgmentHandler.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Audio/LaserSlamSE.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/HighScore/HighScoreInfo.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Title/TitleMenu.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Ini/ConfigIni.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Graphics/ScreenUtils.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Main.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Result/ResultScene.cpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/PlayOption.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    },
+    {
+      "path": "kshootmania/src/Scenes/Select/BTOptionPanel.hpp",
+      "policy": "Retain uncertain/changed regions; matching unchanged bodies may be restored"
+    }
+  ],
+  "measurementPolicy": "Git source diffs against upstream, not patch-file line counts; patch containers and serialized UI are separately identified.",
+  "dependencySourceDiffs": [
+    {
+      "module": "ksmaudio",
+      "before": {
+        "changedFiles": 20,
+        "insertions": 2381,
+        "deletions": 127,
+        "files": [
+          {
+            "path": "ThirdParty_Windows/bassasio/bassasio.h",
+            "insertions": 163,
+            "deletions": 0
+          },
+          {
+            "path": "ThirdParty_Windows/bassmix/bassmix.h",
+            "insertions": 154,
+            "deletions": 0
+          },
+          {
+            "path": "include/ksmaudio/AudioEffect/AudioEffectBus.hpp",
+            "insertions": 16,
+            "deletions": 11
+          },
+          {
+            "path": "include/ksmaudio/AudioEffect/ParamController.hpp",
+            "insertions": 15,
+            "deletions": 7
+          },
+          {
+            "path": "include/ksmaudio/Diagnostics.hpp",
+            "insertions": 354,
+            "deletions": 0
+          },
+          {
+            "path": "include/ksmaudio/Sample.hpp",
+            "insertions": 15,
+            "deletions": 1
+          },
+          {
+            "path": "include/ksmaudio/Stream.hpp",
+            "insertions": 34,
+            "deletions": 4
+          },
+          {
+            "path": "include/ksmaudio/StreamWithEffects.hpp",
+            "insertions": 7,
+            "deletions": 3
+          },
+          {
+            "path": "include/ksmaudio/ksmaudio.hpp",
+            "insertions": 61,
+            "deletions": 2
+          },
+          {
+            "path": "src/AsioOutput.hpp",
+            "insertions": 23,
+            "deletions": 0
+          },
+          {
+            "path": "src/AudioEffect/AudioEffectBus.cpp",
+            "insertions": 39,
+            "deletions": 4
+          },
+          {
+            "path": "src/AudioEffect/ParamController.cpp",
+            "insertions": 11,
+            "deletions": 4
+          },
+          {
+            "path": "src/OutputResources.hpp",
+            "insertions": 27,
+            "deletions": 0
+          },
+          {
+            "path": "src/Sample.cpp",
+            "insertions": 138,
+            "deletions": 10
+          },
+          {
+            "path": "src/Stream.cpp",
+            "insertions": 223,
+            "deletions": 31
+          },
+          {
+            "path": "src/StreamWithEffects.cpp",
+            "insertions": 19,
+            "deletions": 1
+          },
+          {
+            "path": "src/Web/SampleWeb.cpp",
+            "insertions": 13,
+            "deletions": 5
+          },
+          {
+            "path": "src/Web/StreamWeb.cpp",
+            "insertions": 20,
+            "deletions": 13
+          },
+          {
+            "path": "src/Web/ksmaudioWeb.cpp",
+            "insertions": 41,
+            "deletions": 2
+          },
+          {
+            "path": "src/ksmaudio.cpp",
+            "insertions": 1008,
+            "deletions": 29
+          }
+        ]
+      },
+      "review": {
+        "changedFiles": 20,
+        "insertions": 2369,
+        "deletions": 115,
+        "files": [
+          {
+            "path": "ThirdParty_Windows/bassasio/bassasio.h",
+            "insertions": 163,
+            "deletions": 0
+          },
+          {
+            "path": "ThirdParty_Windows/bassmix/bassmix.h",
+            "insertions": 154,
+            "deletions": 0
+          },
+          {
+            "path": "include/ksmaudio/AudioEffect/AudioEffectBus.hpp",
+            "insertions": 16,
+            "deletions": 11
+          },
+          {
+            "path": "include/ksmaudio/AudioEffect/ParamController.hpp",
+            "insertions": 15,
+            "deletions": 7
+          },
+          {
+            "path": "include/ksmaudio/Diagnostics.hpp",
+            "insertions": 354,
+            "deletions": 0
+          },
+          {
+            "path": "include/ksmaudio/Sample.hpp",
+            "insertions": 15,
+            "deletions": 1
+          },
+          {
+            "path": "include/ksmaudio/Stream.hpp",
+            "insertions": 34,
+            "deletions": 4
+          },
+          {
+            "path": "include/ksmaudio/StreamWithEffects.hpp",
+            "insertions": 7,
+            "deletions": 3
+          },
+          {
+            "path": "include/ksmaudio/ksmaudio.hpp",
+            "insertions": 61,
+            "deletions": 2
+          },
+          {
+            "path": "src/AsioOutput.hpp",
+            "insertions": 23,
+            "deletions": 0
+          },
+          {
+            "path": "src/AudioEffect/AudioEffectBus.cpp",
+            "insertions": 39,
+            "deletions": 4
+          },
+          {
+            "path": "src/AudioEffect/ParamController.cpp",
+            "insertions": 11,
+            "deletions": 4
+          },
+          {
+            "path": "src/OutputResources.hpp",
+            "insertions": 27,
+            "deletions": 0
+          },
+          {
+            "path": "src/Sample.cpp",
+            "insertions": 138,
+            "deletions": 10
+          },
+          {
+            "path": "src/Stream.cpp",
+            "insertions": 223,
+            "deletions": 31
+          },
+          {
+            "path": "src/StreamWithEffects.cpp",
+            "insertions": 19,
+            "deletions": 1
+          },
+          {
+            "path": "src/Web/SampleWeb.cpp",
+            "insertions": 9,
+            "deletions": 1
+          },
+          {
+            "path": "src/Web/StreamWeb.cpp",
+            "insertions": 12,
+            "deletions": 5
+          },
+          {
+            "path": "src/Web/ksmaudioWeb.cpp",
+            "insertions": 41,
+            "deletions": 2
+          },
+          {
+            "path": "src/ksmaudio.cpp",
+            "insertions": 1008,
+            "deletions": 29
+          }
+        ]
+      }
+    },
+    {
+      "module": "kshootmania/ThirdParty/NocoUI",
+      "before": {
+        "changedFiles": 1,
+        "insertions": 3,
+        "deletions": 3,
+        "files": [
+          {
+            "path": "src/Asset.cpp",
+            "insertions": 3,
+            "deletions": 3
+          }
+        ]
+      },
+      "review": {
+        "changedFiles": 1,
+        "insertions": 1,
+        "deletions": 1,
+        "files": [
+          {
+            "path": "src/Asset.cpp",
+            "insertions": 1,
+            "deletions": 1
+          }
+        ]
+      }
+    }
+  ],
+  "fullCurrentSnapshotTrackedFiles": 969,
+  "existingDevelopmentFilesSeparated": 127,
+  "companionBranchTrackedFiles": 981,
+  "companionAdditionalFiles": 139
+}
