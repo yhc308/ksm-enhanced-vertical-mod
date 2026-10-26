@@ -3,7 +3,7 @@
 **An unofficial mod that brings vertical play to K-Shoot Mania 2.1.0.**
 Features include vertical play, skin presets, viewport customization, EX scoring, HARD+APS, judgment timing settings and partial ASIO support.
 
-[Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [Source structure and build guide](https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/release/0.5.1-beta1/overlay/REVIEW.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
+[Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [Source structure and build guide](https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/release/0.5.1-beta1/overlay/REVIEW.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/fe5afb4ca7c375f98cbce7591b70bae477d1004b) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
 ## Features
 
