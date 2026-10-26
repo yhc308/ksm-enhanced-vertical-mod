@@ -8,7 +8,7 @@ For playing the mod, use the [installer release](https://github.com/yhc308/ksm-e
 
 The source for the published **0.5.1-beta1** build is on [`release/0.5.1-beta1`](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/release/0.5.1-beta1). The `main` branch retains an earlier source snapshot; its updated project README does not mean the release code has been merged into it.
 
-For an upstream-based view with the original Git history, see the [equivalent full-source branch](https://github.com/yhc308/ksm-enhanced-vertical/tree/release/0.5.1-beta1).
+For an upstream-based view with the original Git history, see the [equivalent full-source branch](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical).
 
 ## Reconstruct the source
 
