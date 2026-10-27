@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <Siv3D.hpp>
 #include "Vertical/VerticalModConfig.hpp"
+#include "Ini/ConfigIni.hpp"
 namespace GameRender
 {
 	struct Context
@@ -15,7 +16,10 @@ namespace GameRender
 	}
 	inline Context Current()
 	{
-		return Override().value_or(Context{ Scene::Size(), Vertical::ModConfig::Load().enabled });
+		// Avoid evaluating the settings fallback while a render scope is active.
+		if (const auto& context = Override())
+			return *context;
+		return Context{ Scene::Size(), ConfigIni::GetBool(U"vertical_enabled", false) };
 	}
 	inline Size Size()
 	{

@@ -11,9 +11,11 @@ import sys
 import time
 import tempfile
 import uuid
+import struct
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT/'installer'))
 spec = importlib.util.spec_from_file_location('build_package', ROOT/'installer/BuildPackage.py')
 builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)
 WORK = ROOT/'build/native-installer-tests'/uuid.uuid4().hex
@@ -27,6 +29,25 @@ def put(path, data):
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_bytes(data.encode() if isinstance(data,str) else data)
 def js(path): return json.loads(path.read_text(encoding='utf-8-sig'))
+def dll_image(symbols=('BASS_Test',), machine=0x8664):
+    data=bytearray(0x1200)
+    struct.pack_into('<H',data,0,0x5a4d);struct.pack_into('<I',data,0x3c,0x80)
+    struct.pack_into('<IHHIIIHH',data,0x80,0x4550,machine,1,0,0,0,240,0x2022)
+    opt=0x98
+    struct.pack_into('<H',data,opt,0x20b);struct.pack_into('<I',data,opt+56,0x3000);struct.pack_into('<I',data,opt+60,0x200)
+    struct.pack_into('<I',data,opt+108,16);struct.pack_into('<II',data,opt+112,0x1000,0x100)
+    sec=opt+240
+    struct.pack_into('<8sIIII',data,sec,b'.text',0x1000,0x1000,0x1000,0x200)
+    struct.pack_into('<IIHHIIIIIII',data,0x200,0,0,0,0,0,1,len(symbols),len(symbols),0x1100,0x1200,0x1300)
+    pos=0x1400
+    for i,name in enumerate(symbols):
+        struct.pack_into('<I',data,0x300+i*4,0x1800)
+        struct.pack_into('<I',data,0x400+i*4,pos)
+        struct.pack_into('<H',data,0x500+i*2,i)
+        encoded=name.encode()+b'\0';data[pos-0x1000+0x200:pos-0x1000+0x200+len(encoded)]=encoded;pos+=len(encoded)
+    data[0xa00]=0xc3
+    return bytes(data)
+
 payload=WORK/'inputs'; payload.mkdir()
 FILES={
  'ksm-enhanced-vertical.exe':b'MOD-BINARY',
@@ -43,12 +64,12 @@ for i,(name,data) in enumerate(FILES.items()):
     p=payload/str(i); put(p,data); paths[name]=p
 targets={'schemaVersion':2,'modId':'ksm-enhanced-vertical','profiles':[
  {'id':'fixture','runtimeContract':'ksm-2.1.0-enhanced-skin-v2','executableHashes':[sha(b'ORIGINAL-A')],
-  'requiredFiles':[{'path':'ui/scene/title.noco','sha256':sha(b'UI-A')}]}]}
+  'requiredFiles':[], 'requiredLibraries':[{'path':'bass.dll','requiredExports':['BASS_Test']},{'path':'bass_fx.dll','requiredExports':['BASS_Test']}]}]}
 EXE=WORK/'SetupTest.exe'
 builder.assemble(ROOT/'build/native-installer/SetupTestStub.exe', EXE, paths, targets, fixture=True)
 def fixture(name):
     p=WORK/name; p.mkdir()
-    for key,data in {'kshootmania.exe':b'ORIGINAL-A','ui/scene/title.noco':b'UI-A',
+    for key,data in {'kshootmania.exe':b'ORIGINAL-A','ui/scene/title.noco':b'UI-A','bass.dll':dll_image(),'bass_fx.dll':dll_image(),
                      'imgs/bg_vertical.png':b'USER-BEFORE','lang/Korean.json':b'{"label":"ORIGINAL"}',
                      'mods/enhanced/ui/test.noco':b'ORIGINAL-UI','config.ini':b'USER-SETTINGS',
                      'skin_preset.json':b'USER-PRESET','audio_calibration_profiles.json':b'USER-CALIBRATION',
@@ -122,7 +143,26 @@ try:
     p=fixture('unknown'); put(p/'kshootmania.exe','WRONG'); before=inventory(p)
     run(p,'install',False); check(inventory(p)==before,'Unknown upstream is preserved')
     p=fixture('bad-resources'); put(p/'ui/scene/title.noco','DIFFERENT'); before=inventory(p)
-    run(p,'install',False); check(inventory(p)==before,'Resource contract mismatch is preserved')
+    run(p,'install'); run(p,'remove'); check(inventory(p)==before,'Changed user UI is accepted and preserved')
+    p=fixture('missing-user-resources');(p/'ui/scene/title.noco').unlink();put(p/'imgs/base.gif',b'USER-BASE');put(p/'imgs/日本語/extra.png',b'USER-EXTRA');before=inventory(p)
+    run(p,'inspect');run(p,'install');run(p,'remove');check(inventory(p)==before,'Missing original UI and changed/additional user images do not block installation')
+    for name,content,expected in (
+        ('missing-dll',None,'dependency_missing'),('invalid-dll',b'broken','dependency_invalid'),
+        ('x86-dll',dll_image(machine=0x14c),'dependency_architecture'),
+        ('missing-export',dll_image(('OTHER',)),'dependency_export'),
+        ('truncated-pe',dll_image()[:150],'dependency_invalid')):
+        p=fixture(name)
+        if content is None:(p/'bass.dll').unlink()
+        else:put(p/'bass.dll',content)
+        before=inventory(p)
+        data,_=run(p,'inspect',False);check(data['code']==expected and 'bass.dll' in data['message'],'Specific read-only dependency diagnostic: '+name)
+        run(p,'install',False);check(inventory(p)==before,'Rejected DLL leaves all files unchanged: '+name)
+    p=fixture('compatible-different-dll');put(p/'bass.dll',dll_image()+b'DIFFERENT-HASH');before=inventory(p)
+    run(p,'install');run(p,'remove');check(inventory(p)==before,'Compatible DLL with a different hash is accepted and preserved')
+    p=fixture('packed-dll-export');packed=bytearray(dll_image());struct.pack_into('<I',packed,0x300,0x2000);struct.pack_into('<I',packed,0x188+8,0x2000);put(p/'bass.dll',bytes(packed));before=inventory(p)
+    run(p,'install');run(p,'remove');check(inventory(p)==before,'Packed DLL exports in valid virtual section space are accepted')
+    p=fixture('older-installed-version');run(p,'install');state=js(p/'.ksm-enhanced-install.json');state['version']='0.5.1-beta1';state.pop('installerRevision',None);put(p/'.ksm-enhanced-install.json',json.dumps(state))
+    data,_=run(p,'inspect');check(not data['sameVersion'],'Older version is identified without an automatic overwrite');run(p,'remove');run(p,'install');run(p,'remove')
     p=fixture('manual'); put(p/'ksm-enhanced-vertical.exe','MANUAL'); before=inventory(p)
     run(p,'install',False); check(inventory(p)==before,'Manual installation is not adopted')
     p=fixture('locked-file'); before=inventory(p)

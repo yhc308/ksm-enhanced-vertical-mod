@@ -17,9 +17,9 @@ From the project root:
 ./installer/Build.ps1
 ./installer/Build.ps1 -TestEngine
 python installer/tests/TestEngine.py
-python installer/BuildPackage.py --output build/native-installer/cleanup-revision-3/KsmEnhancedVerticalSetup.exe
+python installer/BuildPackage.py --output build/installer-0.5.2-beta2/candidate3/KsmEnhancedVerticalSetup.exe
 ./installer/tests/RealRuntime.ps1 -ProjectRoot (Get-Location).Path -OriginalGameDirectory <original-KSM-folder> -BuildInformation build/latest.json -SetupExecutable <assembled-setup.exe>
-python installer/PackageRelease.py
+python installer/PackageRelease.py --setup <verified-setup.exe> --production-evidence <production-results.json> --gui-evidence <gui-evidence.json> --engine-evidence <engine-results.json>
 ```
 
 Assembly and release scripts refuse to overwrite existing output files/directories.
@@ -112,3 +112,11 @@ files, user directories, metadata tampering, concurrent file addition/rename and
 crash/restart cases. Real production GUI warning at 100 percent was inspected.
 The latest local package is under releases/ksm-enhanced-vertical-0.5.1-beta1-installer-cleanup1/.
 The previous release folder was restored and verified after its open ZIP blocked replacement.
+
+## 0.5.2-beta2 compatibility revision
+
+User images, scene UI, language files and user data are never compared against original hashes for installation eligibility. The original EXE identity remains checked. Required bass.dll and bass_fx.dll files are parsed as x64 PE DLLs and their direct exports are checked against imports extracted from the pinned normal game build, without loading either DLL. Package, backup and installed-file hashes still protect integrity and removal ownership. Missing or modified user scene UI is accepted; this is not a guarantee that an arbitrary custom resource is valid at runtime.
+
+Inspect failures show the specific dependency/file and are saved in the GUI result JSON. Older installations must be removed before installing the new version; existing ownership schemas remain supported. The current game title includes 0.5.2-beta2. Native fault tests and production runtime evidence must be regenerated for each setup package; old evidence is not promoted as a new test run.
+
+The managed enhanced UI now includes the original baseline title template, alongside the existing select/result/HUD overrides. This allows original scene files to be missing or customized without requiring replacement of user scene files. Both unmodified and customized/missing-resource production runtime suites are required for packaging.

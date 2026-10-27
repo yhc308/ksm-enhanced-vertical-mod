@@ -3,7 +3,7 @@
 **K-Shoot Mania 2.1.0を縦画面でも楽しめるように拡張する非公式Modです。**
 縦画面プレイ、スキンプリセット、画面のカスタマイズ、EXスコア、HARD+APS、判定タイミング設定、一部のASIO機能を提供します。
 
-[ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [ソース構成・ビルドガイド](../DEVELOPMENT.md) · [ソース全体](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical) · [不具合報告](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
+[ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.2-beta2) · [ソース構成・ビルドガイド](../DEVELOPMENT.md) · [ソース全体](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical) · [不具合報告](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
 ▶ English : **[Open](README_EN.md)**<br>
 ▶ 日本語 : **[開く](README_JA.md)** **(表示中)**<br>

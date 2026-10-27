@@ -2,8 +2,8 @@
 1 RT_MANIFEST "Setup.manifest"
 101 ICON "assets/setup.ico"
 1 VERSIONINFO
-FILEVERSION 0,5,1,1
-PRODUCTVERSION 0,5,1,1
+FILEVERSION 0,5,2,2
+PRODUCTVERSION 0,5,2,2
 FILEOS VOS_NT_WINDOWS32
 FILETYPE VFT_APP
 BEGIN
@@ -13,7 +13,7 @@ BEGIN
   BEGIN
    VALUE "FileDescription", "KSM Enhanced Vertical Mod Setup\0"
    VALUE "ProductName", "KSM Enhanced Vertical Mod\0"
-   VALUE "ProductVersion", "0.5.1-beta1\0"
+   VALUE "ProductVersion", "0.5.2-beta2\0"
    VALUE "OriginalFilename", "KsmEnhancedVerticalSetup.exe\0"
   END
  END

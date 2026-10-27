@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..b43c6465b89bb8ae661f2b48cfc81707ccd02935 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..eb84d84ec7fba58fd38d078fbd7053e9830f940d 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,57 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,58 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -59,7 +59,8 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..b43c6465b89bb8ae661f2b48cfc81707
 +
 +# Installer and release source documentation
 +!/docs/MOD_INSTALLER*.md
-+!/docs/RELEASE_0.5.1-beta1.md
++!/docs/RELEASE_*.md
++!/docs/review/*.md
 diff --git a/README.md b/README.md
 index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e00fbe0e6c 100644
 --- a/README.md
@@ -100,11 +101,11 @@ index 950cfc8783c061e5410d225d06534df434e994b0..94fcfe2863281bba779242753f744130
 +kshootmania/App/imgs/standby_vertical.png	imgs/standby_vertical.png
 +kshootmania/App/skins/README.txt	skins/README.txt
 diff --git a/kshootmania/App/lang/English.json b/kshootmania/App/lang/English.json
-index ec1f82326e62527737930a7d531a67d6de278d2f..7537d2e0098c4a491606d601b6a57abc6466e753 100644
+index ec1f82326e62527737930a7d531a67d6de278d2f..4e13392db59e4818cd3cbf062bb3d302f758f888 100644
 --- a/kshootmania/App/lang/English.json
 +++ b/kshootmania/App/lang/English.json
-@@ -1,197 +1,260 @@
--{
+@@ -1,197 +1,283 @@
+ {
 -	"General": {
 -		"ErrorBassInitFailed": "Failed to initialize BASS audio library.\nSpeakers might be disconnected or disabled.\n(BASS error code: {0})"
 -	},
@@ -300,7 +301,6 @@ index ec1f82326e62527737930a7d531a67d6de278d2f..7537d2e0098c4a491606d601b6a57abc
 -		"ScoreNotSentTurn": "IR score not recorded:\nTurn option was used",
 -		"ScoreNotSentAssist": "IR score not recorded:\nJudgment Mode option has been changed"
 -	}
-+﻿{
 +  "General": {
 +    "ErrorBassInitFailed": "Failed to initialize BASS audio library.\nSpeakers might be disconnected or disabled.\n(BASS error code: {0})"
 +  },
@@ -557,15 +557,38 @@ index ec1f82326e62527737930a7d531a67d6de278d2f..7537d2e0098c4a491606d601b6a57abc
 +    "LatencyEstimate": "Estimates, not physical latency measurements",
 +    "NextLaunchOutput": "Next launch · current output retained: ",
 +    "CurrentAudioOutput": "Current audio output",
-+    "NotImplemented": "Not implemented"
++    "NotImplemented": "Not implemented",
++    "ErrorSummary": "An error occurred.",
++    "ErrorPartial": "Some charts were skipped.",
++    "ErrorStageCommandLine": "Opening a chart from the command line",
++    "ErrorStageChart": "Reading chart data",
++    "ErrorStageMetadata": "Reading chart information",
++    "ErrorStageEx": "Calculating the EX maximum",
++    "ErrorStageCache": "Reading the song index",
++    "ErrorStageDirectory": "Opening a song folder",
++    "ErrorStageGame": "Running the game",
++    "ErrorReasonMissing": "The file or folder was not found.",
++    "ErrorReasonAccess": "Access was denied.",
++    "ErrorReasonPath": "The file system rejected the path length.",
++    "ErrorReasonChart": "Chart data could not be read or validated.",
++    "ErrorReasonCache": "The song index could not be read.",
++    "ErrorReasonLookup": "A required internal entry was not found.",
++    "ErrorReasonUnknown": "The cause has not been identified. See the log.",
++    "ErrorLabelStage": "Step",
++    "ErrorLabelTarget": "Target",
++    "ErrorLabelReason": "Error",
++    "ErrorLabelSkipped": "Skipped charts",
++    "ErrorLabelLog": "Log",
++    "ErrorLogFailed": "The detailed log could not be saved.",
++    "ErrorLongFilename": "[Long filename; see log]"
 +  }
  }
 diff --git a/kshootmania/App/lang/Japanese.json b/kshootmania/App/lang/Japanese.json
-index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..425e5c777d1e94f68b5c56a17122d782323c918f 100644
+index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..f21512fcc7d891db128cbfd4e3d74f5beec055ae 100644
 --- a/kshootmania/App/lang/Japanese.json
 +++ b/kshootmania/App/lang/Japanese.json
-@@ -1,197 +1,260 @@
--{
+@@ -1,197 +1,283 @@
+ {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS音声ライブラリの初期化に失敗しました。\nスピーカーが接続されていないか、無効になっている可能性があります。\n(BASSエラーコード: {0})"
 -	},
@@ -761,7 +784,6 @@ index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..425e5c777d1e94f68b5c56a17122d782
 -		"ScoreNotSentTurn": "Turnオプションが使用されたため、\nIRのスコア集計対象外",
 -		"ScoreNotSentAssist": "判定モードオプションが変更されているため、\nIRのスコア集計対象外"
 -	}
-+﻿{
 +  "General": {
 +    "ErrorBassInitFailed": "BASS音声ライブラリの初期化に失敗しました。\nスピーカーが接続されていないか、無効になっている可能性があります。\n(BASSエラーコード: {0})"
 +  },
@@ -1018,15 +1040,38 @@ index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..425e5c777d1e94f68b5c56a17122d782
 +    "LatencyEstimate": "推定値です・実測の遅延ではありません",
 +    "NextLaunchOutput": "次回起動時に適用・現在の出力を維持: ",
 +    "CurrentAudioOutput": "現在のオーディオ出力",
-+    "NotImplemented": "未実装"
++    "NotImplemented": "未実装",
++    "ErrorSummary": "エラーが発生しました。",
++    "ErrorPartial": "一部の譜面を除外しました。",
++    "ErrorStageCommandLine": "起動引数から譜面を開く",
++    "ErrorStageChart": "譜面データの読み込み",
++    "ErrorStageMetadata": "譜面情報の読み込み",
++    "ErrorStageEx": "EX理論値の計算",
++    "ErrorStageCache": "選曲キャッシュの読み込み",
++    "ErrorStageDirectory": "楽曲フォルダーを開く",
++    "ErrorStageGame": "ゲームの実行",
++    "ErrorReasonMissing": "ファイルまたはフォルダーが見つかりません。",
++    "ErrorReasonAccess": "アクセスが拒否されました。",
++    "ErrorReasonPath": "パスの長さがファイルシステムに拒否されました。",
++    "ErrorReasonChart": "譜面データの読み込みまたは検証に失敗しました。",
++    "ErrorReasonCache": "選曲キャッシュを読み込めませんでした。",
++    "ErrorReasonLookup": "必要な内部項目が見つかりません。",
++    "ErrorReasonUnknown": "原因は未確認です。ログを確認してください。",
++    "ErrorLabelStage": "処理",
++    "ErrorLabelTarget": "対象",
++    "ErrorLabelReason": "エラー",
++    "ErrorLabelSkipped": "除外した譜面",
++    "ErrorLabelLog": "ログ",
++    "ErrorLogFailed": "詳細ログを保存できませんでした。",
++    "ErrorLongFilename": "[長いファイル名・詳細はログ]"
 +  }
  }
 diff --git a/kshootmania/App/lang/Korean.json b/kshootmania/App/lang/Korean.json
-index 4f620187751a870eacb3debf03fc9ba3ea98c7be..5ecf04ebd0fedbaac6509bd779ee8aba452acd81 100644
+index 4f620187751a870eacb3debf03fc9ba3ea98c7be..aabaebed33e25f836c8f8c4c31dcc9bfd90c1286 100644
 --- a/kshootmania/App/lang/Korean.json
 +++ b/kshootmania/App/lang/Korean.json
-@@ -1,197 +1,260 @@
--{
+@@ -1,197 +1,283 @@
+ {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 오디오 라이브러리 초기화에 실패했습니다.\n스피커가 연결되어 있지 않거나, '사용 안 함'으로 설정되어 있을 가능성이 있습니다.\n(BASS 오류 코드: {0})"
 -	},
@@ -1222,7 +1267,6 @@ index 4f620187751a870eacb3debf03fc9ba3ea98c7be..5ecf04ebd0fedbaac6509bd779ee8aba
 -		"ScoreNotSentTurn": "Turn 옵션이 사용되어\nIR 스코어 집계 대상 외",
 -		"ScoreNotSentAssist": "판정 모드 옵션이 변경되어\nIR 스코어 집계 대상 외"
 -	}
-+﻿{
 +  "General": {
 +    "ErrorBassInitFailed": "BASS 오디오 라이브러리 초기화에 실패했습니다.\n스피커가 연결되어 있지 않거나, '사용 안 함'으로 설정되어 있을 가능성이 있습니다.\n(BASS 오류 코드: {0})"
 +  },
@@ -1479,15 +1523,38 @@ index 4f620187751a870eacb3debf03fc9ba3ea98c7be..5ecf04ebd0fedbaac6509bd779ee8aba
 +    "LatencyEstimate": "추정값 · 실측 지연이 아님",
 +    "NextLaunchOutput": "다음 실행에 적용 · 현재 출력 유지: ",
 +    "CurrentAudioOutput": "현재 오디오 출력",
-+    "NotImplemented": "미구현"
++    "NotImplemented": "미구현",
++    "ErrorSummary": "오류가 발생했습니다.",
++    "ErrorPartial": "일부 채보를 제외했습니다.",
++    "ErrorStageCommandLine": "실행 인수로 채보 열기",
++    "ErrorStageChart": "채보 데이터 읽기",
++    "ErrorStageMetadata": "채보 정보 읽기",
++    "ErrorStageEx": "EX 이론치 계산",
++    "ErrorStageCache": "선곡 캐시 읽기",
++    "ErrorStageDirectory": "악곡 폴더 열기",
++    "ErrorStageGame": "게임 실행",
++    "ErrorReasonMissing": "파일 또는 폴더를 찾지 못했습니다.",
++    "ErrorReasonAccess": "접근 권한이 거부되었습니다.",
++    "ErrorReasonPath": "파일 시스템에서 경로 길이를 거부했습니다.",
++    "ErrorReasonChart": "채보 데이터를 읽거나 검증하지 못했습니다.",
++    "ErrorReasonCache": "선곡 캐시를 읽지 못했습니다.",
++    "ErrorReasonLookup": "필요한 내부 항목을 찾지 못했습니다.",
++    "ErrorReasonUnknown": "원인이 확인되지 않았습니다. 로그를 확인해 주세요.",
++    "ErrorLabelStage": "처리",
++    "ErrorLabelTarget": "대상",
++    "ErrorLabelReason": "오류",
++    "ErrorLabelSkipped": "제외된 채보",
++    "ErrorLabelLog": "로그",
++    "ErrorLogFailed": "상세 로그를 저장하지 못했습니다.",
++    "ErrorLongFilename": "[긴 파일명·상세는 로그 참조]"
 +  }
  }
 diff --git a/kshootmania/App/lang/Simplified Chinese.json b/kshootmania/App/lang/Simplified Chinese.json
-index 150d395e6e48b35c71ae9f47e932298e67e42390..9b2245814cf72ddff95ce5b94942ca62e5eaa775 100644
+index 150d395e6e48b35c71ae9f47e932298e67e42390..3808fb997defc606dcc458651c5d333ed2c36363 100644
 --- a/kshootmania/App/lang/Simplified Chinese.json	
 +++ b/kshootmania/App/lang/Simplified Chinese.json	
-@@ -1,197 +1,260 @@
--{
+@@ -1,197 +1,283 @@
+ {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 音频库初始化失败。\n音频设备可能未连接或已停用。\n(BASS 错误代码: {0})"
 -	},
@@ -1683,7 +1750,6 @@ index 150d395e6e48b35c71ae9f47e932298e67e42390..9b2245814cf72ddff95ce5b94942ca62
 -		"ScoreNotSentTurn": "由于使用了 Turn 选项，\n不纳入 IR 成绩统计",
 -		"ScoreNotSentAssist": "由于判定模式选项已变更，\n不纳入 IR 成绩统计"
 -	}
-+﻿{
 +  "General": {
 +    "ErrorBassInitFailed": "BASS 音频库初始化失败。\n音频设备可能未连接或已停用。\n(BASS 错误代码: {0})"
 +  },
@@ -1940,15 +2006,38 @@ index 150d395e6e48b35c71ae9f47e932298e67e42390..9b2245814cf72ddff95ce5b94942ca62
 +    "LatencyEstimate": "估算值，非实测延迟",
 +    "NextLaunchOutput": "下次启动时生效 · 保持当前输出：",
 +    "CurrentAudioOutput": "当前音频输出",
-+    "NotImplemented": "未实现"
++    "NotImplemented": "未实现",
++    "ErrorSummary": "发生错误。",
++    "ErrorPartial": "已排除部分谱面。",
++    "ErrorStageCommandLine": "通过启动参数打开谱面",
++    "ErrorStageChart": "读取谱面数据",
++    "ErrorStageMetadata": "读取谱面信息",
++    "ErrorStageEx": "计算EX理论值",
++    "ErrorStageCache": "读取选曲缓存",
++    "ErrorStageDirectory": "打开曲目文件夹",
++    "ErrorStageGame": "运行游戏",
++    "ErrorReasonMissing": "找不到文件或文件夹。",
++    "ErrorReasonAccess": "访问被拒绝。",
++    "ErrorReasonPath": "文件系统拒绝了此路径长度。",
++    "ErrorReasonChart": "无法读取或验证谱面数据。",
++    "ErrorReasonCache": "无法读取选曲缓存。",
++    "ErrorReasonLookup": "找不到所需的内部条目。",
++    "ErrorReasonUnknown": "原因尚未确认。请查看日志。",
++    "ErrorLabelStage": "步骤",
++    "ErrorLabelTarget": "目标",
++    "ErrorLabelReason": "错误",
++    "ErrorLabelSkipped": "排除的谱面",
++    "ErrorLabelLog": "日志",
++    "ErrorLogFailed": "无法保存详细日志。",
++    "ErrorLongFilename": "[文件名过长，请查看日志]"
 +  }
  }
 diff --git a/kshootmania/App/lang/Traditional Chinese.json b/kshootmania/App/lang/Traditional Chinese.json
-index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93a3c03a3a 100644
+index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..d6f98ff945717e359dac27755f96914685ccf129 100644
 --- a/kshootmania/App/lang/Traditional Chinese.json	
 +++ b/kshootmania/App/lang/Traditional Chinese.json	
-@@ -1,197 +1,260 @@
--{
+@@ -1,197 +1,283 @@
+ {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 音訊函式庫初始化失敗。\n音訊裝置可能未連接或已停用。\n(BASS 錯誤碼: {0})"
 -	},
@@ -2144,7 +2233,6 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 -		"ScoreNotSentTurn": "由於使用了 Turn 選項，\n不納入 IR 成績統計",
 -		"ScoreNotSentAssist": "由於判定模式選項已變更，\n不納入 IR 成績統計"
 -	}
-+﻿{
 +  "General": {
 +    "ErrorBassInitFailed": "BASS 音訊函式庫初始化失敗。\n音訊裝置可能未連接或已停用。\n(BASS 錯誤碼: {0})"
 +  },
@@ -2401,33 +2489,52 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..7737cba6364c6b6b23fb1f88f481bd93
 +    "LatencyEstimate": "估算值，非實測延遲",
 +    "NextLaunchOutput": "下次啟動時生效 · 保持目前輸出：",
 +    "CurrentAudioOutput": "目前音訊輸出",
-+    "NotImplemented": "未實作"
++    "NotImplemented": "未實作",
++    "ErrorSummary": "發生錯誤。",
++    "ErrorPartial": "已排除部分譜面。",
++    "ErrorStageCommandLine": "透過啟動參數開啟譜面",
++    "ErrorStageChart": "讀取譜面資料",
++    "ErrorStageMetadata": "讀取譜面資訊",
++    "ErrorStageEx": "計算EX理論值",
++    "ErrorStageCache": "讀取選曲快取",
++    "ErrorStageDirectory": "開啟曲目資料夾",
++    "ErrorStageGame": "執行遊戲",
++    "ErrorReasonMissing": "找不到檔案或資料夾。",
++    "ErrorReasonAccess": "存取遭到拒絕。",
++    "ErrorReasonPath": "檔案系統拒絕了此路徑長度。",
++    "ErrorReasonChart": "無法讀取或驗證譜面資料。",
++    "ErrorReasonCache": "無法讀取選曲快取。",
++    "ErrorReasonLookup": "找不到所需的內部項目。",
++    "ErrorReasonUnknown": "原因尚未確認。請查看日誌。",
++    "ErrorLabelStage": "步驟",
++    "ErrorLabelTarget": "目標",
++    "ErrorLabelReason": "錯誤",
++    "ErrorLabelSkipped": "排除的譜面",
++    "ErrorLabelLog": "日誌",
++    "ErrorLogFailed": "無法儲存詳細日誌。",
++    "ErrorLongFilename": "[檔案名稱過長，請查看日誌]"
 +  }
  }
 diff --git a/kshootmania/CMakeLists.txt b/kshootmania/CMakeLists.txt
-index f11b016538f34e42c90d856c07116d535466b3b7..cb2297aaf1eda6691521c61200b53a60473c50fe 100644
+index f11b016538f34e42c90d856c07116d535466b3b7..3ddde92171d67c435a7d263cb6739eee9ea27e5b 100644
 --- a/kshootmania/CMakeLists.txt
 +++ b/kshootmania/CMakeLists.txt
-@@ -9,6 +9,8 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND
-     set(CMAKE_BUILD_TYPE Release)
+@@ -290,3 +290,13 @@ elseif(UNIX)
+         )
+     endif()
  endif()
- 
-+option(KSM_ENABLE_DIAGNOSTICS "Enable opt-in mod diagnostic command-line fixtures" OFF)
 +
- option(OUTPUT_LICENSE_TXT "Output license.txt on startup" OFF)
- 
- set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/App)
-@@ -31,6 +33,8 @@ add_executable(kshootmania
- 	src/Main.cpp
- )
- 
-+target_compile_definitions(kshootmania PRIVATE KSM_ENABLE_DIAGNOSTICS=$<BOOL:${KSM_ENABLE_DIAGNOSTICS}>)
-+
- if(APPLE)
-     set_target_properties(kshootmania PROPERTIES
-         OUTPUT_NAME "K-Shoot MANIA"
++# Optional ASIO runtime dependencies are loaded dynamically from the executable directory.
++if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
++    foreach(addon bassasio bassmix)
++        add_custom_command(TARGET kshootmania POST_BUILD
++            COMMAND ${CMAKE_COMMAND} -E copy_if_different
++                "${CMAKE_SOURCE_DIR}/ksmaudio/ThirdParty_Windows/${addon}/x64/${addon}.dll"
++                "$<TARGET_FILE_DIR:kshootmania>/${addon}.dll")
++    endforeach()
++endif()
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
-index 6d1f63fcc12a2d3110e545d669aefef4b37def79..a5ec9e73ca4c822dabe660b67c281cef34ace6cf 100644
+index 6d1f63fcc12a2d3110e545d669aefef4b37def79..37d67c9b68d799eb55a7b302335852c4cdfa65f5 100644
 --- a/kshootmania/kshootmania.vcxproj
 +++ b/kshootmania/kshootmania.vcxproj
 @@ -18,6 +18,9 @@
@@ -2567,7 +2674,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..a5ec9e73ca4c822dabe660b67c281cef
      <ClInclude Include="src\MusicGame\Judgment\JudgmentMain.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp" />
-@@ -608,6 +632,56 @@
+@@ -608,6 +632,73 @@
      <Font Include="App\assets\font\corporate-logo\Corporate-Logo-Medium-ver3.otf" />
      <Font Include="App\assets\font\tektur-ksm\Tektur-KSM-Medium.ttf" />
    </ItemGroup>
@@ -2581,6 +2688,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..a5ec9e73ca4c822dabe660b67c281cef
 +    <ClInclude Include="src\Diagnostics\EnhancedMenuFixture.hpp" />
 +    <ClInclude Include="src\Diagnostics\JudgeSettingFixture.hpp" />
 +    <ClInclude Include="src\Diagnostics\RenderGeometryFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\LaserRenderFixture.hpp" />
 +    <ClInclude Include="src\Diagnostics\SkinPresetFixture.hpp" />
 +    <ClInclude Include="src\Graphics\GameRenderContext.hpp" />
 +    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp" />
@@ -2621,11 +2729,27 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..a5ec9e73ca4c822dabe660b67c281cef
 +    <ClInclude Include="src\Vertical\VerticalSelfTest.hpp" />
 +    <ClInclude Include="src\Vertical\VerticalTunnelWarp.hpp" />
 +  </ItemGroup>
++  <ItemDefinitionGroup>
++    <Manifest>
++      <AdditionalManifestFiles>$(ProjectDir)app.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
++    </Manifest>
++  </ItemDefinitionGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Common\CommandLine.hpp" />
++    <ClCompile Include="src\Common\ErrorReporting.cpp" />
++    <ClInclude Include="src\Common\ErrorReporting.hpp" />
++    <ClInclude Include="src\Common\CsvUtils.hpp" />
++    <ClInclude Include="src\Common\SongLoadDiagnostics.hpp" />
++    <ClInclude Include="src\Diagnostics\ChartLoadFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\UnicodePathFixture.hpp" />
++    <ClInclude Include="src\Diagnostics\ErrorReportFixture.hpp" />
++    <Manifest Include="app.manifest" />
++  </ItemGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
 diff --git a/kshootmania/kshootmania.vcxproj.filters b/kshootmania/kshootmania.vcxproj.filters
-index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..e49c5dc33d92215a8e9c3fcba53b3760c3eaac70 100644
+index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e8989bae5041 100644
 --- a/kshootmania/kshootmania.vcxproj.filters
 +++ b/kshootmania/kshootmania.vcxproj.filters
 @@ -318,6 +318,12 @@
@@ -2693,7 +2817,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..e49c5dc33d92215a8e9c3fcba53b3760
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
-@@ -1582,4 +1612,54 @@
+@@ -1582,4 +1612,72 @@
        <Filter>Resource Files\assets\font\tektur-ksm</Filter>
      </Font>
    </ItemGroup>
@@ -2707,6 +2831,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..e49c5dc33d92215a8e9c3fcba53b3760
 +    <ClInclude Include="src\Diagnostics\EnhancedMenuFixture.hpp"><Filter>Header Files</Filter></ClInclude>
 +    <ClInclude Include="src\Diagnostics\JudgeSettingFixture.hpp"><Filter>Header Files</Filter></ClInclude>
 +    <ClInclude Include="src\Diagnostics\RenderGeometryFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\LaserRenderFixture.hpp"><Filter>Header Files</Filter></ClInclude>
 +    <ClInclude Include="src\Diagnostics\SkinPresetFixture.hpp"><Filter>Header Files</Filter></ClInclude>
 +    <ClInclude Include="src\Graphics\GameRenderContext.hpp"><Filter>Header Files\Graphics</Filter></ClInclude>
 +    <ClCompile Include="src\HighScore\AdditionalScoreIO.cpp"><Filter>Source Files\HighScore</Filter></ClCompile>
@@ -2747,9 +2872,26 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..e49c5dc33d92215a8e9c3fcba53b3760
 +    <ClInclude Include="src\Vertical\VerticalSelfTest.hpp"></ClInclude>
 +    <ClInclude Include="src\Vertical\VerticalTunnelWarp.hpp"></ClInclude>
 +  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Common\CommandLine.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Common\SongLoadDiagnostics.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\ChartLoadFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Common\CsvUtils.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++    <ClInclude Include="src\Diagnostics\UnicodePathFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++    <Manifest Include="app.manifest"><Filter>Resource Files</Filter></Manifest>
++  </ItemGroup>
++  <ItemGroup>
++    <ClCompile Include="src\Common\ErrorReporting.cpp"><Filter>Source Files</Filter></ClCompile>
++    <ClInclude Include="src\Common\ErrorReporting.hpp"><Filter>Header Files\Common</Filter></ClInclude>
++  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="src\Diagnostics\ErrorReportFixture.hpp"><Filter>Header Files</Filter></ClInclude>
++  </ItemGroup>
  </Project>
 diff --git a/kshootmania/src/Common/AssetManagement.cpp b/kshootmania/src/Common/AssetManagement.cpp
-index 66e0bd4a567b138001dac9974f839bbbc4dd816f..ecbbcfaa9f127938a4543c63a81b8dc1f8151779 100644
+index 66e0bd4a567b138001dac9974f839bbbc4dd816f..ecdaeba6c88c3bfc00af31430c7ec95697102b7a 100644
 --- a/kshootmania/src/Common/AssetManagement.cpp
 +++ b/kshootmania/src/Common/AssetManagement.cpp
 @@ -26,12 +26,7 @@ namespace AssetManagement
@@ -2786,6 +2928,45 @@ index 66e0bd4a567b138001dac9974f839bbbc4dd816f..ecbbcfaa9f127938a4543c63a81b8dc1
 +									   HLSL{ FilePath{ FileSystem::PathAppend(shaderDir, U"monochrome_alpha.hlsl") }, U"PS" } | GLSL{ FilePath{ FileSystem::PathAppend(shaderDir, U"monochrome_alpha.frag") }, { { U"PSConstants2D", 0 } } });
  #endif
  		}
+ 
+@@ -76,6 +75,38 @@ namespace AssetManagement
+ 			FontAsset::Register(kFontAssetSystem, FontMethod::MSDF, 44, Resource(fontPath), FontStyle::Default);
+ 			FontAsset::Register(kFontAssetSystemBold, FontMethod::MSDF, 44, Resource(fontPath), FontStyle::Bold);
+ #endif
++			// Keep the selected language's glyph shapes first. Fallback fonts only
++			// supply missing characters in song names; never rewrite their paths.
++			static const Array<Font> fallbackFonts = []
++			{
++				Array<Font> fonts;
++				for (const auto path : { kFontResourcePathJa, kFontResourcePathSc, kFontResourcePathTc })
++				{
++#ifdef __linux
++					fonts.emplace_back(FontMethod::MSDF, 44, Resource(U"resources/" + String{ path }));
++#else
++					fonts.emplace_back(FontMethod::MSDF, 44, Resource(path));
++#endif
++				}
++				if (Font::IsAvailable(Typeface::CJK_Regular_KR))
++					fonts.emplace_back(FontMethod::MSDF, 44, Typeface::CJK_Regular_KR);
++#ifdef _WIN32
++				const FilePath emojiPath = FileSystem::PathAppend(FileSystem::GetFolderPath(SpecialFolder::SystemFonts), U"seguiemj.ttf");
++				if (FileSystem::IsFile(emojiPath))
++					fonts.emplace_back(44, emojiPath);
++#endif
++				if (Font::IsAvailable(Typeface::ColorEmoji))
++					fonts.emplace_back(44, Typeface::ColorEmoji);
++				else if (Font::IsAvailable(Typeface::MonochromeEmoji))
++					fonts.emplace_back(44, Typeface::MonochromeEmoji);
++				return fonts;
++			}();
++			for (const auto& font : fallbackFonts)
++				if (font)
++				{
++					FontAsset(kFontAssetSystem).addFallback(font);
++					FontAsset(kFontAssetSystemBold).addFallback(font);
++				}
+ 		}
+ 	}
  
 diff --git a/kshootmania/src/Common/CommonDefines.hpp b/kshootmania/src/Common/CommonDefines.hpp
 index 1e31f10717357cd4be3e343a0391a6c0c355e338..a76b4e4eba2b8a2cd1a756dab50d6d1fcc8f0caa 100644
@@ -3869,12 +4050,13 @@ index 693926b6a7971d28185b837a136b01db805a4e23..f3487989c2a31cbd64c605dc1a8c24b0
  	void RequestVirtualDown(Button button);
  
 diff --git a/kshootmania/src/Main.cpp b/kshootmania/src/Main.cpp
-index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be45393283da74 100644
+index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb506629b10 100644
 --- a/kshootmania/src/Main.cpp
 +++ b/kshootmania/src/Main.cpp
-@@ -1,4 +1,13 @@
+@@ -1,4 +1,14 @@
 -﻿#include <Siv3D.hpp>
-+﻿#include "Diagnostics/DiagnosticArguments.hpp"
++﻿#include "Common/ErrorReporting.hpp"
++#include "Diagnostics/DiagnosticArguments.hpp"
 +#include "ksmaudio/Diagnostics.hpp"
 +#include "Common/AudioOutputSettings.hpp"
 +#include <Siv3D.hpp>
@@ -3887,7 +4069,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  #include <CoTaskLib.hpp>
  #include <NocoUI.hpp>
  #include "Common/FrameRateLimit.hpp"
-@@ -11,11 +20,24 @@
+@@ -11,11 +21,24 @@
  #include <ksmaxis/ksmaxis.hpp>
  #include "RuntimeConfig.hpp"
  #include "Scenes/Title/TitleScene.hpp"
@@ -3912,7 +4094,357 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  #ifdef __APPLE__
  #include <ksmplatform_macos/input_method.h>
-@@ -354,6 +376,8 @@ void OutputLicenseTxt()
+@@ -122,14 +145,14 @@ void OutputLicenseTxt()
+ 	bassFxLicense.title = U"BASS_FX";
+ 	bassFxLicense.copyright = U"Copyright (c) 2002-2018 Arthur Aminov (JOBnik!)\nhttp://www.jobnik.org";
+ 	bassFxLicense.text = U"BASS_FX is fully useable in commercial software, as long as credit is given.\n"
+-		U"\n"
+-		U"Credits:\n"
+-		U"* BiQuad filters - Robert Bristow-Johnson\n"
+-		U"* Peaking Equalizer (BiQuad filter) - Manu Webber\n"
+-		U"* Tempo/Pitch/Rate/BPM [SoundTouch v2.0.0] - Copyright (c) 2002-2017 Olli Parviainen (LGPL license)\n"
+-		U"* Auto Wah, Chorus, Distortion, Echo and Phaser - Copyright (c) 2000 Aleksey Smoli\n"
+-		U"* Freeverb - Copyright (c) 2000 Jezar at Dreampoint (Public domain)\n"
+-		U"* Pitch shifting using FFT [smbPitchShift v1.2] - Copyright (c) 1999-2009 Stephan M. Bernsee";
++						 U"\n"
++						 U"Credits:\n"
++						 U"* BiQuad filters - Robert Bristow-Johnson\n"
++						 U"* Peaking Equalizer (BiQuad filter) - Manu Webber\n"
++						 U"* Tempo/Pitch/Rate/BPM [SoundTouch v2.0.0] - Copyright (c) 2002-2017 Olli Parviainen (LGPL license)\n"
++						 U"* Auto Wah, Chorus, Distortion, Echo and Phaser - Copyright (c) 2000 Aleksey Smoli\n"
++						 U"* Freeverb - Copyright (c) 2000 Jezar at Dreampoint (Public domain)\n"
++						 U"* Pitch shifting using FFT [smbPitchShift v1.2] - Copyright (c) 1999-2009 Stephan M. Bernsee";
+ 	licenses.push_back(bassFxLicense);
+ #else
+ 	// Web版のオーディオバックエンドで使用しているライブラリのライセンス情報を追加
+@@ -137,41 +160,41 @@ void OutputLicenseTxt()
+ 	miniaudioLicense.title = U"miniaudio";
+ 	miniaudioLicense.copyright = U"Copyright (c) 2025 David Reid\nhttps://miniaud.io/";
+ 	miniaudioLicense.text = U"This software is available as a choice of the following licenses (MIT No Attribution / Public Domain).\n"
+-		U"\n"
+-		U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
+-		U"this software and associated documentation files (the \"Software\"), to deal in\n"
+-		U"the Software without restriction, including without limitation the rights to\n"
+-		U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
+-		U"of the Software, and to permit persons to whom the Software is furnished to do so.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+-		U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+-		U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
++							U"\n"
++							U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
++							U"this software and associated documentation files (the \"Software\"), to deal in\n"
++							U"the Software without restriction, including without limitation the rights to\n"
++							U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
++							U"of the Software, and to permit persons to whom the Software is furnished to do so.\n"
++							U"\n"
++							U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++							U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++							U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++							U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
++							U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
++							U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
+ 	licenses.push_back(miniaudioLicense);
+ 
+ 	LicenseInfo stbVorbisLicense;
+ 	stbVorbisLicense.title = U"stb_vorbis";
+ 	stbVorbisLicense.copyright = U"Copyright (c) 2017 Sean Barrett\nhttps://github.com/nothings/stb";
+ 	stbVorbisLicense.text = U"This software is available as a choice of the following licenses (MIT License / Public Domain).\n"
+-		U"\n"
+-		U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
+-		U"this software and associated documentation files (the \"Software\"), to deal in\n"
+-		U"the Software without restriction, including without limitation the rights to\n"
+-		U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
+-		U"of the Software, and to permit persons to whom the Software is furnished to do\n"
+-		U"so, subject to the following conditions:\n"
+-		U"The above copyright notice and this permission notice shall be included in all\n"
+-		U"copies or substantial portions of the Software.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+-		U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+-		U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
++							U"\n"
++							U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
++							U"this software and associated documentation files (the \"Software\"), to deal in\n"
++							U"the Software without restriction, including without limitation the rights to\n"
++							U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
++							U"of the Software, and to permit persons to whom the Software is furnished to do\n"
++							U"so, subject to the following conditions:\n"
++							U"The above copyright notice and this permission notice shall be included in all\n"
++							U"copies or substantial portions of the Software.\n"
++							U"\n"
++							U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++							U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++							U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++							U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
++							U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
++							U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
+ 	licenses.push_back(stbVorbisLicense);
+ #endif
+ 
+@@ -180,22 +203,22 @@ void OutputLicenseTxt()
+ 	ksonLicense.title = U"libkson";
+ 	ksonLicense.copyright = U"Copyright (c) 2019-2022 masaka";
+ 	ksonLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+-		U"of this software and associated documentation files (the \"Software\"), to deal\n"
+-		U"in the Software without restriction, including without limitation the rights\n"
+-		U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+-		U"copies of the Software, and to permit persons to whom the Software is\n"
+-		U"furnished to do so, subject to the following conditions:\n"
+-		U"\n"
+-		U"The above copyright notice and this permission notice shall be included in all\n"
+-		U"copies or substantial portions of the Software.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+-		U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+-		U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+-		U"SOFTWARE.";
++					   U"of this software and associated documentation files (the \"Software\"), to deal\n"
++					   U"in the Software without restriction, including without limitation the rights\n"
++					   U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
++					   U"copies of the Software, and to permit persons to whom the Software is\n"
++					   U"furnished to do so, subject to the following conditions:\n"
++					   U"\n"
++					   U"The above copyright notice and this permission notice shall be included in all\n"
++					   U"copies or substantial portions of the Software.\n"
++					   U"\n"
++					   U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++					   U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++					   U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++					   U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
++					   U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
++					   U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
++					   U"SOFTWARE.";
+ 	licenses.push_back(ksonLicense);
+ 
+ 	// ksmaxisのライセンス情報を追加
+@@ -203,43 +226,43 @@ void OutputLicenseTxt()
+ 	ksmaxisLicense.title = U"ksmaxis";
+ 	ksmaxisLicense.copyright = U"Copyright (c) 2025 masaka";
+ 	ksmaxisLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+-		U"of this software and associated documentation files (the \"Software\"), to deal\n"
+-		U"in the Software without restriction, including without limitation the rights\n"
+-		U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+-		U"copies of the Software, and to permit persons to whom the Software is\n"
+-		U"furnished to do so, subject to the following conditions:\n"
+-		U"\n"
+-		U"The above copyright notice and this permission notice shall be included in all\n"
+-		U"copies or substantial portions of the Software.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+-		U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+-		U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+-		U"SOFTWARE.";
++						  U"of this software and associated documentation files (the \"Software\"), to deal\n"
++						  U"in the Software without restriction, including without limitation the rights\n"
++						  U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
++						  U"copies of the Software, and to permit persons to whom the Software is\n"
++						  U"furnished to do so, subject to the following conditions:\n"
++						  U"\n"
++						  U"The above copyright notice and this permission notice shall be included in all\n"
++						  U"copies or substantial portions of the Software.\n"
++						  U"\n"
++						  U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++						  U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++						  U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++						  U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
++						  U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
++						  U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
++						  U"SOFTWARE.";
+ 	licenses.push_back(ksmaxisLicense);
+ 
+ 	// KSMフォントのライセンス情報を追加
+ 	LicenseInfo ksmFontLicense;
+ 	ksmFontLicense.title = U"KSM Fonts (KSM-JA/SC/TC-Medium)";
+ 	ksmFontLicense.copyright = U"Component fonts:\n"
+-		U"1. Tektur (Modified as Tektur-KSM) - Copyright 2023 The Tektur Project Authors, Modified by K-Shoot MANIA Project\n"
+-		U"2. Corporate Logo ver3 - Copyright LOGOTYPE.JP, Based on Source Han Sans (Copyright 2014-2020 Adobe)\n"
+-		U"3. Noto Sans, Noto Sans JP/KR/SC/TC, Noto Sans Math, Noto Sans Symbols, Noto Music, Arabic, Thai, Hebrew, Cherokee - Copyright Google Inc. and Adobe Inc.";
++							   U"1. Tektur (Modified as Tektur-KSM) - Copyright 2023 The Tektur Project Authors, Modified by K-Shoot MANIA Project\n"
++							   U"2. Corporate Logo ver3 - Copyright LOGOTYPE.JP, Based on Source Han Sans (Copyright 2014-2020 Adobe)\n"
++							   U"3. Noto Sans, Noto Sans JP/KR/SC/TC, Noto Sans Math, Noto Sans Symbols, Noto Music, Arabic, Thai, Hebrew, Cherokee - Copyright Google Inc. and Adobe Inc.";
+ 	ksmFontLicense.text = U"All component fonts are licensed under the SIL Open Font License, Version 1.1.\n"
+-		U"\n"
+-		U"Permission is hereby granted, free of charge, to any person obtaining a copy of the Font Software,\n"
+-		U"to use, study, copy, merge, embed, modify, redistribute, and sell modified and unmodified copies\n"
+-		U"of the Font Software, subject to the following conditions:\n"
+-		U"\n"
+-		U"1) Neither the Font Software nor any of its individual components, in Original or Modified Versions,\n"
+-		U"   may be sold by itself.\n"
+-		U"2) Original or Modified Versions of the Font Software may be bundled, redistributed and/or sold with\n"
+-		U"   any software, provided that each copy contains the above copyright notice and this license.\n"
+-		U"3) The Font Software, modified or unmodified, in part or in whole, must be distributed entirely under\n"
+-		U"   this license, and must not be distributed under any other license.";
++						  U"\n"
++						  U"Permission is hereby granted, free of charge, to any person obtaining a copy of the Font Software,\n"
++						  U"to use, study, copy, merge, embed, modify, redistribute, and sell modified and unmodified copies\n"
++						  U"of the Font Software, subject to the following conditions:\n"
++						  U"\n"
++						  U"1) Neither the Font Software nor any of its individual components, in Original or Modified Versions,\n"
++						  U"   may be sold by itself.\n"
++						  U"2) Original or Modified Versions of the Font Software may be bundled, redistributed and/or sold with\n"
++						  U"   any software, provided that each copy contains the above copyright notice and this license.\n"
++						  U"3) The Font Software, modified or unmodified, in part or in whole, must be distributed entirely under\n"
++						  U"   this license, and must not be distributed under any other license.";
+ 	licenses.push_back(ksmFontLicense);
+ 
+ 	// SQLiteのライセンス情報を追加
+@@ -247,31 +270,31 @@ void OutputLicenseTxt()
+ 	sqliteLicense.title = U"SQLite";
+ 	sqliteLicense.copyright = U"https://www.sqlite.org/copyright.html";
+ 	sqliteLicense.text = U"SQLite Is Public Domain\n"
+-		U"\n"
+-		U"All of the code and documentation in SQLite has been dedicated to the public\n"
+-		U"domain by the authors. All code authors, and representatives of the companies\n"
+-		U"they work for, have signed affidavits dedicating their contributions to the\n"
+-		U"public domain and originals of those signed affidavits are stored in a firesafe\n"
+-		U"at the main offices of Hwaci. All contributors are citizens of countries that\n"
+-		U"allow creative works to be dedicated into the public domain. Anyone is free to\n"
+-		U"copy, modify, publish, use, compile, sell, or distribute the original SQLite\n"
+-		U"code, either in source code form or as a compiled binary, for any purpose,\n"
+-		U"commercial or non-commercial, and by any means.\n"
+-		U"\n"
+-		U"The previous paragraph applies to the deliverable code and documentation in\n"
+-		U"SQLite - those parts of the SQLite library that you actually bundle and ship\n"
+-		U"with a larger application. Some scripts used as part of the build process (for\n"
+-		U"example the \"configure\" scripts generated by autoconf) might fall under other\n"
+-		U"open-source licenses. Nothing from these build scripts ever reaches the final\n"
+-		U"deliverable SQLite library, however, and so the licenses associated with those\n"
+-		U"scripts should not be a factor in assessing your rights to copy and use the\n"
+-		U"SQLite library.\n"
+-		U"\n"
+-		U"All of the deliverable code in SQLite has been written from scratch. No code\n"
+-		U"has been taken from other projects or from the open internet. Every line of\n"
+-		U"code can be traced back to its original author, and all of those authors have\n"
+-		U"public domain dedications on file. So the SQLite code base is clean and is\n"
+-		U"uncontaminated with licensed code from other projects.";
++						 U"\n"
++						 U"All of the code and documentation in SQLite has been dedicated to the public\n"
++						 U"domain by the authors. All code authors, and representatives of the companies\n"
++						 U"they work for, have signed affidavits dedicating their contributions to the\n"
++						 U"public domain and originals of those signed affidavits are stored in a firesafe\n"
++						 U"at the main offices of Hwaci. All contributors are citizens of countries that\n"
++						 U"allow creative works to be dedicated into the public domain. Anyone is free to\n"
++						 U"copy, modify, publish, use, compile, sell, or distribute the original SQLite\n"
++						 U"code, either in source code form or as a compiled binary, for any purpose,\n"
++						 U"commercial or non-commercial, and by any means.\n"
++						 U"\n"
++						 U"The previous paragraph applies to the deliverable code and documentation in\n"
++						 U"SQLite - those parts of the SQLite library that you actually bundle and ship\n"
++						 U"with a larger application. Some scripts used as part of the build process (for\n"
++						 U"example the \"configure\" scripts generated by autoconf) might fall under other\n"
++						 U"open-source licenses. Nothing from these build scripts ever reaches the final\n"
++						 U"deliverable SQLite library, however, and so the licenses associated with those\n"
++						 U"scripts should not be a factor in assessing your rights to copy and use the\n"
++						 U"SQLite library.\n"
++						 U"\n"
++						 U"All of the deliverable code in SQLite has been written from scratch. No code\n"
++						 U"has been taken from other projects or from the open internet. Every line of\n"
++						 U"code can be traced back to its original author, and all of those authors have\n"
++						 U"public domain dedications on file. So the SQLite code base is clean and is\n"
++						 U"uncontaminated with licensed code from other projects.";
+ 	licenses.push_back(sqliteLicense);
+ 
+ 	// SQLiteCppのライセンス情報を追加
+@@ -279,21 +302,21 @@ void OutputLicenseTxt()
+ 	sqliteCppLicense.title = U"SQLiteCpp";
+ 	sqliteCppLicense.copyright = U"Copyright (c) 2012-2025 Sebastien Rombauts (sebastien.rombauts@gmail.com)";
+ 	sqliteCppLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+-		U"of this software and associated documentation files (the \"Software\"), to deal\n"
+-		U"in the Software without restriction, including without limitation the rights\n"
+-		U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+-		U"copies of the Software, and to permit persons to whom the Software is furnished\n"
+-		U"to do so, subject to the following conditions:\n"
+-		U"\n"
+-		U"The above copyright notice and this permission notice shall be included in all\n"
+-		U"copies or substantial portions of the Software.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n"
+-		U"WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR\n"
+-		U"IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
++							U"of this software and associated documentation files (the \"Software\"), to deal\n"
++							U"in the Software without restriction, including without limitation the rights\n"
++							U"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
++							U"copies of the Software, and to permit persons to whom the Software is furnished\n"
++							U"to do so, subject to the following conditions:\n"
++							U"\n"
++							U"The above copyright notice and this permission notice shall be included in all\n"
++							U"copies or substantial portions of the Software.\n"
++							U"\n"
++							U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++							U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++							U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++							U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n"
++							U"WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR\n"
++							U"IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
+ 	licenses.push_back(sqliteCppLicense);
+ 
+ 	// stb_imageのライセンス情報を追加
+@@ -301,29 +324,29 @@ void OutputLicenseTxt()
+ 	stbImageLicense.title = U"stb_image";
+ 	stbImageLicense.copyright = U"Copyright (c) 2017 Sean Barrett\nhttps://github.com/nothings/stb\nLicensed under the MIT License (ALTERNATIVE A of stb's dual license).";
+ 	stbImageLicense.text = U"Permission is hereby granted, free of charge, to any person obtaining a copy of\n"
+-		U"this software and associated documentation files (the \"Software\"), to deal in\n"
+-		U"the Software without restriction, including without limitation the rights to\n"
+-		U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
+-		U"of the Software, and to permit persons to whom the Software is furnished to do\n"
+-		U"so, subject to the following conditions:\n"
+-		U"\n"
+-		U"The above copyright notice and this permission notice shall be included in all\n"
+-		U"copies or substantial portions of the Software.\n"
+-		U"\n"
+-		U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+-		U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+-		U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+-		U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+-		U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+-		U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+-		U"SOFTWARE.";
++						   U"this software and associated documentation files (the \"Software\"), to deal in\n"
++						   U"the Software without restriction, including without limitation the rights to\n"
++						   U"use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n"
++						   U"of the Software, and to permit persons to whom the Software is furnished to do\n"
++						   U"so, subject to the following conditions:\n"
++						   U"\n"
++						   U"The above copyright notice and this permission notice shall be included in all\n"
++						   U"copies or substantial portions of the Software.\n"
++						   U"\n"
++						   U"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
++						   U"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
++						   U"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
++						   U"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
++						   U"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
++						   U"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
++						   U"SOFTWARE.";
+ 	licenses.push_back(stbImageLicense);
+ 
+ 	// アルファベット順にソート
+ 	licenses.sort_by([](const LicenseInfo& a, const LicenseInfo& b)
+-	{
+-		return a.title < b.title;
+-	});
++					 {
++						 return a.title < b.title;
++					 });
+ 
+ 	// ファイルに保存
+ 	TextWriter writer(U"license.txt");
+@@ -354,6 +377,8 @@ void OutputLicenseTxt()
  ksmaudio::AudioBackend GetAudioBackendFromConfig()
  {
  	const StringView value = ConfigIni::GetString(ConfigIni::Key::kAudioBackend, ConfigIni::Value::AudioBackend::kDefault);
@@ -3921,12 +4453,12 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  	return value == ConfigIni::Value::AudioBackend::kDirectSound ? ksmaudio::AudioBackend::DirectSound : ksmaudio::AudioBackend::Default;
  }
  #endif
-@@ -371,11 +395,19 @@ void KSMMain()
+@@ -371,11 +396,19 @@ void KSMMain()
  	LicenseManager::DisableDefaultTrigger();
  
  	// ウィンドウタイトル
 -	Window::SetTitle(U"K-Shoot MANIA {} (unofficial build)"_fmt(kAppVersion));
-+	Window::SetTitle(U"K-Shoot Mania V2.1.0 - Enhanced Vertical Mod (Unofficial Build)");
++	Window::SetTitle(U"K-Shoot Mania V2.1.0 - Enhanced Vertical Mod 0.5.2-beta2 (Unofficial Build)");
  
  	// カレントディレクトリを設定
  	// (ChangeCurrentDirectoryはここ以外は基本的に使用禁止。どうしても使う必要がある場合は必ずResourceDirectoryPathに戻すこと)
@@ -3942,7 +4474,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  	// デフォルト色を指定
  	Scene::SetBackground(Palette::Black);
-@@ -390,6 +422,52 @@ void KSMMain()
+@@ -390,6 +423,52 @@ void KSMMain()
  
  	// config.iniを読み込み
  	ConfigIni::Load();
@@ -3995,7 +4527,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  	// ランタイム設定を初期化
  	RuntimeConfig::RestoreJudgmentModesFromConfigIni();
-@@ -400,20 +478,50 @@ void KSMMain()
+@@ -400,20 +479,50 @@ void KSMMain()
  
  	// 音声処理を初期化
  #ifdef _WIN32
@@ -4048,7 +4580,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  	}
  
  	// ハイスコアのバックアップを作成
-@@ -423,8 +531,38 @@ void KSMMain()
+@@ -423,8 +532,38 @@ void KSMMain()
  	Window::SetToggleFullscreenEnabled(false); // Alt+Enter無効化
  	ApplyScreenSizeConfig();
  
@@ -4087,7 +4619,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -479,6 +617,10 @@ void KSMMain()
+@@ -479,6 +618,10 @@ void KSMMain()
  
  	// NocoUIのグローバルデフォルトフォントを設定
  	noco::SetGlobalDefaultFont(AssetManagement::SystemFont());
@@ -4098,7 +4630,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  	// NocoUIの音声再生をゲーム本体と同じ音声バックエンド(BASS)で行う
  	noco::UISound::SetPlayAudioCallback(
-@@ -507,8 +649,8 @@ void KSMMain()
+@@ -507,18 +650,63 @@ void KSMMain()
  	if (testPlayArgs.has_value())
  	{
  		const auto chartData = FsUtils::HasKsonExtension(testPlayArgs->chartFilePath)
@@ -4108,8 +4640,9 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
 +								   : kson::LoadKshChartData(testPlayArgs->chartFilePath.toUTF8());
  		if (chartData.error != kson::ErrorType::None)
  		{
- 			MessageBoxUtils::ShowOK(I18n::Get(I18n::Play::ErrorChartLoadFailed), MessageBoxStyle::Error);
-@@ -516,9 +658,54 @@ void KSMMain()
+-			MessageBoxUtils::ShowOK(I18n::Get(I18n::Play::ErrorChartLoadFailed), MessageBoxStyle::Error);
++			MessageBoxUtils::ShowOK(ErrorReporting::FormatMessage(ErrorReporting::Record(ErrorReporting::Stage::Chart, testPlayArgs->chartFilePath, Unicode::FromUTF8(kson::GetErrorString(chartData.error)), ErrorReporting::Reason::ChartFormat)), MessageBoxStyle::Error);
+ 			return;
  		}
  	}
  
@@ -4165,7 +4698,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  	{
  		// テストプレイ(-from指定あり)の場合
  		initialSceneFactory = Co::MakeSceneFactory<PlayScene>(
-@@ -543,10 +730,151 @@ void KSMMain()
+@@ -543,10 +731,151 @@ void KSMMain()
  	}
  
  	// メインループ
@@ -4319,7 +4852,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  		// マウスカーソル非表示設定(全画面での非表示)
  		// プレイ中のみの非表示はPlaySceneで処理する
  		if (ConfigIni::GetInt(ConfigIni::Key::kHideMouseCursor, ConfigIni::Value::HideMouseCursor::kPlayOnly) == ConfigIni::Value::HideMouseCursor::kAll)
-@@ -556,28 +884,110 @@ void KSMMain()
+@@ -556,28 +885,110 @@ void KSMMain()
  
  		if (ksmaxis::IsInitialized())
  		{
@@ -4431,7 +4964,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  
  #ifdef __APPLE__
  	// macOS: 英数・かなキーのイベントタップを停止
-@@ -589,27 +999,73 @@ void KSMMain()
+@@ -589,28 +1000,77 @@ void KSMMain()
  	{
  		ksmaxis::Terminate();
  	}
@@ -4470,6 +5003,9 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
  	}
  	catch (const Error& e)
  	{
+-		MessageBoxUtils::ShowOK(e.what(), MessageBoxStyle::Error);
+-		throw;
++		const auto report = ErrorReporting::Record(ErrorReporting::Stage::Game, U"", e.what());
 +		ksmaudio::qa::Event("EXCEPTION", 0, 0, e.what().toUTF8());
 +		ksmaudio::qa::Phase("exception.audio_cleanup");
 +		Vertical::OptionsPresentation::Reset();
@@ -4484,27 +5020,34 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..2bba6c6f888d8e747a374fbcb6be4539
 +			TextWriter{ FsUtils::GetResourcePath(U"skin-test-failure.txt") }.writeln(e.what());
 +			return;
 +		}
- 		MessageBoxUtils::ShowOK(e.what(), MessageBoxStyle::Error);
- 		throw;
++		MessageBoxUtils::ShowOK(ErrorReporting::FormatMessage(report), MessageBoxStyle::Error);
++		return;
  	}
  	catch (const std::exception& e)
  	{
+-		MessageBoxUtils::ShowOK(Unicode::FromUTF8(e.what()), MessageBoxStyle::Error);
+-		throw;
++		const auto report = ErrorReporting::Record(ErrorReporting::Stage::Game, U"", e);
 +		ksmaudio::qa::Event("EXCEPTION", 0, 0, e.what());
 +		ksmaudio::qa::Phase("exception.audio_cleanup");
 +		Vertical::OptionsPresentation::Reset();
 +		ksmaudio::Terminate();
- 		MessageBoxUtils::ShowOK(Unicode::FromUTF8(e.what()), MessageBoxStyle::Error);
- 		throw;
++		MessageBoxUtils::ShowOK(ErrorReporting::FormatMessage(report), MessageBoxStyle::Error);
++		return;
  	}
  	catch (...)
  	{
+-		MessageBoxUtils::ShowOK(U"Unknown exception", MessageBoxStyle::Error);
+-		throw;
++		const auto report = ErrorReporting::Record(ErrorReporting::Stage::Game, U"", U"Unknown exception");
 +		ksmaudio::qa::Event("EXCEPTION_UNKNOWN");
 +		ksmaudio::qa::Phase("exception.audio_cleanup");
 +		Vertical::OptionsPresentation::Reset();
 +		ksmaudio::Terminate();
- 		MessageBoxUtils::ShowOK(U"Unknown exception", MessageBoxStyle::Error);
- 		throw;
++		MessageBoxUtils::ShowOK(ErrorReporting::FormatMessage(report), MessageBoxStyle::Error);
++		return;
  	}
+ }
 diff --git a/kshootmania/src/MusicGame/Audio/AssistTick.cpp b/kshootmania/src/MusicGame/Audio/AssistTick.cpp
 index 6dfca858f1aa72e09b8301a113be0bcb8e1af481..83c84913af3f34c159f33d31fbf22d622041d1e2 100644
 --- a/kshootmania/src/MusicGame/Audio/AssistTick.cpp
@@ -11694,13 +12237,75 @@ index e8053dfaaadd86c352049dc0163f4b8a117fbd92..aaad3e34652d5c87588623a945bf82f6
  
  	// BT-Dメニューの表示テキスト生成
  	[[nodiscard]]
+diff --git a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuCourseItem.cpp b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuCourseItem.cpp
+index ecf523ab80e8e9b5cda1fc454e624df055ae1cfb..7417109e4381a31e4a01b34c1ae6d755664e6872 100644
+--- a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuCourseItem.cpp
++++ b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuCourseItem.cpp
+@@ -1,4 +1,5 @@
+ ﻿#include "SelectMenuCourseItem.hpp"
++#include "Common/ErrorReporting.hpp"
+ #include "Course/CoursePlayState.hpp"
+ #include "I18n/I18n.hpp"
+ #include "RuntimeConfig.hpp"
+@@ -8,6 +9,14 @@
+ 
+ namespace
+ {
++	String CourseLoadError(const CourseInfo& course)
++	{
++		for (const auto& chart : course.charts)
++			if (!chart.exists)
++				return ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, chart.absolutePath));
++		return ErrorReporting::FormatMessage(ErrorReporting::Record(ErrorReporting::Stage::Chart, course.filePath, U"The course contains no charts", ErrorReporting::Reason::ChartFormat));
++	}
++
+ 	// TODO: PlayOptionを選曲画面側で生成してそれを使うように
+ 	KscKey CreateKscKeyFromConfig()
+ 	{
+@@ -33,7 +42,7 @@ void SelectMenuCourseItem::decide(const SelectMenuEventContext& context, [[maybe
+ 	// コースの全譜面が存在するかチェック
+ 	if (!m_courseInfo.isValid())
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorSomeChartMissingInCourse));
++		context.fnShowErrorDialog(CourseLoadError(m_courseInfo));
+ 		return;
+ 	}
+ 
+@@ -41,7 +50,7 @@ void SelectMenuCourseItem::decide(const SelectMenuEventContext& context, [[maybe
+ 	const FilePath firstChartPath = m_courseInfo.charts[0].absolutePath;
+ 	if (!FileSystem::Exists(firstChartPath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, firstChartPath)));
+ 		return;
+ 	}
+ 
+@@ -56,7 +65,7 @@ void SelectMenuCourseItem::decideAutoPlay(const SelectMenuEventContext& context,
+ 	// コースの全譜面が存在するかチェック
+ 	if (!m_courseInfo.isValid())
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorSomeChartMissingInCourse));
++		context.fnShowErrorDialog(CourseLoadError(m_courseInfo));
+ 		return;
+ 	}
+ 
+@@ -64,7 +73,7 @@ void SelectMenuCourseItem::decideAutoPlay(const SelectMenuEventContext& context,
+ 	const FilePath firstChartPath = m_courseInfo.charts[0].absolutePath;
+ 	if (!FileSystem::Exists(firstChartPath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, firstChartPath)));
+ 		return;
+ 	}
+ 
 diff --git a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp
-index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad338fb4a6 100644
+index 2132892222c29a008d5790fe91f4428420d3bb73..9f6fc782c19190d55dc513a2f9d6f6153b87a399 100644
 --- a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp
 +++ b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuLevelSongItem.cpp
-@@ -1,12 +1,12 @@
+@@ -1,12 +1,13 @@
 -﻿#include "SelectMenuLevelSongItem.hpp"
-+﻿#include "Graphics/ExScorePanel.hpp"
++﻿#include "Common/ErrorReporting.hpp"
++#include "Graphics/ExScorePanel.hpp"
 +#include "SelectMenuLevelSongItem.hpp"
  #include "RuntimeConfig.hpp"
  
@@ -11714,7 +12319,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  {
  	auto chartInfo = std::make_shared<SelectChartInfo>(chartFilePath);
  	if (!chartInfo->hasError())
-@@ -23,8 +23,7 @@ SelectMenuLevelSongItem::SelectMenuLevelSongItem(
+@@ -23,8 +24,7 @@ SelectMenuLevelSongItem::SelectMenuLevelSongItem(
  	std::shared_ptr<const SelectChartInfo> chartInfo,
  	FilePathView songDirectoryPath,
  	int32 difficultyIdx)
@@ -11724,7 +12329,25 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  {
  	if (chartInfo != nullptr && !chartInfo->hasError())
  	{
-@@ -163,11 +162,11 @@ bool SelectMenuLevelSongItem::isFavoriteRegisterableItemType() const
+@@ -66,7 +66,7 @@ void SelectMenuLevelSongItem::decide(const SelectMenuEventContext& context, [[ma
+ 	const FilePath chartFilePath = FilePath{ m_chartInfo->chartFilePath() };
+ 	if (!FileSystem::Exists(chartFilePath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, chartFilePath)));
+ 		return;
+ 	}
+ 
+@@ -83,7 +83,7 @@ void SelectMenuLevelSongItem::decideAutoPlay(const SelectMenuEventContext& conte
+ 	const FilePath chartFilePath = FilePath{ m_chartInfo->chartFilePath() };
+ 	if (!FileSystem::Exists(chartFilePath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, chartFilePath)));
+ 		return;
+ 	}
+ 
+@@ -163,11 +163,11 @@ bool SelectMenuLevelSongItem::isFavoriteRegisterableItemType() const
  void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext& context, noco::Canvas& canvas, [[maybe_unused]] int32 difficultyIdx) const
  {
  	canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -11741,7 +12364,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  
  	// 各難易度の存在有無とレベルを兄弟情報から設定
  	for (int32 i = 0; i < kNumDifficulties; ++i)
-@@ -175,10 +174,10 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
+@@ -175,10 +175,10 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
  		const bool exists = m_siblings[i].menuIndex >= 0;
  		const int32 levelIndex = exists ? m_siblings[i].level - 1 : -1;
  		canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -11756,7 +12379,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  	}
  
  	if (m_chartInfo == nullptr)
-@@ -187,6 +186,7 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
+@@ -187,6 +187,7 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
  	}
  
  	const HighScoreInfo highScore = context.fnGetHighScore(m_chartInfo->chartFilePath());
@@ -11764,7 +12387,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  	const GaugeType gaugeType = RuntimeConfig::GetGaugeType();
  
  	const FilePath jacketPath = m_chartInfo->jacketFilePath();
-@@ -195,26 +195,26 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
+@@ -195,26 +196,26 @@ void SelectMenuLevelSongItem::setCanvasParamsCenter(const SelectMenuEventContext
  	const SongInfoTextDisplayParams artistParams = MakeSongInfoTextDisplayParams(m_chartInfo->artist(), m_chartInfo->artistTranslit());
  
  	canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -11811,7 +12434,7 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  }
  
  void SelectMenuLevelSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext& context, noco::Canvas& canvas, [[maybe_unused]] int32 difficultyIdx, StringView tag) const
-@@ -235,25 +235,25 @@ void SelectMenuLevelSongItem::setCanvasParamsTopBottom(const SelectMenuEventCont
+@@ -235,25 +236,25 @@ void SelectMenuLevelSongItem::setCanvasParamsTopBottom(const SelectMenuEventCont
  	const SongInfoTextDisplayParams artistParams = MakeSongInfoTextDisplayParams(m_chartInfo->artist(), m_chartInfo->artistTranslit());
  
  	canvas.setSubCanvasParamValuesByTag(tag, {
@@ -11857,17 +12480,18 @@ index 2132892222c29a008d5790fe91f4428420d3bb73..5a41c30b72325f63e29da17c389d44ad
  
  void SelectMenuLevelSongItem::showInFileManager([[maybe_unused]] int32 difficultyIdx) const
 diff --git a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
-index 60d702f5756503d835966d43ce66ee6592117a00..8d11b314a8cc7c91c830f4c2c0c295acecc66f96 100644
+index 60d702f5756503d835966d43ce66ee6592117a00..77cb5097738cd5b23bccf172b494c262c6afb26d 100644
 --- a/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
 +++ b/kshootmania/src/Scenes/Select/MenuItem/SelectMenuSongItem.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
 -﻿#include "SelectMenuSongItem.hpp"
-+﻿#include "Graphics/ExScorePanel.hpp"
++﻿#include "Common/ErrorReporting.hpp"
++#include "Graphics/ExScorePanel.hpp"
 +#include "SelectMenuSongItem.hpp"
  #include "Graphics/FontUtils.hpp"
  #include "Scenes/Select/SelectDifficultyMenu.hpp"
  #include "RuntimeConfig.hpp"
-@@ -63,10 +64,11 @@ SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath)
+@@ -63,10 +65,11 @@ SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath)
  }
  
  SelectMenuSongItem::SelectMenuSongItem(FilePathView fullPath, const std::array<std::shared_ptr<const SelectChartInfo>, kNumDifficulties>& chartInfos, IsSingleChartItemYN isSingleChartItem)
@@ -11883,7 +12507,25 @@ index 60d702f5756503d835966d43ce66ee6592117a00..8d11b314a8cc7c91c830f4c2c0c295ac
  {
  }
  
-@@ -156,11 +158,11 @@ const SelectChartInfo* SelectMenuSongItem::chartInfoPtr(int difficultyIdx, Fallb
+@@ -90,7 +93,7 @@ void SelectMenuSongItem::decide(const SelectMenuEventContext& context, int32 dif
+ 	// 譜面ファイルの存在チェック
+ 	if (!FileSystem::Exists(chartFilePath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, chartFilePath)));
+ 		return;
+ 	}
+ 
+@@ -117,7 +120,7 @@ void SelectMenuSongItem::decideAutoPlay(const SelectMenuEventContext& context, i
+ 	// 譜面ファイルの存在チェック
+ 	if (!FileSystem::Exists(chartFilePath))
+ 	{
+-		context.fnShowErrorDialog(I18n::Get(I18n::Play::ErrorChartFileNotFound));
++		context.fnShowErrorDialog(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::Chart, chartFilePath)));
+ 		return;
+ 	}
+ 
+@@ -156,11 +159,11 @@ const SelectChartInfo* SelectMenuSongItem::chartInfoPtr(int difficultyIdx, Fallb
  void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& context, noco::Canvas& canvas, int32 difficultyIdx) const
  {
  	canvas.setSubCanvasParamValuesByTag(U"center", {
@@ -11900,7 +12542,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..8d11b314a8cc7c91c830f4c2c0c295ac
  
  	// 各難易度の存在有無とレベルを設定
  	setDifficultyLevelDisplayParams(canvas);
-@@ -186,6 +188,7 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
+@@ -186,6 +189,7 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
  	if (pChartInfo != nullptr)
  	{
  		const HighScoreInfo highScoreInfo = context.fnGetHighScore(pChartInfo->chartFilePath());
@@ -11908,7 +12550,7 @@ index 60d702f5756503d835966d43ce66ee6592117a00..8d11b314a8cc7c91c830f4c2c0c295ac
  
  		const GaugeType gaugeType = RuntimeConfig::GetGaugeType();
  
-@@ -197,35 +200,35 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
+@@ -197,35 +201,35 @@ void SelectMenuSongItem::setCanvasParamsCenter(const SelectMenuEventContext& con
  		const FilePath artistImgPath = pChartInfo->artistImgFilePath();
  		const bool hasArtistImg = !artistImgPath.isEmpty() && FileSystem::IsFile(artistImgPath);
  		const SongInfoTextDisplayParams titleParams = hasTitleImg
@@ -11970,6 +12612,106 @@ index 60d702f5756503d835966d43ce66ee6592117a00..8d11b314a8cc7c91c830f4c2c0c295ac
  	}
  	else
  	{
+@@ -241,10 +245,10 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+ 
+ 	// 曲名・アーティスト名・ジャケット画像は常に描画するため、代替カーソル値を使用して取得
+ 	const int32 altDifficultyIdx = SelectDifficultyMenu::GetAlternativeCursor(difficultyIdx,
+-		[this](int32 idx)
+-		{
+-			return chartInfoPtr(idx) != nullptr;
+-		});
++																			  [this](int32 idx)
++																			  {
++																				  return chartInfoPtr(idx) != nullptr;
++																			  });
+ 	const SelectChartInfo* pAltChartInfo = chartInfoPtr(altDifficultyIdx);
+ 	if (pAltChartInfo == nullptr)
+ 	{
+@@ -254,8 +258,8 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+ 
+ 	// レベルとメダルは、中央で選択中の難易度がこの曲に存在する場合のみ表示
+ 	// (単一譜面の場合は常に表示)
+-	int32 levelIndex = -1; // -1は非表示
+-	int32 medalIndex = -1; // -1は非表示
++	int32 levelIndex = -1;		   // -1は非表示
++	int32 medalIndex = -1;		   // -1は非表示
+ 	int32 highScoreGradeIndex = 0; // グレードは「-」表示にするため0
+ 	int32 gaugePercentage = 0;
+ 	const SelectChartInfo* pDisplayChartInfo = m_isSingleChartItem ? pAltChartInfo : pChartInfo;
+@@ -277,34 +281,34 @@ void SelectMenuSongItem::setCanvasParamsTopBottom(const SelectMenuEventContext&
+ 	const FilePath artistImgPath = pAltChartInfo->artistImgFilePath();
+ 	const bool hasArtistImg = !artistImgPath.isEmpty() && FileSystem::IsFile(artistImgPath);
+ 	const SongInfoTextDisplayParams titleParams = hasTitleImg
+-		? SongInfoTextDisplayParams{}
+-		: MakeSongInfoTextDisplayParams(pAltChartInfo->title(), pAltChartInfo->titleTranslit());
++													  ? SongInfoTextDisplayParams{}
++													  : MakeSongInfoTextDisplayParams(pAltChartInfo->title(), pAltChartInfo->titleTranslit());
+ 	const SongInfoTextDisplayParams artistParams = hasArtistImg
+-		? SongInfoTextDisplayParams{}
+-		: MakeSongInfoTextDisplayParams(pAltChartInfo->artist(), pAltChartInfo->artistTranslit());
++													   ? SongInfoTextDisplayParams{}
++													   : MakeSongInfoTextDisplayParams(pAltChartInfo->artist(), pAltChartInfo->artistTranslit());
+ 
+ 	canvas.setSubCanvasParamValuesByTag(tag, {
+-		{ U"isSong", true },
+-		{ U"isDirectory", false },
+-		{ U"isSubDirectory", false },
+-		{ U"isCourse", false },
+-		{ U"title", titleParams.text },
+-		{ U"titleTranslit", titleParams.translitText },
+-		{ U"titleTranslitFadeRate", titleParams.translitFadeRate },
+-		{ U"titleImgFilePath", titleImgPath },
+-		{ U"artist", artistParams.text },
+-		{ U"artistTranslit", artistParams.translitText },
+-		{ U"artistTranslitFadeRate", artistParams.translitFadeRate },
+-		{ U"artistImgFilePath", artistImgPath },
+-		{ U"levelIndex", levelIndex },
+-		{ U"medalIndex", medalIndex },
+-		{ U"highScoreGradeIndex", highScoreGradeIndex },
+-		{ U"gaugePercentage", gaugePercentage },
+-		{ U"jacketFilePath", jacketPath },
+-		{ U"jacketActive", !jacketPath.isEmpty() && FileSystem::IsFile(jacketPath) },
+-		{ U"iconFilePath", iconPath },
+-		{ U"iconActive", !iconPath.isEmpty() && FileSystem::IsFile(iconPath) },
+-	});
++												 { U"isSong", true },
++												 { U"isDirectory", false },
++												 { U"isSubDirectory", false },
++												 { U"isCourse", false },
++												 { U"title", titleParams.text },
++												 { U"titleTranslit", titleParams.translitText },
++												 { U"titleTranslitFadeRate", titleParams.translitFadeRate },
++												 { U"titleImgFilePath", titleImgPath },
++												 { U"artist", artistParams.text },
++												 { U"artistTranslit", artistParams.translitText },
++												 { U"artistTranslitFadeRate", artistParams.translitFadeRate },
++												 { U"artistImgFilePath", artistImgPath },
++												 { U"levelIndex", levelIndex },
++												 { U"medalIndex", medalIndex },
++												 { U"highScoreGradeIndex", highScoreGradeIndex },
++												 { U"gaugePercentage", gaugePercentage },
++												 { U"jacketFilePath", jacketPath },
++												 { U"jacketActive", !jacketPath.isEmpty() && FileSystem::IsFile(jacketPath) },
++												 { U"iconFilePath", iconPath },
++												 { U"iconActive", !iconPath.isEmpty() && FileSystem::IsFile(iconPath) },
++											 });
+ }
+ 
+ void SelectMenuSongItem::showInFileManager(int32 difficultyIdx) const
+@@ -386,9 +390,9 @@ void SelectMenuSongItem::setDifficultyLevelDisplayParams(noco::Canvas& canvas) c
+ 		const bool exists = m_chartInfos[i] != nullptr;
+ 		const int32 levelIndex = exists ? m_chartInfos[i]->level() - 1 : -1;
+ 		canvas.setSubCanvasParamValuesByTag(U"center", {
+-			{ U"difficulty{}Enabled"_fmt(i), exists },
+-			{ U"difficulty{}LevelIndex"_fmt(i), levelIndex },
+-			{ U"difficulty{}StyleState"_fmt(i), U"" },
+-		});
++														   { U"difficulty{}Enabled"_fmt(i), exists },
++														   { U"difficulty{}LevelIndex"_fmt(i), levelIndex },
++														   { U"difficulty{}StyleState"_fmt(i), U"" },
++													   });
+ 	}
+ }
 diff --git a/kshootmania/src/Scenes/Select/SearchInputDialog.cpp b/kshootmania/src/Scenes/Select/SearchInputDialog.cpp
 index be1647189750682b9ea8d46a368345d6942278c2..f19e0e193e9482ab9ab99b91c89fc98cf96fec30 100644
 --- a/kshootmania/src/Scenes/Select/SearchInputDialog.cpp
@@ -12002,17 +12744,56 @@ index be1647189750682b9ea8d46a368345d6942278c2..f19e0e193e9482ab9ab99b91c89fc98c
  	if (!searchBoxNode)
  	{
 diff --git a/kshootmania/src/Scenes/Select/SelectChartInfo.cpp b/kshootmania/src/Scenes/Select/SelectChartInfo.cpp
-index 6f175a307f18aad8f66a908a9d0370e48f84e8b6..00a9ae25d967f6a02c2e052f245a4347a36468e1 100644
+index 6f175a307f18aad8f66a908a9d0370e48f84e8b6..e7fe564ebf1d817b4f2793aedf3838e3cfc1be8d 100644
 --- a/kshootmania/src/Scenes/Select/SelectChartInfo.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectChartInfo.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
 -﻿#include "SelectChartInfo.hpp"
 +﻿#include "MusicGame/Judgment/ExScore.hpp"
 +#include "SelectChartInfo.hpp"
++#include "Common/SongLoadDiagnostics.hpp"
  #include "Ini/ConfigIni.hpp"
  #include "kson/IO/KshIO.hpp"
  
-@@ -28,32 +29,28 @@ kson::MetaChartData SelectChartInfo::LoadMetaChartData(FilePathView chartFilePat
+@@ -14,46 +16,57 @@ FilePath SelectChartInfo::toFullPath(const std::string& u8Filename) const
+ 
+ kson::MetaChartData SelectChartInfo::LoadMetaChartData(FilePathView chartFilePath)
+ {
+-	kson::MetaChartData chartData = FsUtils::HasKsonExtension(chartFilePath)
+-		? kson::LoadKsonMetaChartData(chartFilePath.toUTF8())
+-		: kson::LoadKshMetaChartData(chartFilePath.toUTF8());
+-
+-	// disp_bpmが空の場合は最初のBPMを表示に使用
+-	if (chartData.meta.dispBPM.empty())
++	try
+ 	{
+-		chartData.meta.dispBPM = Unicode::ToUTF8(Format(chartData.firstBPM));
++		kson::MetaChartData chartData = FsUtils::HasKsonExtension(chartFilePath)
++											? kson::LoadKsonMetaChartData(chartFilePath.toUTF8())
++											: kson::LoadKshMetaChartData(chartFilePath.toUTF8());
++	
++		// disp_bpmが空の場合は最初のBPMを表示に使用
++		if (chartData.meta.dispBPM.empty())
++		{
++			chartData.meta.dispBPM = Unicode::ToUTF8(Format(chartData.firstBPM));
++		}
++	
++		return chartData;
+ 	}
+-
+-	return chartData;
++	catch (const std::bad_alloc&) { throw; }
++	catch (const std::exception& error)
++	{
++		SongLoadDiagnostics::Write(U"chart metadata", chartFilePath, error);
++	}
++	catch (const Error& error)
++	{
++		SongLoadDiagnostics::Write(U"chart metadata", chartFilePath, error.what());
++	}
++	kson::MetaChartData invalid;
++	invalid.error = kson::ErrorType::GeneralChartFormatError;
++	return invalid;
  }
  
  SelectChartInfo::SelectChartInfo(FilePathView chartFilePath)
@@ -12095,17 +12876,18 @@ index 3f2aa6e2377781b08584ddf984d7cd6fc3a27a36..e27fc6a6c113fa8e7eb4efed60b6ec26
  	[[nodiscard]]
  	String title() const;
 diff --git a/kshootmania/src/Scenes/Select/SelectMenu.cpp b/kshootmania/src/Scenes/Select/SelectMenu.cpp
-index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb9617b5fe86e 100644
+index 1091b57e91048920c9656bcbb40d46a360907f47..6fe11ea07c3a4d4b2fbfbec3abd6063e83d5e11b 100644
 --- a/kshootmania/src/Scenes/Select/SelectMenu.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectMenu.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
 -﻿#include "SelectMenu.hpp"
 +﻿#include "Diagnostics/DiagnosticArguments.hpp"
 +#include "SelectMenu.hpp"
++#include "Common/SongLoadDiagnostics.hpp"
  #include <cassert>
  #include "kson/kson.hpp"
  #include "IR/IRHash.hpp"
-@@ -21,11 +22,14 @@
+@@ -21,11 +23,14 @@
  #include "RuntimeConfig.hpp"
  #include "SelectMenuCacheDb.hpp"
  #include "UI/MouseMenuUtils.hpp"
@@ -12120,7 +12902,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  		{ U"top4", -4 },
  		{ U"top3", -3 },
  		{ U"top2", -2 },
-@@ -33,6 +37,11 @@ namespace
+@@ -33,6 +38,11 @@ namespace
  		{ U"bottom1", 1 },
  		{ U"bottom2", 2 },
  		{ U"bottom3", 3 },
@@ -12132,7 +12914,197 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  	};
  
  	/// @brief 上下の項目の押下イベントから相対移動量を取得(発火していない場合は0)
-@@ -629,17 +638,19 @@ void SelectMenu::refreshContentCanvasParams()
+@@ -76,15 +86,12 @@ namespace
+ 
+ 	bool IsAnyTranslitDisplayEnabled()
+ 	{
+-		return ConfigIni::GetBool(ConfigIni::Key::kShowTranslitKana, false)
+-			|| ConfigIni::GetBool(ConfigIni::Key::kShowTranslitHangul, false)
+-			|| ConfigIni::GetBool(ConfigIni::Key::kShowTranslitKanji, false);
++		return ConfigIni::GetBool(ConfigIni::Key::kShowTranslitKana, false) || ConfigIni::GetBool(ConfigIni::Key::kShowTranslitHangul, false) || ConfigIni::GetBool(ConfigIni::Key::kShowTranslitKanji, false);
+ 	}
+ 
+ 	KscKey CreateKscKeyFromConfig()
+ 	{
+-		return KscKey
+-		{
++		return KscKey{
+ 			.gaugeType = RuntimeConfig::GetGaugeType(),
+ 			.turnMode = RuntimeConfig::GetTurnMode(),
+ 			.playbackSpeed = RuntimeConfig::GetPlaybackSpeed(),
+@@ -106,9 +113,9 @@ namespace
+ 
+ 		// フォルダ名(小文字変換)の昇順でソート
+ 		directories.sort_by([](const FilePath& a, const FilePath& b)
+-		{
+-			return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
+-		});
++							{
++								return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							});
+ 
+ 		return directories;
+ 	}
+@@ -154,16 +161,16 @@ namespace
+ 	{
+ 		const FilePath songsDir = FsUtils::SongsDirectoryPath();
+ 		Array<FilePath> favFiles = FileSystem::DirectoryContents(songsDir, Recursive::No)
+-			.filter([](FilePathView p)
+-			{
+-				return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"fav";
+-			});
++									   .filter([](FilePathView p)
++											   {
++												   return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"fav";
++											   });
+ 
+ 		// ファイル名(小文字)でソート
+ 		favFiles.sort_by([](const FilePath& a, const FilePath& b)
+-		{
+-			return FileSystem::FileName(a).lowercased() < FileSystem::FileName(b).lowercased();
+-		});
++						 {
++							 return FileSystem::FileName(a).lowercased() < FileSystem::FileName(b).lowercased();
++						 });
+ 
+ 		return favFiles;
+ 	}
+@@ -224,10 +231,10 @@ namespace
+ 		Array<std::unique_ptr<SelectMenuCourseItem>> courseItems;
+ 
+ 		const Array<FilePath> kcoFiles = FileSystem::DirectoryContents(directoryPath, Recursive::No)
+-			.filter([](FilePathView p)
+-			{
+-				return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"kco";
+-			});
++											 .filter([](FilePathView p)
++													 {
++														 return FileSystem::IsFile(p) && FileSystem::Extension(p) == U"kco";
++													 });
+ 
+ 		if (kcoFiles.isEmpty())
+ 		{
+@@ -257,9 +264,9 @@ namespace
+ 		}
+ 
+ 		tempCourseItems.sort_by([](const CourseItemInfo& a, const CourseItemInfo& b)
+-		{
+-			return a.lowercasedTitle < b.lowercasedTitle;
+-		});
++								{
++									return a.lowercasedTitle < b.lowercasedTitle;
++								});
+ 
+ 		for (const auto& item : tempCourseItems)
+ 		{
+@@ -339,7 +346,10 @@ namespace
+ 			result.chartInfos[difficultyIdx] = chartInfo;
+ 		}
+ 
+-		if (!std::any_of(result.chartInfos.begin(), result.chartInfos.end(), [](const auto& chartInfo) { return chartInfo != nullptr; }))
++		if (!std::any_of(result.chartInfos.begin(), result.chartInfos.end(), [](const auto& chartInfo)
++						 {
++							 return chartInfo != nullptr;
++						 }))
+ 		{
+ 			return none;
+ 		}
+@@ -400,15 +410,15 @@ namespace
+ 
+ 			// ソートキーの昇順でソート
+ 			charts.sort_by([](const LevelSortChartFileInfo& a, const LevelSortChartFileInfo& b)
+-			{
+-				if (a.sortKey != b.sortKey)
+-				{
+-					return a.sortKey < b.sortKey;
+-				}
++						   {
++							   if (a.sortKey != b.sortKey)
++							   {
++								   return a.sortKey < b.sortKey;
++							   }
+ 
+-				// 同一楽曲内は難易度順
+-				return a.difficultyIdx < b.difficultyIdx;
+-			});
++							   // 同一楽曲内は難易度順
++							   return a.difficultyIdx < b.difficultyIdx;
++						   });
+ 
+ 			// レベル見出し項目を追加
+ 			pMenu->push_back(std::make_unique<SelectMenuLevelSectionItem>(level));
+@@ -418,8 +428,8 @@ namespace
+ 			{
+ 				const FilePath chartDir = FileSystem::ParentPath(chartInfo.filePath);
+ 				auto item = chartInfo.chartInfo != nullptr
+-					? std::make_unique<SelectMenuLevelSongItem>(chartInfo.chartInfo, chartDir, chartInfo.difficultyIdx)
+-					: std::make_unique<SelectMenuLevelSongItem>(chartInfo.filePath, chartDir, chartInfo.difficultyIdx);
++								? std::make_unique<SelectMenuLevelSongItem>(chartInfo.chartInfo, chartDir, chartInfo.difficultyIdx)
++								: std::make_unique<SelectMenuLevelSongItem>(chartInfo.filePath, chartDir, chartInfo.difficultyIdx);
+ 				if (item->chartExists())
+ 				{
+ 					levelItems.push_back({ static_cast<int32>(pMenu->size()), item.get() });
+@@ -454,21 +464,54 @@ bool SelectMenu::openDirectory(FilePathView directoryPath, PlaySeYN playSe, Refr
+ 	}
+ 
+ 	// ソートモードに応じて処理を分岐
++	SongLoadDiagnostics::Batch diagnostics;
+ 	bool result = false;
+-	if (m_folderState.sortMode == SelectFolderState::SortMode::kLevel)
++	bool failed = false;
++	try
++	{
++		if (m_folderState.sortMode == SelectFolderState::SortMode::kLevel)
++		{
++			result = openDirectoryWithLevelSort(directoryPath);
++		}
++		else
++		{
++			result = openDirectoryWithNameSort(directoryPath);
++		}
++	}
++	catch (const std::bad_alloc&) { throw; }
++	catch (const std::exception& error)
+ 	{
+-		result = openDirectoryWithLevelSort(directoryPath);
++		m_directoryLoadErrorPending = SongLoadDiagnostics::Write(U"open directory", directoryPath, error);
++		failed = true;
+ 	}
+-	else
++	catch (const Error& error)
+ 	{
+-		result = openDirectoryWithNameSort(directoryPath);
++		m_directoryLoadErrorPending = SongLoadDiagnostics::Write(U"open directory", directoryPath, error.what());
++		failed = true;
+ 	}
+-
+ 	if (!result)
+ 	{
++		if (failed)
++		{
++			openDirectoryWithNameSort(U"");
++			refreshContentCanvasParams();
++			this->refreshSongPreview();
++			// The owning scene is not fully constructed during initial loading.
++			// Display its error dialog on the first update, never in its constructor.
++		}
+ 		return false;
+ 	}
+ 
++	HashSet<FilePath> skipped;
++	for (const auto& report : diagnostics.reports)
++		if (report.stage == ErrorReporting::Stage::Metadata) skipped.insert(report.path);
++	if (!skipped.empty())
++	{
++		auto report = ErrorReporting::Record(ErrorReporting::Stage::Directory, directoryPath,
++			U"Some chart metadata could not be read; see preceding entries", ErrorReporting::Reason::ChartFormat, static_cast<int32>(skipped.size()));
++		m_directoryLoadErrorPending = std::move(report);
++	}
++
+ 	applySearchModeFilter();
+ 
+ 	if (saveToConfigIni)
+@@ -629,17 +672,19 @@ void SelectMenu::refreshContentCanvasParams()
  	}
  
  	// 上の項目のパラメータを反映
@@ -12156,7 +13128,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  	{
  		if (const auto pItem = m_menu.atCyclic(m_menu.cursor() + 1 + i).get())
  		{
-@@ -647,6 +658,15 @@ void SelectMenu::refreshContentCanvasParams()
+@@ -647,6 +692,15 @@ void SelectMenu::refreshContentCanvasParams()
  			pItem->setCanvasParamsTopBottom(m_eventContext, *m_selectSceneCanvas, difficultyIdx, U"bottom{}"_fmt(bottomIdx));
  		}
  	}
@@ -12172,7 +13144,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  }
  
  void SelectMenu::refreshSongPreview()
-@@ -692,71 +712,92 @@ SelectMenu::SelectMenu(
+@@ -692,71 +746,92 @@ SelectMenu::SelectMenu(
  	std::function<void(StringView)> fnShowErrorDialog,
  	std::function<void()> fnExitSearchMode,
  	std::function<void()> fnOpenFavoriteDialog)
@@ -12330,7 +13302,7 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  {
  	// ConfigIniからソートモードを読み込み
  	const StringView sortModeStr = ConfigIni::GetString(ConfigIni::Key::kSelectSortType, U"");
-@@ -828,6 +869,25 @@ SelectMenu::SelectMenu(
+@@ -828,6 +903,25 @@ SelectMenu::SelectMenu(
  		openDirectory(U"", PlaySeYN::No);
  	}
  
@@ -12356,7 +13328,20 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  	resetSongInfoTextDisplayTimer();
  	refreshContentCanvasParams();
  	refreshSongPreview();
-@@ -891,6 +951,13 @@ void SelectMenu::update(SongPreviewOnlyYN songPreviewOnly)
+@@ -837,6 +931,12 @@ SelectMenu::~SelectMenu() = default;
+ 
+ void SelectMenu::update(SongPreviewOnlyYN songPreviewOnly)
+ {
++	if (m_directoryLoadErrorPending)
++	{
++		const String message = ErrorReporting::FormatMessage(*m_directoryLoadErrorPending);
++		m_directoryLoadErrorPending.reset();
++		m_eventContext.fnShowErrorDialog(message);
++	}
+ 	if (songPreviewOnly)
+ 	{
+ 		// 楽曲プレビューのみ更新
+@@ -891,6 +991,13 @@ void SelectMenu::update(SongPreviewOnlyYN songPreviewOnly)
  			playShakeUpTween();
  		}
  		refreshContentCanvasParams();
@@ -12370,27 +13355,121 @@ index 1091b57e91048920c9656bcbb40d46a360907f47..2f72164ffa616da1d9b79f399a8eb961
  		refreshSongPreview();
  	}
  
+@@ -1689,7 +1796,10 @@ bool SelectMenu::openAllFolderWithNameSort()
+ 	Array<FilePath> allFolderDirectories;
+ 	for (const auto& path : searchPaths)
+ 	{
+-		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
++		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p)
++																{
++																	return FileSystem::FullPath(p);
++																}));
+ 	}
+ 
+ 	Array<SelectCachedSongEntry> allSongEntries;
+@@ -1700,9 +1810,9 @@ bool SelectMenu::openAllFolderWithNameSort()
+ 	}
+ 
+ 	allSongEntries.sort_by([](const SelectCachedSongEntry& a, const SelectCachedSongEntry& b)
+-	{
+-		return a.song.songSortKey < b.song.songSortKey;
+-	});
++						   {
++							   return a.song.songSortKey < b.song.songSortKey;
++						   });
+ 
+ 	// 曲の項目を追加
+ 	for (const auto& entry : allSongEntries)
+@@ -1750,7 +1860,10 @@ bool SelectMenu::openAllFolderWithLevelSort()
+ 	Array<FilePath> allFolderDirectories;
+ 	for (const auto& path : searchPaths)
+ 	{
+-		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
++		allFolderDirectories.append(GetSubDirectories(path).map([](FilePathView p)
++																{
++																	return FileSystem::FullPath(p);
++																}));
+ 	}
+ 
+ 	for (const auto& folderDirectory : allFolderDirectories)
+@@ -1877,9 +1990,9 @@ bool SelectMenu::openFavoriteFolderWithNameSort(FilePathView specialPath)
+ 
+ 	// 名前(小文字変換)の昇順でソート
+ 	favoriteSongInfos.sort_by([](const FavoriteSongInfo& a, const FavoriteSongInfo& b)
+-	{
+-		return a.sortKey < b.sortKey;
+-	});
++							  {
++								  return a.sortKey < b.sortKey;
++							  });
+ 
+ 	// 項目を追加
+ 	for (const auto& favoriteSongInfo : favoriteSongInfos)
+@@ -2138,14 +2251,17 @@ Array<FilePath> SelectMenu::getSortedFolderPaths() const
+ 	Array<FilePath> normalDirectories;
+ 	for (const auto& path : searchPaths)
+ 	{
+-		normalDirectories.append(GetSubDirectories(path).map([](FilePathView p) { return FileSystem::FullPath(p); }));
++		normalDirectories.append(GetSubDirectories(path).map([](FilePathView p)
++															 {
++																 return FileSystem::FullPath(p);
++															 }));
+ 	}
+ 
+ 	// フォルダ名(小文字変換)の昇順でソート
+ 	normalDirectories.sort_by([](const FilePath& a, const FilePath& b)
+-	{
+-		return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
+-	});
++							  {
++								  return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							  });
+ 
+ 	// ソート済みの通常ディレクトリを追加
+ 	folderPaths.append(normalDirectories);
+diff --git a/kshootmania/src/Scenes/Select/SelectMenu.hpp b/kshootmania/src/Scenes/Select/SelectMenu.hpp
+index 178325897545ce3c94d4fab17b81583474dc3bb3..448e0a3329d4ea883b062ad311dbca704f2bcfb3 100644
+--- a/kshootmania/src/Scenes/Select/SelectMenu.hpp
++++ b/kshootmania/src/Scenes/Select/SelectMenu.hpp
+@@ -1,5 +1,6 @@
+ ﻿#pragma once
+ #include "SelectFolderState.hpp"
++#include "Common/ErrorReporting.hpp"
+ #include "SelectHighScoreCache.hpp"
+ #include "UI/ArrayWithLinearMenu.hpp"
+ #include "SelectDifficultyMenu.hpp"
+@@ -62,6 +63,8 @@ private:
+ 
+ 	SelectFolderState m_folderState;
+ 
++	Optional<ErrorReporting::Report> m_directoryLoadErrorPending;
++
+ 	bool m_searchActive = false;
+ 
+ 	String m_searchQuery;
 diff --git a/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp b/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
-index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080ce9d8095 100644
+index b9d581345427a2838c5645c77acc2eddff4bd0b7..3c3215fbeefd256ccc21784606f645e6ab09e871 100644
 --- a/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectMenuCacheDb.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,7 @@
 -﻿#include "SelectMenuCacheDb.hpp"
 +﻿#include "MusicGame/Judgment/ExScore.hpp"
 +#include "SelectMenuCacheDb.hpp"
++#include "Common/SongLoadDiagnostics.hpp"
++#include "Common/CsvUtils.hpp"
  #include <SQLiteCpp/SQLiteCpp.h>
  #include <filesystem>
  #include "Common/Encoding.hpp"
-@@ -6,7 +7,7 @@
+@@ -6,7 +9,7 @@
  
  namespace
  {
 -	constexpr int32 kSchemaVersion = 2;
-+	constexpr int32 kSchemaVersion = 3;
++	constexpr int32 kSchemaVersion = 4;
  	constexpr StringView kDbFileName = U"cache.sqlite3";
  
  	struct SourceFileInfo
-@@ -30,6 +31,7 @@ namespace
+@@ -30,6 +33,7 @@ namespace
  		String songSortKey;
  		FilePath chartFileRelativePath;
  		kson::MetaChartData chartData;
@@ -12398,15 +13477,186 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080
  		FolderConfIni folderConfIni;
  	};
  
-@@ -271,6 +273,7 @@ namespace
- 				.songSortKey = FsUtils::DirectoryNameByDirectoryPath(songDirPath).lowercased(),
- 				.chartFileRelativePath = FileSystem::RelativePath(chartFilePath, baseDirectoryPath),
- 				.chartData = chartData,
-+				.exMaximum = MusicGame::Judgment::LoadChartExMaximum(chartFilePath),
- 				.folderConfIni = FolderConfIni::Load(chartFilePath),
- 			});
- 			chartExists = true;
-@@ -330,6 +333,7 @@ namespace
+@@ -70,20 +74,9 @@ namespace
+ 
+ 	FilePath CacheDirectoryPath(FilePathView directoryPath)
+ 	{
+-		const FilePath fullPath = FileSystem::FullPath(directoryPath);
+-		FilePath relativePath = FsUtils::RelativePathFromSongsDir(fullPath);
+-		relativePath.replace(U'\\', U'/');
+-
+-		if (relativePath.isEmpty() || relativePath == U".")
+-		{
+-			relativePath = U"_root";
+-		}
+-		else if (relativePath.starts_with(U'/') || relativePath.starts_with(U"../") || relativePath == U".." || relativePath.includes(U':'))
+-		{
+-			relativePath = FileSystem::PathAppend(U"_external", Format(StablePathHash(fullPath)));
+-		}
+-
+-		return FileSystem::PathAppend(CacheBasePath(), relativePath);
++		// Keep cache paths short even when the source folder is deeply nested.
++		// IsCacheValid also checks the full source path, not just this hash.
++		return FileSystem::PathAppend(FileSystem::PathAppend(CacheBasePath(), U"v4"), Format(StablePathHash(FileSystem::FullPath(directoryPath))));
+ 	}
+ 
+ 	FilePath DbPath(FilePathView directoryPath)
+@@ -95,12 +88,15 @@ namespace
+ 	{
+ 		Array<FilePath> directories =
+ 			FileSystem::DirectoryContents(path, Recursive::No)
+-				.filter([](FilePathView p) { return FileSystem::IsDirectory(p); });
++				.filter([](FilePathView p)
++						{
++							return FileSystem::IsDirectory(p);
++						});
+ 
+ 		directories.sort_by([](const FilePath& a, const FilePath& b)
+-		{
+-			return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
+-		});
++							{
++								return FsUtils::DirectoryNameByDirectoryPath(a).lowercased() < FsUtils::DirectoryNameByDirectoryPath(b).lowercased();
++							});
+ 
+ 		return directories;
+ 	}
+@@ -119,11 +115,7 @@ namespace
+ 		}
+ 
+ 		const String extension = FileSystem::Extension(path).lowercased();
+-		return extension == U"ksh"
+-			|| extension == U"kson"
+-			|| extension == U"kco"
+-			|| filename.lowercased() == U"foldername.csv"
+-			|| filename.lowercased() == U"conf.ini";
++		return extension == U"ksh" || extension == U"kson" || extension == U"kco" || filename.lowercased() == U"foldername.csv" || filename.lowercased() == U"conf.ini";
+ 	}
+ 
+ 	Array<SourceFileInfo> CollectSourceFiles(FilePathView baseDirectoryPath)
+@@ -144,9 +136,9 @@ namespace
+ 		}
+ 
+ 		files.sort_by([](const SourceFileInfo& a, const SourceFileInfo& b)
+-		{
+-			return a.relativePath < b.relativePath;
+-		});
++					  {
++						  return a.relativePath < b.relativePath;
++					  });
+ 		return files;
+ 	}
+ 
+@@ -175,24 +167,11 @@ namespace
+ 		const Array<String> lines = Encoding::ReadTextFileLinesShiftJISOrUTF8BasedOnBOM(csvPath);
+ 		for (const String& line : lines)
+ 		{
+-			const Array<String> parts = line.split(U',');
+-			if (parts.size() < 2)
+-			{
++			const auto parts = CsvUtils::ParseRow(line);
++			if (!parts || parts->size() < 2)
+ 				continue;
+-			}
+-
+-			auto removeQuotes = [](String str) -> String
+-			{
+-				str = str.trimmed();
+-				if (str.length() >= 2 && str.starts_with(U'"') && str.ends_with(U'"'))
+-				{
+-					return str.substr(1, str.length() - 2);
+-				}
+-				return str;
+-			};
+-
+-			const String folderName = removeQuotes(parts[0]);
+-			const String displayName = removeQuotes(parts[1]);
++			const String& folderName = (*parts)[0];
++			const String& displayName = (*parts)[1];
+ 			if (!folderName.isEmpty())
+ 			{
+ 				// displayNameが空文字列の場合はサブフォルダ見出しを非表示化
+@@ -242,38 +221,51 @@ namespace
+ 				continue;
+ 			}
+ 
+-			kson::MetaChartData chartData = SelectChartInfo::LoadMetaChartData(chartFilePath);
+-
+-			if (chartData.error != kson::ErrorType::None)
++			try
+ 			{
+-				Logger << U"[ksm warning] SelectMenuCacheDb: Chart Loading Error (error:'{}', chartFilePath:'{}')"_fmt(Unicode::FromUTF8(kson::GetErrorString(chartData.error)), chartFilePath);
+-				continue;
++				kson::MetaChartData chartData = SelectChartInfo::LoadMetaChartData(chartFilePath);
++	
++				if (chartData.error != kson::ErrorType::None)
++				{
++					SongLoadDiagnostics::Write(U"chart metadata", chartFilePath, Unicode::FromUTF8(kson::GetErrorString(chartData.error)));
++					continue;
++				}
++	
++				int32 difficultyIdx = chartData.meta.difficulty.idx;
++				if (difficultyIdx < 0 || kNumDifficulties <= difficultyIdx)
++				{
++					Logger << U"[ksm warning] SelectMenuCacheDb: Difficulty index out of range (difficultyIdx:{}, chartFilePath:'{}')"_fmt(difficultyIdx, chartFilePath);
++					difficultyIdx = kNumDifficulties - 1;
++					chartData.meta.difficulty.idx = difficultyIdx;
++				}
++	
++				pRows->push_back(ChartRow{
++					.songDirectoryRelativePath = FileSystem::RelativePath(songDirPath, baseDirectoryPath),
++					.sectionDirectoryRelativePath = sectionDirPath.isEmpty() ? FilePath{} : FileSystem::RelativePath(sectionDirPath, baseDirectoryPath),
++					.sectionDisplayName = sectionDisplayName,
++					.skipSectionHeading = skipSectionHeading,
++					.visibleInDirectoryNameSort = visibleInDirectoryNameSort,
++					.visibleInAllNameSort = visibleInAllNameSort,
++					.sectionDirectoryIndex = sectionDirectoryIndex,
++					.songDirectoryIndex = songDirectoryIndex,
++					.chartFileIndex = static_cast<int32>(chartFileIndex),
++					.songSortKey = FsUtils::DirectoryNameByDirectoryPath(songDirPath).lowercased(),
++					.chartFileRelativePath = FileSystem::RelativePath(chartFilePath, baseDirectoryPath),
++					.chartData = chartData,
++					.exMaximum = MusicGame::Judgment::LoadChartExMaximum(chartFilePath),
++					.folderConfIni = FolderConfIni::Load(chartFilePath),
++				});
++				chartExists = true;
+ 			}
+-
+-			int32 difficultyIdx = chartData.meta.difficulty.idx;
+-			if (difficultyIdx < 0 || kNumDifficulties <= difficultyIdx)
++			catch (const std::bad_alloc&) { throw; }
++			catch (const std::exception& error)
+ 			{
+-				Logger << U"[ksm warning] SelectMenuCacheDb: Difficulty index out of range (difficultyIdx:{}, chartFilePath:'{}')"_fmt(difficultyIdx, chartFilePath);
+-				difficultyIdx = kNumDifficulties - 1;
+-				chartData.meta.difficulty.idx = difficultyIdx;
++				SongLoadDiagnostics::Write(U"select chart", chartFilePath, error);
++			}
++			catch (const Error& error)
++			{
++				SongLoadDiagnostics::Write(U"select chart", chartFilePath, error.what());
+ 			}
+-
+-			pRows->push_back(ChartRow{
+-				.songDirectoryRelativePath = FileSystem::RelativePath(songDirPath, baseDirectoryPath),
+-				.sectionDirectoryRelativePath = sectionDirPath.isEmpty() ? FilePath{} : FileSystem::RelativePath(sectionDirPath, baseDirectoryPath),
+-				.sectionDisplayName = sectionDisplayName,
+-				.skipSectionHeading = skipSectionHeading,
+-				.visibleInDirectoryNameSort = visibleInDirectoryNameSort,
+-				.visibleInAllNameSort = visibleInAllNameSort,
+-				.sectionDirectoryIndex = sectionDirectoryIndex,
+-				.songDirectoryIndex = songDirectoryIndex,
+-				.chartFileIndex = static_cast<int32>(chartFileIndex),
+-				.songSortKey = FsUtils::DirectoryNameByDirectoryPath(songDirPath).lowercased(),
+-				.chartFileRelativePath = FileSystem::RelativePath(chartFilePath, baseDirectoryPath),
+-				.chartData = chartData,
+-				.folderConfIni = FolderConfIni::Load(chartFilePath),
+-			});
+-			chartExists = true;
+ 		}
+ 		return chartExists;
+ 	}
+@@ -330,6 +322,7 @@ namespace
  		db.exec("CREATE TABLE IF NOT EXISTS source_files (relative_path TEXT PRIMARY KEY, mtime_ms INTEGER NOT NULL, size INTEGER NOT NULL)");
  		db.exec(
  			"CREATE TABLE IF NOT EXISTS charts ("
@@ -12414,7 +13664,18 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080
  			"chart_path TEXT PRIMARY KEY,"
  			"song_dir TEXT NOT NULL,"
  			"section_dir TEXT NOT NULL,"
-@@ -460,20 +464,21 @@ namespace
+@@ -417,9 +410,7 @@ namespace
+ 			{
+ 				return false;
+ 			}
+-			if (Unicode::FromUTF8(query.getColumn(0).getString()) != sourceFiles[index].relativePath
+-				|| query.getColumn(1).getInt64() != sourceFiles[index].mtime
+-				|| static_cast<uint64>(query.getColumn(2).getInt64()) != sourceFiles[index].size)
++			if (Unicode::FromUTF8(query.getColumn(0).getString()) != sourceFiles[index].relativePath || query.getColumn(1).getInt64() != sourceFiles[index].mtime || static_cast<uint64>(query.getColumn(2).getInt64()) != sourceFiles[index].size)
+ 			{
+ 				return false;
+ 			}
+@@ -460,20 +451,21 @@ namespace
  
  		{
  			SQLite::Statement query(db,
@@ -12444,7 +13705,7 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080
  				query.bind(columnIndex++, row.chartFileRelativePath.toUTF8());
  				query.bind(columnIndex++, row.songDirectoryRelativePath.toUTF8());
  				query.bind(columnIndex++, row.sectionDirectoryRelativePath.toUTF8());
-@@ -541,10 +546,7 @@ namespace
+@@ -541,10 +533,7 @@ namespace
  	{
  		Array<ChartRowResult> rows;
  
@@ -12456,7 +13717,25 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080
  		SQLite::Statement query(db, sql);
  		while (query.executeStep())
  		{
-@@ -580,14 +582,14 @@ namespace
+@@ -575,19 +564,31 @@ namespace
+ 			folderConfIni.offsetMs = query.getColumn("folder_offset_ms").getInt();
+ 			folderConfIni.tweetOption = Unicode::FromUTF8(query.getColumn("folder_tweet_option").getString());
+ 
+-			const FilePath chartPath = FileSystem::PathAppend(baseDirectoryPath, Unicode::FromUTF8(query.getColumn("chart_path").getString()));
++			const FilePath chartRelativePath = Unicode::FromUTF8(query.getColumn("chart_path").getString());
++			const auto validRelativePath = [](const FilePath& path)
++			{
++				const String normalized = String{ path }.replaced(U'\\', U'/');
++				return !normalized.starts_with(U'/') && !normalized.includes(U':') &&
++					!normalized.split(U'/').includes(U"..");
++			};
++			if (meta.difficulty.idx < 0 || meta.difficulty.idx >= kNumDifficulties ||
++				!validRelativePath(chartRelativePath) ||
++				!validRelativePath(Unicode::FromUTF8(query.getColumn("song_dir").getString())) ||
++				!validRelativePath(Unicode::FromUTF8(query.getColumn("section_dir").getString())))
++				throw std::runtime_error{ "Invalid song cache row" };
++			const FilePath chartPath = FileSystem::PathAppend(baseDirectoryPath, chartRelativePath);
+ 			const FilePath songDirRel = Unicode::FromUTF8(query.getColumn("song_dir").getString());
  			const FilePath sectionDirRel = Unicode::FromUTF8(query.getColumn("section_dir").getString());
  
  			rows.push_back(ChartRowResult{
@@ -12474,8 +13753,36 @@ index b9d581345427a2838c5645c77acc2eddff4bd0b7..57f315bf1c4d0b02170de06ed8568080
  				.skipSectionHeading = query.getColumn("skip_section_heading").getInt() != 0,
  				.visibleInDirectoryNameSort = query.getColumn("visible_in_directory_name_sort").getInt() != 0,
  				.visibleInAllNameSort = query.getColumn("visible_in_all_name_sort").getInt() != 0,
+@@ -621,12 +622,23 @@ namespace
+ 		{
+ 			return loadOnce(forceRebuild);
+ 		}
+-		catch (const std::exception& e)
++		catch (const std::bad_alloc&) { throw; }
++		catch (const std::exception& error)
++		{
++			SongLoadDiagnostics::Write(fnName, directoryPath, error);
++		}
++		catch (const Error& error)
+ 		{
+-			Logger << U"[ksm warning] SelectMenuCacheDb::{} failed. Fallback to rebuild. (path:'{}', error:'{}')"_fmt(fnName, directoryPath, Unicode::FromUTF8(e.what()));
+-			FileSystem::Remove(dbPath);
+-			return loadOnce(true);
++			SongLoadDiagnostics::Write(fnName, directoryPath, error.what());
+ 		}
++
++		// Cache storage is optional. Preserve the failing DB for diagnosis and
++		// build a transient index using exactly the normal row ordering.
++		SongLoadDiagnostics::Write(U"cache fallback", directoryPath, U"Using an in-memory song index");
++		SQLite::Database memoryDb(":memory:", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
++		CreateSchema(memoryDb);
++		Rebuild(memoryDb, baseDirectoryPath, CollectSourceFiles(baseDirectoryPath));
++		return ReadChartRows(memoryDb, baseDirectoryPath, whereClause, orderByClause);
+ 	}
+ 
+ 	Array<SelectCachedSongEntry> GroupRowsAsSongEntries(const Array<ChartRowResult>& rows)
 diff --git a/kshootmania/src/Scenes/Select/SelectScene.cpp b/kshootmania/src/Scenes/Select/SelectScene.cpp
-index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d416fc1921 100644
+index e48e2f72be6fa20647d26b0db57919fb51b32da7..3bfcf69e04b8b5a5e1f933086a4e5c8fae91a6dd 100644
 --- a/kshootmania/src/Scenes/Select/SelectScene.cpp
 +++ b/kshootmania/src/Scenes/Select/SelectScene.cpp
 @@ -1,4 +1,6 @@
@@ -12513,7 +13820,48 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  		return canvas;
  	}
  
-@@ -352,22 +358,33 @@ void SelectScene::exitSearchMode()
+@@ -54,9 +60,9 @@ namespace
+ 		}
+ 
+ 		playerNames.sort_by([](const String& a, const String& b)
+-		{
+-			return a.lowercased() < b.lowercased();
+-		});
++							{
++								return a.lowercased() < b.lowercased();
++							});
+ 
+ 		return playerNames;
+ 	}
+@@ -84,7 +90,7 @@ namespace
+ 
+ 		// 該当行を削除
+ 		bool removed = false;
+-		for (auto it = lines.begin(); it != lines.end(); )
++		for (auto it = lines.begin(); it != lines.end();)
+ 		{
+ 			// .fav内にあるパスを正規化
+ 			FilePath lineFullPath = FileSystem::PathAppend(songsDir, *it);
+@@ -279,9 +285,15 @@ void SelectScene::enterSearchInputPhase()
+ 
+ 	const String initialQuery = wasNone ? String{} : m_searchResultQuery;
+ 	m_dialogRunner = Co::Play<SearchInputDialog>(
+-		initialQuery,
+-		[this](StringView q) { m_menu.setSearchQuery(q); }
+-	).runScoped([this](const Optional<String>& result) { onSearchInputDialogClosed(result); });
++						 initialQuery,
++						 [this](StringView q)
++						 {
++							 m_menu.setSearchQuery(q);
++						 })
++						 .runScoped([this](const Optional<String>& result)
++									{
++										onSearchInputDialogClosed(result);
++									});
+ }
+ 
+ void SelectScene::onSearchInputDialogClosed(const Optional<String>& result)
+@@ -352,22 +364,33 @@ void SelectScene::exitSearchMode()
  
  SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchParams)
  	: m_folderCloseButton(
@@ -12542,7 +13890,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
 +											 },
 +											 [this](StringView msg)
 +											 {
-+												 m_dialogRunner = Co::Play<SimpleDialog>(String{ U"ERROR" }, String{ msg }).runScoped();
++												 m_dialogRunner = Co::Play<SimpleDialog>(String{ U"ERROR" }, String{ msg }, true).runScoped();
 +											 },
 +											 [this]()
 +											 {
@@ -12561,7 +13909,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  
  	// 検索結果表示ノードを取得
  	m_searchResultNode = NocoUtils::GetNodeByPath(m_canvas, { U"SearchResult" });
-@@ -415,9 +432,15 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
+@@ -415,9 +438,15 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
  		{
  			m_searchPhase = SelectSceneSearchPhase::kInput;
  			m_dialogRunner = Co::Play<SearchInputDialog>(
@@ -12580,7 +13928,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  		}
  		else
  		{
-@@ -434,6 +457,8 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
+@@ -434,6 +463,8 @@ SelectScene::SelectScene(const Optional<SelectSceneSearchParams>& initialSearchP
  
  void SelectScene::update()
  {
@@ -12589,7 +13937,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  	const noco::HitTestEnabledYN hitTestEnabled{ !isFadingIn() && !isFadingOut() && InputUtils::IsUIMouseInputEnabled() };
  
  	// ダイアログ表示中は必要な更新のみ実行
-@@ -446,6 +471,10 @@ void SelectScene::update()
+@@ -446,6 +477,10 @@ void SelectScene::update()
  	}
  
  	// 共通オーバーレイを更新
@@ -12600,7 +13948,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  	m_commonOverlay.update(hitTestEnabled);
  
  	// BTオプションパネル更新
-@@ -486,7 +515,7 @@ void SelectScene::update()
+@@ -486,7 +521,7 @@ void SelectScene::update()
  		return;
  	}
  
@@ -12609,7 +13957,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  
  	// BackSpaceキーまたはBackボタン(Escキー)でフォルダを閉じる
  	if (closeFolder)
-@@ -585,32 +614,58 @@ void SelectScene::update()
+@@ -585,32 +620,58 @@ void SelectScene::update()
  	// Shift+A〜Zでアルファベットジャンプ
  	if (KeyShift.pressed())
  	{
@@ -12694,7 +14042,7 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
  	}
  
  	updateAlphabetJump();
-@@ -728,6 +783,9 @@ void SelectScene::openFavoriteDialogForCursor()
+@@ -728,6 +789,9 @@ void SelectScene::openFavoriteDialogForCursor()
  
  void SelectScene::draw() const
  {
@@ -12703,6 +14051,38 @@ index e48e2f72be6fa20647d26b0db57919fb51b32da7..c6cc4224d8cc6f0e489f113f388c21d4
 +		Scene::Rect().draw(Palette::Black);
  	m_canvas->draw();
  	m_commonOverlay.draw();
+ }
+@@ -735,10 +799,11 @@ void SelectScene::draw() const
+ Co::Task<void> SelectScene::fadeIn()
+ {
+ 	const auto canvasUpdateRunner = Co::UpdaterTask([this]
+-		{
+-			m_canvas->update(noco::HitTestEnabledYN::No);
+-			m_commonOverlay.update(noco::HitTestEnabledYN::No);
+-		}).runScoped();
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
++										.runScoped();
+ 
+ 	co_await Co::ScreenFadeIn(kFadeInDuration);
+ }
+@@ -751,10 +816,11 @@ Co::Task<void> SelectScene::fadeOut()
+ 	}
+ 
+ 	const auto canvasUpdateRunner = Co::UpdaterTask([this]
+-		{
+-			m_canvas->update(noco::HitTestEnabledYN::No);
+-			m_commonOverlay.update(noco::HitTestEnabledYN::No);
+-		}).runScoped();
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
++										.runScoped();
+ 
+ 	co_await Co::ScreenFadeOut(kFadeOutDuration, m_fadeOutColor);
  }
 diff --git a/kshootmania/src/Scenes/Title/TitleMenu.cpp b/kshootmania/src/Scenes/Title/TitleMenu.cpp
 index 40240a1ddbf92f2c2d8b40dc91de14dc5db7eb5d..cf204415e774cc53b6f2b7af2c8dba9dd194cc89 100644
@@ -13137,6 +14517,95 @@ index 71097430c548b3a05e0c60b08292e75bcea3e134..1a3ce27ca625e1e2ebb8a3825abcb66c
  
  	TitleMenuItem m_selectedMenuItem = TitleMenuItem::kStart;
  
+diff --git a/kshootmania/src/TestPlayArgs.cpp b/kshootmania/src/TestPlayArgs.cpp
+index 4497809caae175825ddb80233c523ad018ac2215..2eefe59b75dc51daf78e1c128e19f334b2a7e7de 100644
+--- a/kshootmania/src/TestPlayArgs.cpp
++++ b/kshootmania/src/TestPlayArgs.cpp
+@@ -1,10 +1,12 @@
+-﻿#include "TestPlayArgs.hpp"
++﻿#include "Common/ErrorReporting.hpp"
++#include "TestPlayArgs.hpp"
++#include "Common/CommandLine.hpp"
+ 
+ Optional<TestPlayArgs> ParseTestPlayArgs(bool* pShouldExit)
+ {
+ 	*pShouldExit = false;
+ 
+-	const Array<String> args = System::GetCommandLineArgs();
++	const auto& args = CommandLine::Arguments();
+ 
+ 	// args[0]は実行ファイルパス、args[1]以降がユーザー引数
+ 	if (args.size() <= 1)
+@@ -54,7 +56,7 @@ Optional<TestPlayArgs> ParseTestPlayArgs(bool* pShouldExit)
+ 	// ファイルが存在しない場合はエラー終了
+ 	if (!FileSystem::Exists(result.chartFilePath))
+ 	{
+-		MessageBoxUtils::ShowOK(U"Chart file not found:\n" + result.chartFilePath, MessageBoxStyle::Error);
++		MessageBoxUtils::ShowOK(ErrorReporting::FormatMessage(ErrorReporting::FileUnavailable(ErrorReporting::Stage::CommandLine, result.chartFilePath)), MessageBoxStyle::Error);
+ 		*pShouldExit = true;
+ 		return none;
+ 	}
+diff --git a/kshootmania/src/UI/SimpleDialog.cpp b/kshootmania/src/UI/SimpleDialog.cpp
+index 9a9203ff24c339fcca30300a692e0f04d11077c4..06628fb24415c3f5ed5cde92df5a95d6feac14d6 100644
+--- a/kshootmania/src/UI/SimpleDialog.cpp
++++ b/kshootmania/src/UI/SimpleDialog.cpp
+@@ -1,22 +1,25 @@
+ ﻿#include "SimpleDialog.hpp"
++#include "Common/MessageBoxUtils.hpp"
+ #include "Input/KeyConfig.hpp"
+ #include "Input/InputUtils.hpp"
+ #include "Common/FsUtils.hpp"
+ #include "Graphics/ScreenUtils.hpp"
+ 
+-SimpleDialog::SimpleDialog(String titleText, String bodyText)
++SimpleDialog::SimpleDialog(String titleText, String bodyText, bool detailedError)
+ 	: m_titleText(std::move(titleText))
+ 	, m_bodyText(std::move(bodyText))
++	, m_detailedError(detailedError)
+ {
+ }
+ 
+ Co::Task<void> SimpleDialog::start()
+ {
+ 	// Canvasをロード
+-	const FilePath uiFilePath = FsUtils::GetResourcePath(U"ui/dialog/simple_dialog.noco");
++	const FilePath uiFilePath = FsUtils::GetResourcePath(m_detailedError ? U"mods/enhanced/ui/error_dialog.noco" : U"ui/dialog/simple_dialog.noco");
+ 	m_canvas = noco::Canvas::LoadFromFile(uiFilePath);
+ 	if (!m_canvas)
+ 	{
++		if (m_detailedError) MessageBoxUtils::ShowOK(m_bodyText, MessageBoxStyle::Error);
+ 		co_return;
+ 	}
+ 
+@@ -31,7 +34,9 @@ Co::Task<void> SimpleDialog::start()
+ 	// Start・Back・クリックのいずれかで閉じる
+ 	while (true)
+ 	{
+-		const double scale = ScreenUtils::Scaled(1.0);
++		const double scale = m_detailedError
++			? Min(ScreenUtils::Scaled(1.0), Min(Scene::Width() * .9 / m_canvas->referenceSize().x, Scene::Height() * .9 / m_canvas->referenceSize().y))
++			: ScreenUtils::Scaled(1.0);
+ 		const Vec2 position = (Scene::Size() - m_canvas->referenceSize() * scale) / 2.0;
+ 		m_canvas->setPositionScale(position, Vec2{ scale, scale });
+ 
+diff --git a/kshootmania/src/UI/SimpleDialog.hpp b/kshootmania/src/UI/SimpleDialog.hpp
+index 800ed5225599fda30573b6c7daacb15c4ae3f3ce..4ab28d73cad88f7b2130ba58d902da73b4e21dc6 100644
+--- a/kshootmania/src/UI/SimpleDialog.hpp
++++ b/kshootmania/src/UI/SimpleDialog.hpp
+@@ -8,11 +8,12 @@ private:
+ 	std::shared_ptr<noco::Canvas> m_canvas;
+ 	String m_titleText;
+ 	String m_bodyText;
++	bool m_detailedError = false;
+ 
+ 	Co::Task<void> start() override;
+ 
+ 	void draw() const override;
+ 
+ public:
+-	SimpleDialog(String titleText, String bodyText);
++	SimpleDialog(String titleText, String bodyText, bool detailedError = false);
+ };
 diff --git a/kshootmania/src/stdafx.h b/kshootmania/src/stdafx.h
 index b1260230013f8920fa08f9a729218974dbcf60d7..7764e61b33dd73a000683a9fa83e22d3efecc55b 100644
 --- a/kshootmania/src/stdafx.h

@@ -7,11 +7,12 @@ import hashlib
 import json
 import struct
 import sys
+from PeImage import PeImage
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[1]
-GAME_BUILD = '20261023-234835-524ce9c3'
-GAME_SHA = 'f5e014b9e6de87037403a49f1652c9b6de308a61de49bee4b66100882d232f70'
+GAME_BUILD = '20261027-194127-779e4d6d'
+GAME_SHA = 'ef68345d4e8126d35ac7ecf6c552b3e51b5cfce22419f0db2c7a69d999bb73e3'
 cabinet = ct.WinDLL('cabinet', use_last_error=True)
 cabinet.CreateCompressor.argtypes = [wt.DWORD, ct.c_void_p, ct.POINTER(ct.c_void_p)]
 cabinet.Compress.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_size_t, ct.c_void_p, ct.c_size_t, ct.POINTER(ct.c_size_t)]
@@ -73,7 +74,7 @@ def assemble(stub, destination, files, targets, fixture=False):
         inventory.append({'path':relative,'kind':kind(relative),'size':len(data),'compressedSize':len(packed),
                           'offset':offset,'sha256':hashlib.sha256(data).hexdigest()})
         blocks.append(packed); offset += len(packed)
-    index = {'schemaVersion':1,'modId':'ksm-enhanced-vertical','version':'0.5.1-beta1','buildId':GAME_BUILD,
+    index = {'installerRevision':'20261027-compatibility2','schemaVersion':1,'modId':'ksm-enhanced-vertical','version':'0.5.2-beta2','buildId':GAME_BUILD,
              'fixture':fixture,'targets':targets,'files':inventory}
     encoded = json.dumps(index,ensure_ascii=True,separators=(',',':')).encode()
     blob = b'KSMSET01' + struct.pack('<Q',len(encoded)) + encoded + b''.join(blocks)
@@ -90,7 +91,12 @@ if __name__ == '__main__':
     parser.add_argument('--output',type=Path,required=True)
     args = parser.parse_args()
     targets = json.loads((ROOT/'compatibility/targets.json').read_text(encoding='utf-8-sig'))
-    index = assemble(args.stub,args.output,sources(),targets)
+    files = sources()
+    imports = PeImage(files['ksm-enhanced-vertical.exe'].read_bytes()).imports()
+    for profile in targets['profiles']:
+        assert profile['requiredFiles'] == []
+        assert profile['requiredLibraries'] == [{'path':name,'requiredExports':imports[name]} for name in ('bass.dll','bass_fx.dll')]
+    index = assemble(args.stub,args.output,files,targets)
     args.output.with_suffix('.payload.json').write_text(json.dumps(index,indent=2)+'\n')
     print(json.dumps({'executable':str(args.output),'files':len(index['files']),'bytes':args.output.stat().st_size,
                       'sha256':hashlib.sha256(args.output.read_bytes()).hexdigest()},indent=2))

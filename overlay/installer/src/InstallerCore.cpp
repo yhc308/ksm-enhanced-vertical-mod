@@ -1,4 +1,4 @@
-﻿#include "InstallerCore.hpp"
+#include "InstallerCore.hpp"
 #include <bcrypt.h>
 #include <compressapi.h>
 #include <tlhelp32.h>
@@ -35,6 +35,97 @@ namespace Setup
 			for (auto& c : text) c = static_cast<char>(tolower(static_cast<unsigned char>(c)));
 			return text;
 		}
+		// Parse file-backed PE metadata only; never load or execute a user's DLL.
+		class PeImage
+		{
+			const Bytes& data;
+			std::string path;
+			size_t optional = 0;
+			std::vector<IMAGE_SECTION_HEADER> sections;
+			DWORD headers = 0, directories = 0, imageSize = 0;
+			void Check(bool condition, const char* reason) const
+			{
+				Need(condition, "dependency_invalid", path + ": " + reason);
+			}
+			template<class T> T At(size_t offset) const
+			{
+				Check(offset <= data.size() && sizeof(T) <= data.size() - offset, "Truncated PE image");
+				T value{}; memcpy(&value, data.data() + offset, sizeof(T)); return value;
+			}
+			size_t Offset(DWORD rva, size_t size = 1) const
+			{
+				if (rva < headers && size <= size_t(headers) - rva && rva <= data.size() && size <= data.size() - rva) return rva;
+				for (const auto& section : sections)
+				{
+					if (rva < section.VirtualAddress) continue;
+					const size_t delta = size_t(rva) - section.VirtualAddress;
+					if (delta >= section.SizeOfRawData || size > section.SizeOfRawData - delta) continue;
+					const uint64_t offset = uint64_t(section.PointerToRawData) + delta;
+					Check(offset <= data.size() && size <= data.size() - size_t(offset), "Invalid PE section range");
+					return size_t(offset);
+				}
+				Check(false, "PE address has no file-backed data"); return 0;
+			}
+			std::string String(DWORD address) const
+			{
+				std::string value;
+				for (uint64_t i = 0; i < 4096; ++i)
+				{
+					Check(uint64_t(address) + i <= MAXDWORD, "Invalid PE string address");
+					const auto c = At<unsigned char>(Offset(DWORD(uint64_t(address) + i)));
+					if (!c) return value;
+					value.push_back(char(c));
+				}
+				Check(false, "Unterminated PE string"); return {};
+			}
+		public:
+			PeImage(const Bytes& data, std::string path) : data(data), path(std::move(path))
+			{
+				const auto dos = At<IMAGE_DOS_HEADER>(0);
+				Check(dos.e_magic == IMAGE_DOS_SIGNATURE && dos.e_lfanew >= 0, "Invalid DOS signature");
+				const size_t nt = size_t(dos.e_lfanew);
+				Check(At<DWORD>(nt) == IMAGE_NT_SIGNATURE, "Invalid PE signature");
+				const auto file = At<IMAGE_FILE_HEADER>(nt + sizeof(DWORD));
+				Need(file.Machine == IMAGE_FILE_MACHINE_AMD64, "dependency_architecture", this->path + ": Expected x64 DLL");
+				Check((file.Characteristics & IMAGE_FILE_DLL) != 0, "Expected a DLL image");
+				Check(file.NumberOfSections > 0 && file.NumberOfSections <= 96 && file.SizeOfOptionalHeader >= sizeof(IMAGE_OPTIONAL_HEADER64), "Invalid PE headers");
+				optional = nt + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER);
+				const auto header = At<IMAGE_OPTIONAL_HEADER64>(optional);
+				Check(header.Magic == IMAGE_NT_OPTIONAL_HDR64_MAGIC && header.NumberOfRvaAndSizes <= IMAGE_NUMBEROF_DIRECTORY_ENTRIES, "Invalid PE32+ header");
+				headers = header.SizeOfHeaders; directories = header.NumberOfRvaAndSizes; imageSize = header.SizeOfImage;
+				Check(headers <= data.size(), "Truncated PE headers");
+				for (size_t i = 0; i < file.NumberOfSections; ++i)
+					sections.push_back(At<IMAGE_SECTION_HEADER>(optional + file.SizeOfOptionalHeader + i * sizeof(IMAGE_SECTION_HEADER)));
+			}
+			std::set<std::string> Exports() const
+			{
+				if (!directories) return {};
+				const auto directory = At<IMAGE_DATA_DIRECTORY>(optional + offsetof(IMAGE_OPTIONAL_HEADER64, DataDirectory));
+				if (!directory.VirtualAddress) return {};
+				Check(directory.Size >= sizeof(IMAGE_EXPORT_DIRECTORY), "Invalid export directory");
+				const auto exports = At<IMAGE_EXPORT_DIRECTORY>(Offset(directory.VirtualAddress, sizeof(IMAGE_EXPORT_DIRECTORY)));
+				Check(exports.NumberOfFunctions <= 65536 && exports.NumberOfNames <= 65536, "Export table too large");
+				std::set<std::string> result;
+				for (uint64_t i = 0; i < exports.NumberOfNames; ++i)
+				{
+					Check(uint64_t(exports.AddressOfNames) + i * 4 <= MAXDWORD && uint64_t(exports.AddressOfNameOrdinals) + i * 2 <= MAXDWORD, "Export table address overflow");
+					const auto name = At<DWORD>(Offset(DWORD(exports.AddressOfNames + i * 4), 4));
+					const auto ordinal = At<WORD>(Offset(DWORD(exports.AddressOfNameOrdinals + i * 2), 2));
+					Check(ordinal < exports.NumberOfFunctions && uint64_t(exports.AddressOfFunctions) + uint64_t(ordinal) * 4 <= MAXDWORD, "Invalid export ordinal");
+					const auto function = At<DWORD>(Offset(exports.AddressOfFunctions + ordinal * 4, 4));
+					if (!function) continue;
+					// Forwarders need another DLL and are outside the supported direct BASS contract.
+					Check(function < directory.VirtualAddress || uint64_t(function) >= uint64_t(directory.VirtualAddress) + directory.Size, "Forwarded DLL exports are unsupported");
+					// Packed original BASS exports can point into virtual-only section data.
+					bool mapped = false;
+					for (const auto& section : sections)
+						if (function >= section.VirtualAddress && uint64_t(function) - section.VirtualAddress < std::max(section.Misc.VirtualSize, section.SizeOfRawData)) mapped = true;
+					Check(mapped && function < imageSize, "Export address is outside the mapped image");
+					result.insert(String(name));
+				}
+				return result;
+			}
+		};
 		std::string Id()
 		{
 			unsigned char value[16];
@@ -289,14 +380,21 @@ namespace Setup
 				if (Lower(value) != hash) continue;
 				matched = true;
 				Need(profile.at("runtimeContract") == kContract, "target", "Unsupported runtime contract");
-				if (installing) for (const auto& file : profile.at("requiredFiles"))
+				if (installing) for (const auto& library : profile.value("requiredLibraries", Json::array()))
 				{
-					const auto path = Safe(file.at("path"));
-					Need(std::filesystem::is_regular_file(path) && FileHash(path) == Lower(file.at("sha256")), "target", "Original resource contract mismatch: " + file.at("path").get<std::string>());
+					const auto name = library.at("path").get<std::string>();
+					Need(name == "bass.dll" || name == "bass_fx.dll", "package", "Unsupported dependency path");
+					const auto path = Safe(name);
+					Need(std::filesystem::is_regular_file(path), "dependency_missing", name + ": Required audio DLL is missing");
+					Need(std::filesystem::file_size(path) <= 128 * 1024 * 1024, "dependency_invalid", name + ": DLL image is too large");
+					const auto bytes = Read(path);
+					const auto exports = PeImage(bytes, name).Exports();
+					for (const auto& symbol : library.at("requiredExports"))
+						Need(exports.count(symbol.get<std::string>()) != 0, "dependency_export", name + ": Missing required function " + symbol.get<std::string>());
 				}
 			}
 		}
-		Need(matched, "target", "This installer supports the verified KSM 2.1.0 Windows build only");
+		Need(matched, "target", "kshootmania.exe: Unsupported original executable. Expected verified KSM 2.1.0 Windows x64; actual SHA256=" + hash);
 	}
 	void Engine::Say(const std::wstring& message) { if (progress) progress(message); }
 	void Engine::ReportProgress(int percent) { if (progressValue) progressValue(percent); }
@@ -602,7 +700,7 @@ namespace Setup
 			++number;
 			ReportProgress(10 + int(50 * number / package.index.at("files").size()));
 		}
-		Json state{{"schemaVersion", 3}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"runtimeContract", kContract}, {"upstreamHash", FileHash(Safe("kshootmania.exe"))}, {"transaction", id}, {"files", entries}, {"createdDirectories", createdDirectories}};
+		Json state{{"schemaVersion", 3}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"installerRevision", package.index.value("installerRevision", "legacy")}, {"runtimeContract", kContract}, {"upstreamHash", FileHash(Safe("kshootmania.exe"))}, {"transaction", id}, {"files", entries}, {"createdDirectories", createdDirectories}};
 		const auto stage = base + "/stage/" + std::to_string(number) + ".bin";
 		const auto data = JsonBytes(state); Write(Safe(stage), data);
 		operations.push_back(Operation(kState, nullptr, nullptr, Hash(data), stage));
@@ -688,7 +786,7 @@ namespace Setup
 		if (std::filesystem::exists(Safe(kState)))
 		{
 			const auto state = LoadState();
-			return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", true}, {"version", state.value("version", state.value("buildId", "legacy"))}, {"sameVersion", state.value("version", "") == package.index.at("version")}, {"target", Utf8(root.wstring())}};
+			return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", true}, {"version", state.value("version", state.value("buildId", "legacy"))}, {"buildId", state.value("buildId", "legacy")}, {"installerRevision", state.value("installerRevision", "legacy")}, {"sameVersion", state.value("version", "") == package.index.at("version") && state.value("buildId", "") == package.index.at("buildId") && state.value("installerRevision", "legacy") == package.index.value("installerRevision", "legacy")}, {"target", Utf8(root.wstring())}};
 		}
 		Need(!std::filesystem::exists(Safe("ksm-enhanced-vertical.exe")), "manual_install", "Manual installation without ownership metadata detected");
 		return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", false}, {"version", ""}, {"sameVersion", false}, {"target", Utf8(root.wstring())}};

@@ -1,4 +1,4 @@
-﻿#include "InstallerCore.hpp"
+#include "InstallerCore.hpp"
 #include <commctrl.h>
 #include <shobjidl.h>
 #include <shellapi.h>
@@ -38,7 +38,9 @@ namespace
 			{"error", {L"Action stopped; files were preserved or rolled back. Details: ", L"処理を停止しました。ファイルは保持または復元されました。詳細: ", L"작업을 중단했습니다. 파일은 보존하거나 작업 전 상태로 복구했습니다. 상세: ", L"操作已停止，文件已保留或回滚。详情：", L"操作已停止，檔案已保留或還原。詳細："}},
 			{"permission", {L"Write permission is required. Retry this action as administrator?", L"書き込み権限が必要です。管理者として再試行しますか？", L"쓰기 권한이 필요합니다. 관리자 권한으로 같은 작업을 재시도할까요?", L"需要写入权限。是否以管理员身份重试？", L"需要寫入權限。是否以管理員身分重試？"}},
 			{"busy", {L"Close the game in this folder, then retry.", L"このフォルダーのゲームを終了してから再試行してください。", L"이 폴더에서 실행 중인 게임을 종료한 뒤 다시 시도하세요.", L"请关闭此文件夹中运行的游戏后重试。", L"請關閉此資料夾中執行的遊戲後重試。"}},
-			{"target", {L"Unsupported folder or changed original resources. Select verified KSM 2.1.0.", L"未対応のフォルダーまたは変更された原本です。対応 KSM 2.1.0 を選択してください。", L"지원하지 않는 폴더 또는 변경된 원본 리소스입니다. 지원 KSM 2.1.0을 선택하세요.", L"文件夹不受支持或原版资源已更改。请选择受支持的 KSM 2.1.0。", L"資料夾不受支援或原版資源已變更。請選擇受支援的 KSM 2.1.0。"}},
+			{"target", {L"Unsupported original KSM executable or installation state. Details: ", L"原版KSM実行ファイルまたはインストール状態に対応していません。詳細: ", L"지원하지 않는 원본 KSM 실행 파일 또는 설치 상태입니다. 상세: ", L"原版KSM程序或安装状态不受支持。详情：", L"原版KSM程式或安裝狀態不受支援。詳細："}},
+			{"dependency", {L"Required audio DLL is missing or incompatible. Details: ", L"必要な音声DLLがないか、互換性がありません。詳細: ", L"필수 오디오 DLL이 없거나 호환되지 않습니다. 상세: ", L"必需的音频DLL缺失或不兼容。详情：", L"必要的音訊DLL遺失或不相容。詳細："}},
+			{"update", {L"To install this version, remove the installed mod first. Scores and settings are preserved.", L"このバージョンをインストールする前に既存のモードを削除してください。スコアと設定は保持されます。", L"새 버전을 설치하려면 기존 모드를 먼저 제거하세요. 점수와 설정은 보존됩니다.", L"请先移除已安装的模组，再安装此版本。分数和设置将保留。", L"請先移除已安裝的模組，再安裝此版本。分數和設定將保留。"}},
 			{"recovery", {L"Recovery files: ", L"復元用ファイル: ", L"복구 자료: ", L"恢复文件：", L"還原資料："}},
 			{"kept", {L"Preserved edited/deleted image paths: ", L"維持した編集・削除画像: ", L"유지한 수정·삭제 이미지: ", L"保留的修改或删除图片：", L"保留的修改或刪除圖片："}}
 		};
@@ -61,7 +63,8 @@ namespace
 		const auto code = result.value("code", "error");
 		if (code == "missing_executable") return std::wstring(T("missingExe")) + Wide(result.value("message", ""));
 		if (code == "busy") return T("busy");
-		if (code == "target") return T("target");
+		if (code == "target") return std::wstring(T("target")) + Wide(result.value("message", ""));
+		if (code.rfind("dependency_", 0) == 0) return std::wstring(T("dependency")) + Wide(result.value("message", ""));
 		return std::wstring(T("error")) + Wide(result.value("message", "Unknown error"));
 	}
 	std::wstring CleanupNotice(std::wstring text, const Json& result)
@@ -90,12 +93,13 @@ namespace
 		{
 			Engine engine(*g_package, g_target); const auto state = engine.Run("inspect");
 			auto status = state.at("installed").get<bool>() ? std::wstring(T("installed")) + Wide(state.at("version")) : std::wstring(T("ready"));
+			if (state.at("installed").get<bool>() && !state.at("sameVersion").get<bool>()) status += L"\r\n" + std::wstring(T("update"));
 			if (state.value("cleanupRecovered", false)) { status = T("cleanupRecovered"); SaveGuiReport(state); }
 			Text(g_status, CleanupNotice(status, state));
 			EnableWindow(g_install, !state.at("installed").get<bool>()); EnableWindow(g_remove, state.at("installed").get<bool>());
 		}
-		catch (const Error& e) { Text(g_status, ErrorText(Json{{"code", e.code}, {"message", e.what()}})); }
-		catch (const std::exception& e) { Text(g_status, std::wstring(T("error")) + Wide(e.what())); }
+		catch (const Error& e) { const Json result{{"status", "FAIL"}, {"action", "inspect"}, {"target", Utf8(g_target.wstring())}, {"code", e.code}, {"message", e.what()}, {"systemCode", e.systemCode}}; Text(g_status, ErrorText(result)); SaveGuiReport(result); }
+		catch (const std::exception& e) { const Json result{{"status", "FAIL"}, {"action", "inspect"}, {"target", Utf8(g_target.wstring())}, {"code", "invalid_data"}, {"message", e.what()}}; Text(g_status, ErrorText(result)); SaveGuiReport(result); }
 	}
 	void Choose()
 	{
@@ -239,7 +243,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show)
 		Control(WC_COMBOBOXW, L"", CBS_DROPDOWNLIST | WS_TABSTOP, 588, 20, 175, 200, 10, g_language);
 		for (const auto* value : {L"EN — English", L"JP — 日本語", L"KR — 한국어", L"SC — 简体中文", L"TC — 繁體中文"}) SendMessageW(g_language, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(value));
 		SendMessageW(g_language, CB_SETCURSEL, g_lang, 0);
-		Control(L"STATIC", L"KSM 2.1.0 / Enhanced Vertical 0.5.1-beta1", SS_LEFT, 24, 24, 555, 28, 0, g_hint);
+		Control(L"STATIC", L"KSM 2.1.0 / Enhanced Vertical 0.5.2-beta2", SS_LEFT, 24, 24, 555, 28, 0, g_hint);
 		Control(L"EDIT", L"", ES_READONLY | ES_AUTOHSCROLL | WS_BORDER, 24, 70, 558, 29, 0, g_path);
 		Control(L"BUTTON", T("browse"), BS_PUSHBUTTON | WS_TABSTOP, 595, 68, 167, 32, 11, g_browse);
 		Control(L"EDIT", L"", ES_READONLY | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 24, 120, 738, 118, 0, g_status);

@@ -1,4 +1,4 @@
-﻿{
+{
   "schemaVersion": 2,
   "modId": "ksm-enhanced-vertical",
   "profiles": [
@@ -11,37 +11,56 @@
       "executableHashes": [
         "8EAC0DC17EA31E405F61746CCA2ADC0CD6A198C88DBCED25C1ED360BDF793757"
       ],
-      "requiredFiles": [
-        {
-          "path": "ui/scene/title.noco",
-          "sha256": "7F7BAC9BAB592818FC3EDD1F404E983F23700A6AFA91410D3D55C195FF16341D"
-        },
-        {
-          "path": "ui/scene/select.noco",
-          "sha256": "8B618FCE506ECF8C5D04806892C7C0EABA95C04226507760D7B5291C0DA37EF0"
-        },
-        {
-          "path": "ui/scene/result.noco",
-          "sha256": "3E7C0ACEF7E238D8E694CB5695AE84B7105D5247F73CEBEB005426601BA906EE"
-        },
-        {
-          "path": "ui/scene/play_hud.noco",
-          "sha256": "81FBDA059B73DED587DFC2689E9D88FC2B9AAAB000000D3DCE939B7852DA79A5"
-        },
-        {
-          "path": "imgs/base.gif",
-          "sha256": "AA25A357F648C25F806C6FE56BD0E1FDC2E5DE934A20CD6B0D96D2D4A2539AA1"
-        },
+      "requiredFiles": [],
+      "notes": "Original executable identity only; user resources are not hash-gated. Required x64 DLL exports are validated without loading DLLs.",
+      "requiredLibraries": [
         {
           "path": "bass.dll",
-          "sha256": "FEBB2CF1882D554C3A958280777DA0B69F07DE6E262DF271DE11C56E4A54AFD4"
+          "requiredExports": [
+            "BASS_ChannelBytes2Seconds",
+            "BASS_ChannelGetData",
+            "BASS_ChannelGetInfo",
+            "BASS_ChannelGetLength",
+            "BASS_ChannelGetPosition",
+            "BASS_ChannelIsActive",
+            "BASS_ChannelIsSliding",
+            "BASS_ChannelLock",
+            "BASS_ChannelPause",
+            "BASS_ChannelPlay",
+            "BASS_ChannelRemoveDSP",
+            "BASS_ChannelSeconds2Bytes",
+            "BASS_ChannelSetAttribute",
+            "BASS_ChannelSetDSP",
+            "BASS_ChannelSetFX",
+            "BASS_ChannelSetPosition",
+            "BASS_ChannelSlideAttribute",
+            "BASS_ChannelStop",
+            "BASS_ChannelUpdate",
+            "BASS_ErrorGetCode",
+            "BASS_FXSetParameters",
+            "BASS_Free",
+            "BASS_GetDevice",
+            "BASS_GetDeviceInfo",
+            "BASS_GetInfo",
+            "BASS_GetVolume",
+            "BASS_Init",
+            "BASS_SampleFree",
+            "BASS_SampleGetChannel",
+            "BASS_SampleLoad",
+            "BASS_SampleStop",
+            "BASS_SetConfig",
+            "BASS_StreamCreateFile",
+            "BASS_StreamFree"
+          ]
         },
         {
           "path": "bass_fx.dll",
-          "sha256": "A6E1847EEF52D882B4137AF514D834C2E220DACEB417C821D1E502FB7A34C84A"
+          "requiredExports": [
+            "BASS_FX_GetVersion",
+            "BASS_FX_TempoCreate"
+          ]
         }
-      ],
-      "notes": "Known original resource contract; enhanced Vertical+ASIO payload; Skin integration pending."
+      ]
     }
   ]
 }

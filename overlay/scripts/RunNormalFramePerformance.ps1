@@ -46,7 +46,7 @@ try{
                     $watch=[Diagnostics.Stopwatch]::StartNew();$ready=$false
                     while($watch.Elapsed.TotalSeconds -lt 30){
                         if($game.WaitForExit(100)){throw 'Native game exited before capture.'};$game.Refresh()
-                        if($game.MainWindowTitle -eq 'K-Shoot Mania V2.1.0 - Enhanced Vertical Mod (Unofficial Build)'){$ready=$true;break}
+                        if($game.MainWindowTitle -eq 'K-Shoot Mania V2.1.0 - Enhanced Vertical Mod 0.5.2-beta2 (Unofficial Build)'){$ready=$true;break}
                     }
                     if(-not $ready){throw 'Native game window was not ready.'}
                     $csv=Join-Path $output "$side-$iteration-$vertical.csv"

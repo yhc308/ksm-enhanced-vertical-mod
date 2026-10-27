@@ -9,6 +9,10 @@
 #include "ApsFixture.hpp"
 #include "JudgeSettingFixture.hpp"
 #include "RenderGeometryFixture.hpp"
+#include "LaserRenderFixture.hpp"
+#include "ChartLoadFixture.hpp"
+#include "UnicodePathFixture.hpp"
+#include "ErrorReportFixture.hpp"
 #include "SkinPresetFixture.hpp"
 #include "Ini/AudioCalibration.hpp"
 #include "Vertical/OptionsPresentation.hpp"
@@ -72,6 +76,57 @@ namespace DiagnosticRunner
 
 	bool RunAfterAssetRegistration()
 	{
+		if (ModDiagnostics::Arguments().contains(U"--unicode-path-test"))
+		{
+			UnicodePathFixture::Run();
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
+		if (ModDiagnostics::Arguments().contains(U"--chart-load-test"))
+		{
+			ChartLoadFixture::Run();
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
+
+		if (ModDiagnostics::Arguments().contains(U"--render-context-test"))
+		{
+			try
+			{
+				LaserRenderFixture::VerifyRenderContexts();
+			}
+			catch (const Error& error)
+			{
+				TextWriter{ FsUtils::GetResourcePath(U"render-context-failure.txt") }.writeln(error);
+			}
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
+		if (ModDiagnostics::Arguments().contains(U"--laser-range-test"))
+		{
+			try
+			{
+				LaserRenderFixture::VerifyRanges();
+			}
+			catch (const Error& error)
+			{
+				TextWriter{ FsUtils::GetResourcePath(U"laser-range-failure.txt") }.writeln(error);
+			}
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
+		if (ModDiagnostics::Arguments().contains(U"--laser-render-test"))
+		{
+			LaserRenderFixture::Run();
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
+
 		if (RenderGeometryFixture::Requested())
 		{
 			RenderGeometryFixture::Run();
@@ -91,6 +146,25 @@ namespace DiagnosticRunner
 
 	bool RunAfterInputInitialization()
 	{
+		if (ModDiagnostics::Arguments().contains(U"--error-fatal-test"))
+		{
+			ErrorReportFixture::RequireIsolated();
+			throw std::out_of_range{ "invalid map<K, T> key" };
+		}
+		if (ModDiagnostics::Arguments().contains(U"--error-report-test"))
+		{
+			try
+			{
+				ErrorReportFixture::Run();
+			}
+			catch (const Error& error)
+			{
+				TextWriter{ FsUtils::GetResourcePath(U"error-report-failure.txt") }.writeln(error.what());
+			}
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
 		if (ModDiagnostics::Arguments().contains(U"--judge-setting-test"))
 		{
 			try

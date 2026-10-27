@@ -1,4 +1,4 @@
-﻿KSM Enhanced Vertical Mod 0.5.1-beta1 Installation Guide
+KSM Enhanced Vertical Mod 0.5.2-beta2 Installation Guide
 Supported version: K-Shoot Mania 2.1.0 Windows x64
 
 # Installation
@@ -54,3 +54,15 @@ Folders containing files (including hidden files) or other folders are kept. Con
 Pre-existing shared folders, songs, user skins, records, settings, logs, installation backups and recovery data are preserved.
 If permissions or locks prevent cleanup, the folder is kept and a warning appears in the completion screen and last-operation JSON report.
 If folder cleanup is interrupted, run the same installer and select the same folder to resume recovery.
+
+# Changes in 0.5.2-beta2
+- Improved rendering performance in complex laser sections
+- Improved multilingual and long-path handling, error dialogs and detailed logs
+- Fixed installation rejection caused by modified or missing user images and UI resources
+- Added the mod version to the game window title
+
+# Updating an existing installation
+Use this installer to remove the previous mod, then install 0.5.2-beta2. In-place automatic updates are not provided. Existing and newly earned scores, EX records and settings are preserved.
+Images, UI, languages, settings, records, songs and user skins do not need to match original hashes. The supported original EXE and the required audio DLLs' x64 structure and required exports are checked. Structural checks do not guarantee runtime compatibility with every DLL version.
+Folder-selection failures are also saved to %TEMP%\KsmEnhancedVerticalSetup-last-result.json.
+Additional game error logs: [game folder]\log\error.log and [game folder]\log\song-loading.log

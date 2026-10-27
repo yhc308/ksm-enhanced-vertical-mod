@@ -1,8 +1,9 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)][string]$ProjectRoot,
     [Parameter(Mandatory=$true)][string]$OriginalGameDirectory,
     [Parameter(Mandatory=$true)][string]$BuildInformation,
-    [Parameter(Mandatory=$true)][string]$SetupExecutable
+    [Parameter(Mandatory=$true)][string]$SetupExecutable,
+    [switch]$CustomizedResources
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
@@ -36,6 +37,15 @@ foreach($relative in @('score/normal.ksc','score/legacy_additional.ksc','score/n
  $path=Join-Path $app $relative;New-Item -ItemType Directory -Path (Split-Path $path -Parent) -Force|Out-Null
  [IO.File]::WriteAllText($path,'normal=1,2,3,4,5,6,7,8,9,10,11')
 }
+if($CustomizedResources){
+ foreach($name in @('imgs/base.gif','ui/scene/title.noco','ui/scene/select.noco','ui/scene/result.noco','ui/scene/play_hud.noco')){
+  $path=Join-Path $app $name
+  if($name -eq 'imgs/base.gif'){[IO.File]::AppendAllText($path,'USER IMAGE METADATA')}else{Remove-Item -LiteralPath $path}
+ }
+ $custom=Join-Path $app 'imgs/ユーザー 自定义/extra.png'
+ New-Item -ItemType Directory -Path (Split-Path $custom -Parent) -Force|Out-Null
+ [IO.File]::WriteAllText($custom,'USER IMAGE')
+}
 $before=@{}
 foreach($file in Get-ChildItem -LiteralPath $app -Recurse -File){$before[[IO.Path]::GetRelativePath($app,$file.FullName).Replace('\','/')]=(Get-FileHash -LiteralPath $file.FullName).Hash}
 $protected=@('kshootmania.exe','config.ini','songs/user/chart.ksh','score/user.ksc','skins/User Skin/skin.json')
@@ -67,7 +77,7 @@ try{
         while($watch.Elapsed.TotalSeconds -lt 30){
             if($process.WaitForExit(100)){throw 'Installed normal executable exited during startup.'}
             $process.Refresh()
-            if($process.MainWindowTitle -eq 'K-Shoot Mania V2.1.0 - Enhanced Vertical Mod (Unofficial Build)'){$ready=$true;break}
+            if($process.MainWindowTitle -eq 'K-Shoot Mania V2.1.0 - Enhanced Vertical Mod 0.5.2-beta2 (Unofficial Build)'){$ready=$true;break}
         }
         if(-not $ready){throw 'Installed normal game window was not ready.'}
         $busyReport=Join-Path $run 'running-game.json'
@@ -116,6 +126,6 @@ try{
      $expected=if($relative -eq 'config.ini'){$configAfterRuntime}else{$before[$relative]}
      if((Get-FileHash -LiteralPath (Join-Path $app $relative)).Hash -ne $expected){throw "Reinstall changed: $relative"}
     }
-    [ordered]@{status='PASS';buildId=$build.buildId;diagnostics=$false;upstreamHash=$probe.executableHash;setup=$installer;fixture=$run;originalFilesRestored=$before.Count;installProtectedFiles=$protected;normalStartup=$true;runtimeCases=4;landscape=$true;portrait=$true;runningGameRejected=$true;productionFaultHooksDisabled=$true;emptyDirectoryCleanup=$true;gracefulExit=$true;userSkinsAndRecordsPreserved=$true;gameConfigAfterRuntimePreserved=$true}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $root 'build/native-installer-runtime-smoke.json') -Encoding UTF8
+    [ordered]@{status='PASS';buildId=$build.buildId;diagnostics=$false;upstreamHash=$probe.executableHash;setup=$installer;fixture=$run;originalFilesRestored=$before.Count;installProtectedFiles=$protected;normalStartup=$true;runtimeCases=4;landscape=$true;portrait=$true;runningGameRejected=$true;productionFaultHooksDisabled=$true;emptyDirectoryCleanup=$true;gracefulExit=$true;userSkinsAndRecordsPreserved=$true;gameConfigAfterRuntimePreserved=$true;customizedResources=[bool]$CustomizedResources}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $root $(if($CustomizedResources){'build/native-installer-customized-smoke.json'}else{'build/native-installer-runtime-smoke.json'})) -Encoding UTF8
     Write-Output "NATIVE INSTALLATION PASS: $run"
 }finally{Remove-Item Env:KSM_SETUP_FAIL_AFTER,Env:KSM_SETUP_CRASH_AFTER,Env:KSM_SETUP_LOW_SPACE -ErrorAction SilentlyContinue}
