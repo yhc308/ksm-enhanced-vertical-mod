@@ -1,8 +1,8 @@
 {
   "version": "0.5.4-beta4",
   "upstreamCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
-  "gameBuildId": "20261105-180035-32156be9",
-  "gameSha256": "77b1c322dfb534cd67bab57abd4ca36fef6b0595bcca183bcd2a195ddf4361c1",
+  "gameBuildId": "20261105-195949-671d1730",
+  "gameSha256": "1df9a53de08addb83a3207cc77922d92b00013abb87f91e59a0e599135c54644",
   "gameCpp": {
     "kshootmania/src/Main.cpp": {
       "tokens": "8cc4d99e39118b72b2984f8a20d1a8b557b42ea2742ce30c52e1738456a81322",
@@ -941,11 +941,11 @@
       "directives": "b3adf106d95b8934f690943f2921308b90be5b766c4c8ba250c792de56400201"
     },
     "kshootmania/src/Scenes/Common/ShowLoadingOneFrame.cpp": {
-      "tokens": "960c9e48b3b3c2b6c6f203c034c9b58eeaa5d1448139c43fb5681b3c8b642b19",
-      "directives": "67dbeb86f84a49a1451b833c5b04c8db59b4d1a7eaacca48057aeaf14545bf23"
+      "tokens": "81e82949c210f533d6d4e189ad39678632feca928697ee7ffbfbc642cd783354",
+      "directives": "1bf9b48871c97599e143c893b398cd255ca65f1404746e530846c561a0cdd696"
     },
     "kshootmania/src/Scenes/Common/ShowLoadingOneFrame.hpp": {
-      "tokens": "8a894c26a79f004c8acf0176dbc1796f71f39b973298d26d84479060d588857d",
+      "tokens": "477548b539bcd4824f64d905948caaaf97e1a59ed198dd0407f0721510ae29b8",
       "directives": "440c1afe12e489600944efbe7159d11d5020523b47c77528f557b064ef6ce8c0"
     },
     "kshootmania/src/Scenes/CourseResult/CourseResultChartList.cpp": {

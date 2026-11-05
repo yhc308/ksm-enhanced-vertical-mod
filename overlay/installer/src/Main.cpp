@@ -1,4 +1,4 @@
-#include "InstallerCore.hpp"
+﻿#include "InstallerCore.hpp"
 #include <commctrl.h>
 #include <shobjidl.h>
 #include <shellapi.h>
@@ -25,7 +25,7 @@ namespace
 			{"browse", {L"Choose folder", L"フォルダー選択", L"폴더 선택", L"选择文件夹", L"選擇資料夾"}},
 			{"install", {L"Install mod", L"モードをインストール", L"모드 설치", L"安装模组", L"安裝模組"}},
 			{"updateReady", {L"An update is available. Use Update mod.", L"更新できます。「モードを更新」を選択してください。", L"새 버전으로 업데이트할 수 있습니다. 모드 업데이트를 누르세요.", L"可以更新。请选择更新模组。", L"可以更新。請選擇更新模組。"}},
-			{"sameVersion", {L"This version is already installed.", L"このバージョンはインストール済みです。", L"이 버전은 이미 설치되어 있습니다.", L"已安装此版本。", L"已安裝此版本。"}},
+			{"sameVersion", {L"This build is already installed.", L"このビルドはインストール済みです。", L"이 빌드는 이미 설치되어 있습니다.", L"已安装此构建。", L"已安裝此組建。"}},
 			{"downgrade", {L"A newer version is installed. Downgrading is not supported.", L"新しいバージョンがインストール済みです。ダウングレードには対応しません。", L"더 높은 버전이 설치되어 있어 다운그레이드할 수 없습니다.", L"已安装较新版本，不支持降级。", L"已安裝較新版本，不支援降級。"}},
 			{"unsupportedUpdate", {L"No verified update path exists for this installation.", L"このインストールの対応する更新方法を確認できません。", L"이 설치본에서 지원되는 업데이트 경로를 확인할 수 없습니다.", L"此安装没有已验证的更新路径。", L"此安裝沒有已驗證的更新路徑。"}},
 			{"updateButton", {L"Update mod", L"モードを更新", L"모드 업데이트", L"更新模组", L"更新模組"}},

@@ -65,4 +65,8 @@ If folder cleanup is interrupted, run the same installer and select the same fol
 - Viewport settings include laser, slam laser and note thickness, key-beam length and opacity, and skin help. An option to remember the selected EFF.RATE is included.
 - Missing new settings use defaults. Old key-beam OFF settings become Normal mode with 0% opacity. Existing score files are not batch-converted.
 
-Supported updates: valid installations of 0.4.0-beta.1, 0.5.1-beta1 and its installer revisions, and 0.5.2-beta2. Untracked manual installations are not overwritten automatically. Same-version reinstalls and downgrades are not supported.
+Supported updates: valid installations of 0.4.0-beta.1, 0.5.1-beta1 and its installer revisions, and 0.5.2-beta2. Untracked manual installations are not overwritten automatically. Same-build reinstalls and downgrades are not supported.
+
+# 0.5.4-beta4 hotfix
+A newer hotfix build can update the same 0.5.4-beta4 version with Update mod. Duplicate builds and build downgrades remain blocked.
+Portrait loading now uses the same background and aspect fit as the result screen, fixing the cropped background.

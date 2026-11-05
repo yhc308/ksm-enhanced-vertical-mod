@@ -1,4 +1,4 @@
-#include "InstallerCore.hpp"
+﻿#include "InstallerCore.hpp"
 #include <bcrypt.h>
 #include <compressapi.h>
 #include <tlhelp32.h>
@@ -41,7 +41,19 @@ namespace Setup
 		{
 			const auto old = state.value("version", ""), next = package.value("version", "");
 			const auto parts = [](const std::string& value) { std::smatch m; std::array<unsigned long, 4> v{}; Need(std::regex_match(value, m, std::regex("([0-9]+)\\.([0-9]+)\\.([0-9]+)-beta\\.?([0-9]+)")), "version", "Unknown version format"); for (size_t i = 0; i < v.size(); ++i) v[i] = std::stoul(m[i + 1]); return v; };
-			if (old == next) return "This version is already installed";
+			if (old == next)
+			{
+				// A rebuilt hotfix keeps its public version. Only strictly newer,
+				// timestamped release builds can replace an existing same-version build.
+				const auto oldBuild = state.value("buildId", ""), nextBuild = package.value("buildId", "");
+				const std::regex releaseBuild("[0-9]{8}-[0-9]{6}-[0-9a-fA-F]{8}");
+				if (std::regex_match(oldBuild, releaseBuild) && std::regex_match(nextBuild, releaseBuild))
+				{
+					if (oldBuild.substr(0, 15) < nextBuild.substr(0, 15)) return "";
+					if (oldBuild.substr(0, 15) > nextBuild.substr(0, 15)) return "Downgrading an installed mod build is not supported";
+				}
+				return "This version is already installed";
+			}
 			if (parts(old) > parts(next)) return "Downgrading an installed mod is not supported";
 			const std::set<std::string> supported{"0.4.0-beta.1", "0.5.1-beta1", "0.5.2-beta2", "0.5.4-beta4"};
 			return supported.count(old) ? "" : "Installed version has no verified update path";

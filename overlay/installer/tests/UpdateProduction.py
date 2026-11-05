@@ -50,6 +50,20 @@ try:
   with zipfile.ZipFile(archive) as z:old.write_bytes(z.read('KsmEnhancedVerticalSetup.exe'))
   app=fixture(folder);baseline={p.relative_to(base).as_posix():sha(p)for p in base.rglob('*')if p.is_file()};call(old,app,'install');(app/'score/new_additional.ksc').write_text('normal=1,2,3,4,5,6,7,8,9,20,30',encoding='utf8');state=call(setup,app,'inspect');check(state['updateAvailable'],'Actual old package supports update '+folder);call(setup,app,'update');check(sha(app/'ksm-enhanced-vertical.exe')==build['sha256'].lower(),'Actual upgrade uses latest normal EXE');startup(app,0);call(setup,app,'remove')
   check(all((app/n).is_file() and sha(app/n)==h for n,h in baseline.items()),'Actual upgrade removal restores all original runtime files '+folder);check((app/'score/new_additional.ksc').is_file(),'New EX survives actual upgrade '+folder);call(setup,app,'install');call(setup,app,'remove');upgrades.append({'status':'PASS','previousPackage':folder,'oldSetupSha256':sha(old)})
+ # Rebuilds keep the public version; update the actual earlier 0.5.4 package.
+ archive=next((ROOT/'releases/ksm-enhanced-vertical-0.5.4-beta4-installer').glob('*.zip'));oldHotfix=work/'ksm-enhanced-vertical-0.5.4-beta4-before-loading.exe'
+ with zipfile.ZipFile(archive)as z:oldHotfix.write_bytes(z.read('KsmEnhancedVerticalSetup.exe'))
+ app=fixture('same-version-hotfix');baseline={p.relative_to(base).as_posix():sha(p)for p in base.rglob('*')if p.is_file()};call(oldHotfix,app,'install')
+ oldBuild=json.loads((app/'.ksm-enhanced-install.json').read_text(encoding='utf8'))['buildId']
+ image=app/'imgs/bg_vertical.png';edited=image.read_bytes()+b'USER-HOTFIX-IMAGE';image.write_bytes(edited);deleted=app/'imgs/er_aps.png';deleted.unlink()
+ (app/'score/hotfix_additional.ksc').write_text('normal=1,2,3,4,5,6,7,8,9,20,30',encoding='utf8')
+ state=call(setup,app,'inspect');check(state['updateAvailable'],'Actual same-version hotfix offers Update mod')
+ call(setup,app,'update');check(sha(app/'ksm-enhanced-vertical.exe')==build['sha256'].lower(),'Same-version update installs exact fixed EXE')
+ check(image.read_bytes()==edited and not deleted.exists(),'Same-version update retains edited and deleted images');startup(app,1)
+ call(setup,app,'update',success=False);call(setup,app,'remove')
+ check(all((app/n).is_file()and sha(app/n)==h for n,h in baseline.items()),'Same-version removal restores first-install originals')
+ check(image.read_bytes()==edited and not deleted.exists()and (app/'score/hotfix_additional.ksc').is_file(),'Same-version removal preserves images and EX records')
+ hotfix={'status':'PASS','oldBuildId':oldBuild,'newBuildId':build['buildId'],'oldSetupSha256':sha(oldHotfix),'editedDeletedImagesPreserved':True,'firstInstallBaselineRestored':True}
  # Observe the actual production GUI on its own invisible desktop in all five languages.
  app=fixture('gui');old=work/'ksm-enhanced-vertical-0.5.2-beta2-installer.exe';call(old,app,'install')
  for language,label in enumerate(('Update mod','モードを更新','모드 업데이트','更新模组','更新模組')):
@@ -57,7 +71,7 @@ try:
   result=subprocess.run([str(host),str(setup),str(app),'--target',str(app),'--language',str(language)],env=env,capture_output=True,text=True,encoding='utf8',errors='replace',timeout=75)
   check(result.returncode==0 and 'installEnabled=1, removeEnabled=1' in result.stdout and label in result.stdout,'Production GUI update button language '+str(language));gui.append({'status':'PASS','language':language,'label':label,'privateDesktop':True})
  call(setup,app,'update');call(setup,app,'remove')
- result={'status':'PASS','setup':str(setup),'setupSha256':sha(setup),'buildId':build['buildId'],'fixture':str(work),'checks':len(checks),'runtimeCases':runtime,'upgrades':upgrades,'gui':gui,'limitations':['Exact normal startup runs on a private, never-switched desktop; interactive-desktop visual layout is checked with the separate diagnostic build.','Physical input and analog output latency are not measured; TOPPING +15ms was confirmed by the user.']}
+ result={'status':'PASS','setup':str(setup),'setupSha256':sha(setup),'buildId':build['buildId'],'fixture':str(work),'checks':len(checks),'runtimeCases':runtime,'upgrades':upgrades,'gui':gui,'sameVersionHotfix':hotfix,'limitations':['Exact normal startup runs on a private, never-switched desktop; interactive-desktop visual layout is checked with the separate diagnostic build.','Physical input and analog output latency are not measured; TOPPING +15ms was confirmed by the user.']}
 except Exception as e:
  result={'status':'FAIL','setup':str(setup),'fixture':str(work),'checks':len(checks),'error':str(e),'runtimeCases':runtime,'upgrades':upgrades,'gui':gui};raise
 finally:

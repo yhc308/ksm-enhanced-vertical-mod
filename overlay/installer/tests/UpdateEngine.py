@@ -23,6 +23,18 @@ try:
   check((p/'ksm-enhanced-vertical.exe').read_bytes()==b'UPDATED-MOD','Updated executable applied');check(not(p/'skin_preview/assets/example.dat').exists(),'Retired owned file removed')
   run(p,'update',False,exe=new);run(p,'update',False,exe=old)
   run(p,'remove',exe=new);check(inventory(p)==original,'Earliest original restored after '+version+' update');run(p,'install',exe=new);run(p,'remove',exe=new);check(inventory(p)==original,'Reinstall after upgrade removal preserves originals')
+ # Same public version: accept a strictly newer timestamped build only.
+ sameOld=package('0.5.4-beta4',paths,'20261105-180035-32156be9')
+ sameNew=package('0.5.4-beta4',newfiles,'20261105-195949-671d1730')
+ p=fixture('same-version-hotfix');original=inventory(p);run(p,'install',exe=sameOld)
+ put(p/'imgs/bg_vertical.png',b'USER-HOTFIX-IMAGE');put(p/'score/hotfix_additional.ksc',b'NEW-HOTFIX-EX')
+ data,_=run(p,'inspect',exe=sameNew);check(data['updateAvailable'],'Same-version newer build is updateable')
+ run(p,'update',exe=sameNew);check((p/'ksm-enhanced-vertical.exe').read_bytes()==b'UPDATED-MOD','Same-version hotfix replaces executable')
+ check((p/'imgs/bg_vertical.png').read_bytes()==b'USER-HOTFIX-IMAGE' and (p/'score/hotfix_additional.ksc').read_bytes()==b'NEW-HOTFIX-EX','Hotfix preserves edited image and new EX record')
+ run(p,'update',False,exe=sameNew);run(p,'update',False,exe=sameOld)
+ unknown=package('0.5.4-beta4',newfiles,'unversioned-manual');run(p,'update',False,exe=unknown)
+ equal=package('0.5.4-beta4',newfiles,'20261105-195949-ffffffff');run(p,'update',False,exe=equal)
+ run(p,'remove',exe=sameNew);check((p/'lang/Korean.json').read_bytes()==b'{"label":"ORIGINAL"}','Same-version hotfix removal restores earliest original language')
  # Two upgrades must carry the first-install baseline through both generations.
  p=fixture('two-updates');original=inventory(p);first=package('0.4.0-beta.1',paths,'chain-first');middle=package('0.5.1-beta1',newfiles,'chain-middle');run(p,'install',exe=first);run(p,'update',exe=middle);run(p,'update',exe=new);run(p,'remove',exe=new);check(inventory(p)==original,'Two upgrades restore the first-install baseline')
  old=package('0.5.2-beta2',paths,'edits-old')

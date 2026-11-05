@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261105-180035-32156be9",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "7b719c78c25f4a7712574d23c2b65200165389590129aa9839c5f703f02a3229",
+  "mainPatchSha256": "0c068a126e383da33907e3ebb53cb77ed85648087293c45b39985ac6dd4bb7f8",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -108,7 +108,7 @@
     },
     {
       "path": "docs/UPDATE_0.5.4-beta4.md",
-      "sha256": "9aa22d728901f98ff6b216cac0789146e33d30b105cf895c5e80a396001b7f37"
+      "sha256": "966532de775723415c458cea3429377d91c5d1d391ed026789f18aadff2994bf"
     },
     {
       "path": "docs/UPSTREAM_README.md",
@@ -124,7 +124,7 @@
     },
     {
       "path": "docs/review/RELEASE_0.5.4_SOURCE_REFERENCE.json",
-      "sha256": "7bb40ef7e209e485c6edc135696db58766ac94985e327916df259ee4977d9f50"
+      "sha256": "b9aadc222d0f764e2f465c6fd0bbff54cc1a1546231c3efedcd0387289ff8761"
     },
     {
       "path": "docs/review/SAMPLING_CONTROL.json",
@@ -152,7 +152,7 @@
     },
     {
       "path": "installer/PackageRelease.py",
-      "sha256": "1e12ce6edd340bf05780a0747a96663f38dc5d4f6a7e8a56e238eadd3623e757"
+      "sha256": "a5913a0349d22d32667dd1144cbd4693ebf53955ba9ac8e90b969849d146f0fe"
     },
     {
       "path": "installer/PeImage.py",
@@ -188,23 +188,23 @@
     },
     {
       "path": "installer/readme/README_EN.txt",
-      "sha256": "7823ca9e06085836e7c8f4d0a62ca5d0e5059b1012e369d6d24801c432596e21"
+      "sha256": "009b6b65d60e9c0b74f46f52e974e158445200ccc1303d6b27b462b55b305c4f"
     },
     {
       "path": "installer/readme/README_JA.txt",
-      "sha256": "788a92e264ff7a0aeec86f26b515af20241e4911a6e3810d049e81c9c449ef31"
+      "sha256": "c1f38faa5713c78d9e856c7a1f8b7a0850d1ff632eae58b3eb41e3841e64081e"
     },
     {
       "path": "installer/readme/README_KO.txt",
-      "sha256": "9c452f0a77e80abd9b1879a42900bf43dec392c6c2a68328b62dc9215daa2197"
+      "sha256": "cdff57b170612525cf328f1b9668ba394897728afce919aeb3a3e2edf63a3a34"
     },
     {
       "path": "installer/release.json",
-      "sha256": "baddb63d255e630d9bf7f9da9cdb362790c3aed8d734fe8c5f9f454299dc3d96"
+      "sha256": "edd6f7c55643071699ee52ac5589beaac74645c0cfb8de8f22b5c5aa6a5e9982"
     },
     {
       "path": "installer/src/InstallerCore.cpp",
-      "sha256": "4406dc932997a1f4e2327cf34d2bccab9eaf7b6b2a975bcb83cddc44aec2669c"
+      "sha256": "f28a13763489108e18fd689e1133406fafc4c00690b69a19e0dc75f7976146e3"
     },
     {
       "path": "installer/src/InstallerCore.hpp",
@@ -212,7 +212,7 @@
     },
     {
       "path": "installer/src/Main.cpp",
-      "sha256": "ddf7969da7d1f21b8d5df02e3ea3660fefab5644d694672633efa5979158bcc4"
+      "sha256": "64c2aa6b243f357138e259c5029e209c3333dfb1c3c4172392d0a22d6b34f0aa"
     },
     {
       "path": "installer/tests/CancelEngine.cpp",
@@ -244,11 +244,11 @@
     },
     {
       "path": "installer/tests/UpdateEngine.py",
-      "sha256": "d089fca31095c24f44cdcd949e714666ed7b1db2958b112a7a9bf30f2bca66b2"
+      "sha256": "8f36c48eb8a9b80a3f59ad31e9ec961f8b55fd64dbbe0de94f5a18b9cb480244"
     },
     {
       "path": "installer/tests/UpdateProduction.py",
-      "sha256": "547b96318dc70509b4ccc47c5f2773585506bb4258ad61054b2f15eb5ef886d4"
+      "sha256": "897a5275eb1c27fcee2f8fe04cb24c6d773f0a4e11439f60f89b5cf384657405"
     },
     {
       "path": "installer/third_party/LICENSE.json.txt",

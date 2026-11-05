@@ -11412,6 +11412,55 @@ index 70f9a25e9360d3522175d6a01e943a77052b0a48..7f80dbb779be15c127be7af00297a110
  	void setBackButtonVisible(bool visible);
  
  	/// @brief Backボタンクリックの長押し必要時間を切り替える(noneの場合は長押しなし)
+diff --git a/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.cpp b/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.cpp
+index cd35d7634332640ee51bb38a9fe30559ada37f0b..2bb336102fa21bf005ddd67fa85b4159fd6e7c68 100644
+--- a/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.cpp
++++ b/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.cpp
+@@ -1,7 +1,10 @@
+ ﻿#include "ShowLoadingOneFrame.hpp"
++#include "Vertical/VerticalModConfig.hpp"
++#include "Vertical/VerticalLayout.hpp"
+ 
+ ShowLoadingOneFrame::ShowLoadingOneFrame(LoadingBgMode bgMode)
+-	: m_bgMode(bgMode)
++	: m_bgMode(bgMode), m_vertical(Vertical::ModConfig::Load().enabled),
++	  m_bgTexture(TextureAsset(m_vertical ? U"bg2_vertical.png" : CommonTexture::kMainBG))
+ {
+ }
+ 
+@@ -15,7 +18,17 @@ void ShowLoadingOneFrame::draw() const
+ 	switch (m_bgMode)
+ 	{
+ 	case LoadingBgMode::kMainBg:
+-		FitToHeight(m_bgTexture).drawAt(Scene::Center());
++		if (m_vertical)
++		{
++			const auto view = Vertical::Viewport::Fit(Scene::Width(), Scene::Height());
++			const Transformer2D transform{ Mat3x2::Identity(), Transformer2D::Target::SetLocal };
++			Scene::Rect().draw(Palette::Black);
++			m_bgTexture.fitted(720 * view.scale, 1280 * view.scale).drawAt(Scene::Center());
++		}
++		else
++		{
++			FitToHeight(m_bgTexture).drawAt(Scene::Center());
++		}
+ 		break;
+ 	case LoadingBgMode::kBlack:
+ 		{
+diff --git a/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.hpp b/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.hpp
+index 2148f00b3ad59519462bbc10efff7dc7f0c93e88..5ffe6b5c79ce7d436104646523b52c9598e43336 100644
+--- a/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.hpp
++++ b/kshootmania/src/Scenes/Common/ShowLoadingOneFrame.hpp
+@@ -18,7 +18,8 @@ class ShowLoadingOneFrame : public Co::SequenceBase<void>
+ {
+ private:
+ 	const LoadingBgMode m_bgMode;
+-	const Texture m_bgTexture{ TextureAsset(CommonTexture::kMainBG) };
++	const bool m_vertical;
++	const Texture m_bgTexture;
+ 	const Texture m_loadingTexture{ TextureAsset(CommonTexture::kLoading) };
+ 
+ 	Co::Task<void> start() override;
 diff --git a/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp b/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp
 index 7f2f6b58bfb330ed35960c5583b3a924140e5813..5ca6849d1354e52985ff1879c0f05535dfc7c61c 100644
 --- a/kshootmania/src/Scenes/CourseResult/CourseResultScene.cpp
