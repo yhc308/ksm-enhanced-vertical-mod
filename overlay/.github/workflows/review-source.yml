@@ -1,7 +1,7 @@
 name: Review full source checks
 on:
   push:
-    branches: [review/current-features-tests, release/0.5.1-beta1]
+    branches: [review/current-features-tests, enhanced-vertical]
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,8 +18,8 @@ jobs:
           python-version: '3.10'
       - run: pip install libclang==18.1.1 clang-format==19.1.5
       - run: python scripts/ApplyDependencyPatches.py
-      - name: Verify actual game source, pinned core commit, and immutable resources
-        run: python scripts/VerifyReviewSource.py
+      - name: Verify tested release source and immutable resources
+        run: python scripts/VerifyReleaseSource.py
       - name: Test the compiler-token restoration safeguards
         run: python -m unittest discover -s tests -p 'test_compiler_parity.py' -v
       - name: Test preview clock sampling against unchanged-reference frame gaps
@@ -37,7 +37,7 @@ jobs:
         with:
           name: review-source-and-headless-results
           path: |
-            build/review-parity.json
+            build/release-source-parity.json
             build/headless-results.xml
   windows-timer:
     runs-on: windows-latest
@@ -64,9 +64,30 @@ jobs:
           if ($LASTEXITCODE) { throw 'Windows timer tests failed' }
       - name: Record exactly which feature commit was tested
         shell: pwsh
-        run: Get-Content docs/review/CORE_TARGET.json
+        run: |
+          git rev-parse HEAD
+          Get-Content docs/review/RELEASE_0.5.4_SOURCE_REFERENCE.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: review-native-windows-timer-results
           path: build/windows-timer-results.xml
+
+  native-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build and test native installer update transactions
+        shell: pwsh
+        run: |
+          ./installer/Build.ps1 -TestEngine
+          python installer/tests/UpdateEngine.py
+          if ($LASTEXITCODE) { throw 'Native installer update tests failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-installer-results
+          path: build/native-installer-update-latest.json

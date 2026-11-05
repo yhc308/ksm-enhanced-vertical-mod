@@ -18,5 +18,7 @@ for path in sorted((root / 'kshootmania/src').rglob('*')):
     assert path.read_bytes().startswith(b'\xef\xbb\xbf'), 'Missing UTF-8 BOM: ' + str(path)
     subprocess.run([formatter, '--style=file:' + str(root / '.clang-format'), '--dry-run', '--Werror', str(path)], check=True)
     checked.append(path.relative_to(root).as_posix())
-assert len(checked) == 82
+import json
+reference = json.loads((root / 'docs/review/RELEASE_0.5.4_SOURCE_REFERENCE.json').read_text())
+assert set(checked) == set(reference['addedGameCpp'])
 print('Review style PASS:', len(checked), 'added game C++ files; upstream files are protected by compiler parity, not a global formatter pass')

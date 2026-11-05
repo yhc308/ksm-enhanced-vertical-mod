@@ -2,9 +2,9 @@
   "upstream": "https://github.com/kshootmania/ksm-v2.git",
   "baseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
-  "sourceBuildId": "20261027-194127-779e4d6d",
+  "sourceBuildId": "20261105-180035-32156be9",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "59c91c588d2715dbc5acdd04da1258cdb7d38dfb9ce86d572d741e632176f955",
+  "mainPatchSha256": "7b719c78c25f4a7712574d23c2b65200165389590129aa9839c5f703f02a3229",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -16,15 +16,15 @@
     },
     {
       "path": ".github/workflows/review-source.yml",
-      "sha256": "d4083c5e723a3bfb88b69180157143d2fa4b52affc6bb69dd7bfdcf5c2c68ff5"
+      "sha256": "b36edf2130dd1fb82edbba0261f3d726d1b3889f5ce028a3540fa63b571ad18a"
     },
     {
       "path": "README_ENHANCED.md",
-      "sha256": "8860c30c3214812e3089e725081375fcfd32c461f17da465ec8dacc8162bdd47"
+      "sha256": "ae41bac030c9e83f0392af42e87088716d7cff902f0a954c589c1cd493826a6d"
     },
     {
       "path": "REVIEW.md",
-      "sha256": "a79736aac6eb49e5866abbe3062817a0723bcd1c50133c86371e0d2a84715883"
+      "sha256": "2ddcba90063f71d5d9dd7b075ac85e9787efcfbdfb7eaa663ee4d4f9abbf32b0"
     },
     {
       "path": "compatibility/targets.json",
@@ -44,7 +44,7 @@
     },
     {
       "path": "config/release.json",
-      "sha256": "8adc1d8239e823114f6fb5ef86b531be853274a94f8f1c368ee7440bd0cab735"
+      "sha256": "eb2c150e0f7776df3837ae263b8264f949dd17dfb78305a696a7c722ec7b69f6"
     },
     {
       "path": "docs/BASELINE_TEST_FINDINGS.md",
@@ -103,12 +103,16 @@
       "sha256": "3cafa5c9272fe80aed969d9df0b3e433d3b6b524de0079f7e79ce59f074d5481"
     },
     {
-      "path": "docs/RELEASE_0.5.2-beta2.md",
-      "sha256": "2c492f56bf450db3859b95b196adc0e7b73312a4cc586fa24b7e05dd09dcf900"
-    },
-    {
       "path": "docs/REMOVAL_AUDIT.md",
       "sha256": "67f132fd866a98d348e31fcbae7f21fc97fdae074bab3fe5cecf105a7de8f2db"
+    },
+    {
+      "path": "docs/UPDATE_0.5.4-beta4.md",
+      "sha256": "9aa22d728901f98ff6b216cac0789146e33d30b105cf895c5e80a396001b7f37"
+    },
+    {
+      "path": "docs/UPSTREAM_README.md",
+      "sha256": "0a25632a0236b65ae0c8e02d542a01dba6346434e134d3effb7e1f473e88cf26"
     },
     {
       "path": "docs/review/CORE_TARGET.json",
@@ -117,6 +121,10 @@
     {
       "path": "docs/review/D7_SOURCE_REFERENCE.json",
       "sha256": "0e7479a9af1607e76213d0fc0e056d60b077ab3fb54d36739368054adaa960c3"
+    },
+    {
+      "path": "docs/review/RELEASE_0.5.4_SOURCE_REFERENCE.json",
+      "sha256": "7bb40ef7e209e485c6edc135696db58766ac94985e327916df259ee4977d9f50"
     },
     {
       "path": "docs/review/SAMPLING_CONTROL.json",
@@ -136,15 +144,15 @@
     },
     {
       "path": "installer/Build.ps1",
-      "sha256": "45ba171968723f83aef974f11d31396198a3bf1749bcd977677d7733fdff9522"
+      "sha256": "53efc521a3d175b62a6645c5f4fe5de7b4e0b089371e217041ce80db79b02995"
     },
     {
       "path": "installer/BuildPackage.py",
-      "sha256": "c2988726440bf4bb8242de88fda501bd20ffc0c795ec6553fdddf084e84898a5"
+      "sha256": "3677be2a9191668c1c90db0fb135ff357f938b8ff6115433eafa2f6cb7dd16a2"
     },
     {
       "path": "installer/PackageRelease.py",
-      "sha256": "d309405d5b04f36de55cbf14c026ec2658b304e8fd314e6038c5f2cc697b0089"
+      "sha256": "1e12ce6edd340bf05780a0747a96663f38dc5d4f6a7e8a56e238eadd3623e757"
     },
     {
       "path": "installer/PeImage.py",
@@ -152,7 +160,7 @@
     },
     {
       "path": "installer/README.md",
-      "sha256": "c6854a3dcdeb41b166d7dd8c7a02842b800d7dbdfc8289c3af072672693afbeb"
+      "sha256": "92b38618fa904065c0ea98417514ff7da995de825a4c9d2d3c5e005acb6ec592"
     },
     {
       "path": "installer/Setup.manifest",
@@ -160,7 +168,7 @@
     },
     {
       "path": "installer/Setup.rc",
-      "sha256": "8b8d45010d94b2dfab7625ed61ebda5b9becd1263b84f6e1834064d5ff5f7245"
+      "sha256": "c24be8706bdbb7e375a0a2ecd6472acd5a25355ff10db775908acd82bc81bac8"
     },
     {
       "path": "installer/assets/README.md",
@@ -180,31 +188,35 @@
     },
     {
       "path": "installer/readme/README_EN.txt",
-      "sha256": "849c3404224d363c3cdde8c917958a4a182fffc6446c5048145008498f41f585"
+      "sha256": "0656881bd6cbe6e04cbce74df07d8f03d2ee008557dd9a6e163f373edbfc084a"
     },
     {
       "path": "installer/readme/README_JA.txt",
-      "sha256": "00f4ccdfbd2ed3d8a6f88dab311e7c50f4d2beec1ebd1fdfb2b1f6e2404a84dd"
+      "sha256": "03b00f8883ee681993558d287bd6357ccb98cbc6c495dd7b573bfe31c8db8de9"
     },
     {
       "path": "installer/readme/README_KO.txt",
-      "sha256": "563b7da621edeff52e26b51a2c7ffe2116145c4d6dccd098c7906be787539ac2"
+      "sha256": "cbe251b728d4e7da3fa2401bfb051c3c7ac8c2a85899d417f0e2640d71bd0090"
+    },
+    {
+      "path": "installer/release.json",
+      "sha256": "baddb63d255e630d9bf7f9da9cdb362790c3aed8d734fe8c5f9f454299dc3d96"
     },
     {
       "path": "installer/src/InstallerCore.cpp",
-      "sha256": "6f42f9e1e9ed62c200bddf5fa289a5239174da21ccbccd52fa8360caefa4e702"
+      "sha256": "4406dc932997a1f4e2327cf34d2bccab9eaf7b6b2a975bcb83cddc44aec2669c"
     },
     {
       "path": "installer/src/InstallerCore.hpp",
-      "sha256": "7bb3de71d30d2a588e3c75e7b3390d954ea879ee0434baf177f72b66612af165"
+      "sha256": "17b4a0d7a968d5c6519d75e3400d8425b19da9a5696efd124aaf8d2b77e28573"
     },
     {
       "path": "installer/src/Main.cpp",
-      "sha256": "eba2ebb94650cc9d9dbc85e8aa896672acba81f395e2771e67c90168fc938674"
+      "sha256": "ddf7969da7d1f21b8d5df02e3ea3660fefab5644d694672633efa5979158bcc4"
     },
     {
       "path": "installer/tests/CancelEngine.cpp",
-      "sha256": "516765e08fd07f523e396ea135436d84d5f34b61f017f0fc6ab98dbd4d3ddd5e"
+      "sha256": "0509c0baeb22f8dd64b774ce28b7e2831582e048403abddfea679dfb620a92b1"
     },
     {
       "path": "installer/tests/GuiDirectoryWarning.py",
@@ -213,6 +225,10 @@
     {
       "path": "installer/tests/LegacyDirectoryRemoval.py",
       "sha256": "419800de88e69b4768a4b0c41ffe44853692c9dd5d17674cad65fa097415d4e7"
+    },
+    {
+      "path": "installer/tests/LinkedSongs.py",
+      "sha256": "51742237c4f1d7ea9a5e2d13a318ceec217f76eb0d8a79d724f034bb1ecaf038"
     },
     {
       "path": "installer/tests/ProductionCompatibility.py",
@@ -225,6 +241,14 @@
     {
       "path": "installer/tests/TestEngine.py",
       "sha256": "9c5bc9b3a5a1932d1e16392370a9665e7bb8dac26292b3f441994ca86078b166"
+    },
+    {
+      "path": "installer/tests/UpdateEngine.py",
+      "sha256": "d089fca31095c24f44cdcd949e714666ed7b1db2958b112a7a9bf30f2bca66b2"
+    },
+    {
+      "path": "installer/tests/UpdateProduction.py",
+      "sha256": "547b96318dc70509b4ccc47c5f2773585506bb4258ad61054b2f15eb5ef886d4"
     },
     {
       "path": "installer/third_party/LICENSE.json.txt",
@@ -404,7 +428,7 @@
     },
     {
       "path": "kshootmania/App/mods/vertical/ui/option_setting_item.noco",
-      "sha256": "e3311e15f6d9bb3b073b45964818bfd1746d9d05da133ac1ca1d4d3e14c72067"
+      "sha256": "9b2b91a503dc8623f4e01abe01dd7527f95bfa00249030fcaf34b4b75ea52541"
     },
     {
       "path": "kshootmania/App/mods/vertical/ui/play_hud.noco",
@@ -499,6 +523,10 @@
       "sha256": "77b6dbc7a35a46ca7a2f5efa6497bc823549509ed05f240cff177f8c447d10d9"
     },
     {
+      "path": "kshootmania/app.manifest",
+      "sha256": "bd0771d3737c5aed28ba3574909f610acf32f713e4256a55e31561a7a1c54f3c"
+    },
+    {
       "path": "kshootmania/src/Common/AudioOutputRestart.hpp",
       "sha256": "e63cd3656e50ceaa949ad9b03a6df66dd799e0337294c7125863c4a3fb1ae9b0"
     },
@@ -528,11 +556,11 @@
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.cpp",
-      "sha256": "3071c2ccd8ef2cd0813f2ff3bae8fbae97517726b522dffdd0b79b4cd9e74cb1"
+      "sha256": "b98679d446e304b971d3fffae0504fa84d59bf9b2ab13749ffbd2daaad8f151d"
     },
     {
       "path": "kshootmania/src/Common/SkinPreset.hpp",
-      "sha256": "03e0c480d97466107beabacf227e5652918914dbff5cf2629ada80df71ec6475"
+      "sha256": "fe7e60c0f62098bf0a0204947eafbf1f69a7119a50ea496cbce42fe7c1804a38"
     },
     {
       "path": "kshootmania/src/Common/SongLoadDiagnostics.hpp",
@@ -604,7 +632,7 @@
     },
     {
       "path": "kshootmania/src/Diagnostics/SkinPresetFixture.hpp",
-      "sha256": "d011c3518389d8353a3da7be6469c294823e08b2c6fc20e2f82aec8f4763abcd"
+      "sha256": "1e59d74e9137e45a3e40e33ba546be63d79514ddcbea9c600b44a3865e1e8b3c"
     },
     {
       "path": "kshootmania/src/Diagnostics/TimingHudCapture.hpp",
@@ -612,7 +640,7 @@
     },
     {
       "path": "kshootmania/src/Diagnostics/TimingHudFixture.hpp",
-      "sha256": "e5063fad1f6af2949f331abeaab62865705aad923a51db1d84bf779790b1cc87"
+      "sha256": "18725f5b8e189201920bbb5ae75df5207d930a924c4593bec1c6452c72b866cf"
     },
     {
       "path": "kshootmania/src/Diagnostics/UnicodePathFixture.hpp",
@@ -632,7 +660,7 @@
     },
     {
       "path": "kshootmania/src/HighScore/AdditionalScoreIO.cpp",
-      "sha256": "766ca7046ec84cc9c05ed110a55cc1212e5a5e5047da4abeab6636d816f2eb31"
+      "sha256": "2340f0ddf52538b08b1eb8f2a1e1eca7e4f5e129a45f4da58adc50b4ccc62c7f"
     },
     {
       "path": "kshootmania/src/HighScore/AdditionalScoreIO.hpp",
@@ -640,7 +668,7 @@
     },
     {
       "path": "kshootmania/src/Ini/AudioCalibration.hpp",
-      "sha256": "343bec310539082f7cf5ba4ba5b447c3c22e7c76979193925cf97fde256c8128"
+      "sha256": "29de3c711d708b33a5d2ff8b05970f524c55e35e872773da2ed24a9d770d8dea"
     },
     {
       "path": "kshootmania/src/Input/MenuInputProfiles.hpp",
@@ -660,11 +688,15 @@
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingOverlay.hpp",
-      "sha256": "34f6939dcade367bf522aba81565c83b61ff85fd5594a0693ebc2c8c9bf4882d"
+      "sha256": "4c9f0ddd6e51d2fc4496129ded7fa516998b65585df70e8428afb3ba47751ff8"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/HUD/TimingTextStyle.hpp",
       "sha256": "2898f71e5a2f2f47867645d0ef8cd7deb6277a82b29563dceeff62b2c4dc2d9d"
+    },
+    {
+      "path": "kshootmania/src/MusicGame/Graphics/Highway/HighwayArrival.hpp",
+      "sha256": "5d87e59a1d3d91524ae8432f4a63522451ced1527d0d4be4297332c41a9d1a75"
     },
     {
       "path": "kshootmania/src/MusicGame/Graphics/ViewportGeometry.hpp",
@@ -708,7 +740,7 @@
     },
     {
       "path": "kshootmania/src/MusicGame/TimingFeedback.hpp",
-      "sha256": "b92686f8a47d072a659362ca5e25e75ec9e061bf98c642b4601c203e1d8ee739"
+      "sha256": "b6854593a10c5496b7b34719b52245d4123b3c4b9e3ee412da2d81fab9009f7d"
     },
     {
       "path": "kshootmania/src/Scenes/Title/JudgeSettingOverlay.cpp",
@@ -724,11 +756,11 @@
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.cpp",
-      "sha256": "b22e55c0a72683fcb33f1bc40311dc0949694cb59fa9e07ddfb0d0ae0acb4b03"
+      "sha256": "0499cbe82b31ef0cc43b70dfcd1ac2a1172136b493836bcc99016ddd296ba69b"
     },
     {
       "path": "kshootmania/src/Scenes/Title/SkinOverlay.hpp",
-      "sha256": "8064e5c25e6a147a338f0ece92ca470c481d17bea96207c35014a30c89e23520"
+      "sha256": "b394e17bab3e93ca57b2afb9953adabaee35610b13de541a8660df15c6479bc7"
     },
     {
       "path": "kshootmania/src/UI/ModMenuStyle.hpp",
@@ -784,7 +816,7 @@
     },
     {
       "path": "kshootmania/src/Vertical/SpinRegression.hpp",
-      "sha256": "1defc6457d83224b574c960751a9f2172ce96deca3e4714b22dcdca7458a797d"
+      "sha256": "78dac6c6e2398a6446c2c36f920312a3c1177aca0652b1d941ed086cb85e8e60"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalCameraProfile.hpp",
@@ -800,7 +832,7 @@
     },
     {
       "path": "kshootmania/src/Vertical/VerticalLaneGeometry.hpp",
-      "sha256": "743f5f1a3bf76bba5822a6371e5f2708ff81f4e0a50d61c4e70c4e376e8ac300"
+      "sha256": "1691a54cec291e40fb22b97349109af3e8acfc465dafeb3d88115caf8336c25d"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalLayout.hpp",
@@ -820,7 +852,7 @@
     },
     {
       "path": "kshootmania/src/Vertical/VerticalSelfTest.hpp",
-      "sha256": "01ec37b59f73f4a220868c7fe57a9c2b376e88beb710de30b282bc954931659c"
+      "sha256": "c4c45e55c8ebed1af08ec59ddf9c8d9b798cf6bf478980b992903ba736385a87"
     },
     {
       "path": "kshootmania/src/Vertical/VerticalTunnelWarp.hpp",
@@ -828,19 +860,19 @@
     },
     {
       "path": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
-      "sha256": "11a90f50a0deede5537f13cd99a3a17cb9705d748a5027c93567dbdd124c4b1e"
+      "sha256": "a1c7f9b7ed3311847b25a83088aafd8450be1b08f736c64a6270584de1c7e5a6"
     },
     {
       "path": "patches/dependencies/ksmaudio.patch",
-      "sha256": "b9be8d5555a33fbfc78320d90ac7ae8a387781645d11151696c3f71781740fa9"
+      "sha256": "020d151128eb2c9d9be67ba4680eb1dc161aa426803d3969495229186f65a115"
     },
     {
       "path": "patches/dependencies/manifest.json",
-      "sha256": "df7ef970d589ee51cf3bd1d6a6dc2bbf496622efdaeac900b0bc929729865492"
+      "sha256": "cad3ab572e2b770a6c3ab55c37b8b864a78339ea9cc114b1ca10fa0e6b2041e5"
     },
     {
       "path": "scripts/ApplyDependencyPatches.py",
-      "sha256": "aff1bcc8d97be7760f0c6736e6ea9e7fb89312d0928a4f8e46654f664ad8e616"
+      "sha256": "0c0db9922b78f2e774ec561bc6992ee6978b0a3aadb80e55ef65beffe70c0761"
     },
     {
       "path": "scripts/BenchmarkTunnel.ps1",
@@ -900,11 +932,11 @@
     },
     {
       "path": "scripts/CheckCppStyle.py",
-      "sha256": "89de75b596eb505e71739bf743ac1e339b8cba3b545e344473504bdfbe63e790"
+      "sha256": "e93258b9b6e8684558f668e6d8065acdb1e57bcab4878fd4e3d0fb5c357183dc"
     },
     {
       "path": "scripts/CheckReviewCppStyle.py",
-      "sha256": "c0c74a5b4612a2a32f6c56b31b996a99fe56f8e01be02e95ab5539db2af75183"
+      "sha256": "0d489c501569c977f88cb7134702e7ba913cf766eb5e0c58779ba99ab0c16128"
     },
     {
       "path": "scripts/CompareFramePerformance.py",
@@ -964,7 +996,7 @@
     },
     {
       "path": "scripts/GenerateUnitTestProject.py",
-      "sha256": "59d8c6ece5df9569854a5d4b385f38415f7d913facb5010fbae549f8a080958f"
+      "sha256": "e50c62560495bde816d420b4682c07cc1de7198e0ecafc90ad4017c21261c1ed"
     },
     {
       "path": "scripts/GenerateV10CoverageSamples.ps1",
@@ -1160,7 +1192,7 @@
     },
     {
       "path": "scripts/RunViewportOptionsTests.ps1",
-      "sha256": "e768da60b37451f066ed7fc4499604bfecdc608401fd0d34fce4475aebbde0b6"
+      "sha256": "3ea8f413713694a05a6e8ca2ada55f6401cfb1ec167bf9cdf3c32ee378f83ee0"
     },
     {
       "path": "scripts/TestWorkspace.psm1",
@@ -1169,6 +1201,10 @@
     {
       "path": "scripts/ValidateRefactor.ps1",
       "sha256": "af7b2a8cd8ecbdf86e97c227d77e1c21aa0e28b7450715165cefd34589fc61d5"
+    },
+    {
+      "path": "scripts/VerifyReleaseSource.py",
+      "sha256": "bdb43c7b357b5d08775c8080cb3ca6334b89a485d7c6955da4917a96350b4ae0"
     },
     {
       "path": "scripts/VerifyResourceBaseline.py",
@@ -1232,7 +1268,7 @@
     },
     {
       "path": "tests/ModLocalizationVerifier.py",
-      "sha256": "eee65ef9996adb958a6e29455f9fb7cb2b5ae1927ee0f27eda364cf506b17117"
+      "sha256": "05e25ea9f9f5558408ea86f71b9ca3814e3bb621b13382bae628cdc64fb44218"
     },
     {
       "path": "tests/NormalRuntimeSmoke.ps1",
@@ -1256,7 +1292,7 @@
     },
     {
       "path": "tests/PreviewTraceRules.py",
-      "sha256": "6f2e9082e0160d4b62f1b8dfb1861c5177f84966a638a2e865b779d5be4030bd"
+      "sha256": "ebc555c48ed4989e9466efc0e9a24375a0b9aedf340fa56f5d87c8aa293d2487"
     },
     {
       "path": "tests/ResultBestScoreNativePixels.py",
@@ -1276,7 +1312,15 @@
     },
     {
       "path": "tests/SkinTestVerifier.py",
-      "sha256": "3bed1039beff024ce2b4fdb3ffc264170da75891c33ff6297a8a119487fbc313"
+      "sha256": "d08ba5bd5be90619803af45126a947ce583e13b95433e88ee9391721a5c55cdf"
+    },
+    {
+      "path": "tests/TestHighwayArrival.cpp",
+      "sha256": "b2b35f752afcab28e0f356acf0ab8a13c9ebaeae9affff4a54a1be01e25fdec8"
+    },
+    {
+      "path": "tests/TestHighwayPositionCache.cpp",
+      "sha256": "2890baf8f206eb150577149e9af24b6f203d40dd6b26e1904e097663538f7208"
     },
     {
       "path": "tests/TestModBehavior.cpp",
@@ -1285,6 +1329,10 @@
     {
       "path": "tests/TestModEnvironment.ps1",
       "sha256": "a2360838d4092cb5d21a81a21dd7b818aee88515d739bb2542c362e3e0403ac7"
+    },
+    {
+      "path": "tests/TestPatchSettings.cpp",
+      "sha256": "207c24920a256af53a038be4b9a64598724d8c67d3758232dc7e86e43e6fd596"
     },
     {
       "path": "tests/TestPersistentPlay.ps1",
@@ -1303,12 +1351,24 @@
       "sha256": "e2994bc1ee464e6460f3f5a56ea1b1984254e2715e783e44e81e815dbeb0d2ab"
     },
     {
+      "path": "tests/ViewportLayoutFadeVerifier.py",
+      "sha256": "c9338be8cb0f7b601029d47a7cdcda616b7f73ea826ef2511a251738e478189d"
+    },
+    {
       "path": "tests/WindowsWaitableTimerTests.cpp",
       "sha256": "e36af09516b601bc6db97eb26936310cea5654cd4fe7f16c84e1681621a82359"
     },
     {
+      "path": "tests/asio/AudioClockPhaseTest.cpp",
+      "sha256": "41afd391c33852497a26225e318f69dbed94864224e8d3b47ed455e1e8f2fff7"
+    },
+    {
       "path": "tests/asio/AudioOutputTest.cpp",
       "sha256": "33db8fdc774dc79abbb69fa11a9b68639b21f6402d8c356cb45bc4cb3c4e9ec7"
+    },
+    {
+      "path": "tests/asio/AudioSyncProbe.cpp",
+      "sha256": "c3af5b4fc4819ceec7b0d5bd0438699a118402e1ac230976cf78f90e91414df2"
     },
     {
       "path": "tests/asio/FakeAsio.cpp",
@@ -1333,6 +1393,10 @@
     {
       "path": "tests/test_preview_trace_rules.py",
       "sha256": "b3d47b5cde27e2b9a2125dd3e5669b737b8ce1d4543a95f1af85c2369bd84240"
+    },
+    {
+      "path": "tests/windows/NormalRuntimeHost.cpp",
+      "sha256": "2da7d72a21defe880e84a8c27d560aed123c0edbb39f612cfa50bcd9b5913c94"
     }
   ],
   "releaseVersion": "0.5.2-beta2",

@@ -1,5 +1,6 @@
 # KSM Enhanced Vertical Mod (Windows x64 only)
 
+[0.5.4-beta4 Update and migration guide](docs/UPDATE_0.5.4-beta4.md)
 **An unofficial mod that brings vertical play to K-Shoot Mania 2.1.0.**
 Features include vertical play, skin presets, viewport customization, EX scoring, HARD+APS, judgment timing settings and partial ASIO support.
 

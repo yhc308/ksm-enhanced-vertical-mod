@@ -108,8 +108,17 @@ namespace SkinPreset
 	{
 		background1Brightness = Clamp(background1Brightness, 0, 100);
 		background2Opacity = Clamp(background2Opacity, 0, 100);
-		laserWidthPercent = std::isfinite(laserWidthPercent) ? Clamp(laserWidthPercent, 50.0, 125.0) : 100.0;
+		laserWidthPercent = std::isfinite(laserWidthPercent) ? Clamp(laserWidthPercent, 50.0, 200.0) : 100.0;
 		noteHeightPercent = Clamp(noteHeightPercent, 50, 200);
+		slamThicknessPercent = (Clamp(slamThicknessPercent, 50, 200) + 2) / 5 * 5;
+		keyBeamLengthPercent = (Clamp(keyBeamLengthPercent, 25, 100) + 12) / 25 * 25;
+		keyBeamOpacityPercent = (Clamp(keyBeamOpacityPercent, 0, 100) + 5) / 10 * 10;
+		keyBeamMode = static_cast<KeyBeamMode>(Clamp(static_cast<int32>(keyBeamMode), 0, 5));
+		if (keyBeamMode == KeyBeamMode::Off)
+		{
+			keyBeamMode = KeyBeamMode::Normal;
+			keyBeamOpacityPercent = 0;
+		}
 		indicatorPortrait = static_cast<IndicatorPortrait>(Clamp(static_cast<int32>(indicatorPortrait), 0, 2));
 		keyBeamMode = static_cast<KeyBeamMode>(Clamp(static_cast<int32>(keyBeamMode), 0, 5));
 	}
@@ -124,7 +133,7 @@ namespace SkinPreset
 		{
 			if (value < kVerticalLaserPercent && value + 5.0 > kVerticalLaserPercent)
 				return kVerticalLaserPercent;
-			return Min(125.0, value + 5.0);
+			return Min(200.0, value + 5.0);
 		}
 		if (value > kVerticalLaserPercent && value - 5.0 < kVerticalLaserPercent)
 			return kVerticalLaserPercent;
@@ -139,6 +148,9 @@ namespace SkinPreset
 		Settings settings;
 		if (json)
 		{
+			settings.slamThicknessPercent = Read<int32>(json, U"slamThicknessPercent", 100);
+			settings.keyBeamLengthPercent = Read<int32>(json, U"keyBeamLengthPercent", 100);
+			settings.keyBeamOpacityPercent = Read<int32>(json, U"keyBeamOpacityPercent", 100);
 			settings.folder = Read<String>(json, U"folder", U"default");
 			settings.missing = Read<String>(json, U"missing", U"default") == U"error" ? MissingMode::Error : MissingMode::Default;
 			settings.background1Brightness = Read<int32>(json, U"background1Brightness", 100);
@@ -247,6 +259,9 @@ namespace SkinPreset
 		auto clean = settings;
 		clean.sanitize();
 		JSON json;
+		json[U"slamThicknessPercent"] = clean.slamThicknessPercent;
+		json[U"keyBeamLengthPercent"] = clean.keyBeamLengthPercent;
+		json[U"keyBeamOpacityPercent"] = clean.keyBeamOpacityPercent;
 		json[U"folder"] = settings.folder;
 		json[U"missing"] = settings.missing == MissingMode::Error ? U"error" : U"default";
 		json[U"background1Brightness"] = clean.background1Brightness;

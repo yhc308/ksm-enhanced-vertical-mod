@@ -1,7 +1,7 @@
 from pathlib import Path
 import csv,json,hashlib,sys
 from PIL import Image,ImageDraw
-from PreviewTraceRules import verify_preview_loop_boundary, verify_preview_loop_period, verify_preview_edit_clock
+from PreviewTraceRules import verify_preview_loop_boundary
 def verify_trace(dest):
     rows=[]
     with (dest/'preview-trace.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -33,8 +33,7 @@ def verify_trace(dest):
                 assert b['ex']>=a['ex'],'skin/numeric changes reset EX'
     for previous, current in loops:
         verify_preview_loop_boundary(previous, current)
-    for first, second in zip(loops, loops[1:]):
-        verify_preview_loop_period(first, second)
+    assert all(abs((b[1]['wall']-a[1]['wall'])-18.0)<0.12 for a,b in zip(loops,loops[1:])), 'loop duration drift'
     assert all(r['score']==0 and abs(r['gauge'])<1e-5 for r in rows if 17.55<r['chart']<17.95)
     before=[r for r in rows if 16.8<r['chart']<17]
     half=[r for r in rows if 17.2<r['chart']<17.3]
@@ -42,17 +41,15 @@ def verify_trace(dest):
     assert 0<half[0]['score']<before[0]['score']
     changes=[(a,b) for a,b in zip(rows,rows[1:]) if (a['folder'],a['policy'])!=(b['folder'],b['policy'])]
     assert len(changes)>=3
-    for previous, current in changes:
-        verify_preview_edit_clock(previous, current)
+    assert all(b['chart']>=a['chart'] and b['chart']-a['chart']<1.5 for a,b in changes),changes
     numeric_changes=[(a,b) for a,b in zip(rows,rows[1:]) if any(a[k]!=b[k] for k in ['bg1','bg2','laser','note'])]
     assert len(numeric_changes)>=8
-    for previous, current in numeric_changes:
-        verify_preview_edit_clock(previous, current)
+    assert all(b['chart']>=a['chart'] and b['chart']-a['chart']<0.25 for a,b in numeric_changes), 'numeric edits restart or stall playback'
     assert {0,50,75,100}.issubset({r['bg1'] for r in rows})
     assert {0,40,50,100}.issubset({r['bg2'] for r in rows})
     assert {50,100,125,200}.issubset({r['note'] for r in rows})
-    assert all(50 <= r['laser'] <= 125 for r in rows)
-    assert {50,100,125}.issubset({r['laser'] for r in rows})
+    assert all(50 <= r['laser'] <= 200 for r in rows)
+    assert {50,100,125,200}.issubset({r['laser'] for r in rows})
     assert any(abs(r['laser']-800/11)<0.01 for r in rows)
     for name in ['preview-default.png','preview-partial.png','preview-error.png','preview-reset-half.png','preview-reset-zero.png','preview-second-loop.png','preview-confirm.png','title-restored.png']:
         assert (dest/name).exists(),name
@@ -62,13 +59,17 @@ def verify_trace(dest):
     layer=Image.open(dest/'viewport-bg1-zero.png').convert('RGB')
     w,h=dark.size
     u=min(h/720,w/960)
-    rw,rh=(720,1280) if h>w else (w,h)
-    scale=0.95*min((w*2/3-48*u)/rw,(h-230*u)/rh)
+    rw,rh=w,h
+    py=274*w/720+56*u if h>w else 216*u
+    content_bottom=1170*w/720 if h>w else h
+    scale=0.95*min((w*2/3-48*u)/rw,max(1,content_bottom-py-132*u)/rh)
     pw,ph=rw*scale,rh*scale
-    px,py=(w*2/3-pw)/2,(274*w/720 if h>w else 172*u)
+    px=(w*2/3-pw)/2
     if h>w:
-        # No portrait controls or hints may occupy the artwork's letterbox bands.
-        for band in [(0,0,w,int(110*w/720)),(0,int(1170*w/720),w,h)]:
+        # Native BACK intentionally occupies the upper-left letterbox.
+        # All other controls/hints remain excluded from both letterbox bands.
+        back_right=int(48*h/480+0.999)
+        for band in [(back_right,0,w,int(110*w/720)),(0,int(1170*w/720),w,h)]:
             assert not any(min(c)>150 for c in dark.crop(band).getdata()), 'portrait UI leaked into letterbox'
         # The progress line belongs below the large title, before the small song panel.
         # A host-size/preview-size mixup moves it outside this strip at 1080x1920.

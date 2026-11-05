@@ -64,10 +64,12 @@ namespace Setup
 	private:
 		Json LoadState();
 		Json Install();
+		Json Update();
 		Json Remove();
 		Json Verify();
-		Json Transaction(const Json& operations, const std::string& id, const Json& cleanup = Json::array(), const Json& sources = Json::array());
+		Json Transaction(const Json& operations, const std::string& id, const Json& cleanup = Json::array(), const Json& sources = Json::array(), const std::string& action = "");
 		Json recoveredCleanup = nullptr;
+		std::string recoveredAction;
 		std::set<std::string> DirectoryParents(const Json& sources) const;
 		void ValidateDirectories(const Json& directories, const Json& sources, bool inspectLinks) const;
 		Json RemovalDirectories(const Json& state) const;

@@ -5,6 +5,7 @@
 #include "MusicGame/Graphics/ViewportGeometry.hpp"
 #include "MusicGame/ViewStatus.hpp"
 #include "MusicGame/Camera/CameraMath.hpp"
+#include "MusicGame/Graphics/Highway/HighwayArrival.hpp"
 
 namespace Vertical
 {
@@ -57,9 +58,21 @@ namespace Vertical
 		double anchorT;
 		double endT;
 		bool rayValid = true;
+		double barTextureT = kJudgeTextureT;
 	};
 	inline LaneSpan NeutralLaneSpan(const BasicCamera3D& camera, int outputHeight = GameRender::Height())
 	{
+		struct Cache
+		{
+			Mat4x4 viewProjection;
+			Vec3 eye, focus;
+			int height;
+			LaneSpan span;
+		};
+		static thread_local Optional<Cache> cache;
+		if (cache && cache->height == outputHeight && cache->viewProjection == camera.getViewProj() &&
+			cache->eye == camera.getEyePosition() && cache->focus == camera.getFocusPosition())
+			return cache->span;
 		const auto eye = camera.getEyePosition();
 		const Vec3 bar{ kJudgmentBarCenter };
 		const Vec3 anchor = eye + (bar - eye) * (-eye.y / (bar.y - eye.y));
@@ -76,7 +89,9 @@ namespace Vertical
 			else
 				hi = z;
 		}
-		return { (anchor.z - farZ) / (frontZ - farZ), ((lo + hi) / 2 - farZ) / (frontZ - farZ) };
+		const LaneSpan result{ (anchor.z - farZ) / (frontZ - farZ), ((lo + hi) / 2 - farZ) / (frontZ - farZ) };
+		cache = Cache{ camera.getViewProj(), camera.getEyePosition(), camera.getFocusPosition(), outputHeight, result };
+		return result;
 	}
 	// Intersect the bar's camera ray with the original (possibly zoomed/flipped)
 	// highway plane. Only its texture-to-distance mapping changes. The far edge
@@ -85,6 +100,20 @@ namespace Vertical
 	inline LaneSpan DisplayLaneSpan(const MeshData& source, const BasicCamera3D& camera, const MusicGame::ViewStatus& view, int outputHeight = GameRender::Height())
 	{
 		auto result = NeutralLaneSpan(camera, outputHeight);
+		const auto reference = MusicGame::Graphics::HighwayArrival::UpstreamContactTextureT(source, SharedGearView(view));
+		if (reference)
+			result.barTextureT = *reference;
+		else
+		{
+			// Invalid authored poses retain a finite upstream neutral reference.
+			static const double neutralReference = []
+			{
+				auto mesh = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1, Float2{ .9925f, .995f }, Float2{ .00375f, .0025f });
+				mesh.vertices[0].pos.z = mesh.vertices[1].pos.z = static_cast<float>(MusicGame::Graphics::kHighwayPlaneSize.y * kJudgeTextureT / 2);
+				return MusicGame::Graphics::HighwayArrival::UpstreamContactTextureT(mesh, {}).value_or(kJudgeTextureT);
+			}();
+			result.barTextureT = neutralReference;
+		}
 		// Slam-event highway and judgment-line spins intentionally differ upstream.
 		// Fit the neutral distance in their shared frame, then rotate the whole
 		// gear once. Intersecting independently rotated planes crosses a pole.
@@ -110,15 +139,16 @@ namespace Vertical
 		}
 		result.endT = t + (result.endT - result.anchorT);
 		result.anchorT = t;
+		// Independent authored highway/bar spins are not alignment errors.
+		// Never chase the moving image with note UVs or the logical clock.
 		return result;
 	}
-	// Add a vertex row at the texture's existing judgment row. Scroll position,
+	// Add a vertex row at upstream's optical contact row. Scroll position,
 	// note lifetime, negative scroll and judgment APIs keep the original values.
-	inline MeshData DisplayHighwayMesh(const MeshData& source, const LaneSpan& span)
+	inline void UpdateDisplayHighwayMesh(MeshData& mesh, const MeshData& source, const LaneSpan& span)
 	{
-		auto mesh = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 2);
 		const std::array<double, 3> lengths{ 0, span.anchorT, span.endT };
-		const std::array<float, 3> uv{ 0, static_cast<float>(kJudgeTextureT), 1 };
+		const std::array<float, 3> uv{ 0, static_cast<float>(span.barTextureT), 1 };
 		for (int row = 0; row < 3; ++row)
 			for (int col = 0; col < 2; ++col)
 			{
@@ -126,6 +156,11 @@ namespace Vertical
 				v.pos = source.vertices[col].pos + (source.vertices[col + 2].pos - source.vertices[col].pos) * static_cast<float>(lengths[row]);
 				v.tex = { source.vertices[col].tex.x, uv[row] };
 			}
+	}
+	inline MeshData DisplayHighwayMesh(const MeshData& source, const LaneSpan& span)
+	{
+		auto mesh = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 2);
+		UpdateDisplayHighwayMesh(mesh, source, span);
 		return mesh;
 	}
 }

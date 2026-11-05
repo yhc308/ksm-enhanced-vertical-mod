@@ -53,6 +53,9 @@ namespace SkinPreset
 		int32 background2Opacity = 100;
 		double laserWidthPercent = 100.0;
 		int32 noteHeightPercent = 100;
+		int32 slamThicknessPercent = 100;
+		int32 keyBeamLengthPercent = 100;
+		int32 keyBeamOpacityPercent = 100;
 		IndicatorPortrait indicatorPortrait = IndicatorPortrait::Bottom;
 		bool indicatorLandscape = true;
 		KeyBeamMode keyBeamMode = KeyBeamMode::Normal;

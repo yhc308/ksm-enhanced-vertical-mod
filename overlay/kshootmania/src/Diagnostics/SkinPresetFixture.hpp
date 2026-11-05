@@ -224,11 +224,11 @@ namespace SkinFixture
 		invalid.noteHeightPercent = -10;
 		Check(Save(invalid), U"sanitize save");
 		Initialize();
-		Check(Current().background1Brightness == 0 && Current().background2Opacity == 100 && Current().laserWidthPercent == 125 && Current().noteHeightPercent == 50, U"numeric limits");
-		Check(Current().indicatorPortrait == IndicatorPortrait::Both && Current().keyBeamMode == KeyBeamMode::Off, U"invalid presentation settings clamped");
+		Check(Current().background1Brightness == 0 && Current().background2Opacity == 100 && Current().laserWidthPercent == 200 && Current().noteHeightPercent == 50, U"numeric limits");
+		Check(Current().indicatorPortrait == IndicatorPortrait::Both && Current().keyBeamMode == KeyBeamMode::Normal && Current().keyBeamOpacityPercent == 0, U"invalid presentation settings clamped");
 		Check(StepLaserPercent(100, 1) == 105 && StepLaserPercent(100, -1) == 95, U"laser five percent steps");
 		Check(Abs(StepLaserPercent(70, 1) - kVerticalLaserPercent) < 1e-8 && Abs(StepLaserPercent(75, -1) - kVerticalLaserPercent) < 1e-8 && StepLaserPercent(kVerticalLaserPercent, 1) == 75 && StepLaserPercent(kVerticalLaserPercent, -1) == 70, U"exact vertical detent");
-		Check(StepLaserPercent(50, -1) == 50 && StepLaserPercent(120, 1) == 125 && StepLaserPercent(125, 1) == 125, U"laser endpoints clamp");
+		Check(StepLaserPercent(50, -1) == 50 && StepLaserPercent(120, 1) == 125 && StepLaserPercent(195, 1) == 200 && StepLaserPercent(200, 1) == 200, U"laser endpoints clamp");
 		Activate(Settings{});
 		const Texture before = TextureAsset(U"bt_chip.gif");
 		const auto textureId = before.id();
@@ -238,7 +238,7 @@ namespace SkinFixture
 		Image reference;
 		plane.additiveTexture().readAsImage(reference);
 		Check(reference.width() == kHighwayTextureSizeWide.x, U"padded render target");
-		for (const double percent : { 50.0, kVerticalLaserPercent, 100.0, 125.0 })
+		for (const double percent : { 50.0, kVerticalLaserPercent, 100.0, 125.0, 200.0 })
 		{
 			Settings value;
 			value.laserWidthPercent = percent;
@@ -248,7 +248,7 @@ namespace SkinFixture
 			Check(Abs(ViewportGeometry::RailX(0) - (ViewportGeometry::CoreLeft() * (1 - percent / 100 / (GameRender::VerticalEnabled() ? 8.0 / 11 : 1)))) < 1e-8, U"left rail expands outward");
 			const double minX = kLaserPositionOffsetWide.x + ViewportGeometry::LaserCenter(0, 2) - ViewportGeometry::LaserWidth() / 2;
 			const double maxX = kLaserPositionOffsetWide.x + ViewportGeometry::LaserCenter(1, 2) + ViewportGeometry::LaserWidth() / 2;
-			Check(minX >= 0 && maxX <= kHighwayTextureSizeWide.x, U"125 percent wide laser fits render target");
+			Check(minX >= 0 && maxX <= kHighwayTextureSizeWide.x, U"200 percent wide laser fits render target");
 			plane.drawBaseTexture(0.0);
 			Graphics2D::Flush();
 			Image actual;

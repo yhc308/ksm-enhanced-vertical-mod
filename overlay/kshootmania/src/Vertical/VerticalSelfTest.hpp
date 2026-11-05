@@ -99,12 +99,12 @@ namespace Vertical
 			}
 		}
 		TextWriter laneReport{ U"vertical-lane-anchor-test.csv" };
-		laneReport.writeln(U"width,height,degrees,anchor_error_px,tail_px,outline_error_px,button_ratio,side_ratio,status");
+		laneReport.writeln(U"width,height,degrees,anchor_error_px,tail_px,outline_error_px,button_ratio,side_ratio,reference_uv,contact_uv,uv_error,status");
 		bool lanePassed = true;
 		for (const auto resolution : kPresets)
 		{
 			const auto camera = MakeCamera({ resolution.width, resolution.height }, {});
-			auto source = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1);
+			auto source = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1, Float2{ .9925f, .995f }, Float2{ .00375f, .0025f });
 			const float height = MusicGame::Graphics::kHighwayPlaneSize.y;
 			source.vertices[0].pos.z = source.vertices[1].pos.z = static_cast<float>(height * kJudgeTextureT / 2);
 			source.vertices[2].pos.z = source.vertices[3].pos.z = -height / 2;
@@ -126,14 +126,16 @@ namespace Vertical
 				const double outline = Abs((dp.x - fp.x) * (np.y - fp.y) - (dp.y - fp.y) * (np.x - fp.x)) / Max((np - fp).length(), 1.0f) * 720 / resolution.width;
 				const double buttonRatio = 168.0 * kButtonWidthScale / 256;
 				const double sideRatio = 44.0 * kLaserWidthScale / 256;
-				const bool ok = span.rayValid && error <= 4 && outline <= 1 &&
+				const auto referenceUV = MusicGame::Graphics::HighwayArrival::UpstreamContactTextureT(source, view);
+				const double uvError = referenceUV ? Abs(display.vertices[2].tex.y - *referenceUV) : 1.0;
+				const bool ok = referenceUV && uvError < 1e-6 && span.rayValid && error <= 4 && outline <= 1 &&
 								(degrees != 0 || Abs(tail - kTailLogicalPixels) <= 1) && Abs(buttonRatio - kButtonWidthRatio) < 1e-6 && Abs(sideRatio - kLaserRailWidthRatio) < 1e-6;
 				lanePassed = lanePassed && ok;
 				laneReport.writeln(U"{},{},{},{},{},{},{},{},{}"_fmt(resolution.width, resolution.height, degrees, error, tail, outline, buttonRatio, sideRatio, ok ? U"PASS" : U"FAIL"));
 			}
 		}
 		// An authored edge-on surface must remain finite when no ray intersection exists.
-		auto degenerate = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1);
+		auto degenerate = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1, Float2{ .9925f, .995f }, Float2{ .00375f, .0025f });
 		degenerate.vertices[2].pos = degenerate.vertices[0].pos;
 		degenerate.vertices[3].pos = degenerate.vertices[1].pos;
 		const auto fallback = DisplayLaneSpan(degenerate, MakeCamera({ 720, 1280 }, {}), {}, 1280);

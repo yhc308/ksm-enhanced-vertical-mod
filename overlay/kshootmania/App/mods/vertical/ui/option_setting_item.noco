@@ -878,7 +878,8 @@
         "translate": [
           0,
           0
-        ]
+        ],
+        "color_paramRef": "itemTint"
       },
       "verticalScrollable": false,
       "wheelScrollEnabled": true,
@@ -1080,7 +1081,8 @@
         "translate": [
           0,
           0
-        ]
+        ],
+        "color_paramRef": "itemTint"
       },
       "verticalScrollable": false,
       "wheelScrollEnabled": true,
@@ -1127,6 +1129,15 @@
     "valueRightArrowVisible": {
       "type": "Bool",
       "value": true
+    },
+    "itemTint": {
+      "type": "Color",
+      "value": [
+        255,
+        255,
+        255,
+        255
+      ]
     }
   },
   "referenceSize": [

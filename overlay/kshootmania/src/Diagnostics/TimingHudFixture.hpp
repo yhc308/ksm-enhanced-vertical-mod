@@ -95,10 +95,12 @@ namespace TimingHudFixture
 		check(PresentTiming(settings, { JudgmentResult::kCritical, -0.01, 1 }, 1).ms == U"0.0ms", U"negative zero is normalized");
 		check(PresentTiming(settings, { JudgmentResult::kNearSlow, -47.8, 1 }, 1).ms == U"-47.8ms", U"SLOW uses minus and lowercase ms");
 		check(PresentTiming(settings, { JudgmentResult::kNearFast, 12.3, 1 }, 1).ms == U"+12.3ms", U"FAST uses plus and lowercase ms");
-		check(PresentTiming(settings, { JudgmentResult::kCritical, 0, 1 }, 1.84).alpha > 0.89, U"full opacity lasts 840ms");
-		const auto fading = PresentTiming(settings, { JudgmentResult::kCritical, 0, 1 }, 2.02).alpha;
-		check(fading > 0.44 && fading < 0.46, U"last 360ms fade without movement");
-		check(PresentTiming(settings, { JudgmentResult::kCritical, 0, 1 }, 2.2).alpha == 0, U"display expires after 1200ms");
+		for (const double elapsed : { 0.0, .849, .850 })
+			check(std::abs(PresentTiming(settings, { JudgmentResult::kCritical, 0, 0 }, elapsed).alpha - .9) < .0001, U"full opacity holds through 850ms");
+		const auto fading = PresentTiming(settings, { JudgmentResult::kCritical, 0, 0 }, .975).alpha;
+		check(std::abs(fading - .45) < .0001, U"250ms linear fade reaches half opacity at 975ms");
+		check(PresentTiming(settings, { JudgmentResult::kCritical, 0, 0 }, 1.099).alpha > 0, U"display remains before 1100ms");
+		check(PresentTiming(settings, { JudgmentResult::kCritical, 0, 0 }, 1.100).alpha == 0, U"display expires at 1100ms");
 		check(PresentTiming(settings, { JudgmentResult::kCritical, 0, 1 }, 0.9).alpha == 0, U"backward time never revives a future display");
 		TimingFeedbackState state;
 		state.offer(JudgmentResult::kCritical, 12);

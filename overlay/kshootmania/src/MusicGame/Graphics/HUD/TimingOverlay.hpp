@@ -19,6 +19,15 @@ namespace MusicGame::Graphics
 			m_glowCanvas = noco::Canvas::LoadFromFile(path);
 			if (!m_canvas || !m_glowCanvas)
 				throw Error{ U"Failed to load '{}'"_fmt(path) };
+			if (!GameRender::VerticalEnabled())
+			{
+				for (const auto& canvas : { m_canvas, m_glowCanvas })
+					for (int32 i = 0; i < 4; ++i)
+						for (const auto suffix : { U"Word", U"Ms" })
+							if (const auto node = canvas->findByName(U"Timing{}{}"_fmt(i, suffix), noco::RecursiveYN::Yes, noco::IncludeSubCanvasYN::Yes))
+								if (const auto label = node->getComponent<noco::Label>())
+									label->setFontSize(label->fontSize().defaultValue() * .85);
+			}
 		}
 		void update(FastSlowMode mode, const TimingHudSettings& settings,
 					const Optional<TimingFeedback>& feedback, double now, bool enabled = true)

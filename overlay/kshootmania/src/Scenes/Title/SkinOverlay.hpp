@@ -23,11 +23,15 @@ class SkinOverlay
 	mutable RenderTexture m_target;
 	int32 m_index = 0;
 	double m_scroll = 0;
-	int32 m_focus = 0; // 0 list, 1 policy, 2-5 numeric, 6 indicator, 7 depth, 8 beam, 9 depth details, 10 close
+	int32 m_focus = 0; // 0 list, 1 policy, 2-5 numeric, 6 indicator, 7 depth, 8 beam, 9 details, 10 BACK, 11 slam, 12 length, 13 opacity, 14 help
 	bool m_keyboardRegion = false;
 	Vertical::ModConfig m_depthDraft = Vertical::ModConfig::Load();
 	const Vertical::ModConfig m_originalDepth = m_depthDraft;
 	bool m_depthDialog = false;
+	bool m_skinHelp = false;
+	int32 m_helpReturnFocus = 14;
+	void openSkinHelp();
+	void closeSkinHelp();
 	int32 m_depthIndex = 0;
 	int32 m_depthEdit = -1;
 	String m_depthDigits;
@@ -45,7 +49,7 @@ class SkinOverlay
 	String m_error;
 	Stopwatch m_fixtureClock{ StartImmediately::Yes };
 	std::unique_ptr<TextWriter> m_fixtureTrace;
-	HashSet<int32> m_fixtureStages;
+	mutable HashSet<int32> m_fixtureStages;
 	void updateFixture();
 	void changeSelection(int32 index);
 	void refreshSkin();

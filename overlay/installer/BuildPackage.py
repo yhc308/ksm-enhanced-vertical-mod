@@ -11,8 +11,7 @@ from PeImage import PeImage
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[1]
-GAME_BUILD = '20261027-194127-779e4d6d'
-GAME_SHA = 'ef68345d4e8126d35ac7ecf6c552b3e51b5cfce22419f0db2c7a69d999bb73e3'
+RELEASE = json.loads((ROOT / 'installer/release.json').read_text(encoding='utf-8-sig'))
 cabinet = ct.WinDLL('cabinet', use_last_error=True)
 cabinet.CreateCompressor.argtypes = [wt.DWORD, ct.c_void_p, ct.POINTER(ct.c_void_p)]
 cabinet.Compress.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_size_t, ct.c_void_p, ct.c_size_t, ct.POINTER(ct.c_size_t)]
@@ -38,11 +37,11 @@ def kind(path):
         return 'language'
     return 'image' if Path(path).suffix.lower() in {'.png','.gif','.jpg','.jpeg','.bmp','.webp','.ico'} else 'other'
 
-def sources():
-    build = json.loads((ROOT / 'build/latest.json').read_text(encoding='utf-8-sig'))
-    assert build['buildId'] == GAME_BUILD and build['configuration'] == 'Release' and not build['diagnostics']
+def sources(build_information=None):
+    build = json.loads(Path(build_information or ROOT / 'build/latest.json').read_text(encoding='utf-8-sig'))
+    assert build['configuration'] == 'Release' and not build['diagnostics']
     executable = Path(build['executable'])
-    assert hashlib.sha256(executable.read_bytes()).hexdigest() == GAME_SHA
+    assert hashlib.sha256(executable.read_bytes()).hexdigest() == build['sha256'].lower()
     result = {'ksm-enhanced-vertical.exe': executable}
     app = ROOT / 'kshootmania/App'
     for directory in ('mods/vertical','mods/enhanced','imgs','skin_preview'):
@@ -56,13 +55,14 @@ def sources():
         result[f'lang/{name}.json'] = app / f'lang/{name}.json'
     for name in ('custom','judge','vertical'):
         result[f'ui/menu_{name}_icon.png'] = app / f'ui/menu_{name}_icon.png'
+    result['ui/parts/option_setting_item.noco'] = app / 'ui/parts/option_setting_item.noco'
     for name in ('bassasio.dll','bassmix.dll'):
         result[name] = app / name
     result['mods/enhanced/LICENSE'] = ROOT / 'LICENSE'
     result['mods/enhanced/licenses/json.txt'] = ROOT / 'installer/third_party/LICENSE.json.txt'
     return result
 
-def assemble(stub, destination, files, targets, fixture=False):
+def assemble(stub, destination, files, targets, fixture=False, version=None, build_id=None):
     assert not destination.exists(), 'Do not overwrite an existing setup executable'
     blocks, inventory, offset = [], [], 0
     for relative, path in sorted(files.items()):
@@ -74,7 +74,7 @@ def assemble(stub, destination, files, targets, fixture=False):
         inventory.append({'path':relative,'kind':kind(relative),'size':len(data),'compressedSize':len(packed),
                           'offset':offset,'sha256':hashlib.sha256(data).hexdigest()})
         blocks.append(packed); offset += len(packed)
-    index = {'installerRevision':'20261027-compatibility2','schemaVersion':1,'modId':'ksm-enhanced-vertical','version':'0.5.2-beta2','buildId':GAME_BUILD,
+    index = {'installerRevision':RELEASE['installerRevision'],'schemaVersion':1,'modId':'ksm-enhanced-vertical','version':version or RELEASE['version'],'buildId':build_id or ('native-installer-fixture' if fixture else json.loads((ROOT/'build/latest.json').read_text(encoding='utf-8-sig'))['buildId']),
              'fixture':fixture,'targets':targets,'files':inventory}
     encoded = json.dumps(index,ensure_ascii=True,separators=(',',':')).encode()
     blob = b'KSMSET01' + struct.pack('<Q',len(encoded)) + encoded + b''.join(blocks)
@@ -89,14 +89,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--stub',type=Path,default=ROOT/'build/native-installer/SetupStub.exe')
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--build-information',type=Path,default=ROOT/'build/latest.json')
     args = parser.parse_args()
     targets = json.loads((ROOT/'compatibility/targets.json').read_text(encoding='utf-8-sig'))
-    files = sources()
+    files = sources(args.build_information)
     imports = PeImage(files['ksm-enhanced-vertical.exe'].read_bytes()).imports()
     for profile in targets['profiles']:
         assert profile['requiredFiles'] == []
         assert profile['requiredLibraries'] == [{'path':name,'requiredExports':imports[name]} for name in ('bass.dll','bass_fx.dll')]
-    index = assemble(args.stub,args.output,files,targets)
+    index = assemble(args.stub,args.output,files,targets,build_id=json.loads(args.build_information.read_text(encoding="utf-8-sig"))["buildId"])
     args.output.with_suffix('.payload.json').write_text(json.dumps(index,indent=2)+'\n')
     print(json.dumps({'executable':str(args.output),'files':len(index['files']),'bytes':args.output.stat().st_size,
                       'sha256':hashlib.sha256(args.output.read_bytes()).hexdigest()},indent=2))

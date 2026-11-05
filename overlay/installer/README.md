@@ -2,7 +2,7 @@
 
 The installer is an independent Win32 C++17 application. No game source is modified.
 `src/InstallerCore.cpp` owns target validation, protected paths, SHA256, staging,
-transaction journals, recovery, legacy schema 2 migration and removal policies.
+transaction journals, recovery, legacy schema 2/3 migration and removal policies.
 `src/Main.cpp` provides the localized GUI and non-interactive JSON command interface.
 Both use the same `Engine::Run` implementation. Production and fault-test builds are separate.
 
@@ -17,9 +17,10 @@ From the project root:
 ./installer/Build.ps1
 ./installer/Build.ps1 -TestEngine
 python installer/tests/TestEngine.py
-python installer/BuildPackage.py --output build/installer-0.5.2-beta2/candidate3/KsmEnhancedVerticalSetup.exe
-./installer/tests/RealRuntime.ps1 -ProjectRoot (Get-Location).Path -OriginalGameDirectory <original-KSM-folder> -BuildInformation build/latest.json -SetupExecutable <assembled-setup.exe>
-python installer/PackageRelease.py --setup <verified-setup.exe> --production-evidence <production-results.json> --gui-evidence <gui-evidence.json> --engine-evidence <engine-results.json>
+python installer/BuildPackage.py --output build/installer-0.5.4-beta4/KsmEnhancedVerticalSetup.exe --build-information <verified-build.json>
+python installer/tests/UpdateEngine.py
+python installer/tests/UpdateProduction.py --setup <assembled-setup.exe> --build-information <verified-build.json> --original <original-KSM-folder>
+python installer/PackageRelease.py --setup <verified-setup.exe> --validation <validation.json> --build-information <verified-build.json>
 ```
 
 Assembly and release scripts refuse to overwrite existing output files/directories.
@@ -33,7 +34,7 @@ Do not replace build/latest.json to point at a diagnostic executable.
 KsmEnhancedVerticalSetup.exe --quiet --action inspect --target "C:\Games\KSM" --report "C:\Temp\inspect.json"
 ```
 
-Actions: inspect / install / verify / remove. The optional language index is
+Actions: inspect / install / update / verify / remove. The optional language index is
 `--language 0..4` (EN / JP / KR / SC / TC). Results use English JSON and exit codes
 0 (success) or 2 (failure). Wait for the process when invoking this GUI-subsystem EXE
 from scripts. Without --target, only the installer's directory is considered;
@@ -41,7 +42,7 @@ the process working directory is not used for automatic target selection.
 
 ## Data safety
 
-Installation ownership schema 3 is stored in `.ksm-enhanced-install.json`.
+Installation ownership schema 4 is stored in `.ksm-enhanced-install.json`.
 Original, undo and staged bytes live below `.ksm-enhanced-backup/<transaction>/`.
 The durable journal is written before target mutations; interrupted transactions
 are rolled back before a subsequent operation. Invalid metadata/backups stop safely.
@@ -120,3 +121,9 @@ User images, scene UI, language files and user data are never compared against o
 Inspect failures show the specific dependency/file and are saved in the GUI result JSON. Older installations must be removed before installing the new version; existing ownership schemas remain supported. The current game title includes 0.5.2-beta2. Native fault tests and production runtime evidence must be regenerated for each setup package; old evidence is not promoted as a new test run.
 
 The managed enhanced UI now includes the original baseline title template, alongside the existing select/result/HUD overrides. This allows original scene files to be missing or customized without requiring replacement of user scene files. Both unmodified and customized/missing-resource production runtime suites are required for packaging.
+
+## Direct updates (0.5.4-beta4)
+
+`inspect` reports `updateAvailable` and `updateBlockedReason`. `update` is one transaction, not remove followed by install. Schema 2/3 records are read and schema 4 is written. First-install originals are copied into the new backup inventory; undo files represent the immediately previous mod. Version downgrades, same-version reinstallation and unsupported/untracked installs are refused.
+
+Run `tests/UpdateEngine.py` for cancellation, operation-boundary faults and interrupted updates. `tests/UpdateProduction.py` checks the actual archived old installers and exact new normal runtime on a private desktop that is never switched to. Interactive visual regression uses the diagnostic build on the left secondary display. See `docs/UPDATE_0.5.4-beta4.md` for configuration compatibility.

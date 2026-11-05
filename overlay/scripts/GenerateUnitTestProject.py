@@ -8,7 +8,7 @@ def tag(name):return "{"+ns+"}"+name
 source=root/"kshootmania/kshootmania.vcxproj"
 tree=ET.parse(source);project=tree.getroot()
 for node in project.iter():
-    if "Include" in node.attrib and node.tag in {tag("ClCompile"),tag("ClInclude"),tag("Font"),tag("ProjectReference"),tag("ResourceCompile")}:
+    if "Include" in node.attrib and node.tag in {tag("ClCompile"),tag("ClInclude"),tag("Font"),tag("ProjectReference"),tag("ResourceCompile"),tag("Manifest")}:
         node.set("Include",str((source.parent/node.get("Include").replace("\\","/")).resolve()))
     if node.text:node.text=node.text.replace("$(ProjectDir)",str(source.parent)+"/")
 for group in list(project):

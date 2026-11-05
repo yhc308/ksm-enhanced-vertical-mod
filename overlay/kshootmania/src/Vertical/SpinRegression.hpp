@@ -51,7 +51,7 @@ namespace Vertical
 		for (const auto res : kPresets)
 		{
 			const auto camera = MakeCamera({ res.width, res.height }, {});
-			auto source = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1);
+			auto source = MeshData::Grid(MusicGame::Graphics::kHighwayPlaneSizeWide, 1, 1, Float2{ .9925f, .995f }, Float2{ .00375f, .0025f });
 			const float h = MusicGame::Graphics::kHighwayPlaneSize.y;
 			source.vertices[0].pos.z = source.vertices[1].pos.z = h * static_cast<float>(kJudgeTextureT) / 2;
 			source.vertices[2].pos.z = source.vertices[3].pos.z = -h / 2;
@@ -83,7 +83,9 @@ namespace Vertical
 						++oldBad;
 					const auto hud = camera.worldToScreenPoint(HUDGearOrigin(view).transformPoint(anchor));
 					const double hudError = (hud - camera.worldToScreenPoint(localAnchor)).length();
-					const bool ok = hudError < .001 && span.rayValid && error < .001 && clip.w > 0 && std::isfinite(point.x) && std::isfinite(point.y) && step < 25;
+					const auto sharedReference = MusicGame::Graphics::HighwayArrival::UpstreamContactTextureT(source, SharedGearView(view));
+					const bool uvStable = sharedReference && Abs(mesh.vertices[2].tex.y - *sharedReference) < 1e-6;
+					const bool ok = uvStable && hudError < .001 && span.rayValid && error < .001 && clip.w > 0 && std::isfinite(point.x) && std::isfinite(point.y) && step < 25;
 					passed = passed && ok;
 					++count;
 					previous = point;

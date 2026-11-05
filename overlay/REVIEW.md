@@ -2,7 +2,7 @@
 
 This branch is a full-source review view of the existing mod, based directly on
 K-Shoot MANIA 2.1.0 `41bfdaa7331808aff7239a9ec283cdba01b3b406`. Its game behavior is frozen at mod commit
-`d7fa0f09a15a124609269d97f093eb2befa84a76`. The game implementation is unchanged; the current main source also includes the native installer. No newer upstream game implementation is merged.
+`d7fa0f09a15a124609269d97f093eb2befa84a76`. The game implementation is unchanged; the enhanced-vertical branch also includes the native installer. No newer upstream game implementation is merged.
 The original upstream license, source paths and six submodule revisions remain.
 
 ## Comparisons and reading order

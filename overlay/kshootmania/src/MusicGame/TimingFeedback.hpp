@@ -100,8 +100,8 @@ namespace MusicGame
 		Color color{ 178, 178, 178 }, wordColor{ 178, 178, 178 };
 		double alpha = 0, wordAlpha = 0;
 	};
-	inline constexpr double kTimingDisplaySeconds = 1.2;
-	inline constexpr double kTimingFadeSeconds = 0.36;
+	inline constexpr double kTimingDisplaySeconds = 1.1;
+	inline constexpr double kTimingFadeSeconds = 0.25;
 	inline double TimingOpacity(double age)
 	{
 		return age < 0 || age >= kTimingDisplaySeconds ? 0 : 0.9 * (age <= kTimingDisplaySeconds - kTimingFadeSeconds ? 1.0 : (kTimingDisplaySeconds - age) / kTimingFadeSeconds);

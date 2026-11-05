@@ -1,4 +1,4 @@
-﻿#include "../src/InstallerCore.hpp"
+#include "../src/InstallerCore.hpp"
 #include <iostream>
 
 int wmain(int argc, wchar_t** argv)
@@ -21,7 +21,7 @@ int wmain(int argc, wchar_t** argv)
 		{
 			if (!progressTest && message.rfind(L"1/", 0) == 0) cancel = true;
 		};
-		engine.Run("install");
+		engine.Run(argc == 4 && std::wstring(argv[3]) == L"--update" ? "update" : "install");
 		if (progressTest)
 		{
 			if (previous != 99 || samples < 3) return 6;

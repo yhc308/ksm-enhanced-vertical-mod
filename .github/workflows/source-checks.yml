@@ -16,7 +16,8 @@ jobs:
       - run: python scripts/VerifySource.py
       - run: python -m unittest discover -s tests -p 'test_source_*.py'
       - run: python scripts/PrepareSource.py --destination build/source
-      - run: pip install clang-format==19.1.5
+      - run: pip install libclang==18.1.1 clang-format==19.1.5
+      - run: python build/source/scripts/VerifyReleaseSource.py
       - run: python build/source/scripts/CheckReviewCppStyle.py
       - name: Compile production rolling-window tests without Siv3D
         run: |
@@ -58,3 +59,23 @@ jobs:
         with:
           name: windows-timer-test-results
           path: build/windows-timer-results.xml
+
+  native-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python scripts/PrepareSource.py --destination build/source
+      - name: Build and test native installer update transactions
+        shell: pwsh
+        run: |
+          ./build/source/installer/Build.ps1 -TestEngine
+          python build/source/installer/tests/UpdateEngine.py
+          if ($LASTEXITCODE) { throw 'Native installer update tests failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-installer-results
+          path: build/source/build/native-installer-update-latest.json

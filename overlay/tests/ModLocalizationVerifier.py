@@ -12,7 +12,9 @@ def check(ok,name):
 def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
 header=(root/'kshootmania/src/I18n/I18n.hpp').read_text(encoding='utf-8-sig')
 block=re.search(r'enum class Mod\s*\{([^}]+)\}',header).group(1)
-keys=set(re.findall(r'\b(\w+)\s*,',block))
+keys={part.strip() for part in re.sub(r"//[^\n]*", "", block).split(",") if part.strip()}
+error_source=(root/'kshootmania/src/Common/ErrorReporting.cpp').read_text(encoding='utf-8-sig')
+keys.update(re.findall(r'Text\(U"(Error\w+)"',error_source))
 languages=['English','Japanese','Korean','Simplified Chinese','Traditional Chinese']
 base=read(root/'kshootmania/App/lang/English.json')['Mod']
 formatter=string.Formatter()
@@ -37,11 +39,11 @@ for rel in ['Scenes/Title/SkinOverlay.cpp','Scenes/Title/JudgeSettingOverlay.hpp
         if 'U"한글 Partial"' in line:continue # Fixture folder name is user metadata, never translated.
         check(not re.search('[가-힣]',line),f'{rel} has no fixed Korean UI: '+line[:55])
 skin=(root/'kshootmania/src/Scenes/Title/SkinOverlay.cpp').read_text(encoding='utf-8-sig')
-check("const auto lines=entry.description.split(U'\\n');" in skin,'skin descriptions bypass the translation system')
+check("const auto lines=entry.description.split(U'\\n');" in re.sub(r"\s+", "", skin).replace("constautolines", "const auto lines"),'skin descriptions bypass the translation system')
 check('DefaultSkinDescription' not in header,'skin description has no translation key')
 check('I18n::Mod::AuthorLabel' in skin,'only the author label is localized')
 check(read(root/'kshootmania/App/imgs/skin.json')['description']=='K-Shoot MANIA v2.1.0 default skin','packaged default skin description is English metadata')
-judge=(root/'kshootmania/src/Scenes/Title/JudgeSettingOverlay.hpp').read_text(encoding='utf-8-sig')
+judge='\n'.join((root/'kshootmania/src/Scenes/Title'/name).read_text(encoding='utf-8-sig') for name in ['JudgeSettingOverlay.hpp','JudgeSettingOverlay.cpp'])
 check('U"BT / FX: {}     ↑↓ / R: {}     ←→ / L: {}     START: {}"' in judge,'judge key names and Unicode arrows stay unchanged')
 check('U"START or ESC or MOUSE Click : {}"' in judge,'PLAY STOP retains colon and untranslated key names')
 if not args.resources_only:

@@ -15,7 +15,7 @@ KO, EN and JA guides are included in the ZIP.
 ## Source layouts
 
 - This full-source branch in the public fork preserves original upstream history.
-- The independent [mod repository](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/main)
+- The independent [mod repository](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/release/0.5.1-beta1)
   stores the same source as a reproducible patch plus overlay. Run its scripts/PrepareSource.py.
 - Binary releases are published only in the independent mod repository, not this fork.
 

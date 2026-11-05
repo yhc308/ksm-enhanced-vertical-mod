@@ -44,6 +44,8 @@ namespace AdditionalScoreIO
 
 	bool Write(FilePathView path, const MusicGame::PlayResult& result, const KscKey& condition)
 	{
+		if (result.exMaximum <= 0)
+			return false; // Preserve the previous sidecar rather than write an unknown MAX.
 		auto values = Read(path);
 		if (result.exMaximum > 0 && result.exScore >= 0 && result.exScore <= result.exMaximum)
 		{

@@ -1668,7 +1668,7 @@ index fd3d8a410802690eb77562d1c2b93dddc3318c05..985d1bca3e092183292b9f71caa026cc
  	};
  }
 diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
-index 13d3b241c46acbb5b620c029aeaab35722044365..690413349f482b158fcfae40f8ccfe8b9440d192 100644
+index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a29b44406 100644
 --- a/include/ksmaudio/Stream.hpp
 +++ b/include/ksmaudio/Stream.hpp
 @@ -1,9 +1,11 @@
@@ -1684,7 +1684,7 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..690413349f482b158fcfae40f8ccfe8b
  #include "ksmaudio/Backend.hpp"
  #include "ksmaudio/AudioEffect/AudioEffect.hpp"
  
-@@ -12,18 +14,44 @@ namespace ksmaudio
+@@ -12,18 +14,48 @@ namespace ksmaudio
  	using SecondsF = std::chrono::duration<double>;
  	using Duration = SecondsF;
  
@@ -1696,6 +1696,10 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..690413349f482b158fcfae40f8ccfe8b
 +		std::uint64_t generation = 0;
 +		bool valid = false;
 +		bool playing = false;
++		double observedTimeSec = 0, callbackTimeSec = 0;
++		std::uint64_t interpolatedFrames = 0;
++		std::uint32_t callbackFrames = 0;
++		bool phaseLimited = false;
 +	};
 +
  	class Stream
@@ -1730,7 +1734,7 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..690413349f482b158fcfae40f8ccfe8b
  		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
  #else
  		class Impl;
-@@ -42,9 +70,9 @@ namespace ksmaudio
+@@ -42,9 +74,9 @@ namespace ksmaudio
  		Stream& operator=(const Stream&) = delete;
  
  #ifdef KSMAUDIO_BACKEND_BASS
@@ -1742,7 +1746,7 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..690413349f482b158fcfae40f8ccfe8b
  #else
  		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
  		Stream(Stream&&);
-@@ -62,6 +90,8 @@ namespace ksmaudio
+@@ -62,6 +94,8 @@ namespace ksmaudio
  
  		SecondsF posSec() const;
  
@@ -1885,16 +1889,24 @@ index e889afc96022cba5d5d1dda46b802cd16a1eaff5..d3f80de0288f21d00750530fa73898d7
      <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectParam.hpp" />
 diff --git a/src/AsioOutput.hpp b/src/AsioOutput.hpp
 new file mode 100644
-index 0000000000000000000000000000000000000000..ccef6f2040bb4fcb1d5740fc72416662a5d9b58c
+index 0000000000000000000000000000000000000000..06aec2e8261a0fb60ce2b3e228248b9a6026ce52
 --- /dev/null
 +++ b/src/AsioOutput.hpp
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,31 @@
 +﻿#pragma once
 +#include "ksmaudio/Backend.hpp"
 +#include "ksmaudio/Sample.hpp"
 +
 +namespace ksmaudio::detail
 +{
++	struct OutputClockTiming
++	{
++		std::uint64_t observedNanoseconds = 0, callbackNanoseconds = 0;
++		std::uint64_t interpolatedFrames = 0;
++		std::uint32_t callbackFrames = 0;
++		bool valid = false, phaseLimited = false;
++	};
++	OutputClockTiming ReadOutputClockTiming();
 +	void ForgetChannel(DWORD channel);
 +	void LockOutput();
 +	void UnlockOutput();
@@ -1907,7 +1919,7 @@ index 0000000000000000000000000000000000000000..ccef6f2040bb4fcb1d5740fc72416662
 +	bool PauseOutputChannel(DWORD channel);
 +	bool StopOutputChannel(DWORD channel);
 +	DWORD OutputChannelIsActive(DWORD channel);
-+	QWORD OutputChannelGetPosition(DWORD channel);
++	QWORD OutputChannelGetPosition(DWORD channel, const OutputClockTiming* timing = nullptr);
 +	QWORD OutputChannelGetRenderPosition(DWORD channel);
 +	bool OutputChannelSetPosition(DWORD channel, QWORD pos);
 +	DWORD OutputChannelGetData(DWORD channel, void* buffer, DWORD length);
@@ -2267,7 +2279,7 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..ef3cdad39dd60378f2eca0188526fe26
  		if (hChannel == 0)
  		{
 diff --git a/src/Stream.cpp b/src/Stream.cpp
-index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1973337e1 100644
+index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb5084756d 100644
 --- a/src/Stream.cpp
 +++ b/src/Stream.cpp
 @@ -1,8 +1,13 @@
@@ -2398,7 +2410,9 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  
 -	Stream::~Stream()
 +	void Stream::registerResource()
-+	{
+ 	{
+-		BASS_StreamFree(m_hStream);
+-		if (m_hStreamSource.has_value())
 +		detail::OutputResources()[this] = {
 +			[this]
 +			{
@@ -2429,9 +2443,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
 +		};
 +	}
 +	void Stream::releaseNative()
- 	{
--		BASS_StreamFree(m_hStream);
--		if (m_hStreamSource.has_value())
++	{
 +		ksmaudio::qa::Scope qaScope{ "Stream.releaseNative", true };
 +		OutputBatchLock callbackBoundary;
 +		const std::string_view file{ m_filePath };
@@ -2558,7 +2570,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  	}
  
  	SecondsF Stream::posSec() const
-@@ -223,14 +365,35 @@ namespace ksmaudio
+@@ -223,14 +365,41 @@ namespace ksmaudio
  		{
  			return SecondsF{ 0.0 };
  		}
@@ -2584,11 +2596,17 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
 +		value.generation = (detail::OutputGeneration() << 32) + m_generation;
 +		if (!m_hStream || m_playbackSpeed <= 0)
 +			return value;
++		const auto timing = IsASIOActive() ? detail::ReadOutputClockTiming() : detail::OutputClockTiming{};
 +		const QWORD rendered = detail::OutputChannelGetRenderPosition(m_hStream);
-+		const QWORD audible = detail::OutputChannelGetPosition(m_hStream);
++		const QWORD audible = detail::OutputChannelGetPosition(m_hStream, &timing);
 +		if (rendered == static_cast<QWORD>(-1) || audible == static_cast<QWORD>(-1))
 +			return value;
 +		value.outputFrame = detail::OutputFrame();
++		value.observedTimeSec = timing.observedNanoseconds / 1e9;
++		value.callbackTimeSec = timing.callbackNanoseconds / 1e9;
++		value.callbackFrames = timing.callbackFrames;
++		value.interpolatedFrames = timing.interpolatedFrames;
++		value.phaseLimited = timing.phaseLimited;
 +		value.valid = true;
 +		value.audiblePositionSec = BASS_ChannelBytes2Seconds(m_hStream, audible) / m_playbackSpeed;
 +		value.renderPositionSec = IsASIOActive() ? BASS_ChannelBytes2Seconds(m_hStream, rendered) / m_playbackSpeed : value.audiblePositionSec;
@@ -2596,7 +2614,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  	}
  
  	Duration Stream::duration() const
-@@ -245,12 +408,31 @@ namespace ksmaudio
+@@ -245,12 +414,31 @@ namespace ksmaudio
  
  	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
  	{
@@ -2630,7 +2648,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  	}
  
  	void Stream::setFadeIn(Duration duration) const
-@@ -280,10 +462,10 @@ namespace ksmaudio
+@@ -280,10 +468,10 @@ namespace ksmaudio
  		applyVolume();
  		setFadeOut(duration);
  	}
@@ -2643,7 +2661,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  		return status == BASS_ACTIVE_PLAYING || status == BASS_ACTIVE_STALLED;
  	}
  
-@@ -349,6 +531,8 @@ namespace ksmaudio
+@@ -349,6 +537,8 @@ namespace ksmaudio
  
  	SecondsF Stream::latency() const
  	{
@@ -2652,7 +2670,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..205e9f6fd03666184e7172c89eed0be1
  		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
  		if (playbuf != (DWORD)-1)
  		{
-@@ -359,16 +543,24 @@ namespace ksmaudio
+@@ -359,16 +549,24 @@ namespace ksmaudio
  
  	void Stream::lockBegin() const
  	{
@@ -2714,7 +2732,7 @@ index 0262cf98cacfafa101a2e2d88a54f20c56af4751..ee21f6df94992ec6db4fa4e3e0d8b27c
  	{
  		m_stream.play();
 diff --git a/src/Web/SampleWeb.cpp b/src/Web/SampleWeb.cpp
-index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..58f16da5e3d488c79d69d78e46237198a1793021 100644
+index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..a6e407bfa07b088b0dae1accf694d5e096c1b0a9 100644
 --- a/src/Web/SampleWeb.cpp
 +++ b/src/Web/SampleWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2738,8 +2756,23 @@ index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..58f16da5e3d488c79d69d78e46237198
  	class Sample::Impl : public web::IMixSource
  	{
  	private:
+@@ -94,10 +102,10 @@ namespace ksmaudio
+ 			if (pTargetVoice == nullptr)
+ 			{
+ 				const auto it = std::max_element(m_voices.begin(), m_voices.end(),
+-					[](const Voice& a, const Voice& b)
+-					{
+-						return a.cursorFrame < b.cursorFrame;
+-					});
++												 [](const Voice& a, const Voice& b)
++												 {
++													 return a.cursorFrame < b.cursorFrame;
++												 });
+ 				pTargetVoice = &(*it);
+ 			}
+ 
 diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
-index 65a25982b80a368bbb1fa68f9a97729285594dfb..c71d9bca670cd6eb905c1b2422f6d20dd99a7c62 100644
+index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796f000fb78 100644
 --- a/src/Web/StreamWeb.cpp
 +++ b/src/Web/StreamWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2774,6 +2807,21 @@ index 65a25982b80a368bbb1fa68f9a97729285594dfb..c71d9bca670cd6eb905c1b2422f6d20d
  	class Stream::Impl : public web::IMixSource
  	{
  	private:
+@@ -136,10 +144,10 @@ namespace ksmaudio
+ 		{
+ 			// 優先度の降順を保ち、同順位では後から追加した方を後ろに挿入(BASSと同じ呼び出し順)
+ 			const auto it = std::find_if(m_dspChain.begin(), m_dspChain.end(),
+-				[&entry](const DSPEntry& e)
+-				{
+-					return e.priority < entry.priority;
+-				});
++										 [&entry](const DSPEntry& e)
++										 {
++											 return e.priority < entry.priority;
++										 });
+ 			m_dspChain.insert(it, entry);
+ 		}
+ 
 @@ -176,8 +184,7 @@ namespace ksmaudio
  
  	public:
@@ -2784,6 +2832,21 @@ index 65a25982b80a368bbb1fa68f9a97729285594dfb..c71d9bca670cd6eb905c1b2422f6d20d
  		{
  			ma_decoder_config config = ma_decoder_config_init(ma_format_f32, web::kEngineNumChannels, web::kEngineSampleRate);
  			m_decoderOk = ma_decoder_init_file(filePath.c_str(), &config, &m_decoder) == MA_SUCCESS;
+@@ -357,10 +364,10 @@ namespace ksmaudio
+ 			web::Engine().lock();
+ 			m_dspChain.erase(
+ 				std::remove_if(m_dspChain.begin(), m_dspChain.end(),
+-					[hDSP](const DSPEntry& e)
+-					{
+-						return e.type == DSPType::UserEffect && e.handle == hDSP;
+-					}),
++							   [hDSP](const DSPEntry& e)
++							   {
++								   return e.type == DSPType::UserEffect && e.handle == hDSP;
++							   }),
+ 				m_dspChain.end());
+ 			web::Engine().unlock();
+ 		}
 diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
 index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde29c268f67 100644
 --- a/src/Web/ksmaudioWeb.cpp
@@ -2847,10 +2910,10 @@ index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde2
  	{
  		web::Engine().terminate();
 diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
-index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280557bb30d 100644
+index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f9a956413 100644
 --- a/src/ksmaudio.cpp
 +++ b/src/ksmaudio.cpp
-@@ -1,77 +1,1056 @@
+@@ -1,77 +1,1090 @@
 +﻿#include "ksmaudio/Diagnostics.hpp"
  #include "ksmaudio/ksmaudio.hpp"
 +#include "AsioOutput.hpp"
@@ -2927,6 +2990,8 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +		bool s_available = false, s_reportedValid = false;
 +		std::uint64_t s_generation = 0, s_outputFrame = 0, s_scheduledEvents = 0, s_lateEvents = 0, s_rejectedEvents = 0;
 +		std::recursive_mutex s_outputMutex;
++		std::chrono::steady_clock::time_point s_callbackTime;
++		std::uint32_t s_clockCallbackFrames = 0;
 +		struct ScheduledSample
 +		{
 +			const Sample* owner = nullptr;
@@ -3132,6 +3197,10 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +			auto* samples = static_cast<float*>(buffer);
 +			for (DWORD i = 0; i < length / sizeof(float); ++i)
 +				samples[i] *= gain;
++			// The mixer position and this high-resolution timestamp describe the same
++			// completed output block. All readers use the output mutex as one boundary.
++			s_clockCallbackFrames = length / (2 * sizeof(float));
++			s_callbackTime = std::chrono::steady_clock::now();
 +			return length;
 +		}
 +		void CALLBACK NotifyASIO(DWORD notification, void*)
@@ -3170,6 +3239,8 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +			}
 +			s_reset = 0;
 +			s_callbackError = false;
++			s_callbackTime = {};
++			s_clockCallbackFrames = 0;
 +		}
 +		std::string ASIOError(const char* operation)
 +		{
@@ -3321,6 +3392,8 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +			std::lock_guard guard(s_outputMutex);
 +			++s_generation;
 +			s_outputFrame = 0;
++			s_callbackTime = {};
++			s_clockCallbackFrames = 0;
 +			s_events = {};
 +			s_origins.clear();
 +		}
@@ -3737,6 +3810,25 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +		{
 +			s_outputMutex.unlock();
 +		}
++		OutputClockTiming ReadOutputClockTiming()
++		{
++			std::lock_guard guard(s_outputMutex);
++			OutputClockTiming value;
++			const auto now = std::chrono::steady_clock::now();
++			value.observedNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
++			if (!IsASIOActive() || s_callbackTime == std::chrono::steady_clock::time_point{} ||
++				!s_clockCallbackFrames || s_status.sampleRate <= 0)
++				return value;
++			value.valid = true;
++			value.callbackNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(s_callbackTime.time_since_epoch()).count();
++			value.callbackFrames = s_clockCallbackFrames;
++			const auto elapsed = std::chrono::duration<double>(now - s_callbackTime).count();
++			const double frames = (std::max)(0.0, elapsed * s_status.sampleRate);
++			value.phaseLimited = frames >= s_clockCallbackFrames;
++			// Do not invent output beyond the last completed block during an underrun.
++			value.interpolatedFrames = static_cast<std::uint64_t>((std::min)(frames, static_cast<double>(s_clockCallbackFrames)));
++			return value;
++		}
 +		std::uint64_t OutputFrame()
 +		{
 +			return s_outputFrame;
@@ -3877,7 +3969,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +#endif
 +			return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
 +		}
-+		QWORD OutputChannelGetPosition(DWORD channel)
++		QWORD OutputChannelGetPosition(DWORD channel, const OutputClockTiming* timing)
 +		{
 +			qa::Scope qaHelper{ "OutputChannelGetPosition.wait_mutex" };
 +			std::lock_guard guard(s_outputMutex);
@@ -3885,17 +3977,22 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +#ifdef _WIN32
 +			if (IsMixed(channel))
 +			{
++				const auto observed = timing ? *timing : ReadOutputClockTiming();
++				const auto latencyFrames = static_cast<std::uint64_t>(std::llround(s_status.latencySec * s_status.sampleRate));
++				const auto phaseFrames = observed.valid ? (std::min)(observed.interpolatedFrames, latencyFrames) : 0;
++				const auto delayFrames = latencyFrames - phaseFrames;
 +				const auto origin = s_origins.find(channel);
 +				if (origin != s_origins.end())
 +				{
 +					if (origin->second.paused)
 +						return origin->second.pausedPosition;
-+					if ((s_outputFrame - origin->second.frame) < s_status.latencySec * s_status.sampleRate)
++					if (s_outputFrame == origin->second.frame ||
++						(s_outputFrame - origin->second.frame + phaseFrames) < latencyFrames)
 +						return origin->second.position;
 +				}
 +				if (s_api.mixChannelFlags(channel, 0, 0) & BASS_MIXER_CHAN_PAUSE)
 +					return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
-+				const DWORD delay = static_cast<DWORD>(s_status.latencySec * s_status.sampleRate) * 2 * sizeof(float);
++				const DWORD delay = static_cast<DWORD>(delayFrames) * 2 * sizeof(float);
 +				const QWORD pos = s_api.mixChannelGetPositionEx(channel, BASS_POS_BYTE, delay);
 +				// At startup/after seek, history may not yet cover the output latency.
 +				if (pos != static_cast<QWORD>(-1))
@@ -3903,7 +4000,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..94849278d793467e709733e7cdd73280
 +				const QWORD decoded = BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
 +				if (decoded == static_cast<QWORD>(-1))
 +					return 0;
-+				const QWORD sourceDelay = BASS_ChannelSeconds2Bytes(channel, s_status.latencySec);
++				const QWORD sourceDelay = BASS_ChannelSeconds2Bytes(channel, delayFrames / s_status.sampleRate);
 +				return decoded > sourceDelay ? decoded - sourceDelay : 0;
 +			}
 +#endif

@@ -14,6 +14,24 @@ namespace AudioCalibration
 	using Values = std::array<int32, Keys.size()>;
 	inline JSON bank;
 	inline String active;
+	inline bool saveAllowed = true;
+	inline int32 CorrectionMs()
+	{
+		return Clamp(ConfigIni::GetInt(ConfigIni::Key::kAsioJudgmentCorrection, 15), -100, 100);
+	}
+	inline void PutCorrection(const String& key)
+	{
+		if (key.starts_with(U"asio|"))
+			bank[U"profiles"][key][ConfigIni::Key::kAsioJudgmentCorrection] = CorrectionMs();
+	}
+	inline void RestoreCorrection(const String& key)
+	{
+		ConfigIni::SetInt(ConfigIni::Key::kAsioJudgmentCorrection, Clamp(bank[U"profiles"][key][ConfigIni::Key::kAsioJudgmentCorrection].getOr<int32>(15), -100, 100));
+	}
+	inline double JudgmentCorrectionSec()
+	{
+		return ksmaudio::IsASIOActive() ? CorrectionMs() / 1000.0 : 0.0;
+	}
 	inline Values Read()
 	{
 		Values v{};
@@ -34,6 +52,11 @@ namespace AudioCalibration
 	}
 	inline bool Save()
 	{
+		if (!saveAllowed)
+		{
+			Logger << U"[audio] Existing invalid profile file retained; save blocked";
+			return false;
+		}
 		const FilePath temporary = Path() + U".tmp";
 		if (!bank.save(temporary))
 		{
@@ -71,6 +94,7 @@ namespace AudioCalibration
 	inline void Initialize()
 	{
 		bank = JSON::Load(Path());
+		saveAllowed = !FileSystem::Exists(Path()) || (bank && bank[U"version"].getOr<int32>(0) == 1 && bank[U"profiles"].isObject());
 		if (!bank || bank[U"version"].getOr<int32>(0) != 1 || !bank[U"profiles"].isObject())
 		{
 			bank = JSON{};
@@ -90,17 +114,21 @@ namespace AudioCalibration
 			Put(active, current);
 		if (!ValidProfile(U"legacy"))
 			Put(U"legacy", current);
+		RestoreCorrection(active);
+		PutCorrection(active);
 		bank[U"active_profile"] = active;
 		Save();
 	}
-	inline void Store()
+	inline bool Store()
 	{
 		if (!active.isEmpty())
 		{
 			Put(active, Read());
+			PutCorrection(active);
 			bank[U"active_profile"] = active;
-			Save();
+			return Save();
 		}
+		return true;
 	}
 	inline void ActivateKey(const String& key)
 	{
@@ -111,6 +139,8 @@ namespace AudioCalibration
 			Put(active, seed);
 		for (size_t i = 0; i < Keys.size(); ++i)
 			ConfigIni::SetInt(Keys[i], bank[U"profiles"][active][Keys[i]].get<int32>());
+		RestoreCorrection(active);
+		PutCorrection(active);
 		Save();
 	}
 	inline void Activate()
@@ -155,12 +185,25 @@ namespace AudioCalibration
 			ConfigIni::SetInt(Keys[i], asio[i]);
 		Initialize();
 		check(Read() == legacy, U"startup fallback restores native profile instead of ASIO offsets");
+		ActivateKey(U"asio|correction-a|0,1|48000|64");
+		check(CorrectionMs() == 15, U"old or new ASIO profiles default to fifteen ms");
+		ConfigIni::SetInt(ConfigIni::Key::kAsioJudgmentCorrection, -25);
+		Store();
+		ActivateKey(U"asio|correction-b|0,1|48000|128");
+		check(CorrectionMs() == 15, U"new device does not inherit another device correction");
+		ActivateKey(U"asio|correction-a|0,1|48000|64");
+		check(CorrectionMs() == -25, U"device correction survives profile switches");
+		ConfigIni::SetInt(ConfigIni::Key::kAsioJudgmentCorrection, 500);
+		Store();
+		ActivateKey(U"asio|correction-a|0,1|48000|64");
+		check(CorrectionMs() == 100, U"correction is clamped to supported range");
+		check(JudgmentCorrectionSec() == 0.0, U"native backend ignores an ASIO correction");
 		TextWriter{ Path() }.write(U"{ broken JSON");
 		for (size_t i = 0; i < Keys.size(); ++i)
 			ConfigIni::SetInt(Keys[i], original[i]);
 		Initialize();
 		check(Read() == original, U"corrupt profile file preserves current config");
-		check(ValidProfile(U"legacy"), U"corrupt profile file rebuilt");
+		check(ValidProfile(U"legacy") && !JSON::Load(Path()) && !Save(), U"corrupt file retained while safe in-memory defaults remain usable");
 		TextWriter{ Path() }.write(U"{\"version\":99}");
 		Initialize();
 		check(Read() == original, U"unknown version preserves current config");

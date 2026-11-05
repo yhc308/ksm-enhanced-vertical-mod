@@ -15,6 +15,8 @@ foreach($vertical in $(if($LandscapeOnly){@(0)}else{@(0,1)})){
  Set-Content -LiteralPath (Join-Path $session.appRoot 'skin_preset.json') -Value '{"folder":"default","missing":"default","background1Brightness":100,"background2Opacity":100,"laserWidthPercent":100,"noteHeightPercent":100,"indicatorPortrait":1,"indicatorLandscape":true,"keyBeamMode":1}' -Encoding UTF8
  $skinBefore=(Get-FileHash -LiteralPath (Join-Path $session.appRoot 'skin_preset.json')).Hash
  Start-KsmOwnedProcess -Session $session -Arguments @('--skin-smoke-test','--viewport-options-smoke') -TimeoutSeconds 100
+ $failure=Join-Path $session.appRoot 'skin-test-failure.txt'
+ if(Test-Path -LiteralPath $failure){throw ([IO.File]::ReadAllText($failure))}
  & $python (Join-Path $root 'tests/ViewportFrameVerifier.py') $session.appRoot
  if($LASTEXITCODE -ne 0){throw 'Viewport rendered frame parity failed'}
  $report=Join-Path $session.appRoot 'viewport-options-passed.txt'

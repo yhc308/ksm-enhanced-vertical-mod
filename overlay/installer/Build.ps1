@@ -1,10 +1,16 @@
-﻿param([switch]$TestEngine)
+param([switch]$TestEngine)
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $output=Join-Path $root 'build/native-installer'
 New-Item -ItemType Directory -Path $output -Force|Out-Null
-$vc='C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat'
+$vc=$env:KSM_VCVARS64
+if(-not $vc){
+ $vswhere=Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+ $found=@(& $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -find 'VC/Auxiliary/Build/vcvars64.bat')
+ if(-not $found.Count){throw 'Visual Studio C++ tools are required on the build machine.'}
+ $vc=$found[0]
+}
 $name=if($TestEngine){'SetupTestStub'}else{'SetupStub'}
 $define=if($TestEngine){'/DKSM_INSTALLER_TEST=1'}else{''}
 $testCommand=if($TestEngine){'

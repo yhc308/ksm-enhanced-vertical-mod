@@ -29,6 +29,12 @@ if mirror.is_dir():
     mirror = mirror.resolve()
     clone.extend(["-c", "safe.directory=" + mirror.as_posix(),
                   "-c", "safe.directory=" + (mirror / ".git").as_posix()])
+    # A worktree's .git is a pointer file. Git clone validates the resolved
+    # administrative repository, so trust that explicit mirror path as well.
+    administrative = subprocess.check_output(
+        ["git", "-c", "safe.directory=" + mirror.as_posix(), "-C", str(mirror),
+         "rev-parse", "--absolute-git-dir"], text=True).strip()
+    clone.extend(["-c", "safe.directory=" + Path(administrative).resolve().as_posix()])
 clone.extend(["clone", "--no-hardlinks", "--no-checkout", args.upstream, str(dest)])
 subprocess.run(clone, check=True)
 def git(*parts):

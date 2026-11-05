@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..eb84d84ec7fba58fd38d078fbd7053e9830f940d 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..b8d7a891658a5bee895784387f0ef4d6dbf724b8 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,58 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,63 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -59,18 +59,89 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..eb84d84ec7fba58fd38d078fbd7053e9
 +
 +# Installer and release source documentation
 +!/docs/MOD_INSTALLER*.md
-+!/docs/RELEASE_*.md
-+!/docs/review/*.md
++!/docs/RELEASE_0.5.1-beta1.md
++
++# Versioned update and migration guide
++!/docs/UPDATE_0.5.4-beta4.md
++
++# Required Windows long-path application manifest
++!/kshootmania/app.manifest
 diff --git a/README.md b/README.md
-index f98fbef4a04056fa471f536ee12767991ef23cf6..10ff8e8a9d1b97016c2deef0de45a0e00fbe0e6c 100644
+index f98fbef4a04056fa471f536ee12767991ef23cf6..8def1cf1c86ead1d0f14df9b7984b2ac8ddc9de3 100644
 --- a/README.md
 +++ b/README.md
-@@ -1,3 +1,5 @@
-+> **Unofficial Enhanced Vertical review branch:** see [README_ENHANCED.md](README_ENHANCED.md).
-+
- K-Shoot MANIA v2
- ========================
+@@ -1,18 +1,58 @@
+-K-Shoot MANIA v2
+-========================
++# KSM Enhanced Vertical Mod (Windows x64 専用)
  
+-## ビルドに必要な環境 / Build Requirements
++[0.5.4-beta4 更新・設定移行ガイド](https://github.com/yhc308/ksm-enhanced-vertical-mod/blob/main/docs/UPDATE_0.5.4-beta4.md)
++**K-Shoot Mania 2.1.0を縦画面でも楽しめるように拡張する非公式Modです。**
++縦画面プレイ、スキンプリセット、画面のカスタマイズ、EXスコア、HARD+APS、判定タイミング設定、一部のASIO機能を提供します。
+ 
+-- Visual Studio 2022
+-    - Visual Studio Installer上で「C++ によるデスクトップ開発」にチェックを付けてインストールしてください /  
+-      Install "Desktop development with C++" from the Visual Studio Installer
+-- OpenSiv3D 0.6.16 (installed to Visual Studio 2022)
+-    - 下記からインストーラをダウンロードして実行してください / Download and run the installer below
+-        - https://github.com/Siv3D/OpenSiv3D#downloads
++[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod) · [ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.1-beta1) · [開発ガイド](REVIEW.md) · [原作のビルド・貢献案内](docs/UPSTREAM_README.md)
+ 
+-## Contributionについて
++このフォークは、原作のGit履歴を保持したModの全体ソースを提供します。インストーラーの配布と利用者向けの案内は、[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod)をご覧ください。最新の統合ソースは `enhanced-vertical` ブランチにあります。
+ 
+-本プロジェクトは個人プロジェクトであり、オープンソース主導の開発プロジェクトではありません。  
+-そのため、機能実装についてのPull Requestは基本的にマージできない場合が多いです。機能追加のご提案はIssueまたはK-Shoot MANIA掲示板( https://bbs.kshootmania.com )よりお願いいたします。
++## 主な機能
+ 
+-既存処理の不具合修正に関するContributionについては、Pull Requestにて歓迎いたします。
++### ◆ 縦画面プレイ
++
++縦画面に合わせたレーンとHUDの配置でプレイできます。従来の横画面プレイにも対応しており、Vertical Optionで画面関連の設定を調整できます。
++縦画面向けに用意したUI画像と追加機能も、横画面モードに対応しています。
++
++### ◆ 判定カウンター
++
++横画面・縦画面それぞれに合わせた配置の判定インジケーターを提供します。
++
++### ◆ P-CRITICAL判定とEXスコア
++
++P-CRITICAL判定、EXスコア、リザルト表示、追加記録の保存に対応しています。EX記録は既存のゲーム記録とは別に保存され、譜面のEXスコア理論値も記録されます。
++
++### ◆ ビューポートのカスタマイズ / ユーザースキン
++
++ゲーム画面のプレビューを見ながら、背景の明るさ、レーンやノーツの太さ、判定インジケーター、スキンなどを調整できます。
++
++標準画像は `imgs/`、ユーザースキンは `skins/<skin name>/` から読み込みます。Viewport Customでスキンを選び、プレビューで確認できます。
++スキンに不足している画像は `imgs/` の標準画像で補えるため、すべての画像を置き換える必要はありません。
++
++### ◆ HARD+APSゲージ
++
++HARDゲージで失敗した際にNORMALへ切り替わるAPS機能を提供します。ゲージとパーセント表示が連動して切り替わり、APSバナーには切り替え演出が適用されます。
++
++### ◆ 判定タイミング設定
++
++専用のテスト譜面を繰り返しプレイしながら、判定と表示の設定を調整できます。
++
++## 不具合報告
++
++問題が発生した場合は、[Issues](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)にWindowsのバージョン、ゲーム・Modのバージョン、再現手順をお知らせください。スクリーンショットやエラーログも調査に役立ちます。
++
++- ゲームログ: `<game folder>/log/session-<number>-pid<PID>/events-0.log`
++- インストーラーの処理結果: `%TEMP%/KsmEnhancedVerticalSetup-last-result.json`
++
++## クレジット・ライセンス
++
++Codexとの共同作業で開発しました。使用している画像と音源はすべて手作業で制作されています。
++
++原作ゲーム: [K-Shoot Mania](https://www.kshootmania.com/) / [公式ソース](https://github.com/kshootmania/ksm-v2)
++
++- Special thanks: [KSMの開発者](https://x.com/masaka_k)
++- UIスキン制作・Mod制作への貢献: [chesia_game](https://x.com/chesia_game)
++- プレビュー・判定タイミング設定用の楽曲提供: [Hyung](https://open.spotify.com/artist/2soZF7u1mCALXnpwCbyGvh?si=7gvRzWqdTeqV2lEYtfmo5w)
++
++このプロジェクトは非公式Modです。原作の著作権表記とライセンスを維持しています。
 diff --git a/dist_scripts/files_win.tsv b/dist_scripts/files_win.tsv
 index 950cfc8783c061e5410d225d06534df434e994b0..94fcfe2863281bba779242753f744130316852c6 100644
 --- a/dist_scripts/files_win.tsv
@@ -101,10 +172,10 @@ index 950cfc8783c061e5410d225d06534df434e994b0..94fcfe2863281bba779242753f744130
 +kshootmania/App/imgs/standby_vertical.png	imgs/standby_vertical.png
 +kshootmania/App/skins/README.txt	skins/README.txt
 diff --git a/kshootmania/App/lang/English.json b/kshootmania/App/lang/English.json
-index ec1f82326e62527737930a7d531a67d6de278d2f..4e13392db59e4818cd3cbf062bb3d302f758f888 100644
+index ec1f82326e62527737930a7d531a67d6de278d2f..8a21963990a8e9fe5ad13938fa26d9ac916727b8 100644
 --- a/kshootmania/App/lang/English.json
 +++ b/kshootmania/App/lang/English.json
-@@ -1,197 +1,283 @@
+@@ -1,197 +1,291 @@
  {
 -	"General": {
 -		"ErrorBassInitFailed": "Failed to initialize BASS audio library.\nSpeakers might be disconnected or disabled.\n(BASS error code: {0})"
@@ -534,13 +605,13 @@ index ec1f82326e62527737930a7d531a67d6de278d2f..4e13392db59e4818cd3cbf062bb3d302
 +    "SkinSaveFailed": "Could not save settings. Check folder write permissions.",
 +    "Background1Brightness": "BG1 brightness: {0}%",
 +    "Background2Brightness": "BG2 brightness: {0}%",
-+    "LaserWidth": "Laser width: {0}%{1}",
-+    "NoteHeight": "Note height: {0}%{1}",
++    "LaserWidth": "Laser thickness: {0}%{1}",
++    "NoteHeight": "Note thickness: {0}%{1}",
 +    "MissingImageLabel": "Missing image: ",
 +    "IndicatorLabel": "Judge indicator: ",
-+    "DepthLabel": "BG depth effect: ",
-+    "KeyBeamLabel": "Key beam: ",
-+    "DepthTitle": "Background depth · details",
++    "DepthLabel": "BG depth ani: ",
++    "KeyBeamLabel": "Key beam mode: ",
++    "DepthTitle": "BG depth ani settings",
 +    "CustomOther": "Custom / Other",
 +    "AuthorLabel": "Author: ",
 +    "NumberHint": "Type digits",
@@ -580,14 +651,22 @@ index ec1f82326e62527737930a7d531a67d6de278d2f..4e13392db59e4818cd3cbf062bb3d302
 +    "ErrorLabelSkipped": "Skipped charts",
 +    "ErrorLabelLog": "Log",
 +    "ErrorLogFailed": "The detailed log could not be saved.",
-+    "ErrorLongFilename": "[Long filename; see log]"
++    "ErrorLongFilename": "[Long filename; see log]",
++    "SlamThickness": "Laser slam thickness: {0}%",
++    "KeyBeamLength": "Key beam length: {0}%",
++    "KeyBeamOpacity": "Key beam opacity: {0}%",
++    "SkinHelp": "Skin help",
++    "SkinHelpText": "Add a skin by placing its folder inside the game folder, for example skins/skin_1/.\n\nWith Default missing-image handling, images absent from the selected skin are replaced by the original images in imgs/. Select Yellow to highlight missing skin images in yellow.",
++    "RememberEffRate": "Remember selected EFF.RATE on exit",
++    "AsioJudgmentCorrection": "ASIO additional judgment correction",
++    "AsioJudgmentCorrectionHelp": "Positive values advance judgment timing and reduce FAST errors. Saved per active ASIO device."
 +  }
  }
 diff --git a/kshootmania/App/lang/Japanese.json b/kshootmania/App/lang/Japanese.json
-index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..f21512fcc7d891db128cbfd4e3d74f5beec055ae 100644
+index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..8a7f7cf5dc8351472aaf34a8e9ec89e6dad42441 100644
 --- a/kshootmania/App/lang/Japanese.json
 +++ b/kshootmania/App/lang/Japanese.json
-@@ -1,197 +1,283 @@
+@@ -1,197 +1,291 @@
  {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS音声ライブラリの初期化に失敗しました。\nスピーカーが接続されていないか、無効になっている可能性があります。\n(BASSエラーコード: {0})"
@@ -1017,13 +1096,13 @@ index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..f21512fcc7d891db128cbfd4e3d74f5b
 +    "SkinSaveFailed": "設定を保存できません。フォルダーの書き込み権限を確認してください。",
 +    "Background1Brightness": "背景1の明るさ: {0}%",
 +    "Background2Brightness": "背景2の明るさ: {0}%",
-+    "LaserWidth": "レーザーの幅: {0}%{1}",
-+    "NoteHeight": "ノーツの高さ: {0}%{1}",
++    "LaserWidth": "レーザー太さ: {0}%{1}",
++    "NoteHeight": "ノーツ厚さ: {0}%{1}",
 +    "MissingImageLabel": "不足画像の代替: ",
 +    "IndicatorLabel": "判定インジケーター: ",
-+    "DepthLabel": "背景立体効果: ",
-+    "KeyBeamLabel": "キービーム設定: ",
-+    "DepthTitle": "背景立体効果・詳細設定",
++    "DepthLabel": "背景立体アニメ: ",
++    "KeyBeamLabel": "キービーム表示: ",
++    "DepthTitle": "背景立体アニメ設定",
 +    "CustomOther": "カスタム / その他",
 +    "AuthorLabel": "作者: ",
 +    "NumberHint": "数字を入力",
@@ -1063,14 +1142,22 @@ index 015b5ef0c65fa8273a98b4e40a36708277aab7e6..f21512fcc7d891db128cbfd4e3d74f5b
 +    "ErrorLabelSkipped": "除外した譜面",
 +    "ErrorLabelLog": "ログ",
 +    "ErrorLogFailed": "詳細ログを保存できませんでした。",
-+    "ErrorLongFilename": "[長いファイル名・詳細はログ]"
++    "ErrorLongFilename": "[長いファイル名・詳細はログ]",
++    "SlamThickness": "直角レーザー太さ: {0}%",
++    "KeyBeamLength": "キービーム長さ: {0}%",
++    "KeyBeamOpacity": "キービーム不透明度: {0}%",
++    "SkinHelp": "スキンヘルプ",
++    "SkinHelpText": "ゲームフォルダー内の skins/ に skins/skin_1/ のようなフォルダーを追加すると、スキンを登録できます。\n\n不足画像処理が Default の場合、選択中のスキンにない画像は imgs/ の元画像で補完されます。Yellow を選ぶと、不足しているスキン画像を黄色で確認できます。",
++    "RememberEffRate": "終了後も選択EFF.RATEを保持",
++    "AsioJudgmentCorrection": "ASIO追加判定補正",
++    "AsioJudgmentCorrectionHelp": "正の値は判定時刻を進め、FAST誤差を減らします。使用中のASIOデバイスごとに保存します。"
 +  }
  }
 diff --git a/kshootmania/App/lang/Korean.json b/kshootmania/App/lang/Korean.json
-index 4f620187751a870eacb3debf03fc9ba3ea98c7be..aabaebed33e25f836c8f8c4c31dcc9bfd90c1286 100644
+index 4f620187751a870eacb3debf03fc9ba3ea98c7be..f621c74acf04ccc2a45e0165fc8628055d09e3e0 100644
 --- a/kshootmania/App/lang/Korean.json
 +++ b/kshootmania/App/lang/Korean.json
-@@ -1,197 +1,283 @@
+@@ -1,197 +1,291 @@
  {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 오디오 라이브러리 초기화에 실패했습니다.\n스피커가 연결되어 있지 않거나, '사용 안 함'으로 설정되어 있을 가능성이 있습니다.\n(BASS 오류 코드: {0})"
@@ -1500,13 +1587,13 @@ index 4f620187751a870eacb3debf03fc9ba3ea98c7be..aabaebed33e25f836c8f8c4c31dcc9bf
 +    "SkinSaveFailed": "설정을 저장하지 못했습니다. 폴더의 쓰기 권한을 확인하세요.",
 +    "Background1Brightness": "배경1 밝기: {0}%",
 +    "Background2Brightness": "배경2 밝기: {0}%",
-+    "LaserWidth": "레이저 굵기: {0}%{1}",
-+    "NoteHeight": "노트굵기: {0}%{1}",
++    "LaserWidth": "레이저 두께: {0}%{1}",
++    "NoteHeight": "노트 두께: {0}%{1}",
 +    "MissingImageLabel": "누락 이미지 대체: ",
 +    "IndicatorLabel": "판정 인디케이터: ",
-+    "DepthLabel": "배경 입체 효과: ",
-+    "KeyBeamLabel": "키빔 설정: ",
-+    "DepthTitle": "배경 입체 효과 · 세부 설정",
++    "DepthLabel": "배경 입체 애니: ",
++    "KeyBeamLabel": "키빔 표시: ",
++    "DepthTitle": "배경 입체 애니 설정",
 +    "CustomOther": "사용자 / 기타",
 +    "AuthorLabel": "제작자: ",
 +    "NumberHint": "숫자를 입력하세요",
@@ -1546,14 +1633,22 @@ index 4f620187751a870eacb3debf03fc9ba3ea98c7be..aabaebed33e25f836c8f8c4c31dcc9bf
 +    "ErrorLabelSkipped": "제외된 채보",
 +    "ErrorLabelLog": "로그",
 +    "ErrorLogFailed": "상세 로그를 저장하지 못했습니다.",
-+    "ErrorLongFilename": "[긴 파일명·상세는 로그 참조]"
++    "ErrorLongFilename": "[긴 파일명·상세는 로그 참조]",
++    "SlamThickness": "직각 레이저 두께: {0}%",
++    "KeyBeamLength": "키빔 길이: {0}%",
++    "KeyBeamOpacity": "키빔 투명도: {0}%",
++    "SkinHelp": "스킨 도움말",
++    "SkinHelpText": "스킨은 게임 폴더의 skins/ 아래에 skins/skin_1/처럼 폴더를 추가해 등록할 수 있습니다.\n\n기본 누락 처리에서는 없는 이미지를 imgs/의 원본 이미지로 대체합니다. Yellow 누락 이미지 설정을 선택하면 현재 스킨에 없는 이미지를 노란색으로 확인할 수 있습니다.",
++    "RememberEffRate": "게임 종료시에도 선택한 EFF.RATE 보존",
++    "AsioJudgmentCorrection": "ASIO 추가 판정 보정",
++    "AsioJudgmentCorrectionHelp": "양수는 판정 기준을 앞당겨 FAST 오차를 줄입니다. 사용 중인 ASIO 장치별로 저장합니다."
 +  }
  }
 diff --git a/kshootmania/App/lang/Simplified Chinese.json b/kshootmania/App/lang/Simplified Chinese.json
-index 150d395e6e48b35c71ae9f47e932298e67e42390..3808fb997defc606dcc458651c5d333ed2c36363 100644
+index 150d395e6e48b35c71ae9f47e932298e67e42390..0896823842a9235acff4db31d06ab32b67b7fcb0 100644
 --- a/kshootmania/App/lang/Simplified Chinese.json	
 +++ b/kshootmania/App/lang/Simplified Chinese.json	
-@@ -1,197 +1,283 @@
+@@ -1,197 +1,291 @@
  {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 音频库初始化失败。\n音频设备可能未连接或已停用。\n(BASS 错误代码: {0})"
@@ -1983,13 +2078,13 @@ index 150d395e6e48b35c71ae9f47e932298e67e42390..3808fb997defc606dcc458651c5d333e
 +    "SkinSaveFailed": "无法保存设置，请检查文件夹写入权限。",
 +    "Background1Brightness": "背景1亮度：{0}%",
 +    "Background2Brightness": "背景2亮度：{0}%",
-+    "LaserWidth": "激光宽度：{0}%{1}",
++    "LaserWidth": "激光厚度：{0}%{1}",
 +    "NoteHeight": "音符厚度：{0}%{1}",
 +    "MissingImageLabel": "缺失图像替代：",
 +    "IndicatorLabel": "判定指示器：",
-+    "DepthLabel": "背景立体效果：",
-+    "KeyBeamLabel": "按键光效：",
-+    "DepthTitle": "背景立体效果 · 详细设置",
++    "DepthLabel": "背景立体动画：",
++    "KeyBeamLabel": "按键光效显示：",
++    "DepthTitle": "背景立体动画设置",
 +    "CustomOther": "自定义 / 其他",
 +    "AuthorLabel": "作者：",
 +    "NumberHint": "请输入数字",
@@ -2029,14 +2124,22 @@ index 150d395e6e48b35c71ae9f47e932298e67e42390..3808fb997defc606dcc458651c5d333e
 +    "ErrorLabelSkipped": "排除的谱面",
 +    "ErrorLabelLog": "日志",
 +    "ErrorLogFailed": "无法保存详细日志。",
-+    "ErrorLongFilename": "[文件名过长，请查看日志]"
++    "ErrorLongFilename": "[文件名过长，请查看日志]",
++    "SlamThickness": "直角激光厚度：{0}%",
++    "KeyBeamLength": "按键光效长度：{0}%",
++    "KeyBeamOpacity": "按键光效不透明度：{0}%",
++    "SkinHelp": "皮肤帮助",
++    "SkinHelpText": "在游戏文件夹的 skins/ 下添加皮肤文件夹，例如 skins/skin_1/，即可添加皮肤。\n\n缺失图像处理设为 Default 时，当前皮肤中缺少的图像会使用 imgs/ 中的原始图像补充。选择 Yellow，可用黄色标记检查皮肤缺失的图像。",
++    "RememberEffRate": "退出游戏后保留所选EFF.RATE",
++    "AsioJudgmentCorrection": "ASIO附加判定校正",
++    "AsioJudgmentCorrectionHelp": "正值提前判定时刻并减小FAST误差。按当前ASIO设备保存。"
 +  }
  }
 diff --git a/kshootmania/App/lang/Traditional Chinese.json b/kshootmania/App/lang/Traditional Chinese.json
-index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..d6f98ff945717e359dac27755f96914685ccf129 100644
+index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..b1fd1950d417c1645c3607428c27f0a456224907 100644
 --- a/kshootmania/App/lang/Traditional Chinese.json	
 +++ b/kshootmania/App/lang/Traditional Chinese.json	
-@@ -1,197 +1,283 @@
+@@ -1,197 +1,291 @@
  {
 -	"General": {
 -		"ErrorBassInitFailed": "BASS 音訊函式庫初始化失敗。\n音訊裝置可能未連接或已停用。\n(BASS 錯誤碼: {0})"
@@ -2466,13 +2569,13 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..d6f98ff945717e359dac27755f969146
 +    "SkinSaveFailed": "無法儲存設定，請檢查資料夾寫入權限。",
 +    "Background1Brightness": "背景1亮度：{0}%",
 +    "Background2Brightness": "背景2亮度：{0}%",
-+    "LaserWidth": "雷射寬度：{0}%{1}",
++    "LaserWidth": "雷射厚度：{0}%{1}",
 +    "NoteHeight": "音符厚度：{0}%{1}",
 +    "MissingImageLabel": "缺少圖像替代：",
 +    "IndicatorLabel": "判定指示器：",
-+    "DepthLabel": "背景立體效果：",
-+    "KeyBeamLabel": "按鍵光效：",
-+    "DepthTitle": "背景立體效果 · 詳細設定",
++    "DepthLabel": "背景立體動畫：",
++    "KeyBeamLabel": "按鍵光效顯示：",
++    "DepthTitle": "背景立體動畫設定",
 +    "CustomOther": "自訂／其他",
 +    "AuthorLabel": "作者：",
 +    "NumberHint": "請輸入數字",
@@ -2512,9 +2615,70 @@ index 9d3ebfc7b3209102b28085c5fbac81bead3c931f..d6f98ff945717e359dac27755f969146
 +    "ErrorLabelSkipped": "排除的譜面",
 +    "ErrorLabelLog": "日誌",
 +    "ErrorLogFailed": "無法儲存詳細日誌。",
-+    "ErrorLongFilename": "[檔案名稱過長，請查看日誌]"
++    "ErrorLongFilename": "[檔案名稱過長，請查看日誌]",
++    "SlamThickness": "直角雷射厚度：{0}%",
++    "KeyBeamLength": "按鍵光效長度：{0}%",
++    "KeyBeamOpacity": "按鍵光效不透明度：{0}%",
++    "SkinHelp": "外觀說明",
++    "SkinHelpText": "在遊戲資料夾的 skins/ 下新增外觀資料夾，例如 skins/skin_1/，即可新增外觀。\n\n缺少圖片處理設為 Default 時，目前外觀中缺少的圖片會使用 imgs/ 中的原始圖片補齊。選擇 Yellow，可用黃色標記檢查外觀缺少的圖片。",
++    "RememberEffRate": "結束遊戲後保留所選EFF.RATE",
++    "AsioJudgmentCorrection": "ASIO附加判定校正",
++    "AsioJudgmentCorrectionHelp": "正值提前判定時刻並減小FAST誤差。依目前ASIO裝置儲存。"
 +  }
  }
+diff --git a/kshootmania/App/ui/parts/option_setting_item.noco b/kshootmania/App/ui/parts/option_setting_item.noco
+index a0b75f1b41426229ef4f86370619746b0eaa3eaf..d082732c9c180800ab030acd4cd26654ae37fc91 100644
+--- a/kshootmania/App/ui/parts/option_setting_item.noco
++++ b/kshootmania/App/ui/parts/option_setting_item.noco
+@@ -1,4 +1,4 @@
+-﻿{
++{
+   "children": [
+     {
+       "activeSelf": true,
+@@ -878,7 +878,8 @@
+         "translate": [
+           0,
+           0
+-        ]
++        ],
++        "color_paramRef": "itemTint"
+       },
+       "verticalScrollable": false,
+       "wheelScrollEnabled": true,
+@@ -1080,7 +1081,8 @@
+         "translate": [
+           0,
+           0
+-        ]
++        ],
++        "color_paramRef": "itemTint"
+       },
+       "verticalScrollable": false,
+       "wheelScrollEnabled": true,
+@@ -1127,6 +1129,15 @@
+     "valueRightArrowVisible": {
+       "type": "Bool",
+       "value": true
++    },
++    "itemTint": {
++      "type": "Color",
++      "value": [
++        255,
++        255,
++        255,
++        255
++      ]
+     }
+   },
+   "referenceSize": [
+@@ -1135,4 +1146,4 @@
+   ],
+   "serializedVersion": 11,
+   "version": "0.5.0-beta1"
+-}
+\ No newline at end of file
++}
 diff --git a/kshootmania/CMakeLists.txt b/kshootmania/CMakeLists.txt
 index f11b016538f34e42c90d856c07116d535466b3b7..3ddde92171d67c435a7d263cb6739eee9ea27e5b 100644
 --- a/kshootmania/CMakeLists.txt
@@ -2534,7 +2698,7 @@ index f11b016538f34e42c90d856c07116d535466b3b7..3ddde92171d67c435a7d263cb6739eee
 +    endforeach()
 +endif()
 diff --git a/kshootmania/kshootmania.vcxproj b/kshootmania/kshootmania.vcxproj
-index 6d1f63fcc12a2d3110e545d669aefef4b37def79..37d67c9b68d799eb55a7b302335852c4cdfa65f5 100644
+index 6d1f63fcc12a2d3110e545d669aefef4b37def79..566e612377095e94e6d78543b40328efa59990f6 100644
 --- a/kshootmania/kshootmania.vcxproj
 +++ b/kshootmania/kshootmania.vcxproj
 @@ -18,6 +18,9 @@
@@ -2657,7 +2821,15 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..37d67c9b68d799eb55a7b302335852c4
      <ClInclude Include="src\MusicGame\Audio\FXChipSE.hpp" />
      <ClInclude Include="src\MusicGame\Audio\LaserSlamSE.hpp" />
      <ClInclude Include="src\MusicGame\Camera\CameraMath.hpp" />
-@@ -482,11 +501,16 @@
+@@ -463,6 +482,7 @@
+     <ClInclude Include="src\MusicGame\Graphics\GraphicsDefines.hpp" />
+     <ClInclude Include="src\MusicGame\Graphics\GraphicsMain.hpp" />
+     <ClInclude Include="src\MusicGame\Graphics\Highway\Highway3DGraphics.hpp" />
++    <ClInclude Include="src\MusicGame\Graphics\Highway\HighwayArrival.hpp" />
+     <ClInclude Include="src\MusicGame\Graphics\Highway\HighwayRenderTexture.hpp" />
+     <ClInclude Include="src\MusicGame\Graphics\Highway\KeyBeamGraphics.hpp" />
+     <ClInclude Include="src\MusicGame\Graphics\Highway\Note\ButtonNoteGraphics.hpp" />
+@@ -482,11 +502,16 @@
      <ClInclude Include="src\MusicGame\HispeedUtils.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ButtonLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp" />
@@ -2674,7 +2846,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..37d67c9b68d799eb55a7b302335852c4
      <ClInclude Include="src\MusicGame\Judgment\JudgmentMain.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserLaneJudgment.hpp" />
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp" />
-@@ -608,6 +632,73 @@
+@@ -608,6 +633,73 @@
      <Font Include="App\assets\font\corporate-logo\Corporate-Logo-Medium-ver3.otf" />
      <Font Include="App\assets\font\tektur-ksm\Tektur-KSM-Medium.ttf" />
    </ItemGroup>
@@ -2749,7 +2921,7 @@ index 6d1f63fcc12a2d3110e545d669aefef4b37def79..37d67c9b68d799eb55a7b302335852c4
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
 diff --git a/kshootmania/kshootmania.vcxproj.filters b/kshootmania/kshootmania.vcxproj.filters
-index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e8989bae5041 100644
+index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..b540d145b5247542521da7d7672daa397c3a0db0 100644
 --- a/kshootmania/kshootmania.vcxproj.filters
 +++ b/kshootmania/kshootmania.vcxproj.filters
 @@ -318,6 +318,12 @@
@@ -2778,7 +2950,17 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e898
      <ClInclude Include="src\RuntimeConfig.hpp">
        <Filter>Header Files</Filter>
      </ClInclude>
-@@ -1315,6 +1327,18 @@
+@@ -1210,6 +1222,9 @@
+     <ClInclude Include="src\MusicGame\Graphics\Highway\Highway3DGraphics.hpp">
+       <Filter>Header Files\MusicGame\Graphics\Highway</Filter>
+     </ClInclude>
++    <ClInclude Include="src\MusicGame\Graphics\Highway\HighwayArrival.hpp">
++      <Filter>Header Files\MusicGame\Graphics\Highway</Filter>
++    </ClInclude>
+     <ClInclude Include="src\MusicGame\Graphics\Highway\Note\NoteGraphicsUtils.hpp">
+       <Filter>Header Files\MusicGame\Graphics\Highway\Note</Filter>
+     </ClInclude>
+@@ -1315,6 +1330,18 @@
      <ClInclude Include="src\MusicGame\Camera\HighwayTilt.hpp">
        <Filter>Header Files\MusicGame\Camera</Filter>
      </ClInclude>
@@ -2797,7 +2979,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e898
      <ClInclude Include="src\MusicGame\ViewStatus.hpp">
        <Filter>Header Files\MusicGame</Filter>
      </ClInclude>
-@@ -1327,6 +1351,9 @@
+@@ -1327,6 +1354,9 @@
      <ClInclude Include="src\Common\FrameRateLimit.hpp">
        <Filter>Header Files\Common</Filter>
      </ClInclude>
@@ -2807,7 +2989,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e898
      <ClInclude Include="src\MusicGame\Camera\CamSystem.hpp">
        <Filter>Header Files\MusicGame\Camera</Filter>
      </ClInclude>
-@@ -1348,6 +1375,9 @@
+@@ -1348,6 +1378,9 @@
      <ClInclude Include="src\MusicGame\Judgment\ComboStatus.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
@@ -2817,7 +2999,7 @@ index 57c03d8775868040bc270f14a5ecccb9a16b3ef7..bcdf5d9104783cddf24210974ee4e898
      <ClInclude Include="src\MusicGame\Judgment\LaserSlamShake.hpp">
        <Filter>Header Files\MusicGame\Judgment</Filter>
      </ClInclude>
-@@ -1582,4 +1612,72 @@
+@@ -1582,4 +1615,72 @@
        <Filter>Resource Files\assets\font\tektur-ksm</Filter>
      </Font>
    </ItemGroup>
@@ -3506,16 +3688,17 @@ index 5fc99279ed9aec7f455f9a6f8cae0f3a87bda331..c2bfd01af7f7ad737e4b1fa88bcab202
  
  	KscValue easyGauge;
 diff --git a/kshootmania/src/HighScore/KscIO.cpp b/kshootmania/src/HighScore/KscIO.cpp
-index ad29bef731603cc9d84976d1780fcbaee804a716..c8dc1eb223455e797c429f1f02d84e68c57fa7c2 100644
+index ad29bef731603cc9d84976d1780fcbaee804a716..ba32314d7fbde9b6231a6e4c7257f7032879b642 100644
 --- a/kshootmania/src/HighScore/KscIO.cpp
 +++ b/kshootmania/src/HighScore/KscIO.cpp
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
  ﻿#include "KscIO.hpp"
 +#include "AdditionalScoreIO.hpp"
++#include "MusicGame/Judgment/ExScore.hpp"
  #include "Common/FsUtils.hpp"
  #include "Ini/ConfigIni.hpp"
  #include "Course/CoursePlayState.hpp"
-@@ -8,6 +9,17 @@ namespace KscIO
+@@ -8,6 +10,17 @@ namespace KscIO
  {
  	namespace
  	{
@@ -3533,7 +3716,18 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..c8dc1eb223455e797c429f1f02d84e68
  		bool TryConvertChartFilePathToKscPath(FilePathView chartFilePath, FilePath* pFilePath)
  		{
  			if (pFilePath == nullptr)
-@@ -297,6 +309,7 @@ namespace KscIO
+@@ -230,8 +243,8 @@ namespace KscIO
+ 				}
+ 				const KscValue& origKscValue = origHighScoreInfo.kscValueOf(gaugeType);
+ 				const KscValue newKscValue = playResult.playOption.gameMode == MusicGame::GameMode::kCourseMode
+-					? origKscValue.applyPlayResultForCourse(playResult)
+-					: origKscValue.applyPlayResult(playResult);
++												 ? origKscValue.applyPlayResultForCourse(playResult)
++												 : origKscValue.applyPlayResult(playResult);
+ 				const String replace = search + newKscValue.toString();
+ 
+ 				TextReader reader(kscFilePath);
+@@ -297,6 +310,7 @@ namespace KscIO
  			return HighScoreInfo{};
  		}
  
@@ -3541,7 +3735,7 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..c8dc1eb223455e797c429f1f02d84e68
  		return highScoreInfo;
  	}
  
-@@ -310,6 +323,9 @@ namespace KscIO
+@@ -310,6 +324,9 @@ namespace KscIO
  		}
  
  		ReadAllHighScoreInfoFromKscFile(kscFilePath, pHighScoreInfoMap);
@@ -3551,19 +3745,24 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..c8dc1eb223455e797c429f1f02d84e68
  	}
  
  	bool WriteHighScoreInfo(FilePathView chartFilePath, const MusicGame::PlayResult& playResult, const KscKey& condition)
-@@ -327,16 +343,24 @@ namespace KscIO
+@@ -327,16 +344,29 @@ namespace KscIO
  			return false;
  		}
  
 +		if (!playResult.playOption.shouldSaveScore())
 +			return false;
++		// Older result producers may omit MAX. Resolve it from the chart once at save,
++		// identically for both orientations, without inventing a missing EX score.
++		auto additionalResult = playResult;
++		if (additionalResult.exMaximum <= 0)
++			additionalResult.exMaximum = MusicGame::Judgment::LoadChartExMaximum(chartFilePath);
  		const bool kscFileExists = FileSystem::IsFile(kscFilePath);
  		if (kscFileExists)
  		{
  			// ファイルが存在する場合は既存のファイルを更新する
 -			return UpdateExistingKscFile(kscFilePath, playResult, condition);
 +			const bool ok = UpdateExistingKscFile(kscFilePath, playResult, condition);
-+			if (ok && !AdditionalScoreIO::Write(kscFilePath, playResult, condition))
++			if (ok && !AdditionalScoreIO::Write(kscFilePath, additionalResult, condition))
 +				Logger << U"[EX SCORE] additional save failed: " + kscFilePath;
 +			return ok;
  		}
@@ -3572,12 +3771,22 @@ index ad29bef731603cc9d84976d1780fcbaee804a716..c8dc1eb223455e797c429f1f02d84e68
  			// ファイルが存在しない場合は今回のプレイ結果を新しいファイルとして書き込む
 -			return CreateNewKscFile(kscFilePath, playResult, condition);
 +			const bool ok = CreateNewKscFile(kscFilePath, playResult, condition);
-+			if (ok && !AdditionalScoreIO::Write(kscFilePath, playResult, condition))
++			if (ok && !AdditionalScoreIO::Write(kscFilePath, additionalResult, condition))
 +				Logger << U"[EX SCORE] additional save failed: " + kscFilePath;
 +			return ok;
  		}
  	}
  
+@@ -406,8 +436,7 @@ namespace KscIO
+ 			}
+ 
+ 			// 新しいハイスコア情報を生成
+-			const KscValue newKscValue
+-			{
++			const KscValue newKscValue{
+ 				.score = Max(origKscValue.score, playResult.avgScore),
+ 				.achievement = Max(origKscValue.achievement, playResult.achievement()),
+ 				.grade = Max(origKscValue.grade, Grade::kNoGrade),
 diff --git a/kshootmania/src/HighScore/KscValue.hpp b/kshootmania/src/HighScore/KscValue.hpp
 index 58f8da1e69bcb570f72909409f283f8af867899b..6e1fc3961fe7dd255c598bbd9b6b7888a6bb8eb6 100644
 --- a/kshootmania/src/HighScore/KscValue.hpp
@@ -3632,10 +3841,10 @@ index e6bcb8364c2ee519e5d4741a2f17ff90066b8c3c..663a6938bfd064bb40b47ebd34c34a73
  }
  
 diff --git a/kshootmania/src/I18n/I18n.hpp b/kshootmania/src/I18n/I18n.hpp
-index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a6952796de353c3 100644
+index d6ba482ad5d35dbb4304f56b677e9f5023839175..e64eeece31f74b7d53f699b67c3a478c6bca328e 100644
 --- a/kshootmania/src/I18n/I18n.hpp
 +++ b/kshootmania/src/I18n/I18n.hpp
-@@ -43,6 +43,67 @@ namespace I18n
+@@ -43,6 +43,75 @@ namespace I18n
  		Option,
  		IR,
  		InputGate,
@@ -3700,10 +3909,18 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a695279
 +		LatencyEstimate,
 +		NextLaunchOutput,
 +		CurrentAudioOutput,
++		SlamThickness,
++		KeyBeamLength,
++		KeyBeamOpacity,
++		SkinHelp,
++		SkinHelpText,
++		RememberEffRate,
++		AsioJudgmentCorrection,
++		AsioJudgmentCorrectionHelp,
  	};
  
  	/// @brief 共通/起動時テキストのキー名
-@@ -74,7 +135,8 @@ namespace I18n
+@@ -74,7 +143,8 @@ namespace I18n
  		PlaybackSpeed,
  		AssistTick,
  		AssistTickOff,
@@ -3713,7 +3930,7 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a695279
  		AutoSync,
  		AutoSyncOnHigh,
  		AutoSyncOnMid,
-@@ -83,6 +145,10 @@ namespace I18n
+@@ -83,6 +153,10 @@ namespace I18n
  		FastSlow,
  		FastSlowHide,
  		FastSlowShow,
@@ -3724,7 +3941,7 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a695279
  		NoteSkin,
  		NoteSkinDefault,
  		NoteSkinNote,
-@@ -179,7 +245,8 @@ namespace I18n
+@@ -179,7 +253,8 @@ namespace I18n
  		LaserInputTypeSlider,
  		LaserInputTypeAnalogStickXY,
  		AssistTickOff,
@@ -3734,7 +3951,7 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a695279
  		DisableIMEOff,
  		DisableIMEOnLow,
  		DisableIMEOnMid,
-@@ -300,13 +367,21 @@ namespace I18n
+@@ -300,13 +375,21 @@ namespace I18n
  		{
  			return GetByCategoryAndKey(EnumUtils::EnumToString(Category::IR), EnumUtils::EnumToString(key));
  		}
@@ -3758,7 +3975,7 @@ index d6ba482ad5d35dbb4304f56b677e9f5023839175..f1b35758a1bcfb530c32331a5a695279
  		}
  	}
 diff --git a/kshootmania/src/Ini/ConfigIni.cpp b/kshootmania/src/Ini/ConfigIni.cpp
-index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350a20361f0 100644
+index d68d579463cee99fc44a46b5997fe2108fdce788..64a42447fe83e6ada323c5f924782b28cf4826c6 100644
 --- a/kshootmania/src/Ini/ConfigIni.cpp
 +++ b/kshootmania/src/Ini/ConfigIni.cpp
 @@ -1,4 +1,8 @@
@@ -3780,17 +3997,19 @@ index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350
  assisttick=0
  
  playtype=2
-@@ -51,6 +55,9 @@ backgroundmovie=1
+@@ -51,6 +55,11 @@ backgroundmovie=1
  noteskin=default
  
  viewtiming=0
++remember_effrate=0
++last_effrate=1
 +timing_position=0
 +timing_ms_display=3
 +timing_ms_color=2
  
  currentplayer=PLAYER
  
-@@ -98,7 +105,7 @@ inputdelay=0
+@@ -98,7 +107,7 @@ inputdelay=0
  editor_loopplayback=1
  
  vsync=0;300
@@ -3799,7 +4018,7 @@ index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350
  twitter_token=
  twitter_token_secret1=
  twitter_token_secret2=
-@@ -133,7 +140,7 @@ fullscrsize=1920,1080
+@@ -133,7 +142,7 @@ fullscrsize=1920,1080
  ; フレームのスキップ数(0～9)
  frameskip=0
  
@@ -3808,17 +4027,19 @@ index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350
  assisttick=0
  
  playtype=2
-@@ -157,6 +164,9 @@ backgroundmovie=1
+@@ -157,6 +166,11 @@ backgroundmovie=1
  noteskin=default
  
  viewtiming=0
++remember_effrate=0
++last_effrate=1
 +timing_position=0
 +timing_ms_display=3
 +timing_ms_color=2
  
  currentplayer=PLAYER
  
-@@ -204,7 +214,7 @@ inputdelay=0
+@@ -204,7 +218,7 @@ inputdelay=0
  editor_loopplayback=1
  
  vsync=0;300
@@ -3827,7 +4048,38 @@ index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350
  twitter_token=
  twitter_token_secret1=
  twitter_token_secret2=
-@@ -284,9 +294,50 @@ void ConfigIni::Load()
+@@ -250,9 +264,9 @@ void ConfigIni::Load()
+ 		// Note: 旧バージョンでは誤って"O"と"C"が逆に保存されていたため、正しく読み込むために意図的に入れ替えてある
+ 		using StrPair = std::pair<StringView, StringView>;
+ 		for (const auto& [key, modComma] : {
+-				StrPair{ Key::kHispeedShowXMod, U"x," },
+-				StrPair{ Key::kHispeedShowOMod, U"C,"/* ← 食い違っているが意図的 */ },
+-				StrPair{ Key::kHispeedShowCMod, U"O,"/* ← 食い違っているが意図的 */ } })
++				 StrPair{ Key::kHispeedShowXMod, U"x," },
++				 StrPair{ Key::kHispeedShowOMod, U"C," /* ← 食い違っているが意図的 */ },
++				 StrPair{ Key::kHispeedShowCMod, U"O," /* ← 食い違っているが意図的 */ } })
+ 		{
+ 			if (!s_configIniData.hasValue(key))
+ 			{
+@@ -269,12 +283,11 @@ void ConfigIni::Load()
+ 
+ 	// キーコンフィグの読み込み
+ 	using KeyConfigTypes = std::initializer_list<std::tuple<StringView, KeyConfig::ConfigSet>>;
+-	for (const auto & [iniKey, targetConfigSet]
+-		: KeyConfigTypes{
+-			{ Key::kKeyConfigKeyboard1, KeyConfig::kKeyboard1 },
+-			{ Key::kKeyConfigKeyboard2, KeyConfig::kKeyboard2 },
+-			{ Key::kKeyConfigGamepad1,  KeyConfig::kGamepad1  },
+-			{ Key::kKeyConfigGamepad2,  KeyConfig::kGamepad2  } })
++	for (const auto& [iniKey, targetConfigSet] : KeyConfigTypes{
++			 { Key::kKeyConfigKeyboard1, KeyConfig::kKeyboard1 },
++			 { Key::kKeyConfigKeyboard2, KeyConfig::kKeyboard2 },
++			 { Key::kKeyConfigGamepad1, KeyConfig::kGamepad1 },
++			 { Key::kKeyConfigGamepad2, KeyConfig::kGamepad2 } })
+ 	{
+ 		const StringView defaultValue = KeyConfig::kDefaultConfigValues[targetConfigSet];
+ 		const StringView configValue = GetString(iniKey, defaultValue);
+@@ -284,9 +297,50 @@ void ConfigIni::Load()
  
  void ConfigIni::Save()
  {
@@ -3879,10 +4131,27 @@ index d68d579463cee99fc44a46b5997fe2108fdce788..73b5ac23cf441e60c4961ac30afe9350
  {
  	return s_configIniData.hasValue(key);
 diff --git a/kshootmania/src/Ini/ConfigIni.hpp b/kshootmania/src/Ini/ConfigIni.hpp
-index 7cb56b54879c89e6ffb8336cbea7198eac996292..3452d4db23871d499e7260bfd252ecc8b3b43756 100644
+index 7cb56b54879c89e6ffb8336cbea7198eac996292..c92843052214df579108d23232828ecc458bef8b 100644
 --- a/kshootmania/src/Ini/ConfigIni.hpp
 +++ b/kshootmania/src/Ini/ConfigIni.hpp
-@@ -66,6 +66,10 @@ namespace ConfigIni
+@@ -9,6 +9,8 @@ namespace ConfigIni
+ {
+ 	namespace Key
+ 	{
++		constexpr StringView kRememberEffRate = U"remember_effrate";
++		constexpr StringView kLastEffRate = U"last_effrate";
+ 		// Option > Display / Sound Settings
+ 		constexpr StringView kFullScreen = U"fullscr";
+ 		constexpr StringView kWindowResolution = U"windowsize";
+@@ -19,6 +21,7 @@ namespace ConfigIni
+ 		constexpr StringView kAlwaysShowOtherFolders = U"showalldir";
+ 		constexpr StringView kHideAllFolder = U"hide_itemall";
+ 		constexpr StringView kMasterVolume = U"mastervol";
++		constexpr StringView kAsioJudgmentCorrection = U"asio_judgment_correction_ms";
+ 		constexpr StringView kAudioBackend = U"audio_backend";
+ 		constexpr StringView kVsync = U"vsync";
+ 
+@@ -66,6 +69,10 @@ namespace ConfigIni
  		constexpr StringView kSelectSortType = U"mselview";
  		constexpr StringView kHispeed = U"hispeed";
  		constexpr StringView kShowFastSlow = U"viewtiming";
@@ -3893,7 +4162,7 @@ index 7cb56b54879c89e6ffb8336cbea7198eac996292..3452d4db23871d499e7260bfd252ecc8
  		constexpr StringView kNoteSkin = U"noteskin";
  		constexpr StringView kBGMovie = U"backgroundmovie";
  
-@@ -180,6 +184,7 @@ namespace ConfigIni
+@@ -180,6 +187,7 @@ namespace ConfigIni
  	void Load();
  
  	void Save();
@@ -4050,7 +4319,7 @@ index 693926b6a7971d28185b837a136b01db805a4e23..f3487989c2a31cbd64c605dc1a8c24b0
  	void RequestVirtualDown(Button button);
  
 diff --git a/kshootmania/src/Main.cpp b/kshootmania/src/Main.cpp
-index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb506629b10 100644
+index 58a84afe14813cf45f56bd51f09ad99fe119e412..e794538a169eda1d828cc007932b9db78d3353f4 100644
 --- a/kshootmania/src/Main.cpp
 +++ b/kshootmania/src/Main.cpp
 @@ -1,4 +1,14 @@
@@ -4458,7 +4727,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  
  	// ウィンドウタイトル
 -	Window::SetTitle(U"K-Shoot MANIA {} (unofficial build)"_fmt(kAppVersion));
-+	Window::SetTitle(U"K-Shoot Mania V2.1.0 - Enhanced Vertical Mod 0.5.2-beta2 (Unofficial Build)");
++	Window::SetTitle(U"K-Shoot Mania V2.1.0 - Enhanced Vertical Mod 0.5.4-beta4 (Unofficial Build)");
  
  	// カレントディレクトリを設定
  	// (ChangeCurrentDirectoryはここ以外は基本的に使用禁止。どうしても使う必要がある場合は必ずResourceDirectoryPathに戻すこと)
@@ -4474,7 +4743,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  
  	// デフォルト色を指定
  	Scene::SetBackground(Palette::Black);
-@@ -390,6 +423,52 @@ void KSMMain()
+@@ -390,9 +423,56 @@ void KSMMain()
  
  	// config.iniを読み込み
  	ConfigIni::Load();
@@ -4527,7 +4796,11 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  
  	// ランタイム設定を初期化
  	RuntimeConfig::RestoreJudgmentModesFromConfigIni();
-@@ -400,20 +479,50 @@ void KSMMain()
++	RuntimeConfig::RestoreGaugeSelectionFromConfigIni();
+ 
+ 	// 言語ファイルを読み込み
+ 	// (BASS初期化失敗時ダイアログの文言に必要なのでBASS初期化前に行う)
+@@ -400,20 +480,50 @@ void KSMMain()
  
  	// 音声処理を初期化
  #ifdef _WIN32
@@ -4580,7 +4853,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  	}
  
  	// ハイスコアのバックアップを作成
-@@ -423,8 +532,38 @@ void KSMMain()
+@@ -423,8 +533,38 @@ void KSMMain()
  	Window::SetToggleFullscreenEnabled(false); // Alt+Enter無効化
  	ApplyScreenSizeConfig();
  
@@ -4619,7 +4892,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -479,6 +618,10 @@ void KSMMain()
+@@ -479,6 +619,10 @@ void KSMMain()
  
  	// NocoUIのグローバルデフォルトフォントを設定
  	noco::SetGlobalDefaultFont(AssetManagement::SystemFont());
@@ -4630,7 +4903,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  
  	// NocoUIの音声再生をゲーム本体と同じ音声バックエンド(BASS)で行う
  	noco::UISound::SetPlayAudioCallback(
-@@ -507,18 +650,63 @@ void KSMMain()
+@@ -507,18 +651,63 @@ void KSMMain()
  	if (testPlayArgs.has_value())
  	{
  		const auto chartData = FsUtils::HasKsonExtension(testPlayArgs->chartFilePath)
@@ -4698,7 +4971,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  	{
  		// テストプレイ(-from指定あり)の場合
  		initialSceneFactory = Co::MakeSceneFactory<PlayScene>(
-@@ -543,10 +731,151 @@ void KSMMain()
+@@ -543,10 +732,151 @@ void KSMMain()
  	}
  
  	// メインループ
@@ -4852,7 +5125,7 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
  		// マウスカーソル非表示設定(全画面での非表示)
  		// プレイ中のみの非表示はPlaySceneで処理する
  		if (ConfigIni::GetInt(ConfigIni::Key::kHideMouseCursor, ConfigIni::Value::HideMouseCursor::kPlayOnly) == ConfigIni::Value::HideMouseCursor::kAll)
-@@ -556,28 +885,110 @@ void KSMMain()
+@@ -556,28 +886,111 @@ void KSMMain()
  
  		if (ksmaxis::IsInitialized())
  		{
@@ -4959,12 +5232,13 @@ index 58a84afe14813cf45f56bd51f09ad99fe119e412..d572e75b51b4ca80c42ae64c4004bfb5
 +	if (!previewMode)
 +	{
 +		AudioCalibration::Store();
++		RuntimeConfig::StoreGaugeSelectionToConfigIni();
 +		ConfigIni::Save();
 +	}
  
  #ifdef __APPLE__
  	// macOS: 英数・かなキーのイベントタップを停止
-@@ -589,28 +1000,77 @@ void KSMMain()
+@@ -589,28 +1002,77 @@ void KSMMain()
  	{
  		ksmaxis::Terminate();
  	}
@@ -5985,19 +6259,20 @@ index 73105c2f9af977f0781a23e7e675240c975e68b1..774af7422b939e7f165cfed3f85283cc
  
  		void update(const kson::ChartData& chartData, const GameStatus& gameStatus);
 diff --git a/kshootmania/src/MusicGame/GameMain.cpp b/kshootmania/src/MusicGame/GameMain.cpp
-index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32c11a11ce 100644
+index 90a8466e021a365b6fb109d844b114dd8f773e23..f46955e8733a53bea23e1a34b93e83f143bc0d3b 100644
 --- a/kshootmania/src/MusicGame/GameMain.cpp
 +++ b/kshootmania/src/MusicGame/GameMain.cpp
-@@ -1,4 +1,7 @@
+@@ -1,4 +1,8 @@
 -﻿#include "GameMain.hpp"
-+﻿#include "ksmaudio/Diagnostics.hpp"
++﻿#include "Ini/AudioCalibration.hpp"
++#include "ksmaudio/Diagnostics.hpp"
 +#include "GameMain.hpp"
 +#include "Audio/AudioDefines.hpp"
 +#include "GameMain.hpp"
  #include "GameDefines.hpp"
  #include "TurnUtil.hpp"
  #include "PlayModeUtil.hpp"
-@@ -10,7 +13,7 @@ namespace MusicGame
+@@ -10,7 +14,7 @@ namespace MusicGame
  	namespace
  	{
  		constexpr double kPlayFinishFadeOutStartSec = 2.4; // TODO: HARD落ちした場合は赤色表示を加えた上で4.8秒にする
@@ -6006,7 +6281,28 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  
  		Audio::BGM CreateBGM(const kson::ChartData& chartData, const FilePath& parentPath, const PlayOption& playOption, const FolderConfIni& folderConfIni)
  		{
-@@ -172,18 +175,64 @@ namespace MusicGame
+@@ -44,8 +48,8 @@ namespace MusicGame
+ 		kson::ChartData LoadChartDataWithTurn(const GameCreateInfo& createInfo, NoteArrangement* pNoteArrangementOut, Optional<SRandomFXAudioMapping>* pSRandomFXAudioMappingOut, std::array<HashSet<kson::Pulse>, kson::kNumLaserLanesSZ>* pLaserCurvedPulses)
+ 		{
+ 			auto chartData = FsUtils::HasKsonExtension(createInfo.chartFilePath)
+-				? kson::LoadKsonChartData(createInfo.chartFilePath.toUTF8())
+-				: kson::LoadKshChartData(createInfo.chartFilePath.toUTF8());
++								 ? kson::LoadKsonChartData(createInfo.chartFilePath.toUTF8())
++								 : kson::LoadKshChartData(createInfo.chartFilePath.toUTF8());
+ 
+ 			// Turn変換を適用
+ 			pNoteArrangementOut->turnTable = MakeTurnTable(createInfo.playOption.turnMode);
+@@ -110,8 +114,7 @@ namespace MusicGame
+ 			if (createInfo.playOption.turnMode == TurnMode::kSRandom)
+ 			{
+ 				const Array<std::size_t> sRandomNoteLanes = MakeSRandomNoteLanes(chartData, createInfo.playOption.nonZeroPlaybackSpeed());
+-				*pSRandomFXAudioMappingOut = SRandomFXAudioMapping
+-				{
++				*pSRandomFXAudioMappingOut = SRandomFXAudioMapping{
+ 					.fxLanesForAudio = chartData.note.fx,
+ 					.fxNoteDestinations = MakeFXNoteDestinations(chartData, sRandomNoteLanes),
+ 				};
+@@ -172,20 +175,67 @@ namespace MusicGame
  		}
  	}
  
@@ -6069,11 +6365,16 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  		const double laserInputDelaySec = m_playOption.effectiveLaserInputDelayMs() / 1000.0;
  		const double audioProcDelaySec = m_playOption.effectiveAudioProcDelayMs() / 1000.0;
 -		const double timingAdjustSec = m_judgmentMain.timingAdjustOffsetSec();
+-		const double currentTimeSecForButtonJudgment = currentTimeSec - inputDelaySec + timingAdjustSec;
+-		const double currentTimeSecForLaserJudgment = currentTimeSec - inputDelaySec - laserInputDelaySec + timingAdjustSec;
 +		const double timingAdjustSec = m_judgmentMain->timingAdjustOffsetSec();
- 		const double currentTimeSecForButtonJudgment = currentTimeSec - inputDelaySec + timingAdjustSec;
- 		const double currentTimeSecForLaserJudgment = currentTimeSec - inputDelaySec - laserInputDelaySec + timingAdjustSec;
++		const double backendJudgmentCorrectionSec = AudioCalibration::JudgmentCorrectionSec();
++		const double currentTimeSecForButtonJudgment = currentTimeSec - inputDelaySec + timingAdjustSec + backendJudgmentCorrectionSec;
++		const double currentTimeSecForLaserJudgment = currentTimeSec - inputDelaySec - laserInputDelaySec + timingAdjustSec + backendJudgmentCorrectionSec;
  		const double currentTimeSecForAudioProc = currentTimeSec - audioProcDelaySec;
-@@ -213,17 +262,34 @@ namespace MusicGame
+ 		const kson::Pulse currentPulse = kson::SecToPulse(currentTimeSec, m_chartData.beat, m_timingCache);
+ 		const double currentPulseDouble = kson::SecToPulseDouble(currentTimeSec, m_chartData.beat, m_timingCache);
+@@ -213,17 +263,34 @@ namespace MusicGame
  		m_viewStatus.tiltRadiansForBgLayer = m_highwayTilt.radiansForBgLayer();
  
  		// 判定の更新
@@ -6113,7 +6414,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  				.finishTimeSec = currentTimeSec,
  				.achievement = Achievement::kNone,
  				.isHardFailed = IsHardFailedYN::Yes,
-@@ -233,15 +299,15 @@ namespace MusicGame
+@@ -233,15 +300,15 @@ namespace MusicGame
  			m_hardFailedSound.play();
  
  			// HARD落ち以降の入力は無視
@@ -6134,7 +6435,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  			};
  		}
  	}
-@@ -254,41 +320,38 @@ namespace MusicGame
+@@ -254,41 +321,38 @@ namespace MusicGame
  			// ハイスピードメニュー更新前にHighwayScrollを更新してBPMを設定
  			m_highwayScroll.update(m_hispeedSettingMenu.hispeedSetting(), m_gameStatus.currentBPM);
  		}
@@ -6197,7 +6498,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  		{
  			const int32 startMeasure = *m_playOption.testPlayOption->startMeasure;
  			const kson::Pulse startPulse = kson::MeasureIdxToPulse(
-@@ -299,25 +362,49 @@ namespace MusicGame
+@@ -299,25 +363,49 @@ namespace MusicGame
  			// 少し手前から再生開始
  			const double seekSec = Max(startSec - kTestPlaySeekMarginSec, 0.0);
  			m_bgm.seekPosSec(SecondsF{ seekSec });
@@ -6250,7 +6551,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  		updateHighwayScroll();
  
  		// 音声エフェクトの更新
-@@ -326,8 +413,8 @@ namespace MusicGame
+@@ -326,8 +414,8 @@ namespace MusicGame
  		for (std::size_t i = 0U; i < kson::kNumFXLanesSZ; ++i)
  		{
  			longFXPressed[i] = m_sRandomFXAudioMapping.has_value()
@@ -6261,7 +6562,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  		}
  		std::array<bool, kson::kNumLaserLanesSZ> laserIsOnOrNone;
  		for (std::size_t i = 0U; i < kson::kNumLaserLanesSZ; ++i)
-@@ -336,19 +423,26 @@ namespace MusicGame
+@@ -336,19 +424,26 @@ namespace MusicGame
  			laserIsOnOrNone[i] = !laneStatus.noteCursorX.has_value() || laneStatus.isCursorInCriticalJudgmentRange();
  		}
  		const kson::FXLane<kson::Interval>& fxNoteLanesForAudio = m_sRandomFXAudioMapping.has_value()
@@ -6296,7 +6597,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  
  		// FXチップ効果音の更新
  		std::array<Audio::FXChipJudgedStatus, kson::kNumFXLanesSZ> fxChipJudgedStatuses;
-@@ -361,17 +455,32 @@ namespace MusicGame
+@@ -361,17 +456,32 @@ namespace MusicGame
  		{
  			for (std::size_t i = 0U; i < kson::kNumFXLanesSZ; ++i)
  			{
@@ -6333,7 +6634,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  
  		m_isFirstUpdate = false;
  
-@@ -380,23 +489,99 @@ namespace MusicGame
+@@ -380,23 +490,99 @@ namespace MusicGame
  
  	void GameMain::draw() const
  	{
@@ -6437,7 +6738,7 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  	}
  
  	FilePathView GameMain::chartFilePath() const
-@@ -411,8 +596,9 @@ namespace MusicGame
+@@ -411,8 +597,9 @@ namespace MusicGame
  
  	PlayResult GameMain::playResult() const
  	{
@@ -6448,6 +6749,38 @@ index 90a8466e021a365b6fb109d844b114dd8f773e23..62343925019346170d9b9189f855ec32
  	}
  
  	Optional<bool> GameMain::sRandomLongFXPressed(std::size_t fxLaneIdx) const
+@@ -441,8 +628,8 @@ namespace MusicGame
+ 		}
+ 		const std::size_t destLaneIdx = destItr->second;
+ 		const ButtonLaneStatus& laneStatus = destLaneIdx < kson::kNumBTLanesSZ
+-			? m_gameStatus.btLaneStatus[destLaneIdx]
+-			: m_gameStatus.fxLaneStatus[destLaneIdx - kson::kNumBTLanesSZ];
++												 ? m_gameStatus.btLaneStatus[destLaneIdx]
++												 : m_gameStatus.fxLaneStatus[destLaneIdx - kson::kNumBTLanesSZ];
+ 		return laneStatus.currentLongNotePulse == y;
+ 	}
+ 
+@@ -457,8 +644,8 @@ namespace MusicGame
+ 			for (std::size_t destLaneIdx = 0U; destLaneIdx < kNumSRandomLanesSZ; ++destLaneIdx)
+ 			{
+ 				const ButtonLaneStatus& laneStatus = destLaneIdx < kson::kNumBTLanesSZ
+-					? m_gameStatus.btLaneStatus[destLaneIdx]
+-					: m_gameStatus.fxLaneStatus[destLaneIdx - kson::kNumBTLanesSZ];
++														 ? m_gameStatus.btLaneStatus[destLaneIdx]
++														 : m_gameStatus.fxLaneStatus[destLaneIdx - kson::kNumBTLanesSZ];
+ 				if (laneStatus.lastChipJudgedTimeSec <= judgedStatuses[fxLaneIdx].lastChipJudgedTimeSec)
+ 				{
+ 					continue;
+@@ -468,8 +655,7 @@ namespace MusicGame
+ 				{
+ 					continue;
+ 				}
+-				judgedStatuses[fxLaneIdx] = Audio::FXChipJudgedStatus
+-				{
++				judgedStatuses[fxLaneIdx] = Audio::FXChipJudgedStatus{
+ 					.lastJudgedChipPulse = laneStatus.lastJudgedChipPulse,
+ 					.lastChipJudgedTimeSec = laneStatus.lastChipJudgedTimeSec,
+ 				};
 @@ -480,7 +666,7 @@ namespace MusicGame
  
  	int32 GameMain::timingAdjustOffsetMs() const
@@ -6651,7 +6984,7 @@ index 747520fcbf833a184e1225457f4f27b7612e4108..6ee08a4cf0e3996354e03ff26f4aff06
  	{
  		return Mat4x4::Rotate(Float3::Right(), -60_deg) * TiltTransformMatrix(tiltRadians, kHighwayTiltCenter);
 diff --git a/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp b/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
-index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e92e531dc3 100644
+index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..dac91a0e8da158f051039122239c907bb58de776 100644
 --- a/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/GraphicsMain.cpp
 @@ -1,9 +1,18 @@
@@ -6674,7 +7007,15 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  
  namespace MusicGame::Graphics
  {
-@@ -42,14 +51,93 @@ namespace MusicGame::Graphics
+@@ -35,21 +44,100 @@ namespace MusicGame::Graphics
+ 	namespace
+ 	{
+ 		constexpr double kCameraVerticalFOV = 45_deg;
+-		constexpr Vec3 kCameraPosition = { 0.0, 45.0, -366.0 };
++		constexpr Vec3 kCameraPosition = HighwayArrival::kUpstreamCameraEye;
+ 
+ 		constexpr double kSin15Deg = 0.2588190451;
+ 		constexpr double kCos15Deg = 0.9659258263;
  		constexpr Vec3 kCameraLookAt = kCameraPosition + Vec3{ 0.0, -100.0 * kSin15Deg, 100.0 * kCos15Deg };
  
  		constexpr Float3 kBGBillboardPosition = Float3{ 0, -52.5f, 0 };
@@ -6932,7 +7273,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  		// HUDのCanvasパラメータを初期設定
  		const double startBPM = chartData.beat.bpm.contains(0) ? chartData.beat.bpm.at(0) : kDefaultBPM;
  
-@@ -342,6 +439,30 @@ namespace MusicGame::Graphics
+@@ -342,6 +439,29 @@ namespace MusicGame::Graphics
  		});
  	}
  
@@ -6945,8 +7286,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
 +			result.push_back(p.x);
 +			result.push_back(p.y);
 +		};
-+		const auto& source = m_highway3DGraphics.sourceMesh();
-+		const auto mesh = GameRender::VerticalEnabled() ? Vertical::DisplayHighwayMesh(source, Vertical::DisplayLaneSpan(source, m_camera, view)) : source;
++		const auto& mesh = m_highway3DGraphics.displayMesh();
 +		const double angle = Math::ToRadians(view.camStatus.rotationDeg + view.camStatus.rotationDegHighway) + view.tiltRadians;
 +		const auto origin = Camera::CamShiftXMatrix(view.camStatus.shiftX) * GearTiltTransformMatrix(angle);
 +		for (const auto& vertex : mesh.vertices)
@@ -6963,10 +7303,12 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  	void GraphicsMain::prepareMovie(double globalOffsetSec)
  	{
  		m_moviePanel.prepare(globalOffsetSec);
-@@ -352,12 +473,62 @@ namespace MusicGame::Graphics
+@@ -351,13 +471,63 @@ namespace MusicGame::Graphics
+ 	{
  		m_comboOverlay.update(viewStatus, gameStatus.currentTimeSec);
  		m_scoreAnimator.update(viewStatus.score);
- 		m_highway3DGraphics.update(viewStatus);
+-		m_highway3DGraphics.update(viewStatus);
++		m_highway3DGraphics.update(viewStatus, &m_camera);
 +		if (m_vertical && m_playOption.showLayer && m_depthEnabled)
 +		{
 +			auto referenceView = viewStatus;
@@ -6976,10 +7318,10 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
 +			const float farZ = Highway3DGraphics::neutralUpperMidpoint(viewStatus.camStatus.useLegacyZoomTop).z;
 +			for (int i = 0; i < 4; ++i)
 +				m_referenceGear.vertices[i].pos = { source.vertices[i].pos.x, 0, i < 2 ? farZ : -kHighwayPlaneSize.y / 2 };
-+			const auto quad = [&](const MeshData& mesh, const ViewStatus& view)
++			const auto quad = [&](const MeshData& mesh, const ViewStatus& view, const Vertical::LaneSpan* cachedSpan = nullptr)
 +			{
 +				Vertical::ProjectiveWall::GearQuad result{};
-+				const auto span = Vertical::DisplayLaneSpan(mesh, m_camera, view);
++				const auto span = cachedSpan ? *cachedSpan : Vertical::DisplayLaneSpan(mesh, m_camera, view);
 +				const auto origin = Vertical::HighwayOrigin(view);
 +				const float half = kHighwayPlaneSize.x / 2 / static_cast<float>(Vertical::kHighwayUVScaleX);
 +				const Float3 upper = (mesh.vertices[0].pos + mesh.vertices[1].pos) * .5f;
@@ -6995,7 +7337,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
 +			};
 +			const double scaled = Camera::ScaledCamZoomBottomValue(viewStatus.camStatus.zoomBottom);
 +			const double baseline = Abs(Camera::ScaledCamZoomBottomValue(scaled < 0 ? -100.0 : 100.0));
-+			m_tunnelWarp.updateGear(m_camera, layerTransform(viewStatus), quad(source, viewStatus), quad(m_referenceGear, referenceView), scaled / baseline);
++			m_tunnelWarp.updateGear(m_camera, layerTransform(viewStatus), quad(source, viewStatus, &m_highway3DGraphics.displayLaneSpan()), quad(m_referenceGear, referenceView), scaled / baseline);
 +		}
  		m_laserApproachIndicator.update(gameStatus, timingCache);
 +		if (TimingHudCapture::Enabled() && ModDiagnostics::Arguments().contains(U"--play-judge-indicator-fixture"))
@@ -7027,7 +7369,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  			{ U"fpsNumber", static_cast<int32>(Profiler::FPS()) },
  			{ U"bpmNumberText", FormatBPM(gameStatus.currentBPM) },
  			{ U"timingAdjustVisible", viewStatus.timingAdjustMs != 0 },
-@@ -365,15 +536,41 @@ namespace MusicGame::Graphics
+@@ -365,15 +535,41 @@ namespace MusicGame::Graphics
  			{ U"timingAdjustNumber", Abs(viewStatus.timingAdjustMs) },
  		});
  
@@ -7074,7 +7416,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  
  		// 3D空間を描画
  		Graphics3D::SetCameraTransform(m_camera);
-@@ -385,12 +582,28 @@ namespace MusicGame::Graphics
+@@ -385,12 +581,28 @@ namespace MusicGame::Graphics
  		{
  			drawLayer(chartData, gameStatus, viewStatus);
  		}
@@ -7106,7 +7448,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  		{
  			const double preStartOffset = m_moviePanel.isEnabled() ? kPreStartOffsetWithMovieSec : kPreStartOffsetSec;
  			const double totalDurationSec = bgmDuration.count() + preStartOffset;
-@@ -404,11 +617,53 @@ namespace MusicGame::Graphics
+@@ -404,11 +616,53 @@ namespace MusicGame::Graphics
  		}
  
  		m_hudCanvas->draw();
@@ -7164,7 +7506,7 @@ index 44ebcbe4a062bcdc22fbd2c15b819c21bc0b8360..651c8ce2544a880a39d88ddd99b703e9
  
  		// HARDゲージ落ち時の赤色オーバーレイ
  		if (gameStatus.playFinishStatus.has_value() && gameStatus.playFinishStatus->isHardFailed)
-@@ -420,7 +675,7 @@ namespace MusicGame::Graphics
+@@ -420,7 +674,7 @@ namespace MusicGame::Graphics
  			const Color overlayColor{ 255, g, 0 };
  
  			const ScopedRenderStates2D blend{ BlendState::Additive };
@@ -7741,7 +8083,7 @@ index 993e451c3ae9365861c6169eb39a46230233f0e6..5057d54d49b9359b7c85031ad19a0a1d
  	}
  }
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
-index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c603d535b 100644
+index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..99ea587d95992feac47b6fb0707401e286954c0a 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.cpp
 @@ -1,7 +1,10 @@
@@ -7756,7 +8098,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  
  namespace MusicGame::Graphics
  {
-@@ -49,10 +52,9 @@ namespace MusicGame::Graphics
+@@ -49,14 +52,13 @@ namespace MusicGame::Graphics
  	}
  
  	Highway3DGraphics::Highway3DGraphics()
@@ -7770,6 +8112,11 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  	{
  	}
  
+-	void Highway3DGraphics::update(const ViewStatus& viewStatus)
++	void Highway3DGraphics::update(const ViewStatus& viewStatus, const BasicCamera3D* displayCamera)
+ 	{
+ 		// メッシュの頂点座標を更新
+ 		// HSP版の該当箇所: https://github.com/kshootmania/ksm-v1/blob/d2811a09e2d75dad5cc152d7c4073897061addb7/src/scene/play/play_draw_frame.hsp#L779-L821
 @@ -77,11 +79,10 @@ namespace MusicGame::Graphics
  			m_meshData.vertices[1].pos.z = m_meshData.vertices[0].pos.z;
  
@@ -7784,7 +8131,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  			m_meshData.vertices[3].pos.z = m_meshData.vertices[2].pos.z;
  		}
  		else
-@@ -112,6 +113,34 @@ namespace MusicGame::Graphics
+@@ -112,6 +113,39 @@ namespace MusicGame::Graphics
  		}
  
  		m_mesh.fill(m_meshData);
@@ -7793,9 +8140,11 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
 +							  ((m_meshData.vertices[2].pos + m_meshData.vertices[3].pos - m_meshData.vertices[0].pos - m_meshData.vertices[1].pos) * .5f) * static_cast<float>(hitT);
 +		if (GameRender::VerticalEnabled())
 +		{
-+			const auto camera = Vertical::MakeCamera(GameRender::Size(), Vertical::ModConfig::Load().layout);
-+			const auto span = Vertical::DisplayLaneSpan(m_meshData, camera, viewStatus);
-+			auto display = Vertical::DisplayHighwayMesh(m_meshData, span);
++			const auto camera = displayCamera ? *displayCamera : Vertical::MakeCamera(GameRender::Size(), Vertical::ModConfig::Load().layout);
++			m_displayLaneSpan = Vertical::DisplayLaneSpan(m_meshData, camera, viewStatus);
++			const auto& span = m_displayLaneSpan;
++			auto& display = m_verticalMeshData;
++			Vertical::UpdateDisplayHighwayMesh(display, m_meshData, span);
 +			m_displayNoteAnchor = (display.vertices[2].pos + display.vertices[3].pos) * .5f;
 +			if (ModDiagnostics::Arguments().contains(U"--vertical-preview-geometry"))
 +			{
@@ -7812,14 +8161,17 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
 +					writer.writeln(U"{},{},{},{},{},{},{},{}"_fmt(anchor.x, anchor.y, bar.x, bar.y, end.y, (anchor - bar).length(), (end.y - bar.y) * 1280 / GameRender::Height(), span.rayValid));
 +				}
 +			}
-+			if (m_trianglesFlipped)
++			if (m_verticalTrianglesFlipped != m_trianglesFlipped)
++			{
 +				display.flipTriangles();
++				m_verticalTrianglesFlipped = m_trianglesFlipped;
++			}
 +			m_verticalMesh.fill(display);
 +		}
  	}
  
  	void Highway3DGraphics::draw2D(const kson::ChartData& chartData, const std::array<HashSet<kson::Pulse>, kson::kNumLaserLanesSZ>& laserCurvedPulses, const PlayOption& playOption, const kson::TimingCache& timingCache, const GameStatus& gameStatus, const ViewStatus& viewStatus, const Scroll::HighwayScrollContext& highwayScrollContext) const
-@@ -121,6 +150,7 @@ namespace MusicGame::Graphics
+@@ -121,6 +155,7 @@ namespace MusicGame::Graphics
  		{
  			const ScopedRenderTarget2D renderTarget(m_renderTexture.additiveTexture());
  			const ScopedRenderStates2D renderState(BlendState::Additive);
@@ -7827,7 +8179,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  
  			const bool isCenterSplitUsed = !MathUtils::AlmostEquals(viewStatus.camStatus.centerSplit, 0.0);
  			const double centerSplitShiftX = isCenterSplitUsed ? Camera::CenterSplitShiftX(viewStatus.camStatus.centerSplit) : 0.0;
-@@ -184,6 +214,7 @@ namespace MusicGame::Graphics
+@@ -184,6 +219,7 @@ namespace MusicGame::Graphics
  			}
  		}
  
@@ -7835,7 +8187,7 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  		// BT/FXノーツの描画
  		m_buttonNoteGraphics.draw(chartData, gameStatus, viewStatus, playOption, highwayScrollContext, m_renderTexture);
  
-@@ -199,7 +230,7 @@ namespace MusicGame::Graphics
+@@ -199,7 +235,7 @@ namespace MusicGame::Graphics
  		// レンダーテクスチャを3D空間上へ描画
  		const double radians = Math::ToRadians(viewStatus.camStatus.rotationDeg + viewStatus.camStatus.rotationDegHighway) + viewStatus.tiltRadians;
  		const double shiftX = viewStatus.camStatus.shiftX;
@@ -7846,24 +8198,41 @@ index 038931abf2e1e805a0e7325c5881a40aa4b39ec4..8d4391a460cd773e278785b8aa2c4f5c
  	}
  }
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp
-index f6c7c2ae12e0ebeb3a5af39af3ad001e58e73617..f9c57f9dc19ca5f26d1398c6c103911e017b9d2b 100644
+index f6c7c2ae12e0ebeb3a5af39af3ad001e58e73617..5900c059b4c39ca92db397ac2de14dbb72baf099 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/Highway3DGraphics.hpp
-@@ -25,12 +25,30 @@ namespace MusicGame::Graphics
+@@ -7,6 +7,7 @@
+ #include "KeyBeamGraphics.hpp"
+ #include "Note/ButtonNoteGraphics.hpp"
+ #include "Note/LaserNoteGraphics.hpp"
++#include "Vertical/VerticalLaneGeometry.hpp"
+ 
+ namespace MusicGame::Graphics
+ {
+@@ -25,12 +26,38 @@ namespace MusicGame::Graphics
  
  		MeshData m_meshData;
  		DynamicMesh m_mesh;
 +		DynamicMesh m_verticalMesh;
++		MeshData m_verticalMeshData{ MeshData::Grid(kHighwayPlaneSizeWide, 1, 2) };
  		bool m_trianglesFlipped = false;
++		bool m_verticalTrianglesFlipped = false;
++		Vertical::LaneSpan m_displayLaneSpan{};
 +		Float3 m_displayNoteAnchor{ 0, 0, 0 };
  
  	public:
  		Highway3DGraphics();
  
- 		void update(const ViewStatus& viewStatus);
+-		void update(const ViewStatus& viewStatus);
++		void update(const ViewStatus& viewStatus, const BasicCamera3D* displayCamera = nullptr);
++		const Vertical::LaneSpan& displayLaneSpan() const { return m_displayLaneSpan; }
 +		Float3 displayNoteAnchor() const
 +		{
 +			return m_displayNoteAnchor;
++		}
++		const MeshData& displayMesh() const
++		{
++			return GameRender::VerticalEnabled() ? m_verticalMeshData : m_meshData;
 +		}
 +		const MeshData& sourceMesh() const
 +		{
@@ -7986,7 +8355,7 @@ index 2620ef42b35dcbcb4909cd2417a56029154949a2..7a3bb8cde1a4c62f1a85c2d1082e2a92
  	}
  }
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp
-index 45b09230d9e84378fc4ef498777f2b5439650c21..1c693a3a306ef751a80e96a2af6c87b82e962837 100644
+index 45b09230d9e84378fc4ef498777f2b5439650c21..d163812b9a4583d2c462b7435b7c46c30eba38f0 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.cpp
 @@ -1,5 +1,8 @@
@@ -7999,7 +8368,7 @@ index 45b09230d9e84378fc4ef498777f2b5439650c21..1c693a3a306ef751a80e96a2af6c87b8
  #include "MusicGame/Camera/CameraMath.hpp"
  
  namespace MusicGame::Graphics
-@@ -17,13 +20,14 @@ namespace MusicGame::Graphics
+@@ -17,13 +20,18 @@ namespace MusicGame::Graphics
  	}
  
  	KeyBeamGraphics::KeyBeamGraphics()
@@ -8010,12 +8379,16 @@ index 45b09230d9e84378fc4ef498777f2b5439650c21..1c693a3a306ef751a80e96a2af6c87b8
  
  	void KeyBeamGraphics::draw(const GameStatus& gameStatus, const ViewStatus& viewStatus, const HighwayRenderTexture& target) const
  	{
++		const auto& settings = SkinPreset::Current();
++		if (settings.keyBeamOpacityPercent == 0)
++			return;
++		const double lengthScale = settings.keyBeamLengthPercent / 100.0;
  		const ScopedRenderTarget2D renderTarget(target.additiveTexture());
 +		const Transformer2D layout{ Mat3x2::Scale(GameRender::VerticalEnabled() ? Vertical::kButtonWidthScale : 1.0, 1.0, Vec2{ static_cast<double>(kHighwayTextureWideCenterX), 0 }) };
  		const ScopedRenderStates2D renderState(BlendState::Additive);
  
  		for (std::size_t i = 0; i < kson::kNumBTLanesSZ + kson::kNumFXLanesSZ; ++i)
-@@ -51,8 +55,14 @@ namespace MusicGame::Graphics
+@@ -51,12 +59,23 @@ namespace MusicGame::Graphics
  				alpha = 1.0 - (sec - kKeyBeamFullWidthSec) / (kKeyBeamEndSec - kKeyBeamFullWidthSec);
  			}
  
@@ -8032,6 +8405,15 @@ index 45b09230d9e84378fc4ef498777f2b5439650c21..1c693a3a306ef751a80e96a2af6c87b8
  				0,
  				kBTKeyBeamTextureSize.x * widthRate,
  				kBTKeyBeamTextureSize.y);
+ 
++			alpha *= settings.keyBeamOpacityPercent / 100.0;
++			// Keep each existing animated beam's foot, including the FX offset.
++			const double footY = kKeyBeamPositionOffset.y + kBTKeyBeamTextureSize.y +
++								 (isBT ? 0.0 : kFXKeyBeamTextureSize.y * (0.5 - widthRate / 2));
++			const Transformer2D length{ Mat3x2::Scale(1.0, lengthScale, Vec2{ 0, footY }) };
+ 			const double dLaneIdx = static_cast<double>(laneIdx);
+ 
+ 			if (isBT)
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp b/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp
 index 1857839a1351b7bc885c64acb8ea230d1f4b8cfe..66f606e0f732c66f8d7a520bc18525789e166bd8 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/KeyBeamGraphics.hpp
@@ -8045,7 +8427,7 @@ index 1857839a1351b7bc885c64acb8ea230d1f4b8cfe..66f606e0f732c66f8d7a520bc1852578
  	public:
  		KeyBeamGraphics();
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp
-index 7f58bdb329c69f1e78f0e0068a79f190cc43a560..b97f79aab0716c6f3d36e1d0447b838a1e80ea49 100644
+index 7f58bdb329c69f1e78f0e0068a79f190cc43a560..a13c476cf52e033e6d1647e9d5db16da0284118e 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/Note/ButtonNoteGraphics.cpp
 @@ -1,6 +1,9 @@
@@ -8100,7 +8482,32 @@ index 7f58bdb329c69f1e78f0e0068a79f190cc43a560..b97f79aab0716c6f3d36e1d0447b838a
  			const ScopedRenderStates2D blendState((i == 0) ? (isBT ? BlendState::Additive : BlendState::Default2D) : BlendState::Subtractive);
  
  			for (std::size_t laneIdx = 0; laneIdx < numLanes; ++laneIdx)
-@@ -203,8 +209,8 @@ namespace MusicGame::Graphics
+@@ -136,6 +142,12 @@ namespace MusicGame::Graphics
+ 
+ 				for (const auto& [y, note] : lane)
+ 				{
++					if (note.length <= 0)
++					{
++						// ここではロングノーツ以外は描画しない
++						continue;
++					}
++
+ 					const int32 positionStartY = highwayScrollContext.getPositionY(y);
+ 					if (!hasNegativeScrollSpeed && positionStartY < 0)
+ 					{
+@@ -156,11 +168,6 @@ namespace MusicGame::Graphics
+ 						continue;
+ 					}
+ 
+-					if (note.length <= 0)
+-					{
+-						// ここではロングノーツ以外は描画しない
+-						continue;
+-					}
+ 
+ 					const int32 height = positionStartY - positionEndY;
+ 					if (height == 0)
+@@ -203,8 +210,8 @@ namespace MusicGame::Graphics
  
  					// 始点テクスチャの描画
  					const int32 startTextureY = height >= 0
@@ -8111,7 +8518,7 @@ index 7f58bdb329c69f1e78f0e0068a79f190cc43a560..b97f79aab0716c6f3d36e1d0447b838a
  					const Vec2 startPosition = offsetPosition + Vec2::Right(centerSplitShiftX) + Vec2::Down(startTextureY);
  					const Texture& startTexture = isBT ? m_longBTNoteStartTexture : m_longFXNoteStartTexture;
  					startTexture(width * i, 0, width, kLongNoteStartTextureHeight)
-@@ -226,24 +232,21 @@ namespace MusicGame::Graphics
+@@ -226,24 +233,21 @@ namespace MusicGame::Graphics
  
  	ButtonNoteGraphics::ButtonNoteGraphics()
  		: m_chipBTNoteTexture(NoteGraphicsUtils::ApplyAlphaToNoteTexture(TextureAsset(kChipBTNoteTextureFilename),
@@ -8152,164 +8559,748 @@ index 7f58bdb329c69f1e78f0e0068a79f190cc43a560..b97f79aab0716c6f3d36e1d0447b838a
  	}
  
 diff --git a/kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp
-index 6864a367bccfe9b66ca5979c9a9f858cc4564542..2abaeb157cfb8ef03e0b8b8e8f9bc0e24f4b4e7b 100644
+index 6864a367bccfe9b66ca5979c9a9f858cc4564542..0c2942327bac9cdbebfec7d0e06fdcaad5106612 100644
 --- a/kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp
 +++ b/kshootmania/src/MusicGame/Graphics/Highway/Note/LaserNoteGraphics.cpp
-@@ -1,6 +1,9 @@
+@@ -1,389 +1,652 @@
 -﻿#include "LaserNoteGraphics.hpp"
 +﻿#include "Graphics/GameRenderContext.hpp"
++
 +#include "MusicGame/Graphics/ViewportGeometry.hpp"
++
 +#include "LaserNoteGraphics.hpp"
++
  #include "NoteGraphicsUtils.hpp"
++
  #include "MusicGame/Graphics/GraphicsDefines.hpp"
-+#include "Vertical/VerticalLaneGeometry.hpp"
  
++#include "Vertical/VerticalLaneGeometry.hpp"
++
  namespace MusicGame::Graphics
++
  {
-@@ -12,7 +15,14 @@ namespace MusicGame::Graphics
++
+ 	namespace
++
+ 	{
++
+ 		constexpr StringView kLaserNoteTextureFilename = U"laser.gif";
++
+ 		constexpr StringView kLaserNoteMaskTextureFilename = U"laser_mask.gif";
++
+ 		constexpr StringView kLaserNoteLeftStartTextureFilename = U"laserl_0.gif";
++
  		constexpr StringView kLaserNoteRightStartTextureFilename = U"laserr_0.gif";
  
  		constexpr Size kLaserTextureSize = { 48, 48 };
 -		constexpr int32 kLaserLineWidth = kLaserTextureSize.x;
++
 +		double LaserLineWidth()
++
 +		{
++
 +			return ViewportGeometry::LaserWidth();
 +		}
++
 +		double LaserScale()
++
 +		{
++
 +			return ViewportGeometry::LaserScale();
 +		}
++
  		constexpr int32 kLaserSlamHeightMax = kLaserTextureSize.y;
++
  		constexpr kson::RelPulse kLaserSlamHeightPulse = kson::kResolution4 / 32; // 32分長
++
  		constexpr int32 kLaserTailHeightMax = 80;
-@@ -34,19 +44,19 @@ namespace MusicGame::Graphics
++
+ 		constexpr kson::RelPulse kLaserTailHeightPulse = kson::kResolution4 / 16; // 16分長
++
+ 		constexpr int32 kLaserSlamFullHeightHispeed = 750;
+ 
+ 		// 直角同士が連続する場合の分厚さの上限の割合(中間のレーザーが消えないよう1未満にする)
++
+ 		constexpr int32 kLaserSlamHeightMaxToNextSlamNumerator = 4;
++
+ 		constexpr int32 kLaserSlamHeightMaxToNextSlamDenominator = 5;
++
+ 		constexpr Size kLaserStartTextureSize = { 44, 200 };
++
+ 		constexpr int32 kLaserShiftY = -6;
+ 
+ 		constexpr double kLaserCriticalBlinkIntervalSec = 0.12;
+ 
+ 		enum class JudgmentStatus
++
+ 		{
++
+ 			kNormal,
++
+ 			kCritical,
++
  			kError,
  		};
  
 -		constexpr Quad LaserLineQuad(const Vec2& positionStart, const Vec2& positionEnd)
 +		Quad LaserLineQuad(const Vec2& positionStart, const Vec2& positionEnd)
++
  		{
++
  			return {
 -				positionStart + Vec2{ kLaserLineWidth / 2, 0.0 },
 -				positionStart + Vec2{ -kLaserLineWidth / 2, 0.0 },
 -				positionEnd + Vec2{ -kLaserLineWidth / 2, 0.0 },
 -				positionEnd + Vec2{ kLaserLineWidth / 2, 0.0 }
++
 +				positionStart + Vec2{ LaserLineWidth() / 2, 0.0 },
++
 +				positionStart + Vec2{ -LaserLineWidth() / 2, 0.0 },
++
 +				positionEnd + Vec2{ -LaserLineWidth() / 2, 0.0 },
++
 +				positionEnd + Vec2{ LaserLineWidth() / 2, 0.0 }
++
  			};
  		}
  
 -		constexpr double LaserPointX(double v, int32 xScale)
 +		double LaserPointX(double v, int32 xScale)
++
  		{
 -			return (v * (kHighwayTextureSize.x - kLaserLineWidth) + kLaserLineWidth / 2) * xScale;
++
 +			return ViewportGeometry::LaserCenter(v, xScale);
  		}
  
  		void DrawLaserLine(int32 laneIdx, int32 positionY, const kson::GraphPoint& point, int32 slamHeight, int32 nextPositionY, const kson::GraphPoint& nextPoint, const Texture& laserNoteTexture, int32 laserNoteTextureRow, int32 xScale, double startXShift)
-@@ -102,7 +112,7 @@ namespace MusicGame::Graphics
- 		double ClampSlamTopShift(double startX, double endX, double topShiftX)
++
  		{
++
+ 			// 現在の点が直角の場合は後続のLASERを高さ分後ろにずらす
++
+ 			const bool isSlam = point.v.v != point.v.vf;
++
+ 			const int32 currentOffset = isSlam ? -slamHeight : 0;
+ 
+ 			const Vec2 positionStart = {
++
+ 				LaserPointX(point.v.vf, xScale) + startXShift,
++
+ 				positionY + currentOffset
++
+ 			};
+ 
+ 			const Vec2 positionEnd = {
++
+ 				LaserPointX(nextPoint.v.v, xScale),
++
+ 				nextPositionY
++
+ 			};
+ 
+ 			const Quad quad = LaserLineQuad(positionStart, positionEnd);
++
+ 			quad(laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow + kLaserTextureSize.y - 1 + kOnePixelTextureSourceOffset, kLaserTextureSize.x, kOnePixelTextureSourceSize)).draw();
+ 		}
+ 
+ 		/// @brief ハイスピードに応じた高さ(直角の分厚さ)の最小値を計算
++
+ 		int32 CalcLaserSlamHeightMin(kson::Pulse pulse, const Scroll::HighwayScrollContext& highwayScrollContext, int32 heightMax)
++
+ 		{
++
+ 			const int32 hispeed = highwayScrollContext.hispeedWithScrollSpeedAt(pulse);
++
+ 			return heightMax * Min(hispeed, kLaserSlamFullHeightHispeed) / kLaserSlamFullHeightHispeed;
+ 		}
+ 
+ 		/// @brief 直角レーザーの横線の高さを計算
++
+ 		/// @remark scroll_speedが負の場合は負の値を返す
++
+ 		int32 CalcLaserSlamHeight(kson::Pulse pulse, const Scroll::HighwayScrollContext& highwayScrollContext)
++
+ 		{
++
+ 			// 高BPMの場合に細くなりすぎないよう最小値を設ける
++
+ 			const int32 slamHeightFromPulse = highwayScrollContext.relPulseToPixelHeight(pulse, kLaserSlamHeightPulse);
++
+ 			const int32 sign = Sign(slamHeightFromPulse);
++
+ 			const int32 slamHeightMin = CalcLaserSlamHeightMin(pulse, highwayScrollContext, kLaserSlamHeightMax);
+-			return sign * Clamp(Abs(slamHeightFromPulse), slamHeightMin, kLaserSlamHeightMax);
++
++			const int32 height = sign * Clamp(Abs(slamHeightFromPulse), slamHeightMin, kLaserSlamHeightMax);
++			return static_cast<int32>(Round(height * SkinPreset::Current().slamThicknessPercent / 100.0));
+ 		}
+ 
+ 		/// @brief 直角レーザーのtailの高さを計算
++
+ 		/// @remark scroll_speedが負の場合は負の値を返す
++
+ 		int32 CalcLaserTailHeight(kson::Pulse pulse, const Scroll::HighwayScrollContext& highwayScrollContext)
++
+ 		{
++
+ 			// 高BPMの場合に短くなりすぎないよう最小値を設ける
++
+ 			const int32 tailHeightFromPulse = highwayScrollContext.relPulseToPixelHeight(pulse, kLaserTailHeightPulse);
++
+ 			const int32 sign = Sign(tailHeightFromPulse);
++
+ 			const int32 tailHeightMin = CalcLaserSlamHeightMin(pulse, highwayScrollContext, kLaserTailHeightMax);
++
+ 			return sign * Clamp(Abs(tailHeightFromPulse), tailHeightMin, kLaserTailHeightMax);
+ 		}
+ 
+ 		// 曲線直角レーザーの上端が始点側を越えないように傾きを制限
++
+ 		double ClampSlamTopShift(double startX, double endX, double topShiftX)
++
+ 		{
++
  			const double slamWidth = Abs(endX - startX);
 -			const double innerWidth = Max(slamWidth - kLaserLineWidth, 0.0);
++
 +			const double innerWidth = Max(slamWidth - LaserLineWidth(), 0.0);
++
  			if (endX >= startX)
++
  			{
++
  				return Max(topShiftX, -innerWidth);
-@@ -112,7 +122,7 @@ namespace MusicGame::Graphics
+ 			}
++
+ 			return Min(topShiftX, innerWidth);
+ 		}
  
  		Quad LaserSlamLineQuad(const Vec2& positionStart, const Vec2& positionEnd, int32 slamHeight, double topShiftX)
++
  		{
 -			if (Abs(positionEnd.x - positionStart.x) <= kLaserLineWidth)
++
 +			if (Abs(positionEnd.x - positionStart.x) <= LaserLineWidth())
++
  			{
++
  				// 左右が近すぎて直角レーザーの横線が描画できない場合はゼロを返す
++
  				return { Vec2::Zero(), Vec2::Zero(), Vec2::Zero(), Vec2::Zero() };
-@@ -124,20 +134,20 @@ namespace MusicGame::Graphics
+ 			}
+ 
+ 			const int32 diffXSign = Sign(positionEnd.x - positionStart.x);
+ 
+ 			if (slamHeight > 0)
++
  			{
++
  				// scroll_speedが正の場合、奥方向(上)に太さを持つ
++
  				return {
 -					positionStart + Vec2{ diffXSign * kLaserLineWidth / 2, -slamHeight },
 -					positionEnd + Vec2{ -diffXSign * kLaserLineWidth / 2 + topShiftX, -slamHeight },
 -					positionEnd + Vec2{ -diffXSign * kLaserLineWidth / 2, 0 },
 -					positionStart + Vec2{ diffXSign * kLaserLineWidth / 2, 0 }
++
 +					positionStart + Vec2{ diffXSign * LaserLineWidth() / 2, -slamHeight },
++
 +					positionEnd + Vec2{ -diffXSign * LaserLineWidth() / 2 + topShiftX, -slamHeight },
++
 +					positionEnd + Vec2{ -diffXSign * LaserLineWidth() / 2, 0 },
++
 +					positionStart + Vec2{ diffXSign * LaserLineWidth() / 2, 0 }
++
  				};
  			}
++
  			else
++
  			{
++
  				// scroll_speedが負の場合、手前方向(下)に太さを持つ
++
  				return {
 -					positionStart + Vec2{ diffXSign * kLaserLineWidth / 2, 0 },
 -					positionEnd + Vec2{ -diffXSign * kLaserLineWidth / 2, 0 },
 -					positionEnd + Vec2{ -diffXSign * kLaserLineWidth / 2 + topShiftX, -slamHeight },
 -					positionStart + Vec2{ diffXSign * kLaserLineWidth / 2, -slamHeight }
++
 +					positionStart + Vec2{ diffXSign * LaserLineWidth() / 2, 0 },
++
 +					positionEnd + Vec2{ -diffXSign * LaserLineWidth() / 2, 0 },
++
 +					positionEnd + Vec2{ -diffXSign * LaserLineWidth() / 2 + topShiftX, -slamHeight },
++
 +					positionStart + Vec2{ diffXSign * LaserLineWidth() / 2, -slamHeight }
++
  				};
  			}
  		}
-@@ -163,19 +173,19 @@ namespace MusicGame::Graphics
+ 
+ 		void DrawLaserSlam(int32 laneIdx, int32 positionY, const kson::GraphPoint& point, int32 slamHeight, const Texture& laserNoteTexture, int32 laserNoteTextureRow, int32 xScale, double topShiftX)
++
+ 		{
++
+ 			const Vec2 positionStart = {
++
+ 				LaserPointX(point.v.v, xScale),
++
+ 				positionY
++
+ 			};
+ 
+ 			const Vec2 positionEnd = {
++
+ 				LaserPointX(point.v.vf, xScale),
++
+ 				positionY
++
+ 			};
+ 
+ 			// 直角レーザーの角のテクスチャを描画
++
+ 			const bool isLeftToRight = (point.v.v < point.v.vf);
++
+ 			const int32 yOffset = -slamHeight / 2;
++
+ 			const double yScale = static_cast<double>(Abs(slamHeight)) / kLaserTextureSize.y;
+ 
+ 			// 始点側(v)の角テクスチャ
++
  			if (slamHeight > 0)
++
  			{
++
  				// scroll_speedが正の場合、奥方向(上)に太さを持つ
 -				laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow, kLaserTextureSize).mirrored(isLeftToRight).scaled(1.0, yScale).drawAt(positionStart + Vec2{ 0, yOffset });
++
 +				laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow, kLaserTextureSize).mirrored(isLeftToRight).scaled(LaserScale(), yScale).drawAt(positionStart + Vec2{ 0, yOffset });
  			}
++
  			else
++
  			{
++
  				// scroll_speedが負の場合、手前方向(下)に太さを持つ(上下反転)
 -				laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow, kLaserTextureSize).mirrored(isLeftToRight).flipped().scaled(1.0, yScale).drawAt(positionStart + Vec2{ 0, yOffset });
++
 +				laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow, kLaserTextureSize).mirrored(isLeftToRight).flipped().scaled(LaserScale(), yScale).drawAt(positionStart + Vec2{ 0, yOffset });
  			}
  
  			const double slamWidth = Abs(positionEnd.x - positionStart.x);
 -			const double innerWidth = Max(slamWidth - kLaserLineWidth, 0.0);
++
 +			const double innerWidth = Max(slamWidth - LaserLineWidth(), 0.0);
++
  			if (topShiftX * (positionEnd.x - positionStart.x) > 0.0 && Abs(topShiftX) > innerWidth)
++
  			{
 -				const double innerX = positionEnd.x + (isLeftToRight ? -kLaserLineWidth / 2 : kLaserLineWidth / 2);
++
 +				const double innerX = positionEnd.x + (isLeftToRight ? -LaserLineWidth() / 2 : LaserLineWidth() / 2);
++
  				const Vec2 innerTop{ innerX, positionY - slamHeight };
++
  				const Vec2 shiftedInnerTop{ innerX + topShiftX, positionY - slamHeight };
++
  				const Vec2 innerBottom{ innerX, positionY };
-@@ -187,10 +197,10 @@ namespace MusicGame::Graphics
+ 
+ 				// 終点側(vf)の角テクスチャの頂点移動で隙間が空かないよう内側の三角形を埋める
++
+ 				Quad{ innerTop, shiftedInnerTop, innerBottom, innerBottom }(laserNoteTexture(kLaserTextureSize.x * laneIdx + kOnePixelTextureSourceOffset, kLaserTextureSize.y * laserNoteTextureRow, kOnePixelTextureSourceSize, kLaserTextureSize.y)).draw();
+ 			}
+ 
  			// 終点側(vf)の角テクスチャ(直角レーザーの曲線描画時の変形のためにQuadで描画)
++
  			{
++
  				const double endX = positionEnd.x;
 -				const Vec2 junctionLeft{ endX - kLaserLineWidth / 2 + topShiftX, positionY - slamHeight };
 -				const Vec2 junctionRight{ endX + kLaserLineWidth / 2 + topShiftX, positionY - slamHeight };
 -				const Vec2 barLeft{ endX - kLaserLineWidth / 2, positionY };
 -				const Vec2 barRight{ endX + kLaserLineWidth / 2, positionY };
++
 +				const Vec2 junctionLeft{ endX - LaserLineWidth() / 2 + topShiftX, positionY - slamHeight };
++
 +				const Vec2 junctionRight{ endX + LaserLineWidth() / 2 + topShiftX, positionY - slamHeight };
++
 +				const Vec2 barLeft{ endX - LaserLineWidth() / 2, positionY };
++
 +				const Vec2 barRight{ endX + LaserLineWidth() / 2, positionY };
  
  				const auto textureRegion = laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow, kLaserTextureSize);
  
-@@ -302,11 +312,11 @@ namespace MusicGame::Graphics
+ 				if (isLeftToRight)
++
+ 				{
++
+ 					Quad{ barLeft, barRight, junctionRight, junctionLeft }(textureRegion).draw();
+ 				}
++
+ 				else
++
+ 				{
++
+ 					Quad{ barRight, barLeft, junctionLeft, junctionRight }(textureRegion).draw();
+ 				}
+ 			}
+ 
+ 			// 直角レーザーの横線を描画
++
+ 			const Quad quad = LaserSlamLineQuad(positionStart, positionEnd, slamHeight, topShiftX);
++
+ 			quad(laserNoteTexture(kLaserTextureSize.x * laneIdx + kOnePixelTextureSourceOffset, kLaserTextureSize.y * laserNoteTextureRow, kOnePixelTextureSourceSize, kLaserTextureSize.y)).draw();
+ 		}
+ 
+ 		void DrawLaserSlamTail(int32 laneIdx, int32 positionY, const kson::GraphPoint& point, int32 slamHeight, int32 tailHeight, const Texture& laserNoteTexture, int32 laserNoteTextureRow, int32 xScale)
++
+ 		{
++
+ 			const Vec2 positionStart = {
++
+ 				LaserPointX(point.v.vf, xScale),
++
+ 				positionY
++
+ 			};
+ 
+ 			// scroll_speedが正の場合は上方向、負の場合は下方向にtailを描画
++
+ 			const Quad quad = LaserLineQuad(positionStart + Vec2{ 0.0, -slamHeight }, positionStart + Vec2{ 0.0, -slamHeight - tailHeight });
++
+ 			quad(laserNoteTexture(kLaserTextureSize.x * laneIdx, kLaserTextureSize.y * laserNoteTextureRow + kLaserTextureSize.y - 1 + kOnePixelTextureSourceOffset, kLaserTextureSize.x, kOnePixelTextureSourceSize)).draw();
+ 		}
+ 
+ 		JudgmentStatus GetLaserSectionJudgmentStatus(const LaserLaneStatus& laneStatus, kson::Pulse laserSectionY)
++
+ 		{
++
+ 			if (laneStatus.currentLaserSectionPulse != laserSectionY)
++
+ 			{
++
+ 				// 現在判定対象になっていなければNormal
++
+ 				return JudgmentStatus::kNormal;
+ 			}
+ 
+ 			if (laneStatus.isCursorInCriticalJudgmentRange())
++
+ 			{
++
+ 				// カーソルがクリティカル判定の範囲内であればCritical
++
+ 				return JudgmentStatus::kCritical;
+ 			}
+ 
+ 			// 判定が外れていればError
++
+ 			return JudgmentStatus::kError;
+ 		}
+ 
+ 		/// @remark レンダーターゲットは呼び出し側で設定しておくこと
++
+ 		void DrawLaserSection(int32 laneIdx, kson::Pulse y, const kson::LaserSection& laserSection, const HashSet<kson::Pulse>& curvedPulses, const Scroll::HighwayScrollContext& highwayScrollContext, const Texture& laserNoteTexture, int32 laserNoteTextureRow, const TextureRegion& laserStartTexture)
++
+ 		{
++
+ 			// はみ出しLASERの場合は描画領域を横幅2倍として扱う
++
+ 			const bool wide = laserSection.wide();
++
+ 			const int32 xScale = wide ? kLaserXScaleWide : kLaserXScaleNormal;
++
+ 			const Transformer2D transformer(Mat3x2::Translate(wide ? kLaserPositionOffsetWide : kLaserPositionOffsetNormal));
+ 
+ 			// scroll_speedに負の値が含まれている場合は過去の点も描画範囲に入る可能性がある
++
+ 			const bool hasNegativeScrollSpeed = highwayScrollContext.hasNegativeScrollSpeed();
+ 
+ 			// LASERセクション内の各点をもとに描画
++
+ 			for (auto itr = laserSection.v.begin(); itr != laserSection.v.end(); ++itr)
++
+ 			{
++
+ 				const auto& [ry, point] = *itr;
+ 
+ 				const int32 positionY = highwayScrollContext.getPositionY(y + ry) + kLaserShiftY;
+ 
+ 				const bool isSlam = point.v.v != point.v.vf;
++
+ 				int32 slamHeight = 0;
++
+ 				if (isSlam)
++
+ 				{
++
+ 					slamHeight = CalcLaserSlamHeight(y + ry, highwayScrollContext);
+ 
++					// Scale the visual height before the existing next-slam safety cap.
++
++					slamHeight = static_cast<int32>(Round(slamHeight * SkinPreset::Current().slamThicknessPercent / 100.0));
++
+ 					// 後続の直角が分厚さの内側に隠れて消えないよう、その直角までの画面距離の一定割合を分厚さの上限とする
++
+ 					for (auto capItr = std::next(itr); capItr != laserSection.v.end(); ++capItr)
++
+ 					{
++
+ 						const int32 capPositionY = highwayScrollContext.getPositionY(y + capItr->first) + kLaserShiftY;
++
+ 						const int32 distanceY = positionY - capPositionY;
++
+ 						if (Sign(distanceY) != Sign(slamHeight) || Abs(distanceY) >= Abs(slamHeight))
++
+ 						{
++
+ 							// 分厚さの外に出たら抜ける
++
+ 							break;
+ 						}
++
+ 						if (capItr->second.v.v != capItr->second.v.vf)
++
+ 						{
++
+ 							slamHeight = distanceY * kLaserSlamHeightMaxToNextSlamNumerator / kLaserSlamHeightMaxToNextSlamDenominator;
++
+ 							break;
+ 						}
+ 					}
+ 				}
+ 
+ 				// この点のPulse位置でのscroll_speedが正かを取得
++
+ 				const bool isScrollSpeedPositive = highwayScrollContext.isScrollSpeedPositiveAt(y + ry);
+ 
+ 				// レーザー開始テクスチャを描画
++
+ 				if (itr == laserSection.v.begin())
++
+ 				{
++
+ 					// 開始テクスチャの描画範囲を計算
++
+ 					const int32 startTextureMinY = isScrollSpeedPositive ? positionY : positionY - kLaserStartTextureSize.y;
++
+ 					const int32 startTextureMaxY = isScrollSpeedPositive ? positionY + kLaserStartTextureSize.y : positionY;
++
+ 					const bool isStartTextureInRange = startTextureMaxY >= 0 && startTextureMinY < kHighwayTextureSize.y;
+ 
+ 					if (isStartTextureInRange)
++
+ 					{
++
+ 						const Vec2 positionStart = {
++
+ 							LaserPointX(point.v.v, xScale),
++
+ 							positionY
++
+ 						};
+ 
  						// scroll_speedが正の場合は下方向、負の場合は上方向にテクスチャを配置
++
  						if (isScrollSpeedPositive)
++
  						{
 -							laserStartTexture.draw(Arg::topCenter = positionStart);
++
 +							laserStartTexture.scaled(LaserScale(), 1.0).draw(Arg::topCenter = positionStart);
  						}
++
  						else
++
  						{
 -							laserStartTexture.flipped().draw(Arg::bottomCenter = positionStart);
++
 +							laserStartTexture.flipped().scaled(LaserScale(), 1.0).draw(Arg::bottomCenter = positionStart);
  						}
  					}
  				}
-@@ -430,21 +440,20 @@ namespace MusicGame::Graphics
+ 
+ 				// 終点スプライトの傾き計算(直角かつ曲線の場合)
++
+ 				double topShiftX = 0.0;
+ 
+ 				// 直角レーザーを描画
++
+ 				if (isSlam)
++
+ 				{
++
+ 					// 展開前データに曲線がある場合、直角の分厚さの外にある最初の点を参照してtopShiftXを計算
++
+ 					if (slamHeight != 0 && curvedPulses.contains(y + ry))
++
+ 					{
++
+ 						const int32 slamTopY = positionY - slamHeight;
++
+ 						for (auto refItr = std::next(itr); refItr != laserSection.v.end(); ++refItr)
++
+ 						{
++
+ 							const auto& [refRy, refPoint] = *refItr;
++
+ 							const int32 refPositionY = highwayScrollContext.getPositionY(y + refRy) + kLaserShiftY;
+ 
+ 							// 直角の分厚さの内側にある点は飛ばす
++
+ 							if ((slamHeight > 0 && refPositionY > slamTopY) || (slamHeight < 0 && refPositionY < slamTopY))
++
+ 							{
++
+ 								continue;
+ 							}
+ 
+ 							// 曲線の位置から上端の横方向の移動量を計算
++
+ 							const double endPointX = LaserPointX(point.v.vf, xScale);
++
+ 							const double refPointX = LaserPointX(refPoint.v.v, xScale);
++
+ 							topShiftX = (refPointX - endPointX) * static_cast<double>(slamHeight) / (positionY - refPositionY);
++
+ 							const double startPointX = LaserPointX(point.v.v, xScale);
++
+ 							topShiftX = ClampSlamTopShift(startPointX, endPointX, topShiftX);
++
+ 							break;
+ 						}
+ 					}
+ 
+ 					// 直角レーザーの横線は厚さ(slamHeight)を持つため、その範囲をチェック
++
+ 					const int32 slamMinY = Min(positionY - slamHeight, positionY);
++
+ 					const int32 slamMaxY = Max(positionY - slamHeight, positionY);
++
+ 					const bool isSlamInRange = slamMaxY >= 0 && slamMinY < kHighwayTextureSize.y;
+ 
+ 					if (isSlamInRange)
++
+ 					{
++
+ 						DrawLaserSlam(laneIdx, positionY, point, slamHeight, laserNoteTexture, laserNoteTextureRow, xScale, topShiftX);
+ 					}
+ 
+ 					// 直角の分厚さの内側にある次の点を飛ばす
++
+ 					const int32 slamTopY = positionY - slamHeight;
++
+ 					while (std::next(itr) != laserSection.v.end())
++
+ 					{
++
+ 						const int32 peekPositionY = highwayScrollContext.getPositionY(y + std::next(itr)->first) + kLaserShiftY;
++
+ 						if ((slamHeight > 0 && peekPositionY > slamTopY) || (slamHeight < 0 && peekPositionY < slamTopY))
++
+ 						{
++
+ 							++itr;
+ 						}
++
+ 						else
++
+ 						{
++
+ 							break;
+ 						}
+ 					}
+ 				}
+ 
+ 				// レーザー終端の点の場合は線を描画しない
++
+ 				const auto nextItr = std::next(itr);
++
+ 				if (nextItr == laserSection.v.end())
++
+ 				{
++
+ 					// 終端が直角の場合は終端を伸ばす
++
+ 					if (isSlam)
++
+ 					{
++
+ 						const int32 tailHeight = CalcLaserTailHeight(y + ry, highwayScrollContext);
+ 
+ 						// tailの描画範囲を計算
++
+ 						const int32 tailMinY = Min(positionY - slamHeight - tailHeight, positionY - slamHeight);
++
+ 						const int32 tailMaxY = Max(positionY - slamHeight - tailHeight, positionY - slamHeight);
++
+ 						const bool isTailInRange = tailMaxY >= 0 && tailMinY < kHighwayTextureSize.y;
+ 
+ 						if (isTailInRange)
++
+ 						{
++
+ 							DrawLaserSlamTail(laneIdx, positionY, point, slamHeight, tailHeight, laserNoteTexture, laserNoteTextureRow, xScale);
+ 						}
+ 					}
+@@ -392,18 +655,28 @@ namespace MusicGame::Graphics
+ 				}
+ 
+ 				// レーザーの2つの点をもとに線を描画
++
+ 				{
++
+ 					const auto& [nextRy, nextPoint] = *nextItr;
++
+ 					const int32 nextPositionY = highwayScrollContext.getPositionY(y + nextRy) + kLaserShiftY;
+ 
+ 					// 線全体が描画範囲外の場合はスキップ
++
+ 					if (!highwayScrollContext.isPulseRangeInDrawRange(y + ry, y + nextRy, kLaserShiftY))
++
+ 					{
++
+ 						// scroll_speedに負の値がなく、線全体が上にある場合は以降も描画対象外
++
+ 						if (!hasNegativeScrollSpeed && Max(positionY, nextPositionY) < 0)
++
+ 						{
++
+ 							return;
+ 						}
++
+ 						continue;
+ 					}
+ 
+@@ -413,124 +686,196 @@ namespace MusicGame::Graphics
+ 		}
+ 
+ 		int32 LaserTextureRow(JudgmentStatus judgmentStatus, double currentTimeSec)
++
+ 		{
++
+ 			switch (judgmentStatus)
++
+ 			{
++
+ 			case JudgmentStatus::kCritical:
++
+ 				return MathUtils::WrappedFmod(currentTimeSec, kLaserCriticalBlinkIntervalSec) < kLaserCriticalBlinkIntervalSec / 2 ? 2 : 1;
+ 
+ 			case JudgmentStatus::kError:
++
+ 				return 3;
+ 
+ 			case JudgmentStatus::kNormal:
++
+ 			default:
++
+ 				return 0;
+ 			}
+ 		}
++
  	}
  
  	LaserNoteGraphics::LaserNoteGraphics()
@@ -8328,23 +9319,173 @@ index 6864a367bccfe9b66ca5979c9a9f858cc4564542..2abaeb157cfb8ef03e0b8b8e8f9bc0e2
 -					.column = kNumTextureColumnsMainSub,
 -					.sourceSize = kLaserStartTextureSize,
 -				}) }
++
 +		: m_laserNoteTexture(TextureAsset(kLaserNoteTextureFilename)), m_laserNoteMaskTexture(TextureAsset(kLaserNoteMaskTextureFilename)), m_laserNoteStartTextures{
++
 +			  TiledTexture(
++
 +				  kLaserNoteLeftStartTextureFilename,
++
 +				  {
++
 +					  .column = kNumTextureColumnsMainSub,
++
 +					  .sourceSize = kLaserStartTextureSize,
++
 +				  }),
++
 +			  TiledTexture(
++
 +				  kLaserNoteRightStartTextureFilename,
++
 +				  {
++
 +					  .column = kNumTextureColumnsMainSub,
++
 +					  .sourceSize = kLaserStartTextureSize,
++
 +				  })
++
 +		  }
++
  	{
  	}
  
+ 	void LaserNoteGraphics::draw(const kson::ChartData& chartData, const std::array<HashSet<kson::Pulse>, kson::kNumLaserLanesSZ>& laserCurvedPulses, const PlayOption& playOption, const GameStatus& gameStatus, const Scroll::HighwayScrollContext& highwayScrollContext, const HighwayRenderTexture& target) const
++
+ 	{
++
+ 		const ScopedRenderStates2D samplerState(SamplerState::ClampNearest);
++
+ 		const ScopedRenderStates2D renderState(BlendState::Additive);
+ 
+ 		// LASERノーツを描画
++
+ 		for (int32 laneIdx = 0; laneIdx < kson::kNumLaserLanes; ++laneIdx) // 座標計算で結局int32にする必要があるのでここではsize_t不使用
++
+ 		{
++
+ 			const auto& lane = chartData.note.laser[laneIdx];
++
+ 			const auto& curvedPulses = laserCurvedPulses[laneIdx];
++
+ 			const auto& laneStatus = gameStatus.laserLaneStatus[laneIdx];
+ 
+ 			// scroll_speedに負の値が含まれている場合は過去のノーツも描画範囲に入る可能性があるため、先頭から走査
++
+ 			const bool hasNegativeScrollSpeed = highwayScrollContext.hasNegativeScrollSpeed();
++
+ 			auto itr = hasNegativeScrollSpeed ? lane.begin() : kson::ValueItrAt(lane, gameStatus.currentPulse);
+ 
+ 			m_visibleLaserSections.clear();
+ 
+ 			for (; itr != lane.end(); ++itr)
++
+ 			{
++
+ 				const auto& [y, laserSection] = *itr;
+ 
+ 				const kson::RelPulse lengthRy = laserSection.v.rbegin()->first;
++
+ 				const int32 sectionStartPositionY = highwayScrollContext.getPositionY(y) + kLaserShiftY;
++
+ 				const int32 sectionEndPositionY = highwayScrollContext.getPositionY(y + lengthRy) + kLaserShiftY;
+ 
+ 				// セクション開始位置でのscroll_speedの符号を取得
++
+ 				const bool isStartScrollSpeedPositive = highwayScrollContext.isScrollSpeedPositiveAt(y);
+ 
+ 				// 開始テクスチャの描画範囲を計算
++
+ 				const int32 startTextureMinY = isStartScrollSpeedPositive ? sectionStartPositionY : sectionStartPositionY - kLaserStartTextureSize.y;
++
+ 				const int32 startTextureMaxY = isStartScrollSpeedPositive ? sectionStartPositionY + kLaserStartTextureSize.y : sectionStartPositionY;
+ 
+ 				// 終端が直角の場合のtailの描画範囲を計算
++
+ 				const bool isEndSlam = (laserSection.v.rbegin()->second.v.v != laserSection.v.rbegin()->second.v.vf);
++
+ 				int32 tailMinY = sectionEndPositionY;
++
+ 				int32 tailMaxY = sectionEndPositionY;
++
+ 				if (isEndSlam)
++
+ 				{
++
+ 					const int32 slamHeight = CalcLaserSlamHeight(y + lengthRy, highwayScrollContext);
++
+ 					const int32 tailHeight = CalcLaserTailHeight(y + lengthRy, highwayScrollContext);
+ 
+ 					tailMinY = Min(sectionEndPositionY - slamHeight - tailHeight, sectionEndPositionY - slamHeight);
++
+ 					tailMaxY = Max(sectionEndPositionY - slamHeight - tailHeight, sectionEndPositionY - slamHeight);
+ 				}
+ 
+ 				// セクション全体が描画範囲外の場合はスキップ
++
+ 				// レーザー線はscroll_speedが負だとセクション内でYが非単調になるためサンプリングで判定し、
++
+ 				// 端点基準の固定オフセットである開始テクスチャ・終端tailは別途範囲を加味する
++
+ 				const bool pathInRange = highwayScrollContext.isPulseRangeInDrawRange(y, y + lengthRy, kLaserShiftY);
++
+ 				const bool startTextureInRange = startTextureMaxY >= 0 && startTextureMinY < kHighwayTextureSize.y;
++
+ 				const bool tailInRange = tailMaxY >= 0 && tailMinY < kHighwayTextureSize.y;
++
+ 				if (!pathInRange && !startTextureInRange && !tailInRange)
++
+ 				{
++
+ 					// scroll_speedに負の値がなく、セクション全体が上にある場合はこれ以降も範囲外
++
+ 					if (!hasNegativeScrollSpeed && Max(sectionStartPositionY, Max(sectionEndPositionY, Max(startTextureMaxY, tailMaxY))) < 0)
++
+ 					{
++
+ 						break;
+ 					}
++
+ 					continue;
+ 				}
+ 
+ 				// LASERセクションの判定状況をもとに描画すべきテクスチャの行を取得
++
+ 				// Offモードの場合は常に通常状態のUVを使用
++
+ 				const JudgmentStatus judgmentStatus = (playOption.laserJudgmentPlayMode == JudgmentPlayMode::kOff) ? JudgmentStatus::kNormal : GetLaserSectionJudgmentStatus(laneStatus, y);
++
+ 				const int32 textureRow = LaserTextureRow(judgmentStatus, gameStatus.currentTimeSec);
+ 
+ 				m_visibleLaserSections.push_back({ .y = y, .pLaserSection = &laserSection, .textureRow = textureRow });
+ 			}
+ 
+ 			// レンダーターゲットの切り替えはセクション単位で行うと描画バッチが分断されるため、テクスチャの種類単位でまとめる
++
+ 			for (int32 textureColumn = 0; textureColumn < kNumTextureColumnsMainSub; ++textureColumn)
++
+ 			{
++
+ 				const bool isMain = textureColumn == kTextureColumnMain;
++
+ 				const ScopedRenderTarget2D renderTarget(isMain ? target.additiveTexture() : target.invMultiplyTexture());
++
+ 				const Texture& laserNoteTexture = isMain ? m_laserNoteTexture : m_laserNoteMaskTexture;
++
+ 				const TextureRegion laserStartTexture = m_laserNoteStartTextures[laneIdx](0, textureColumn);
+ 
+ 				for (const auto& [y, pLaserSection, textureRow] : m_visibleLaserSections)
++
+ 				{
++
+ 					DrawLaserSection(laneIdx, y, *pLaserSection, curvedPulses, highwayScrollContext, laserNoteTexture, textureRow, laserStartTexture);
+ 				}
+ 			}
+ 		}
+ 	}
++
+ }
 diff --git a/kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp b/kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp
 index 1ff357db3a60565b46964bc281b47b00c32f8b74..54342163659e3b944db4f1f595e317418129d38f 100644
 --- a/kshootmania/src/MusicGame/Graphics/Jdgline/Jdgline3DGraphics.cpp
@@ -9944,6 +11085,78 @@ index 70eca379a49f78fc81f69fc7c1fd47c5f885329d..740e9a1955a232b27f5583f72c82da3c
  		Judgment::ComboStats chipOrLaserSlamStats;
  
  		Judgment::ComboStats longOrLaserLineStats;
+diff --git a/kshootmania/src/MusicGame/Scroll/HighwayScroll.cpp b/kshootmania/src/MusicGame/Scroll/HighwayScroll.cpp
+index 1df6b7152c66274c04084ceb4c435cee2676a0cd..3afdb1b7e554f2e40519a3a3d2617d8a739f6eb5 100644
+--- a/kshootmania/src/MusicGame/Scroll/HighwayScroll.cpp
++++ b/kshootmania/src/MusicGame/Scroll/HighwayScroll.cpp
+@@ -102,7 +102,32 @@ namespace MusicGame::Scroll
+ 
+ 	int32 HighwayScrollContext::getPositionY(kson::Pulse pulse) const
+ 	{
+-		return m_pHighwayScroll->getPositionY(pulse, *m_pBeatInfo, *m_pTimingCache, *m_pGameStatus);
++		const auto& hispeed = m_pHighwayScroll->hispeedSetting();
++		if (m_positionTime != m_pGameStatus->currentTimeSec || m_positionPulse != m_pGameStatus->currentPulseDouble ||
++			m_positionHispeed.type != hispeed.type || m_positionHispeed.value != hispeed.value)
++		{
++			m_positionTime = m_pGameStatus->currentTimeSec;
++			m_positionPulse = m_pGameStatus->currentPulseDouble;
++			m_positionHispeed = hispeed;
++			if (++m_positionGeneration == 0)
++			{
++				for (auto& entry : m_positionCache)
++					entry.generation = 0;
++				m_positionGeneration = 1;
++			}
++		}
++		uint64 key = static_cast<uint64>(pulse);
++		key = (key ^ (key >> 30)) * 0xbf58476d1ce4e5b9ULL;
++		key = (key ^ (key >> 27)) * 0x94d049bb133111ebULL;
++		key ^= key >> 31;
++		auto& entry = m_positionCache[key & (m_positionCache.size() - 1)];
++		if (entry.generation != m_positionGeneration || entry.pulse != pulse)
++		{
++			entry.pulse = pulse;
++			entry.value = m_pHighwayScroll->getPositionY(pulse, *m_pBeatInfo, *m_pTimingCache, *m_pGameStatus);
++			entry.generation = m_positionGeneration;
++		}
++		return entry.value;
+ 	}
+ 
+ 	bool HighwayScrollContext::isPulseRangeInDrawRange(kson::Pulse startPulse, kson::Pulse endPulse, int32 positionYOffset) const
+diff --git a/kshootmania/src/MusicGame/Scroll/HighwayScroll.hpp b/kshootmania/src/MusicGame/Scroll/HighwayScroll.hpp
+index 067053bb3229f7bdbbc38254266fb1f74ae977b9..c87a9df61fe4941a50a93291ee118b4da035e556 100644
+--- a/kshootmania/src/MusicGame/Scroll/HighwayScroll.hpp
++++ b/kshootmania/src/MusicGame/Scroll/HighwayScroll.hpp
+@@ -1,5 +1,7 @@
+ ﻿#pragma once
+ #include <mutex>
++#include <array>
++#include <limits>
+ #include "MusicGame/GameStatus.hpp"
+ #include "MusicGame/Graphics/GraphicsDefines.hpp"
+ #include "HispeedSetting.hpp"
+@@ -21,6 +23,21 @@ namespace MusicGame::Scroll
+ 		/// @brief scrollSpeedに負の値が含まれているか
+ 		const bool m_hasNegativeScrollSpeed;
+ 
++		// A draw context is thread-confined. Reuse exact positions within that
++		// frame, with bounded storage and no allocation or timing quantization.
++		struct PositionCacheEntry
++		{
++			kson::Pulse pulse = 0;
++			uint32 generation = 0;
++			int32 value = 0;
++		};
++		mutable std::array<PositionCacheEntry, 2048> m_positionCache{};
++		mutable uint32 m_positionGeneration = 0;
++		mutable double m_positionTime = std::numeric_limits<double>::quiet_NaN();
++		mutable double m_positionPulse = std::numeric_limits<double>::quiet_NaN();
++		mutable HispeedSetting m_positionHispeed{};
++
++
+ 	public:
+ 		/// @brief コンストラクタ
+ 		/// @param pHighwayScroll HighwayScrollのポインタ(メンバ関数呼出時点で有効なポインタであること)
 diff --git a/kshootmania/src/MusicGame/ViewStatus.hpp b/kshootmania/src/MusicGame/ViewStatus.hpp
 index 647052dc27dcf60e746a7d6c6ec306c4af59bc46..a83636e933bc0db024db855d305d1d4e59176c52 100644
 --- a/kshootmania/src/MusicGame/ViewStatus.hpp
@@ -9979,7 +11192,7 @@ index 647052dc27dcf60e746a7d6c6ec306c4af59bc46..a83636e933bc0db024db855d305d1d4e
  	};
  }
 diff --git a/kshootmania/src/RuntimeConfig.cpp b/kshootmania/src/RuntimeConfig.cpp
-index 9bd02ae519beb2f8446b7137bce79dc5bc3e6968..33c57dc44cd871331f64bac3165bde3877da0b61 100644
+index 9bd02ae519beb2f8446b7137bce79dc5bc3e6968..b2d21d2f40cb65d78abbfcf0376c9dda0095aab7 100644
 --- a/kshootmania/src/RuntimeConfig.cpp
 +++ b/kshootmania/src/RuntimeConfig.cpp
 @@ -6,6 +6,7 @@ namespace
@@ -9990,11 +11203,12 @@ index 9bd02ae519beb2f8446b7137bce79dc5bc3e6968..33c57dc44cd871331f64bac3165bde38
  		TurnMode turnMode = TurnMode::kNormal;
  		JudgmentPlayMode judgmentModeBT = JudgmentPlayMode::kOn;
  		JudgmentPlayMode judgmentModeFX = JudgmentPlayMode::kOn;
-@@ -26,6 +27,22 @@ namespace RuntimeConfig
+@@ -26,6 +27,44 @@ namespace RuntimeConfig
  	void SetGaugeType(GaugeType gaugeType)
  	{
  		g_config.gaugeType = gaugeType;
 +		g_config.apsEnabled = false;
++		StoreGaugeSelectionToConfigIni();
 +	}
 +
 +	bool GetApsEnabled()
@@ -10010,10 +11224,31 @@ index 9bd02ae519beb2f8446b7137bce79dc5bc3e6968..33c57dc44cd871331f64bac3165bde38
 +		const int32 hard = static_cast<int32>(GaugeType::kHardGauge);
 +		g_config.gaugeType = static_cast<GaugeType>(Clamp(selection, static_cast<int32>(GaugeType::kEasyGauge), hard));
 +		g_config.apsEnabled = selection == hard + 1;
++		StoreGaugeSelectionToConfigIni();
++	}
++
++	void StoreGaugeSelectionToConfigIni()
++	{
++		if (ConfigIni::GetBool(ConfigIni::Key::kRememberEffRate, false))
++			ConfigIni::SetInt(ConfigIni::Key::kLastEffRate, GetGaugeSelection());
++	}
++
++	void RestoreGaugeSelectionFromConfigIni()
++	{
++		const int32 normal = static_cast<int32>(GaugeType::kNormalGauge);
++		const int32 saved = ConfigIni::GetInt(ConfigIni::Key::kLastEffRate, normal);
++		const bool remember = ConfigIni::GetBool(ConfigIni::Key::kRememberEffRate, false);
++		SetGaugeSelection(remember && saved >= 0 && saved <= 3 ? saved : normal);
++	}
++
++	void SetRememberEffRate(bool enabled)
++	{
++		ConfigIni::SetBool(ConfigIni::Key::kRememberEffRate, enabled);
++		StoreGaugeSelectionToConfigIni();
  	}
  
  	TurnMode GetTurnMode()
-@@ -85,3 +102,20 @@ namespace RuntimeConfig
+@@ -85,3 +124,20 @@ namespace RuntimeConfig
  		g_config.judgmentModeLaser = static_cast<JudgmentPlayMode>(ConfigIni::GetInt(ConfigIni::Key::kJudgmentModeLaser, ConfigIni::Value::JudgmentMode::kOn));
  	}
  }
@@ -10035,16 +11270,17 @@ index 9bd02ae519beb2f8446b7137bce79dc5bc3e6968..33c57dc44cd871331f64bac3165bde38
 +	}
 +}
 diff --git a/kshootmania/src/RuntimeConfig.hpp b/kshootmania/src/RuntimeConfig.hpp
-index b882a055d168a52445c92dc6b1d5ddf03085db45..69901f497195efa57d8dce177145ca91a3378188 100644
+index b882a055d168a52445c92dc6b1d5ddf03085db45..f9081aaf011cfda291dda632c75eceb2f90a998e 100644
 --- a/kshootmania/src/RuntimeConfig.hpp
 +++ b/kshootmania/src/RuntimeConfig.hpp
-@@ -1,14 +1,20 @@
+@@ -1,14 +1,23 @@
  ﻿#pragma once
  #include "Common/CommonDefines.hpp"
 +#include "MusicGame/TimingFeedback.hpp"
  
  // 実行中のみ保持する設定
- // config.iniには保存されず、起動時にデフォルト値にリセットされる
+-// config.iniには保存されず、起動時にデフォルト値にリセットされる
++// ゲージ選択のみ、保存設定が有効な場合はconfig.iniから復元する
  namespace RuntimeConfig
  {
 +	FastSlowMode LoadFastSlowModeFromConfigIni();
@@ -10056,6 +11292,9 @@ index b882a055d168a52445c92dc6b1d5ddf03085db45..69901f497195efa57d8dce177145ca91
 +	bool GetApsEnabled();
 +	void SetGaugeSelection(int32 selection);
 +	int32 GetGaugeSelection();
++	void RestoreGaugeSelectionFromConfigIni();
++	void StoreGaugeSelectionToConfigIni();
++	void SetRememberEffRate(bool enabled);
  
  	[[nodiscard]]
  	TurnMode GetTurnMode();
@@ -10217,8 +11456,87 @@ index 7f2f6b58bfb330ed35960c5583b3a924140e5813..5ca6849d1354e52985ff1879c0f05535
  	m_canvas->draw();
  }
  
+diff --git a/kshootmania/src/Scenes/Option/OptionMenu.cpp b/kshootmania/src/Scenes/Option/OptionMenu.cpp
+index 170be02efcec8ac4ed0e55803e044c9d582955c7..246ca11a2518152da2e581d4489e6cd818478051 100644
+--- a/kshootmania/src/Scenes/Option/OptionMenu.cpp
++++ b/kshootmania/src/Scenes/Option/OptionMenu.cpp
+@@ -74,6 +74,7 @@ Array<OptionMenu::SettingItemParams> OptionMenu::getSettingItemParamsList() cons
+ 			.name = m_fields[i].name(),
+ 			.value = m_fields[i].valueDisplayString(),
+ 			.selected = (i == cursorIdx),
++			.enabled = m_fields[i].enabled(),
+ 			.valueArrowIndex = static_cast<int32>(arrowType),
+ 			.valueLeftArrowVisible = arrowType == OptionMenuField::kArrowTypeLeft || arrowType == OptionMenuField::kArrowTypeLeftRight,
+ 			.valueRightArrowVisible = arrowType == OptionMenuField::kArrowTypeRight || arrowType == OptionMenuField::kArrowTypeLeftRight,
+diff --git a/kshootmania/src/Scenes/Option/OptionMenu.hpp b/kshootmania/src/Scenes/Option/OptionMenu.hpp
+index 3d7529b9fc49fa11c86c87dcd2aad367a41e15c1..bdc6bc308a9288629861c830e565a20e31b449fc 100644
+--- a/kshootmania/src/Scenes/Option/OptionMenu.hpp
++++ b/kshootmania/src/Scenes/Option/OptionMenu.hpp
+@@ -10,6 +10,7 @@ public:
+ 		String name;
+ 		String value;
+ 		bool selected;
++		bool enabled;
+ 		int32 valueArrowIndex;
+ 		bool valueLeftArrowVisible;
+ 		bool valueRightArrowVisible;
+diff --git a/kshootmania/src/Scenes/Option/OptionMenuField.cpp b/kshootmania/src/Scenes/Option/OptionMenuField.cpp
+index 3d78dc9e11e68fda357119eecf249a222a9f3867..3639494a0d64f3610080d3c1c29fbb0d89412465 100644
+--- a/kshootmania/src/Scenes/Option/OptionMenuField.cpp
++++ b/kshootmania/src/Scenes/Option/OptionMenuField.cpp
+@@ -208,6 +208,7 @@ OptionMenuField::OptionMenuField(const CreateInfo& createInfo)
+ 	, m_suffixStrNegative(createInfo.suffixStrNegative)
+ 	, m_valueDisplayNamePairs(createInfo.valueDisplayNamePairs)
+ 	, m_onChangeCallback(createInfo.onChangeCallback)
++	, m_isEnabled(createInfo.isEnabled)
+ 	, m_menu(createInfo.valueStep == 0
+ 		? MakeMenuEnum(static_cast<int32>(createInfo.valueDisplayNamePairs.size()), FindDefaultCursor(m_configIniKey, m_isEnum, m_valueDisplayNamePairs, createInfo.valueDefault))
+ 		: MakeMenuInt(createInfo.valueMin, createInfo.valueMax, FindDefaultCursor(m_configIniKey, m_isEnum, m_valueDisplayNamePairs, createInfo.valueDefault), createInfo.valueStep))
+@@ -221,6 +222,7 @@ bool OptionMenuField::update()
+ 
+ bool OptionMenuField::update(int32 externalValueDelta)
+ {
++	if (!enabled()) return false;
+ 	const int32 cursorPrev = m_menu.cursor();
+ 
+ 	m_menu.updateWithExternalDelta(externalValueDelta);
+@@ -311,5 +313,5 @@ const String& OptionMenuField::name() const
+ 
+ OptionMenuField::ArrowType OptionMenuField::arrowType() const
+ {
+-	return GetMenuFieldValueArrowType(m_menu);
++	return enabled() ? GetMenuFieldValueArrowType(m_menu) : kArrowTypeNone;
+ }
+diff --git a/kshootmania/src/Scenes/Option/OptionMenuField.hpp b/kshootmania/src/Scenes/Option/OptionMenuField.hpp
+index c27d84db6348fac3e34d1041d2c0ed0a326556df..d0ee58d75d8f1a71402854198fed3ed091f38fda 100644
+--- a/kshootmania/src/Scenes/Option/OptionMenuField.hpp
++++ b/kshootmania/src/Scenes/Option/OptionMenuField.hpp
+@@ -19,6 +19,7 @@ private:
+ 	const Array<std::pair<String, String>> m_valueDisplayNamePairs;
+ 
+ 	const std::function<void()> m_onChangeCallback;
++	const std::function<bool()> m_isEnabled;
+ 
+ 	LinearMenu m_menu;
+ 
+@@ -42,6 +43,7 @@ public:
+ 		Array<std::pair<String, String>> valueDisplayNamePairs;
+ 
+ 		std::function<void()> onChangeCallback = nullptr;
++		std::function<bool()> isEnabled = nullptr;
+ 
+ 		static CreateInfo Enum(StringView name, StringView configIniKey, const Array<String>& valueDisplayNames);
+ 
+@@ -79,6 +81,7 @@ public:
+ 	/// @param externalValueDelta 外部からの値変更量
+ 	/// @return 値が変更された場合true
+ 	bool update(int32 externalValueDelta);
++	bool enabled() const { return !m_isEnabled || m_isEnabled(); }
+ 
+ 	// 注意: これらの列挙子の値はNocoUI側のvalueArrowIndexにも使用されるので順番を入れ替えないこと
+ 	enum ArrowType
 diff --git a/kshootmania/src/Scenes/Option/OptionScene.cpp b/kshootmania/src/Scenes/Option/OptionScene.cpp
-index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a0248338563f 100644
+index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..a3168e2d8a3f284e17a3a759dd2198d846f4383d 100644
 --- a/kshootmania/src/Scenes/Option/OptionScene.cpp
 +++ b/kshootmania/src/Scenes/Option/OptionScene.cpp
 @@ -1,9 +1,19 @@
@@ -10251,7 +11569,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  	}
  
  	std::shared_ptr<noco::Canvas> LoadOptionSceneCanvas()
-@@ -50,227 +60,314 @@ std::unique_ptr<std::array<OptionMenu, OptionScene::kOptionMenuTypeEnumCount>> O
+@@ -50,227 +60,324 @@ std::unique_ptr<std::array<OptionMenu, OptionScene::kOptionMenuTypeEnumCount>> O
  		availableLanguageStrPairs.emplace_back(language, language);
  	}
  
@@ -10413,6 +11731,12 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
 -				StrPair{ String{ ConfigIni::Value::AudioBackend::kDirectSound }, I18n::Get(I18n::Option::AudioBackendDirectSound) },
 -			}),
 +			CreateInfo::Enum(I18n::Get(I18n::Option::ItemAudioBackend), ConfigIni::Key::kAudioBackend, audioOutputs),
++			[this] {
++				auto field = CreateInfo::Int(I18n::Get(I18n::Mod::AsioJudgmentCorrection), ConfigIni::Key::kAsioJudgmentCorrection, -100, 100, 15, U"ms", 1);
++				field.isEnabled = [] { return ksmaudio::IsASIOActive(); };
++				field.onChangeCallback = [this] { if (!AudioCalibration::Store()) { m_outputError = I18n::Get(I18n::Mod::AudioSaveFailed); logAudioOutput(m_outputError, true, false); } };
++				return field;
++			}(),
  #endif
  			CreateInfo::Enum(I18n::Get(I18n::Option::ItemVsync), ConfigIni::Key::kVsync, Array<StrPair>{
 -				StrPair{ U"0;120", I18n::Get(I18n::Option::VsyncOffWithFps, 120) },
@@ -10643,6 +11967,10 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
 +																													 I18n::Get(I18n::Option::Off),
 +																													 I18n::Get(I18n::Option::On),
 +																												 }),
++			CreateInfo::Enum(I18n::Get(I18n::Mod::RememberEffRate), ConfigIni::Key::kRememberEffRate, Array<StringView>{ I18n::Get(I18n::Option::Off), I18n::Get(I18n::Option::On) }).setDefaultValue(0).setOnChangeCallback([]
++																																																							 {
++																																																								 RuntimeConfig::SetRememberEffRate(ConfigIni::GetBool(ConfigIni::Key::kRememberEffRate, false));
++																																																							 }),
  		}),
  		OptionMenu({}),
  	});
@@ -10733,7 +12061,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  	// フェード中はクリックやホバーが効かないようヒットテスト無効
  	const noco::HitTestEnabledYN hitTestEnabled{ !isFadingIn() && !isFadingOut() && InputUtils::IsUIMouseInputEnabled() };
  
-@@ -301,6 +398,13 @@ void OptionScene::update()
+@@ -301,6 +408,13 @@ void OptionScene::update()
  			}
  			else
  			{
@@ -10747,7 +12075,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  				m_currentOptionMenuIdx = none;
  			}
  		}
-@@ -364,12 +468,133 @@ void OptionScene::update()
+@@ -364,12 +478,134 @@ void OptionScene::update()
  	m_topMenu.updateUI(m_canvas.get());
  	m_keyConfigMenu.updateUI(m_canvas.get());
  	m_canvas->update(hitTestEnabled);
@@ -10804,6 +12132,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
 +				latency += U" | {:.2f}~{:.2f}ms (avg {:.2f})"_fmt(
 +					metrics.predictedMinSec * 1000, metrics.predictedMaxSec * 1000, metrics.predictedMeanSec * 1000);
 +			entry.lines.push_back(latency);
++			if (output.backend == ksmaudio::AudioBackend::ASIO) entry.lines.push_back(String{ I18n::Get(I18n::Mod::AsioJudgmentCorrectionHelp) });
 +			entry.lines.push_back(String{ I18n::Get(I18n::Mod::LatencyEstimate) });
 +		}
 +	}
@@ -10881,7 +12210,23 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  }
  
  Co::Task<void> OptionScene::fadeIn()
-@@ -391,7 +616,12 @@ Co::Task<void> OptionScene::fadeOut()
+@@ -380,10 +616,11 @@ Co::Task<void> OptionScene::fadeIn()
+ Co::Task<void> OptionScene::fadeOut()
+ {
+ 	const auto canvasUpdateRunner = Co::UpdaterTask([this]
+-	{
+-		m_canvas->update(noco::HitTestEnabledYN::No);
+-		m_commonOverlay.update(noco::HitTestEnabledYN::No);
+-	}).runScoped();
++													{
++														m_canvas->update(noco::HitTestEnabledYN::No);
++														m_commonOverlay.update(noco::HitTestEnabledYN::No);
++													})
++										.runScoped();
+ 
+ 	m_bgmStream.setFadeOut(kFadeDuration);
+ 	co_await Co::ScreenFadeOut(kFadeDuration);
+@@ -391,7 +628,12 @@ Co::Task<void> OptionScene::fadeOut()
  
  void OptionScene::exitScene()
  {
@@ -10895,7 +12240,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  
  	// Vsync設定を反映("0;120"または"1"の形式)
  	const Array<String> vsyncParts = String{ ConfigIni::GetString(ConfigIni::Key::kVsync, U"0;300") }.split(U';');
-@@ -404,10 +634,23 @@ void OptionScene::exitScene()
+@@ -404,10 +646,23 @@ void OptionScene::exitScene()
  	Addon::GetAddon<FrameRateLimit>(FrameRateLimit::kAddonName)->setTargetFPS(frameRateLimit);
  
  	// 画面サイズ反映
@@ -10921,7 +12266,7 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  }
  
  void OptionScene::refreshOptionMenusForLanguageChange()
-@@ -448,7 +691,7 @@ void OptionScene::createSettingItemNodes()
+@@ -448,11 +703,12 @@ void OptionScene::createSettingItemNodes()
  	for (const auto& params : (*m_optionMenus)[*m_currentOptionMenuIdx].getSettingItemParamsList())
  	{
  		containerNode->addSubCanvasNodeAsChild(
@@ -10930,6 +12275,19 @@ index f6eee0a6ef743a7c5aadb58b41baed2a88cfb1a6..e4033e0586ab65fd2ff2c1463ad1a024
  			{
  				{ U"name", params.name },
  				{ U"value", params.value },
+ 				{ U"selected", params.selected },
++				{ U"itemTint", params.enabled ? Color{ 255 } : Color{ 128 } },
+ 				{ U"valueArrowIndex", params.valueArrowIndex },
+ 				{ U"valueLeftArrowVisible", params.valueLeftArrowVisible },
+ 				{ U"valueRightArrowVisible", params.valueRightArrowVisible },
+@@ -557,6 +813,7 @@ void OptionScene::refreshSettingItemParams()
+ 			{ U"name", params.name },
+ 			{ U"value", params.value },
+ 			{ U"selected", params.selected },
++				{ U"itemTint", params.enabled ? Color{ 255 } : Color{ 128 } },
+ 			{ U"valueArrowIndex", params.valueArrowIndex },
+ 			{ U"valueLeftArrowVisible", params.valueLeftArrowVisible },
+ 			{ U"valueRightArrowVisible", params.valueRightArrowVisible },
 diff --git a/kshootmania/src/Scenes/Option/OptionScene.hpp b/kshootmania/src/Scenes/Option/OptionScene.hpp
 index 37b7e186b85445a94b8fbfd916acbe0dc9458035..c8fccd900a356fc7f2911c2bf542efb0ef294e63 100644
 --- a/kshootmania/src/Scenes/Option/OptionScene.hpp
@@ -14643,11 +16001,12 @@ index d7e58ded3117ba60a54bb0fcf31a6a0e9f7d7358..a87bffe5b40faf98d4c9b9eb3e129db7
 +)
 +set_tests_properties(${TARGET_NAME} PROPERTIES TIMEOUT 200)
 diff --git a/tests/Main.cpp b/tests/Main.cpp
-index cc6f318ffaed1913a206e980135e12ff72bfdc4f..a78cd0fb0388e6653058d096b589b6ba6fa1e535 100644
+index cc6f318ffaed1913a206e980135e12ff72bfdc4f..4ed7e0b85d322a603b5c255bcba64c1edb144297 100644
 --- a/tests/Main.cpp
 +++ b/tests/Main.cpp
-@@ -1,14 +1,10 @@
- ﻿#define CATCH_CONFIG_RUNNER
+@@ -1,51 +1,29 @@
+-﻿#define CATCH_CONFIG_RUNNER
++#define CATCH_CONFIG_RUNNER
  #include <Siv3D.hpp>
 -
 -// Siv3Dが依存しているDirectXMathのマクロがGCCで標準ライブラリヘッダと衝突するのを回避
@@ -14658,11 +16017,12 @@ index cc6f318ffaed1913a206e980135e12ff72bfdc4f..a78cd0fb0388e6653058d096b589b6ba
  #include <catch2/catch.hpp>
 -
 -// Linux環境でのみヘッドレスモードを使用
+-#ifdef __linux__
+-SIV3D_SET(EngineOption::Renderer::Headless)
+-#endif
 +#include <cstdlib>
- #ifdef __linux__
- SIV3D_SET(EngineOption::Renderer::Headless)
- #endif
-@@ -16,36 +12,20 @@ SIV3D_SET(EngineOption::Renderer::Headless)
++SIV3D_SET(EngineOption::Renderer::Headless) // Unit tests never create a window on any platform.
+ 
  void Main()
  {
  	Catch::Session session;

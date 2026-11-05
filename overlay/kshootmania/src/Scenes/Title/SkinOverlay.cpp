@@ -6,6 +6,7 @@
 #include "Diagnostics/SkinPresetFixture.hpp"
 #include "UI/ModMenuStyle.hpp"
 #include "MusicGame/HispeedUtils.hpp"
+#include "MusicGame/Graphics/HUD/TimingOverlay.hpp"
 #include "Vertical/DiagnosticInputReplay.hpp"
 
 namespace
@@ -28,7 +29,7 @@ namespace
 	}
 	double PreviewTop()
 	{
-		return Portrait() ? 174 * PortraitScale() + ContentOffset() : 172 * Unit();
+		return Portrait() ? 174 * PortraitScale() + ContentOffset() + 56 * Unit() : 216 * Unit();
 	}
 	RectF PresetPanel()
 	{
@@ -64,16 +65,9 @@ namespace
 		int row = 0, col = 0;
 		switch (field)
 		{
-		case 6:
-			col = 1;
-			break;
 		case 7:
 		case 9:
 			row = 1;
-			break;
-		case 8:
-			row = 1;
-			col = 1;
 			break;
 		case 2:
 			row = 2;
@@ -81,12 +75,30 @@ namespace
 		case 3:
 			row = 3;
 			break;
+		case 6:
+			row = 4;
+			break;
 		case 4:
-			row = 2;
+			col = 1;
+			break;
+		case 11:
+			row = 1;
 			col = 1;
 			break;
 		case 5:
+			row = 2;
+			col = 1;
+			break;
+		case 8:
 			row = 3;
+			col = 1;
+			break;
+		case 12:
+			row = 4;
+			col = 1;
+			break;
+		case 13:
+			row = 5;
 			col = 1;
 			break;
 		}
@@ -99,35 +111,64 @@ namespace
 	RectF DepthPlusRect()
 	{
 		const auto r = SettingRect(7);
-		return { r.br().x - 25 * Unit(), r.y, 25 * Unit(), r.h };
+		return { r.br().x - 85 * Unit(), r.y, 25 * Unit(), r.h };
 	}
 	RectF OptionsRect()
 	{
-		const auto a = SettingRect(1), b = SettingRect(5);
+		const auto a = SettingRect(1), b = SettingRect(13);
 		return { a.x - 4 * Unit(), a.y - 3 * Unit(), b.br().x - a.x + 8 * Unit(), b.br().y - a.y + 6 * Unit() };
 	}
-	constexpr std::array<int32, 11> FocusOrder{ 0, 1, 7, 9, 2, 3, 6, 8, 4, 5, 10 };
+	constexpr std::array<int32, 7> NumericFields{ 2, 3, 4, 11, 5, 12, 13 };
+	constexpr std::array<int32, 12> OptionOrder{ 1, 7, 9, 2, 3, 6, 4, 11, 5, 8, 12, 13 };
+	constexpr std::array<int32, 15> FocusOrder{ 0, 1, 7, 9, 2, 3, 6, 4, 11, 5, 8, 12, 13, 14, 10 };
+	bool IsOptionField(int32 field)
+	{
+		return std::find(OptionOrder.begin(), OptionOrder.end(), field) != OptionOrder.end();
+	}
 	int32 StepFocus(int32 focus, int32 delta)
 	{
-		for (size_t i = 0; i < FocusOrder.size(); ++i)
+		const int32 count = static_cast<int32>(FocusOrder.size());
+		for (int32 i = 0; i < count; ++i)
 			if (FocusOrder[i] == focus)
-				return FocusOrder[(static_cast<int32>(i) + delta % 11 + 11) % 11];
+				return FocusOrder[((i + delta) % count + count) % count];
 		return 0;
 	}
 	int32 StepOptionFocus(int32 focus, int32 delta)
 	{
-		constexpr std::array<int32, 9> order{ 1, 7, 9, 2, 3, 6, 8, 4, 5 };
-		for (int32 i = 0; i < 9; ++i)
-			if (order[i] == focus)
-				return order[Clamp(i + delta, 0, 8)];
+		const int32 count = static_cast<int32>(OptionOrder.size());
+		for (int32 i = 0; i < count; ++i)
+			if (OptionOrder[i] == focus)
+				return OptionOrder[Clamp(i + delta, 0, count - 1)];
 		return 1;
 	}
 	int32 TabFocus(int32 focus, bool reverse)
 	{
-		const int32 group = focus == 0 ? 0 : focus == 10 ? 2
+		const int32 group = focus == 0 ? 0 : focus == 14 ? 2
+										 : focus == 10	 ? 3
 														 : 1;
-		const std::array<int32, 3> groups{ 0, 1, 10 };
-		return groups[(group + (reverse ? 2 : 1)) % 3];
+		const std::array<int32, 4> groups{ 0, 1, 14, 10 };
+		return groups[(group + (reverse ? 3 : 1)) % 4];
+	}
+	RectF SkinHelpRect()
+	{
+		const double u = Unit(), height = ModMenuStyle::TitleHeight();
+		double units = 0;
+		for (char32 c : U"VIEWPORT CUSTOM"_sv)
+		{
+			const auto [l, r] = ModMenuStyle::Trim(c);
+			units += 64 - l - r + 4;
+		}
+		const auto position = ModMenuStyle::TitlePosition();
+		const double x = position.x + Min(Scene::Width() * .48, units * height / 48) + 12 * u;
+		return { x, position.y - 3 * u, Min(180 * u, Scene::Width() - x - 24 * u), height + 8 * u };
+	}
+	void AdjustSymbol(const RectF& rect, bool plus)
+	{
+		const auto center = rect.center();
+		const double half = rect.h * .20, stroke = Max(1.0, 1.5 * Unit());
+		Line{ center - Vec2{ half, 0 }, center + Vec2{ half, 0 } }.draw(stroke, Palette::White);
+		if (plus)
+			Line{ center - Vec2{ 0, half }, center + Vec2{ 0, half } }.draw(stroke, Palette::White);
 	}
 	RectF AdjustRect(int32 field, bool plus)
 	{
@@ -150,6 +191,12 @@ namespace
 				return I18n::Get(I18n::Mod::LaserWidth, 72.73, U" (Vertical)");
 			return I18n::Get(I18n::Mod::LaserWidth, static_cast<int32>(Round(value)), U"");
 		}
+		if (field == 11)
+			return I18n::Get(I18n::Mod::SlamThickness, settings.slamThicknessPercent);
+		if (field == 12)
+			return I18n::Get(I18n::Mod::KeyBeamLength, settings.keyBeamLengthPercent);
+		if (field == 13)
+			return I18n::Get(I18n::Mod::KeyBeamOpacity, settings.keyBeamOpacityPercent);
 		return I18n::Get(I18n::Mod::NoteHeight, settings.noteHeightPercent, settings.noteHeightPercent == 100 ? U" (Default)" : U"");
 	}
 	String IndicatorText(const SkinPreset::Settings& settings)
@@ -188,27 +235,54 @@ namespace
 				return { String{ I18n::Get(I18n::Mod::DepthLabel) }, String{ I18n::Get(I18n::Mod::NotImplemented) }, 0, 0 };
 			return { String{ I18n::Get(I18n::Mod::DepthLabel) }, depth ? U"On" : U"Off", static_cast<int32>(depth), 1 };
 		}
-		return { String{ I18n::Get(I18n::Mod::KeyBeamLabel) }, BeamText(settings.keyBeamMode), static_cast<int32>(settings.keyBeamMode), 5 };
+		return { String{ I18n::Get(I18n::Mod::KeyBeamLabel) }, BeamText(settings.keyBeamMode), static_cast<int32>(settings.keyBeamMode) - 1, 4 };
 	}
-	String ChoiceText(const ChoiceInfo& choice)
+	bool ChoiceArrowEnabled(const ChoiceInfo& choice, bool right)
 	{
-		return choice.title + (choice.index > 0 ? U"◀ " : U"  ") + choice.value + (choice.index < choice.last ? U" ▶" : U"  ");
+		return right ? choice.index < choice.last : choice.index > 0;
 	}
 	RectF ChoiceRow(int32 field)
 	{
-		auto row = SettingRect(field);
-		if (field == 7)
-			row.w -= 30 * Unit();
-		return row;
+		return SettingRect(field);
 	}
-	RectF ChoiceArrow(int32 field, const ChoiceInfo& choice, bool right)
+	RectF ChoiceArrow(int32 field, const ChoiceInfo&, bool right)
+	{
+		return AdjustRect(field, right);
+	}
+	struct SettingRowLayout
+	{
+		RectF label, colon, value;
+	};
+	SettingRowLayout SettingLayout(const RectF& row, double controlsWidth, double extraValueReserve = 0)
 	{
 		const double u = Unit();
-		const auto row = ChoiceRow(field);
+		const double start = row.x + 4 * u;
+		const double end = row.rightX() - controlsWidth;
+		const double colonX = (start + end) / 2;
+		return { RectF{ start, row.y, Max(1.0, colonX - 8 * u - start), row.h },
+				 RectF{ colonX - 4 * u, row.y, 8 * u, row.h },
+				 RectF{ colonX + 8 * u, row.y, Max(1.0, end - extraValueReserve - colonX - 8 * u), row.h } };
+	}
+	SettingRowLayout SettingLayout(int32 field)
+	{
+		return SettingLayout(SettingRect(field), 61 * Unit(), field == 7 ? 30 * Unit() : 0);
+	}
+	std::pair<String, String> SplitSettingText(const String& text)
+	{
+		const size_t split = Min(text.indexOf(U':'), text.indexOf(U'：'));
+		if (split == String::npos)
+			return { text.trimmed(), U"" };
+		return { text.substr(0, split).trimmed(), text.substr(split + 1).trimmed() };
+	}
+	void DrawSettingText(const SettingRowLayout& layout, StringView title, StringView value, double size)
+	{
 		const auto font = AssetManagement::SystemFont();
-		const double size = Min(17 * u, (row.w - 8 * u) / Max(1.0, font(ChoiceText(choice)).region(1.0).w));
-		const String before = right ? choice.title + (choice.index > 0 ? U"◀ " : U"  ") + choice.value + U" " : choice.title;
-		return { row.x + 4 * u + font(before).region(size).w - 2 * u, row.y, Max(12 * u, font(U"▶").region(size).w + 4 * u), row.h };
+		const auto label = font(SplitSettingText(String{ title }).first);
+		const double fitted = Min(size, layout.label.w / Max(1.0, label.region(1.0).w));
+		label.drawAt(TextStyle::Outline(0, .12, ColorF{ 0, .9 }), fitted,
+					 Vec2{ layout.label.rightX() - label.region(fitted).w / 2, layout.label.center().y }, Palette::White);
+		font(U":").drawAt(TextStyle::Outline(0, .12, ColorF{ 0, .9 }), size, layout.colon.center(), Palette::White);
+		ModMenuStyle::Text(value, layout.value, size);
 	}
 	bool Click(const RectF& rect)
 	{
@@ -359,7 +433,7 @@ void SkinOverlay::adjustValue(int32 field, int32 delta)
 		return;
 	}
 	if (field == 8)
-		m_draft.keyBeamMode = static_cast<SkinPreset::KeyBeamMode>(Clamp(static_cast<int32>(m_draft.keyBeamMode) + delta, 0, 5));
+		m_draft.keyBeamMode = static_cast<SkinPreset::KeyBeamMode>(Clamp(static_cast<int32>(m_draft.keyBeamMode) + delta, 1, 5));
 	if (field == 9)
 	{
 		m_depthDialog = true;
@@ -375,6 +449,12 @@ void SkinOverlay::adjustValue(int32 field, int32 delta)
 			m_draft.laserWidthPercent = SkinPreset::StepLaserPercent(m_draft.laserWidthPercent, Sign(delta));
 	if (field == 5)
 		m_draft.noteHeightPercent = Clamp(m_draft.noteHeightPercent + delta * 5, 50, 200);
+	if (field == 11)
+		m_draft.slamThicknessPercent = Clamp(m_draft.slamThicknessPercent + delta * 5, 50, 200);
+	if (field == 12)
+		m_draft.keyBeamLengthPercent = Clamp(m_draft.keyBeamLengthPercent + delta * 25, 25, 100);
+	if (field == 13)
+		m_draft.keyBeamOpacityPercent = Clamp(m_draft.keyBeamOpacityPercent + delta * 10, 0, 100);
 	SkinPreset::Activate(m_draft);
 }
 
@@ -521,20 +601,21 @@ void SkinOverlay::drawDepthDialog() const
 			row.draw(ColorF{ 1.0, .15 });
 		ModMenuStyle::Hover(row, m_depthEdit < 0);
 		const String name = i == 7 ? String{ I18n::Get(I18n::Mod::CustomOther) } : String{ Vertical::kDepthImageNames[i] };
-		FitLabel(U"{}: {}%"_fmt(name, m_depthDraft.depthIntensities[i]), 18 * u, row.pos + Vec2{ 4 * u, 6 * u }, row.w - 170 * u);
+		DrawSettingText(SettingLayout(row, 170 * u), name, U"{}%"_fmt(m_depthDraft.depthIntensities[i]), 18 * u);
 		for (int32 action = 0; action < 3; ++action)
 		{
 			const auto b = DepthAction(i, action);
 			b.draw(ColorF{ 1.0, .1 });
 			ModMenuStyle::Hover(b, m_depthEdit < 0);
-			FitLabel(action == 0 ? U"−" : action == 1 ? U"+"
-													  : I18n::Get(I18n::Mod::Defaults),
-					 16 * u, b.pos + Vec2{ 5 * u, 7 * u }, b.w - 10 * u);
+			if (action < 2)
+				AdjustSymbol(b, action == 1);
+			else
+				ModMenuStyle::Text(I18n::Get(I18n::Mod::Defaults), b.stretched(-5 * u, 0), 16 * u);
 		}
 	}
 	DepthDone().draw(ColorF{ 1.0, .15 });
 	ModMenuStyle::Hover(DepthDone(), m_depthEdit < 0);
-	FitLabel(I18n::Get(I18n::Mod::Close), 18 * u, DepthDone().pos + Vec2{ 12 * u, 4 * u }, DepthDone().w - 24 * u);
+	ModMenuStyle::Text(I18n::Get(I18n::Mod::Close), DepthDone().stretched(-8 * u, 0), 18 * u);
 	DepthResetAll().draw(ColorF{ 1.0, .1 });
 	ModMenuStyle::Hover(DepthResetAll(), m_depthEdit < 0);
 	FitLabel(I18n::Get(I18n::Mod::ResetAll), 18 * u, DepthResetAll().pos + Vec2{ 8 * u, 4 * u }, DepthResetAll().w - 16 * u);
@@ -585,11 +666,30 @@ void SkinOverlay::close(bool save)
 	m_finished = true;
 }
 
+void SkinOverlay::openSkinHelp()
+{
+	m_helpReturnFocus = m_focus;
+	m_skinHelp = true;
+	m_back.setBackButtonFocused(true);
+	m_mouseHeld = -1;
+	m_entryGate = {};
+	m_entryClock.restart();
+}
+
+void SkinOverlay::closeSkinHelp()
+{
+	m_skinHelp = false;
+	m_focus = m_helpReturnFocus;
+	m_back.setBackButtonFocused(m_focus == 10);
+	m_entryGate = {};
+	m_entryClock.restart();
+}
+
 void SkinOverlay::update()
 {
 	m_back.setModScreenLayout();
-	m_back.setBackButtonFocused(m_focus == 10 && !m_confirm && !m_depthDialog);
-	m_back.update(noco::HitTestEnabledYN{ InputUtils::IsUIMouseInputEnabled() });
+	m_back.setBackButtonFocused(m_skinHelp || (m_focus == 10 && !m_skinHelp && !m_confirm && !m_depthDialog));
+	const bool helpBackClicked = m_back.update(noco::HitTestEnabledYN{ InputUtils::IsUIMouseInputEnabled() }, !m_skinHelp);
 	if (m_game)
 	{
 		try
@@ -622,6 +722,14 @@ void SkinOverlay::update()
 	m_fieldNav.update();
 	if (!m_entryGate.accept(m_entryClock.sF(), KeyConfig::Pressed(kButtonStart) || MouseL.pressed(), KeyConfig::Down(kButtonStart) || MouseL.down()))
 		return;
+	if (m_skinHelp)
+	{
+		if (helpBackClicked || KeyConfig::Down(kButtonBack) || KeyEscape.down() || KeyConfig::Down(kButtonStart))
+		{
+			closeSkinHelp();
+		}
+		return;
+	}
 	const int32 knobDelta = m_knob.deltaCursor();
 	const bool selectWithKnob = KeyConfig::Pressed(kButtonFX_L) || KeyConfig::Pressed(kButtonFX_R);
 	if (m_depthDialog)
@@ -677,7 +785,7 @@ void SkinOverlay::update()
 		m_mouseHeld = -1;
 		return;
 	}
-	if (m_focus >= 1 && m_focus <= 9 && m_fieldNav.deltaCursor() != 0)
+	if (IsOptionField(m_focus) && m_fieldNav.deltaCursor() != 0)
 	{
 		const int32 next = StepOptionFocus(m_focus, m_fieldNav.deltaCursor());
 		if (next != 0 && next != 10)
@@ -685,8 +793,10 @@ void SkinOverlay::update()
 		m_mouseHeld = -1;
 	}
 	bool wheelHandled = false;
-	for (int32 field = 2; field <= 5; ++field)
+	for (const int32 field : NumericFields)
 	{
+		if (InputUtils::IsUIMouseInputEnabled() && SettingRect(field).mouseOver())
+			m_focus = field;
 		if (Click(SettingRect(field)))
 		{
 			m_focus = field;
@@ -715,13 +825,15 @@ void SkinOverlay::update()
 	{
 		const auto hit = ChoiceRow(field);
 		const auto choice = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
+		if (InputUtils::IsUIMouseInputEnabled() && hit.mouseOver())
+			m_focus = field;
 		if (Click(hit))
 		{
 			m_focus = field;
 			m_keyboardRegion = false;
 		}
-		const bool left = choice.index > 0 && Click(ChoiceArrow(field, choice, false));
-		const bool right = choice.index < choice.last && Click(ChoiceArrow(field, choice, true));
+		const bool left = ChoiceArrowEnabled(choice, false) && Click(ChoiceArrow(field, choice, false));
+		const bool right = ChoiceArrowEnabled(choice, true) && Click(ChoiceArrow(field, choice, true));
 		if (left || right)
 		{
 			m_focus = field;
@@ -735,6 +847,13 @@ void SkinOverlay::update()
 			adjustValue(field, Mouse::Wheel() < 0 ? 1 : -1);
 			wheelHandled = true;
 		}
+	}
+	if (InputUtils::IsUIMouseInputEnabled() && SkinHelpRect().mouseOver())
+		m_focus = 14;
+	if (Click(SkinHelpRect()) || (m_focus == 14 && KeyConfig::Down(kButtonStart)))
+	{
+		openSkinHelp();
+		return;
 	}
 	if (Click(DepthPlusRect()))
 	{
@@ -766,9 +885,9 @@ void SkinOverlay::update()
 			}
 		}
 	}
-	if (m_focus >= 1 && m_focus <= 9)
+	if (IsOptionField(m_focus))
 		adjustValue(m_focus, m_adjust.deltaCursor() + knobDelta);
-	if (KeyConfig::Down(kButtonStart) && m_focus >= 1 && m_focus <= 9)
+	if (KeyConfig::Down(kButtonStart) && IsOptionField(m_focus))
 		adjustValue(m_focus, 1);
 	else if (KeyConfig::Down(kButtonStart) && (m_focus == 0 || m_focus == 10))
 		requestClose();
@@ -814,10 +933,28 @@ void SkinOverlay::updateFixture()
 					const auto arrow = ChoiceArrow(field, choice, choice.index < choice.last);
 					SkinFixture::Check(arrow.x >= row.x && arrow.rightX() <= row.rightX() + 2 * Unit(), U"localized choice arrow stays in its clickable row");
 				}
-				for (int stage = 0; stage < 3; ++stage)
+				for (const int32 field : OptionOrder)
+				{
+					if (field == 9)
+						continue;
+					const auto layout = SettingLayout(field);
+					const auto& reference = SettingLayout(field == 1 || field == 2 || field == 3 || field == 6 || field == 7 ? 1 : 4);
+					SkinFixture::Check(layout.colon.x == reference.colon.x && layout.label.rightX() < layout.colon.x && layout.value.x > layout.colon.rightX(), U"column colon and independent title/value regions align");
+					SkinFixture::Check(layout.value.rightX() < AdjustRect(field, false).x, U"values cannot overlap button pair");
+				}
+				for (const int32 field : { 1, 6, 7, 8 })
+				{
+					const auto choice = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
+					for (const bool right : { false, true })
+						SkinFixture::Check(ChoiceArrow(field, choice, right) == AdjustRect(field, right), U"choice arrows occupy numeric control slots");
+				}
+				SkinFixture::Check(!DepthPlusRect().intersects(AdjustRect(7, false)) && !DepthPlusRect().intersects(SettingLayout(7).value), U"depth detail button has its own nonoverlapping slot");
+				for (int stage = 0; stage < 4; ++stage)
 				{
 					m_confirm = stage == 1;
 					m_depthDialog = stage == 2;
+					m_skinHelp = stage == 3;
+					m_back.setBackButtonFocused(m_skinHelp);
 					{
 						const ScopedRenderTarget3D t3{ localizedOutput.clear(Palette::Black) };
 						const ScopedRenderTarget2D t2{ localizedOutput };
@@ -831,12 +968,34 @@ void SkinOverlay::updateFixture()
 				}
 				m_confirm = false;
 				m_depthDialog = false;
+				m_skinHelp = false;
+				m_back.setBackButtonFocused(false);
+			}
+			{
+				const GameRender::Scope renderScope{ m_previewContext };
+				MusicGame::Graphics::TimingOverlay timing;
+				MusicGame::TimingHudSettings settings;
+				settings.display = TimingMsDisplay::kAll;
+				const MusicGame::TimingFeedback feedback{ MusicGame::Judgment::JudgmentResult::kNearFast, 75, 0 };
+				RenderTexture frame{ Scene::Size() };
+				for (const int32 milliseconds : { 0, 849, 850, 975, 1099, 1100 })
+				{
+					timing.update(FastSlowMode::kNew, settings, feedback, milliseconds / 1000.0);
+					{
+						const ScopedRenderTarget2D target{ frame.clear(Palette::Black) };
+						timing.draw();
+						Graphics2D::Flush();
+					}
+					Image image;
+					frame.readAsImage(image);
+					image.save(FsUtils::GetResourcePath(U"timing-fade-{}.png"_fmt(milliseconds)));
+				}
 			}
 			I18n::LoadLanguage(originalLanguage);
-			SkinFixture::Check(TabFocus(0, false) == 1 && TabFocus(1, false) == 10 && TabFocus(10, false) == 0, U"Tab cycles list-options-close");
-			SkinFixture::Check(TabFocus(5, false) == 10 && TabFocus(8, true) == 0 && TabFocus(10, true) == 1, U"Tab treats all options as one region and resets on entry");
+			SkinFixture::Check(TabFocus(0, false) == 1 && TabFocus(1, false) == 14 && TabFocus(14, false) == 10 && TabFocus(10, false) == 0, U"Tab cycles list-options-help-back");
+			SkinFixture::Check(TabFocus(5, false) == 14 && TabFocus(8, true) == 0 && TabFocus(10, true) == 14, U"Tab treats all options as one region and resets on entry");
 			SkinFixture::Check(StepFocus(1, 1) == 7 && StepFocus(7, 1) == 9 && StepFocus(3, 1) == 6 && StepFocus(0, -1) == 10, U"knob preserves individual targets including depth plus");
-			SkinFixture::Check(SettingRect(6).x > PolicyRect().br().x && SettingRect(8).y > SettingRect(6).y, U"two-column option order");
+			SkinFixture::Check(SettingRect(6).x == PolicyRect().x && SettingRect(8).x > SettingRect(6).x, U"two-column option order");
 			SkinFixture::Check(SettingRect(5).br().y < PreviewTop() && OptionsRect().y >= Vertical::MenuContent::Rect().y, U"option grid stays above preview inside letterbox");
 			{
 				Vertical::DiagnosticInputReplay::Session replay;
@@ -894,8 +1053,8 @@ void SkinOverlay::updateFixture()
 			}
 			const auto savedDraft = m_draft;
 			const auto savedDepth = m_depthDraft;
-			const std::array<int32, 9> columnOrder{ 1, 7, 9, 2, 3, 6, 8, 4, 5 };
-			for (int i = 0; i < 8; ++i)
+			const auto& columnOrder = OptionOrder;
+			for (size_t i = 0; i + 1 < columnOrder.size(); ++i)
 				SkinFixture::Check(StepOptionFocus(columnOrder[i], 1) == columnOrder[i + 1] && StepOptionFocus(columnOrder[i + 1], -1) == columnOrder[i], U"up/down follows left column then right column");
 			for (const int32 field : { 1, 6, 7, 8 })
 			{
@@ -908,12 +1067,12 @@ void SkinOverlay::updateFixture()
 				}
 				adjustValue(field, -100);
 				const auto first = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
-				SkinFixture::Check(first.index == 0 && !ChoiceText(first).includes(U"◀") && ChoiceText(first).includes(U"▶"), U"first choice hides left arrow");
+				SkinFixture::Check(first.index == 0 && !ChoiceArrowEnabled(first, false) && ChoiceArrowEnabled(first, true), U"first choice hides left arrow");
 				adjustValue(field, -1);
 				SkinFixture::Check(Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled).index == 0, U"first choice blocks previous input");
 				adjustValue(field, 100);
 				const auto last = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
-				SkinFixture::Check(last.index == last.last && ChoiceText(last).includes(U"◀") && !ChoiceText(last).includes(U"▶"), U"last choice hides right arrow");
+				SkinFixture::Check(last.index == last.last && ChoiceArrowEnabled(last, false) && !ChoiceArrowEnabled(last, true), U"last choice hides right arrow");
 				adjustValue(field, 1);
 				SkinFixture::Check(Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled).index == last.last, U"last choice blocks next input");
 			}
@@ -921,13 +1080,13 @@ void SkinOverlay::updateFixture()
 			m_depthDraft = savedDepth;
 			refreshDepth();
 			refreshSkin();
-			for (const int32 a : { 2, 3, 4, 5 })
-				for (const int32 b : { 2, 3, 4, 5 })
+			for (const int32 a : NumericFields)
+				for (const int32 b : NumericFields)
 					if (a != b)
 						for (const bool pa : { false, true })
 							for (const bool pb : { false, true })
 								SkinFixture::Check(!AdjustRect(a, pa).intersects(AdjustRect(b, pb)), U"numeric button boxes do not overlap across rows or columns");
-			SkinFixture::Check(SettingRect(3).x == SettingRect(2).x && SettingRect(4).x == SettingRect(5).x && SettingRect(4).y == SettingRect(2).y, U"screenshot layout groups both background values left and widths right");
+			SkinFixture::Check(SettingRect(3).x == SettingRect(2).x && SettingRect(4).x == SettingRect(5).x && SettingRect(4).y == SettingRect(1).y, U"screenshot layout groups both background values left and widths right");
 			m_focus = TabFocus(0, false);
 			m_keyboardRegion = true;
 		}
@@ -981,8 +1140,10 @@ void SkinOverlay::updateFixture()
 		}
 		if (once(112, 6.2))
 		{
-			m_focus = TabFocus(1, false);
+			m_focus = TabFocus(TabFocus(1, false), false);
 			m_keyboardRegion = true;
+			// Apply the real overlay focus on the next update before checking BACK.
+			return;
 		}
 		if (once(113, 6.6))
 		{
@@ -994,12 +1155,13 @@ void SkinOverlay::updateFixture()
 			m_focus = TabFocus(10, false);
 			m_keyboardRegion = true;
 		}
-		const std::array<SkinPreset::KeyBeamMode, 6> modes{ SkinPreset::KeyBeamMode::Off, SkinPreset::KeyBeamMode::AllCrit, SkinPreset::KeyBeamMode::AllPerfect, SkinPreset::KeyBeamMode::OnlyCrit, SkinPreset::KeyBeamMode::OnlyPerfect, SkinPreset::KeyBeamMode::Normal };
+		const std::array<SkinPreset::KeyBeamMode, 6> modes{ SkinPreset::KeyBeamMode::Normal, SkinPreset::KeyBeamMode::AllCrit, SkinPreset::KeyBeamMode::AllPerfect, SkinPreset::KeyBeamMode::OnlyCrit, SkinPreset::KeyBeamMode::OnlyPerfect, SkinPreset::KeyBeamMode::Normal };
 		for (int i = 0; i < 6; ++i)
 		{
 			if (once(120 + i, 7 + i))
 			{
 				m_draft.keyBeamMode = modes[i];
+				m_draft.keyBeamOpacityPercent = i == 0 ? 0 : 100;
 				SkinPreset::Activate(m_draft);
 				m_focus = 8;
 				m_keyboardRegion = false;
@@ -1007,9 +1169,32 @@ void SkinOverlay::updateFixture()
 			if (once(130 + i, 7.5 + i))
 				ScreenCapture::SaveCurrentFrame(U"viewport-beam-{}.png"_fmt(i));
 		}
-		if (once(140, 14))
+		if (once(141, 13))
 		{
-			TextWriter{ FsUtils::GetResourcePath(U"viewport-options-passed.txt") }.writeln(U"PASS: group/individual focus, option bounds, depth draft/reset and six beam modes");
+			const auto before = m_draft;
+			const auto time = m_game->previewTime();
+			const auto texture = TextureAsset(U"bt_chip.gif").id();
+			adjustValue(4, 100);
+			adjustValue(11, 100);
+			adjustValue(12, -100);
+			adjustValue(13, -100);
+			SkinFixture::Check(m_draft.laserWidthPercent == 200 && m_draft.slamThicknessPercent == 200 && m_draft.keyBeamLengthPercent == 25 && m_draft.keyBeamOpacityPercent == 0, U"new setting bounds apply through actual controls");
+			SkinFixture::Check(TextureAsset(U"bt_chip.gif").id() == texture && m_game->previewTime() == time, U"numeric settings preserve textures and music clock");
+			adjustValue(11, -100);
+			adjustValue(12, 100);
+			adjustValue(13, 100);
+			SkinFixture::Check(m_draft.slamThicknessPercent == 50 && m_draft.keyBeamLengthPercent == 100 && m_draft.keyBeamOpacityPercent == 100, U"new reverse bounds apply");
+			m_focus = 14;
+			openSkinHelp();
+			SkinFixture::Check(m_skinHelp && m_back.backButtonFocused(), U"help opens with BACK focused");
+			closeSkinHelp();
+			SkinFixture::Check(!m_skinHelp && m_focus == 14 && !m_back.backButtonFocused(), U"help restores its previous selection");
+			m_draft = before;
+			refreshSkin();
+		}
+		if (m_fixtureStages.contains(150) && once(140, 14))
+		{
+			TextWriter{ FsUtils::GetResourcePath(U"viewport-options-passed.txt") }.writeln(U"PASS: group/individual focus, option bounds, depth draft/reset, five beam modes and zero opacity");
 			close(false);
 		}
 		return;
@@ -1089,6 +1274,23 @@ void SkinOverlay::updateFixture()
 	}
 	if (once(35, 25.5))
 		ScreenCapture::SaveCurrentFrame(U"viewport-width-125-note-200.png");
+	if (once(38, 27))
+	{
+		adjustValue(4, 100);
+		adjustValue(11, 100);
+		adjustValue(12, -100);
+		adjustValue(13, -5);
+	}
+	if (once(39, 28))
+		ScreenCapture::SaveCurrentFrame(U"viewport-width-200-slam-200.png");
+	if (once(40, 30))
+	{
+		m_draft.laserWidthPercent = 125;
+		m_draft.slamThicknessPercent = 100;
+		m_draft.keyBeamLengthPercent = 100;
+		m_draft.keyBeamOpacityPercent = 100;
+		refreshSkin();
+	}
 	if (once(37, 31.5))
 		ScreenCapture::SaveCurrentFrame(U"viewport-curves-125.png");
 	if (once(36, 34.0))
@@ -1136,6 +1338,7 @@ void SkinOverlay::draw() const
 				Graphics3D::Flush();
 				Graphics2D::Flush();
 				ScreenCapture::SaveCurrentFrame(U"viewport-direct-native.png");
+				m_fixtureStages.insert(150);
 				return;
 			}
 		}
@@ -1144,23 +1347,30 @@ void SkinOverlay::draw() const
 	Scene::Rect().draw(ColorF{ 0.0, 0.7 });
 	auto heading = ModMenuStyle::TitlePosition();
 	ModMenuStyle::Title(U"VIEWPORT CUSTOM", heading, Scene::Width() * .48);
+	const auto help = SkinHelpRect();
+	help.draw(ColorF{ 0, .50 });
+	if (m_focus == 14)
+		help.drawFrame(Max(1.0, u), Palette::White);
+	ModMenuStyle::Hover(help, !m_skinHelp && !m_confirm && !m_depthDialog);
+	ModMenuStyle::Text(I18n::Get(I18n::Mod::SkinHelp), help, 18 * u);
 	const auto policy = PolicyRect();
-	if (m_keyboardRegion && m_focus >= 1 && m_focus <= 9)
+	if (m_keyboardRegion && IsOptionField(m_focus))
 		OptionsRect().drawFrame(1 * u, ColorF{ 1.0, .75 });
 
-	for (int32 field = 2; field <= 5; ++field)
+	for (const int32 field : NumericFields)
 	{
 		const auto row = SettingRect(field);
 		if (m_focus == field)
 			row.drawFrame(1 * u, ColorF{ 1.0, 0.65 });
-		ModMenuStyle::Hover(row, !m_confirm && !m_depthDialog);
-		FitLabel(SettingText(field, m_draft), 17 * u, row.pos + Vec2{ 4 * u, 3 * u }, row.w - 64 * u);
+		ModMenuStyle::Hover(row, !m_skinHelp && !m_confirm && !m_depthDialog);
+		const auto [title, value] = SplitSettingText(SettingText(field, m_draft));
+		DrawSettingText(SettingLayout(field), title, value, 17 * u);
 		for (int32 button = 0; button < 2; ++button)
 		{
 			const auto rect = AdjustRect(field, button == 1);
 			rect.draw(ColorF{ 1.0, 0.1 });
-			ModMenuStyle::Hover(rect, !m_confirm && !m_depthDialog);
-			Label(button ? U"+" : U"−", (Portrait() ? 18 : 16) * u, rect.pos + Vec2{ 6 * u, 1 * u });
+			ModMenuStyle::Hover(rect, !m_skinHelp && !m_confirm && !m_depthDialog);
+			AdjustSymbol(rect, button == 1);
 		}
 	}
 	for (const int32 field : { 1, 6, 7, 8 })
@@ -1168,19 +1378,28 @@ void SkinOverlay::draw() const
 		const auto rect = ChoiceRow(field);
 		if (m_focus == field)
 			rect.drawFrame(1 * u, ColorF{ 1.0, .65 });
-		ModMenuStyle::Hover(rect, !m_confirm && !m_depthDialog);
+		ModMenuStyle::Hover(rect, !m_skinHelp && !m_confirm && !m_depthDialog);
 		const auto choice = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
-		ModMenuStyle::Hover(ChoiceArrow(field, choice, false), !m_confirm && !m_depthDialog && choice.index > 0);
-		ModMenuStyle::Hover(ChoiceArrow(field, choice, true), !m_confirm && !m_depthDialog && choice.index < choice.last);
-		FitLabel(ChoiceText(Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled)), 17 * u, rect.pos + Vec2{ 4 * u, 3 * u }, rect.w - 8 * u);
+		DrawSettingText(SettingLayout(field), choice.title, choice.value, 17 * u);
+		for (const bool right : { false, true })
+		{
+			if (!ChoiceArrowEnabled(choice, right))
+				continue;
+			const auto button = ChoiceArrow(field, choice, right);
+			button.draw(ColorF{ 1.0, .1 });
+			ModMenuStyle::Hover(button, !m_skinHelp && !m_confirm && !m_depthDialog);
+			ModMenuStyle::Text(right ? U"▶" : U"◀", button, 17 * u);
+		}
 	}
 	const auto depthPlus = DepthPlusRect();
 	depthPlus.draw(ColorF{ 1.0, .1 });
 	if (m_focus == 9)
 		depthPlus.drawFrame(1 * u, Palette::White);
-	ModMenuStyle::Hover(depthPlus, Portrait() && !m_confirm && !m_depthDialog);
-	Label(U"+", 18 * u, depthPlus.pos + Vec2{ 6 * u, 2 * u });
-	const double scale = 0.95 * Min((leftWidth - 48 * u) / m_previewSize.x, (Scene::Height() - 230 * u) / m_previewSize.y);
+	ModMenuStyle::Hover(depthPlus, Portrait() && !m_skinHelp && !m_confirm && !m_depthDialog);
+	AdjustSymbol(depthPlus, true);
+	const double contentBottom = Portrait() ? Vertical::MenuContent::Rect().br().y : Scene::Height();
+	const double availableHeight = Max(1.0, contentBottom - PreviewTop() - 132 * u);
+	const double scale = 0.95 * Min((leftWidth - 48 * u) / m_previewSize.x, availableHeight / m_previewSize.y);
 	const Vec2 previewSize = Vec2{ m_previewSize } * scale;
 	const Vec2 previewPos{ (leftWidth - previewSize.x) / 2.0, PreviewTop() };
 	RectF{ previewPos, previewSize }.draw(Palette::Black).drawFrame(1 * u, ColorF{ 0.45 });
@@ -1215,7 +1434,7 @@ void SkinOverlay::draw() const
 			const double y = ListCenterY() + (i - m_scroll) * 52 * u;
 			if (y < listArea.y + 24 * u || y > listArea.br().y - 24 * u)
 				continue;
-			ModMenuStyle::Hover(PresetRow(i - m_scroll), !m_confirm && !m_depthDialog);
+			ModMenuStyle::Hover(PresetRow(i - m_scroll), !m_skinHelp && !m_confirm && !m_depthDialog);
 			// Keep full folder names, shrink long names to the available width.
 			const auto text = AssetManagement::SystemFont()(m_entries[i].folder);
 			const double size = Min(24 * u, (listArea.w - 32 * u) / Max(1.0, text.region(1.0).w));
@@ -1226,7 +1445,7 @@ void SkinOverlay::draw() const
 	{
 		const auto& entry = m_entries[m_index];
 		// Reserve a dedicated author row and three description rows above the hint.
-		const Vec2 detailsPos{ 24 * u, (Portrait() ? 188 * PortraitScale() + ContentOffset() : previewPos.y) + previewSize.y + 8 * u };
+		const Vec2 detailsPos{ 24 * u, previewPos.y + previewSize.y + 8 * u };
 		const double detailsSize = (Portrait() ? 17 : 14) * u;
 		const double detailsStep = (Portrait() ? 20 : 16) * u;
 		FitLabel(String{ I18n::Get(I18n::Mod::AuthorLabel) } + entry.author, detailsSize, detailsPos, leftWidth - 48 * u);
@@ -1239,6 +1458,15 @@ void SkinOverlay::draw() const
 	ModMenuStyle::Footer(U"↑↓: {}   ←→ / LASER: {}"_fmt(I18n::Get(I18n::Mod::ItemSelect), I18n::Get(I18n::Mod::ValueAdjust)), U"TAB / FX + LASER: {}   START: {}   BACK: {}"_fmt(I18n::Get(I18n::Mod::GroupItemMove), I18n::Get(I18n::Mod::Enter), I18n::Get(I18n::Mod::Close)));
 	if (!m_error.isEmpty())
 		AssetManagement::SystemFont()(m_error).draw(16 * u, RectF{ 24 * u, Portrait() ? 1107 * PortraitScale() : 160 * u, leftWidth - 48 * u, 25 * u }, Palette::Orange);
+	if (m_skinHelp)
+	{
+		Scene::Rect().draw(ColorF{ 0, .70 });
+		const RectF body{ Scene::Width() * .10, Scene::Height() * .28, Scene::Width() * .80, Scene::Height() * .50 };
+		ModMenuStyle::Text(I18n::Get(I18n::Mod::SkinHelp), RectF{ body.x, body.y - 48 * u, body.w, 36 * u }, 26 * u);
+		AssetManagement::SystemFont()(I18n::Get(I18n::Mod::SkinHelpText)).draw(TextStyle::Outline(0, .12, ColorF{ 0, .9 }), 20 * u, body, Palette::White);
+		m_back.draw();
+		return;
+	}
 	if (m_depthDialog)
 	{
 		drawDepthDialog();
