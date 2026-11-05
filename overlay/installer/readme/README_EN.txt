@@ -12,7 +12,7 @@ Supported version: K-Shoot Mania 2.1.0 Windows x64
 * Manual installations that were not installed through this setup EXE cannot be removed by the installer.
 1. Run the same setup EXE again, select the KSM folder, then click [Remove mod].
 2. Keep this EXE: no separate uninstaller or Start menu entry is installed.
-3. To switch to a different mod version, remove the current version before reinstalling.
+3. To update a supported older version, use Update mod in the new setup without removing the current version. Use the new setup for removal too.
 
 # Important notes when removing the mod
 

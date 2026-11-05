@@ -188,15 +188,15 @@
     },
     {
       "path": "installer/readme/README_EN.txt",
-      "sha256": "0656881bd6cbe6e04cbce74df07d8f03d2ee008557dd9a6e163f373edbfc084a"
+      "sha256": "7823ca9e06085836e7c8f4d0a62ca5d0e5059b1012e369d6d24801c432596e21"
     },
     {
       "path": "installer/readme/README_JA.txt",
-      "sha256": "03b00f8883ee681993558d287bd6357ccb98cbc6c495dd7b573bfe31c8db8de9"
+      "sha256": "788a92e264ff7a0aeec86f26b515af20241e4911a6e3810d049e81c9c449ef31"
     },
     {
       "path": "installer/readme/README_KO.txt",
-      "sha256": "cbe251b728d4e7da3fa2401bfb051c3c7ac8c2a85899d417f0e2640d71bd0090"
+      "sha256": "9c452f0a77e80abd9b1879a42900bf43dec392c6c2a68328b62dc9215daa2197"
     },
     {
       "path": "installer/release.json",
