@@ -2,7 +2,7 @@
   "upstream": "https://github.com/kshootmania/ksm-v2.git",
   "baseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
-  "sourceBuildId": "20261105-180035-32156be9",
+  "sourceBuildId": "20261105-195949-671d1730",
   "mainPatch": "patches/ksm-v2.patch",
   "mainPatchSha256": "0c068a126e383da33907e3ebb53cb77ed85648087293c45b39985ac6dd4bb7f8",
   "overlayFiles": [
