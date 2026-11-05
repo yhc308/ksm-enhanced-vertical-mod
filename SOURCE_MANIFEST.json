@@ -1292,7 +1292,7 @@
     },
     {
       "path": "tests/PreviewTraceRules.py",
-      "sha256": "ebc555c48ed4989e9466efc0e9a24375a0b9aedf340fa56f5d87c8aa293d2487"
+      "sha256": "6f2e9082e0160d4b62f1b8dfb1861c5177f84966a638a2e865b779d5be4030bd"
     },
     {
       "path": "tests/ResultBestScoreNativePixels.py",
