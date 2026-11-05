@@ -17,7 +17,7 @@ From the project root:
 ./installer/Build.ps1
 ./installer/Build.ps1 -TestEngine
 python installer/tests/TestEngine.py
-python installer/BuildPackage.py --output build/installer-0.5.4-beta4/KsmEnhancedVerticalSetup.exe --build-information <verified-build.json>
+python installer/BuildPackage.py --output build/installer-0.5.4-beta4/KsmEnhancedVertical_0.5.4-beta4_Setup.exe --build-information <verified-build.json>
 python installer/tests/UpdateEngine.py
 python installer/tests/UpdateProduction.py --setup <assembled-setup.exe> --build-information <verified-build.json> --original <original-KSM-folder>
 python installer/PackageRelease.py --setup <verified-setup.exe> --validation <validation.json> --build-information <verified-build.json>
@@ -31,7 +31,7 @@ Do not replace build/latest.json to point at a diagnostic executable.
 ## CLI
 
 ```text
-KsmEnhancedVerticalSetup.exe --quiet --action inspect --target "C:\Games\KSM" --report "C:\Temp\inspect.json"
+KsmEnhancedVertical_0.5.4-beta4_Setup.exe --quiet --action inspect --target "C:\Games\KSM" --report "C:\Temp\inspect.json"
 ```
 
 Actions: inspect / install / update / verify / remove. The optional language index is

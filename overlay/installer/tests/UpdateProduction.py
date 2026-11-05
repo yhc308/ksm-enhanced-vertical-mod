@@ -7,6 +7,13 @@ ROOT=Path(__file__).resolve().parents[2]
 p=argparse.ArgumentParser();p.add_argument('--setup',type=Path,required=True);p.add_argument('--build-information',type=Path,required=True);p.add_argument('--original',type=Path,required=True);args=p.parse_args()
 setup=args.setup.resolve();original=args.original.resolve();build=json.loads(args.build_information.read_text(encoding='utf-8-sig'));work=ROOT/'build/native-installer-production'/uuid.uuid4().hex;work.mkdir(parents=True);checks=[];runtime=[];gui=[];upgrades=[]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+
+def extract_setup(archive):
+ with zipfile.ZipFile(archive)as z:
+  names=[n for n in z.namelist()if n.lower().endswith('.exe')]
+  assert len(names)==1,'Installer ZIP must contain exactly one setup EXE'
+  return z.read(names[0])
+
 def check(ok,message):
  if not ok:raise AssertionError(message)
  checks.append(message);print('PASS '+message,flush=True)
@@ -47,12 +54,12 @@ try:
  # Use the preserved, actually distributed old EXEs rather than synthetic state alone.
  for folder in ('ksm-enhanced-vertical-0.4.0-beta.1-installer','ksm-enhanced-vertical-0.5.1-beta1-installer','ksm-enhanced-vertical-0.5.1-beta1-installer-cleanup1','ksm-enhanced-vertical-0.5.2-beta2-installer'):
   archive=next((ROOT/'releases'/folder).glob('*.zip'));old=work/(folder+'.exe')
-  with zipfile.ZipFile(archive) as z:old.write_bytes(z.read('KsmEnhancedVerticalSetup.exe'))
+  old.write_bytes(extract_setup(archive))
   app=fixture(folder);baseline={p.relative_to(base).as_posix():sha(p)for p in base.rglob('*')if p.is_file()};call(old,app,'install');(app/'score/new_additional.ksc').write_text('normal=1,2,3,4,5,6,7,8,9,20,30',encoding='utf8');state=call(setup,app,'inspect');check(state['updateAvailable'],'Actual old package supports update '+folder);call(setup,app,'update');check(sha(app/'ksm-enhanced-vertical.exe')==build['sha256'].lower(),'Actual upgrade uses latest normal EXE');startup(app,0);call(setup,app,'remove')
   check(all((app/n).is_file() and sha(app/n)==h for n,h in baseline.items()),'Actual upgrade removal restores all original runtime files '+folder);check((app/'score/new_additional.ksc').is_file(),'New EX survives actual upgrade '+folder);call(setup,app,'install');call(setup,app,'remove');upgrades.append({'status':'PASS','previousPackage':folder,'oldSetupSha256':sha(old)})
  # Rebuilds keep the public version; update the actual earlier 0.5.4 package.
  archive=next((ROOT/'releases/ksm-enhanced-vertical-0.5.4-beta4-installer').glob('*.zip'));oldHotfix=work/'ksm-enhanced-vertical-0.5.4-beta4-before-loading.exe'
- with zipfile.ZipFile(archive)as z:oldHotfix.write_bytes(z.read('KsmEnhancedVerticalSetup.exe'))
+ oldHotfix.write_bytes(extract_setup(archive))
  app=fixture('same-version-hotfix');baseline={p.relative_to(base).as_posix():sha(p)for p in base.rglob('*')if p.is_file()};call(oldHotfix,app,'install')
  oldBuild=json.loads((app/'.ksm-enhanced-install.json').read_text(encoding='utf8'))['buildId']
  image=app/'imgs/bg_vertical.png';edited=image.read_bytes()+b'USER-HOTFIX-IMAGE';image.write_bytes(edited);deleted=app/'imgs/er_aps.png';deleted.unlink()

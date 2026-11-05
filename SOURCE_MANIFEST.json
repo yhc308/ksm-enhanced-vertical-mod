@@ -152,7 +152,7 @@
     },
     {
       "path": "installer/PackageRelease.py",
-      "sha256": "a5913a0349d22d32667dd1144cbd4693ebf53955ba9ac8e90b969849d146f0fe"
+      "sha256": "5a8d790c4969376bdb39ee46ecb2cd3e3f550e151d4903b2c8651d7d4d02b6b6"
     },
     {
       "path": "installer/PeImage.py",
@@ -160,7 +160,7 @@
     },
     {
       "path": "installer/README.md",
-      "sha256": "92b38618fa904065c0ea98417514ff7da995de825a4c9d2d3c5e005acb6ec592"
+      "sha256": "0abc2788cb8e57e9142a5fb6796230851fe14b06da1b73676dbbc684fa2bdca2"
     },
     {
       "path": "installer/Setup.manifest",
@@ -188,15 +188,15 @@
     },
     {
       "path": "installer/readme/README_EN.txt",
-      "sha256": "009b6b65d60e9c0b74f46f52e974e158445200ccc1303d6b27b462b55b305c4f"
+      "sha256": "6c1c2fc1aaa58300ca535b363f5742e053fab84fef29c15d36290af5b0c42712"
     },
     {
       "path": "installer/readme/README_JA.txt",
-      "sha256": "c1f38faa5713c78d9e856c7a1f8b7a0850d1ff632eae58b3eb41e3841e64081e"
+      "sha256": "0a9647d76402025fc25753259db1bf7fe0ed531ac1dd6392a3bc4448aec2339c"
     },
     {
       "path": "installer/readme/README_KO.txt",
-      "sha256": "cdff57b170612525cf328f1b9668ba394897728afce919aeb3a3e2edf63a3a34"
+      "sha256": "1165405ee2b8bac8a17f6f609c7690f1cf252805bb9884565d600dd91a7bde7b"
     },
     {
       "path": "installer/release.json",
@@ -248,7 +248,7 @@
     },
     {
       "path": "installer/tests/UpdateProduction.py",
-      "sha256": "897a5275eb1c27fcee2f8fe04cb24c6d773f0a4e11439f60f89b5cf384657405"
+      "sha256": "cfe42cc2aa3220758176a0ca570ab67e4eba199869de3d7095f42ad0e4715329"
     },
     {
       "path": "installer/third_party/LICENSE.json.txt",

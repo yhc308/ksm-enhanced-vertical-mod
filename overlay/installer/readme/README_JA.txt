@@ -3,7 +3,7 @@ KSM Enhanced Vertical Mod 0.5.4-beta4 インストールガイド
 
 # インストール
 1. kshootmania.exe が起動中の場合は終了してください。
-2. KsmEnhancedVerticalSetup.exe を起動してください。
+2. KsmEnhancedVertical_0.5.4-beta4_Setup.exe を起動してください。
 3. kshootmania.exe があるフォルダーを選び、［モードをインストール］を押してください。（インストーラーの EXE を KSM フォルダーに置くと、その場所を自動選択します。）
 4. インストール後、同じフォルダーの ksm-enhanced-vertical.exe からモードを起動します。
 5. 原版の kshootmania.exe は保持されます。

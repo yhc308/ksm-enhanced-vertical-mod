@@ -3,7 +3,7 @@ Supported version: K-Shoot Mania 2.1.0 Windows x64
 
 # Installation
 1. Close kshootmania.exe if it is running.
-2. Run KsmEnhancedVerticalSetup.exe.
+2. Run KsmEnhancedVertical_0.5.4-beta4_Setup.exe.
 3. Select the folder containing kshootmania.exe, then click [Install mod]. (If the setup EXE is in the KSM folder, that folder is selected automatically.)
 4. After installation, run ksm-enhanced-vertical.exe in the same folder to launch the mod.
 5. The original kshootmania.exe is kept.
