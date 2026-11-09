@@ -1,6 +1,5 @@
 # KSM Enhanced Vertical Mod (Windows x64 전용)
 
-[0.5.4-beta4 업데이트·설정 이전 안내](../UPDATE_0.5.4-beta4.md)
 **K-Shoot Mania 2.1.0을 세로 화면에서도 즐길 수 있도록 확장한 비공식 모드입니다.**
 버티컬 플레이, 스킨 프리셋, 화면 커스터마이징, EX 스코어, HARD+APS, 판정 타이밍 설정과 일부 ASIO 기능을 제공합니다.
 
