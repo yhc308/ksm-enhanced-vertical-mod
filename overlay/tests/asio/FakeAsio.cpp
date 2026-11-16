@@ -5,11 +5,21 @@
 #include <cstring>
 #include <cwchar>
 #include <cstdlib>
+#include <atomic>
+#include <thread>
+#include <chrono>
+#include <vector>
 static ASIOPROC* render = nullptr;
 static ASIONOTIFYPROC* notify = nullptr;
 static void* notifyUser = nullptr;
 static double rate = 44100;
-static bool started = false;
+static std::atomic_bool started{ false };
+static std::thread autoPump;
+static void StopAutoPump()
+{
+	started = false;
+	if (autoPump.joinable()) autoPump.join();
+}
 static unsigned stopCalls = 0, rateSetCalls = 0;
 static int error = 0;
 static bool Mode(const wchar_t* expected)
@@ -56,7 +66,7 @@ EXPORT BOOL WINAPI BASS_ASIO_Init(int, DWORD)
 }
 EXPORT BOOL WINAPI BASS_ASIO_Free()
 {
-	started = false;
+	StopAutoPump();
 	render = nullptr;
 	notify = nullptr;
 	return TRUE;
@@ -80,7 +90,7 @@ EXPORT double WINAPI BASS_ASIO_GetRate()
 {
 	return Mode(L"invalid-readback") ? 0 : rate;
 }
-EXPORT BOOL WINAPI BASS_ASIO_Start(DWORD, DWORD)
+EXPORT BOOL WINAPI BASS_ASIO_Start(DWORD frames, DWORD)
 {
 	if (Mode(L"start-fail"))
 	{
@@ -88,12 +98,27 @@ EXPORT BOOL WINAPI BASS_ASIO_Start(DWORD, DWORD)
 		return FALSE;
 	}
 	started = true;
+	if (Mode(L"silent-auto"))
+	{
+		const DWORD count = frames ? frames : 128;
+		autoPump = std::thread([count]
+		{
+			std::vector<float> buffer(count * 2);
+			auto next = std::chrono::steady_clock::now();
+			while (started)
+			{
+				if (render) render(FALSE, 0, buffer.data(), count * 2 * sizeof(float), nullptr);
+				next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(count / rate));
+				std::this_thread::sleep_until(next);
+			}
+		});
+	}
 	return TRUE;
 }
 EXPORT BOOL WINAPI BASS_ASIO_Stop()
 {
 	++stopCalls;
-	started = false;
+	StopAutoPump();
 	return TRUE;
 }
 EXPORT BOOL WINAPI BASS_ASIO_IsStarted()
@@ -149,3 +174,6 @@ EXPORT unsigned WINAPI FakeAsioRateSetCalls()
 {
 	return rateSetCalls;
 }
+
+// Identifies this sink to the diagnostic host. It never opens an OS audio output.
+EXPORT BOOL WINAPI FakeAsioSilentOnly() { return TRUE; }

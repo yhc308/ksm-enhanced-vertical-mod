@@ -1,7 +1,7 @@
 name: Mod source checks
 on:
   push:
-    branches: [main]
+    branches: [main, feature/ksm-2.2.0]
   pull_request:
 permissions:
   contents: read
@@ -17,7 +17,7 @@ jobs:
       - run: python -m unittest discover -s tests -p 'test_source_*.py'
       - run: python scripts/PrepareSource.py --destination build/source
       - run: pip install libclang==18.1.1 clang-format==19.1.5
-      - run: python build/source/scripts/VerifyReleaseSource.py
+      - run: python build/source/scripts/VerifyMigration220.py
       - run: python build/source/scripts/CheckReviewCppStyle.py
       - name: Compile production rolling-window tests without Siv3D
         run: |

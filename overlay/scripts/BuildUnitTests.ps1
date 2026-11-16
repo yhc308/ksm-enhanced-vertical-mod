@@ -14,7 +14,7 @@ Import-Module (Join-Path $PSScriptRoot 'WindowsBuildTools.psm1') -Force
 $msbuild=Get-KsmMSBuild
 $output=Join-Path $root ('build/unit-tests/'+$Configuration)
 New-Item -ItemType Directory -Path $output -Force|Out-Null
-& $msbuild (Join-Path $root 'build/unit-project/ksm-v2-tests.vcxproj') /m:2 /p:Platform=x64 "/p:Configuration=$Configuration" "/p:SolutionDir=$root/" "/p:OutDir=$output/" /verbosity:minimal /nologo 2>&1|Tee-Object -FilePath (Join-Path $output 'build.log')
+& $msbuild (Join-Path $root 'build/unit-project/ksm-v2-tests.vcxproj') /m:1 /p:MultiProcessorCompilation=false /p:Platform=x64 "/p:Configuration=$Configuration" "/p:SolutionDir=$root/" "/p:OutDir=$output/" /verbosity:minimal /nologo 2>&1|Tee-Object -FilePath (Join-Path $output 'build.log')
 if($LASTEXITCODE){throw 'Unit test build failed'}
 foreach($name in @('bass.dll','bass_fx.dll','bassasio.dll','bassmix.dll')){
     $source=Join-Path $root ('kshootmania/App/'+$name)

@@ -40,6 +40,7 @@ def kind(path):
 def sources(build_information=None):
     build = json.loads(Path(build_information or ROOT / 'build/latest.json').read_text(encoding='utf-8-sig'))
     assert build['configuration'] == 'Release' and not build['diagnostics']
+    assert build['baseCommit'] == '63d6546808fe3afad4469f3e4d12ca85145650d8', 'KSM 2.2.0 installer requires its own migrated build'
     executable = Path(build['executable'])
     assert hashlib.sha256(executable.read_bytes()).hexdigest() == build['sha256'].lower()
     result = {'ksm-enhanced-vertical.exe': executable}
@@ -56,6 +57,8 @@ def sources(build_information=None):
     for name in ('custom','judge','vertical'):
         result[f'ui/menu_{name}_icon.png'] = app / f'ui/menu_{name}_icon.png'
     result['ui/parts/option_setting_item.noco'] = app / 'ui/parts/option_setting_item.noco'
+    for name in ('ui/parts/option_setting_heading.noco','ui/parts/select_folder_loading.noco','ui/font/font_monospace.noco','ui/scene/option.noco'):
+        result[name] = app / name
     for name in ('bassasio.dll','bassmix.dll'):
         result[name] = app / name
     result['mods/enhanced/LICENSE'] = ROOT / 'LICENSE'

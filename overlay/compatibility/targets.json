@@ -3,13 +3,13 @@
   "modId": "ksm-enhanced-vertical",
   "profiles": [
     {
-      "id": "ksm-2.1.0-win-x64",
-      "upstreamVersion": "2.1.0",
-      "sourceBaseCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
-      "runtimeContract": "ksm-2.1.0-enhanced-skin-v2",
+      "id": "ksm-2.2.0-win-x64",
+      "upstreamVersion": "2.2.0",
+      "sourceBaseCommit": "63d6546808fe3afad4469f3e4d12ca85145650d8",
+      "runtimeContract": "ksm-2.2.0-enhanced-skin-v1",
       "status": "baseline",
       "executableHashes": [
-        "8EAC0DC17EA31E405F61746CCA2ADC0CD6A198C88DBCED25C1ED360BDF793757"
+        "10f75e152252e519761a462a6e613d6908e5f8f86e65590c673e8472f6c3df34"
       ],
       "requiredFiles": [],
       "notes": "Original executable identity only; user resources are not hash-gated. Required x64 DLL exports are validated without loading DLLs.",

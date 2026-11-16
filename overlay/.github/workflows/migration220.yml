@@ -1,0 +1,38 @@
+name: KSM 2.2.0 migration checks
+on:
+  push:
+    branches: [feature/ksm-2.2.0]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python scripts/ApplyDependencyPatches.py
+      - run: python scripts/VerifyMigration220.py
+      - run: python -m unittest discover -s tests -p 'test_preview_trace_rules.py'
+  installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - shell: pwsh
+        run: |
+          ./installer/Build.ps1 -TestEngine
+          python installer/tests/UpdateEngine.py
+          if ($LASTEXITCODE) { throw 'KSM 2.2 installer transaction tests failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ksm220-installer-results
+          path: build/native-installer-update-latest.json

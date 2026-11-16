@@ -50,15 +50,15 @@ namespace RenderGeometryFixture
 		check(U"wide_and_normal_share_center", kLaserPositionOffsetWide.x + 256, kHighwayTextureWideCenterX, .001);
 		const bool vertical = GameRender::VerticalEnabled();
 		const auto original = SkinPreset::Current();
-		const Array<Size> sizes = vertical ? Array<Size>{ { 720, 1280 }, { 1080, 1920 } } : Array<Size>{ { 640, 480 }, { 1280, 720 } };
+		const Array<Size> sizes = vertical ? Array<Size>{ { 720, 1280 }, { 1080, 1920 } } : Array<Size>{ { 640, 480 }, { 1280, 720 }, { 1920, 1080 } };
 		for (const auto size : sizes)
 		{
 			const GameRender::Scope scope{ GameRender::Context{ size, vertical } };
 			BasicCamera3D camera = vertical ? Vertical::MakeCamera(size, Vertical::ModConfig::Load().layout) : BasicCamera3D{ size, 45_deg, Vec3{ 0, 45, -366 }, Vec3{ 0, 45 - 100 * Sin(15_deg), -366 + 100 * Cos(15_deg) } };
 			Graphics3D::SetCameraTransform(camera);
-			Highway3DGraphics highway;
+			Highway3DGraphics highway{ kson::ChartData{}, {} };
 			KeyBeamGraphics beams;
-			ButtonNoteGraphics notes;
+			ButtonNoteGraphics notes{ kson::ChartData{}, {} };
 			LaserCursor3DGraphics cursor;
 			Jdgoverlay3DGraphics overlay{ camera };
 			HighwayRenderTexture laneTarget;

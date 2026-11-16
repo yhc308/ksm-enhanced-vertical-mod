@@ -21,7 +21,7 @@ namespace
 	const wchar_t* T(const char* key)
 	{
 		static const std::map<std::string, std::vector<const wchar_t*>> text{
-			{"title", {L"Enhanced Vertical Mod — Setup", L"Enhanced Vertical Mod — インストーラー", L"Enhanced Vertical Mod — 설치", L"Enhanced Vertical Mod — 安装程序", L"Enhanced Vertical Mod — 安裝程式"}},
+			{"title", {L"Enhanced Vertical Mod (KSM 2.2.0) — Setup", L"Enhanced Vertical Mod (KSM 2.2.0) — インストーラー", L"Enhanced Vertical Mod (KSM 2.2.0) — 설치", L"Enhanced Vertical Mod (KSM 2.2.0) — 安装程序", L"Enhanced Vertical Mod (KSM 2.2.0) — 安裝程式"}},
 			{"browse", {L"Choose folder", L"フォルダー選択", L"폴더 선택", L"选择文件夹", L"選擇資料夾"}},
 			{"install", {L"Install mod", L"モードをインストール", L"모드 설치", L"安装模组", L"安裝模組"}},
 			{"updateReady", {L"An update is available. Use Update mod.", L"更新できます。「モードを更新」を選択してください。", L"새 버전으로 업데이트할 수 있습니다. 모드 업데이트를 누르세요.", L"可以更新。请选择更新模组。", L"可以更新。請選擇更新模組。"}},
@@ -31,8 +31,8 @@ namespace
 			{"updateButton", {L"Update mod", L"モードを更新", L"모드 업데이트", L"更新模组", L"更新模組"}},
 			{"updateDone", {L"Update complete. Scores and settings preserved.", L"更新完了。スコアと設定は保持されました。", L"업데이트 완료. 점수와 설정을 보존했습니다.", L"更新完成。分数与设置已保留。", L"更新完成。分數與設定已保留。"}},
 			{"remove", {L"Remove mod", L"モードを削除", L"모드 제거", L"移除模组", L"移除模組"}},
-			{"select", {L"Choose the KSM 2.1.0 folder containing kshootmania.exe.", L"kshootmania.exe がある KSM 2.1.0 フォルダーを選択してください。", L"kshootmania.exe가 있는 KSM 2.1.0 폴더를 선택하세요.", L"请选择包含 kshootmania.exe 的 KSM 2.1.0 文件夹。", L"請選擇包含 kshootmania.exe 的 KSM 2.1.0 資料夾。"}},
-			{"ready", {L"Compatible KSM 2.1.0 — ready to install", L"対応 KSM 2.1.0 — インストールできます", L"호환 KSM 2.1.0 — 설치 가능", L"兼容 KSM 2.1.0 — 可以安装", L"相容 KSM 2.1.0 — 可以安裝"}},
+			{"select", {L"Choose the KSM 2.2.0 folder containing kshootmania.exe.", L"kshootmania.exe がある KSM 2.2.0 フォルダーを選択してください。", L"kshootmania.exe가 있는 KSM 2.2.0 폴더를 선택하세요.", L"请选择包含 kshootmania.exe 的 KSM 2.2.0 文件夹。", L"請選擇包含 kshootmania.exe 的 KSM 2.2.0 資料夾。"}},
+			{"ready", {L"Compatible KSM 2.2.0 — ready to install", L"対応 KSM 2.2.0 — インストールできます", L"호환 KSM 2.2.0 — 설치 가능", L"兼容 KSM 2.2.0 — 可以安装", L"相容 KSM 2.2.0 — 可以安裝"}},
 			{"installed", {L"Installed version: ", L"インストール済み: ", L"설치된 버전: ", L"已安装版本：", L"已安裝版本："}},
 			{"working", {L"Working... Closing this window requests a safe rollback.", L"処理中… 閉じると安全に取り消します。", L"작업 중… 창을 닫으면 안전하게 취소·복구합니다.", L"处理中… 关闭窗口将安全取消并回滚。", L"處理中… 關閉視窗將安全取消並還原。"}},
 			{"installDone", {L"Installation complete. Run ksm-enhanced-vertical.exe in the selected folder.", L"インストール完了。選択したフォルダーの ksm-enhanced-vertical.exe を起動してください。", L"설치 완료. 선택한 폴더의 ksm-enhanced-vertical.exe를 실행하세요.", L"安装完成。请运行所选文件夹中的 ksm-enhanced-vertical.exe。", L"安裝完成。請執行所選資料夾中的 ksm-enhanced-vertical.exe。"}},
@@ -45,6 +45,7 @@ namespace
 			{"permission", {L"Write permission is required. Retry this action as administrator?", L"書き込み権限が必要です。管理者として再試行しますか？", L"쓰기 권한이 필요합니다. 관리자 권한으로 같은 작업을 재시도할까요?", L"需要写入权限。是否以管理员身份重试？", L"需要寫入權限。是否以管理員身分重試？"}},
 			{"busy", {L"Close the game in this folder, then retry.", L"このフォルダーのゲームを終了してから再試行してください。", L"이 폴더에서 실행 중인 게임을 종료한 뒤 다시 시도하세요.", L"请关闭此文件夹中运行的游戏后重试。", L"請關閉此資料夾中執行的遊戲後重試。"}},
 			{"target", {L"Unsupported original KSM executable or installation state. Details: ", L"原版KSM実行ファイルまたはインストール状態に対応していません。詳細: ", L"지원하지 않는 원본 KSM 실행 파일 또는 설치 상태입니다. 상세: ", L"原版KSM程序或安装状态不受支持。详情：", L"原版KSM程式或安裝狀態不受支援。詳細："}},
+			{"runtimeMismatch", {L"This setup is for KSM 2.2.0 only. Remove a 2.1.0 mod using its original setup before updating the base game.", L"このインストーラーはKSM 2.2.0専用です。原版を更新する前に、2.1.0版のモードを元のインストーラーで削除してください。", L"KSM 2.2.0 전용 설치기입니다. 원본 게임을 업데이트하기 전에 2.1.0 모드를 해당 버전 설치기로 제거하세요.", L"此安装程序仅适用于KSM 2.2.0。更新原版游戏前，请用原安装程序移除2.1.0模组。", L"此安裝程式僅適用於KSM 2.2.0。更新原版遊戲前，請用原安裝程式移除2.1.0模組。"}},
 			{"dependency", {L"Required audio DLL is missing or incompatible. Details: ", L"必要な音声DLLがないか、互換性がありません。詳細: ", L"필수 오디오 DLL이 없거나 호환되지 않습니다. 상세: ", L"必需的音频DLL缺失或不兼容。详情：", L"必要的音訊DLL遺失或不相容。詳細："}},
 			{"recovery", {L"Recovery files: ", L"復元用ファイル: ", L"복구 자료: ", L"恢复文件：", L"還原資料："}},
 			{"kept", {L"Preserved edited/deleted image paths: ", L"維持した編集・削除画像: ", L"유지한 수정·삭제 이미지: ", L"保留的修改或删除图片：", L"保留的修改或刪除圖片："}}
@@ -67,6 +68,7 @@ namespace
 	{
 		const auto code = result.value("code", "error");
 		if (code == "missing_executable") return std::wstring(T("missingExe")) + Wide(result.value("message", ""));
+		if (code == "runtime_mismatch") return T("runtimeMismatch");
 		if (code == "busy") return T("busy");
 		if (code == "target") return std::wstring(T("target")) + Wide(result.value("message", ""));
 		if (code.rfind("dependency_", 0) == 0) return std::wstring(T("dependency")) + Wide(result.value("message", ""));
@@ -256,7 +258,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show)
 		Control(WC_COMBOBOXW, L"", CBS_DROPDOWNLIST | WS_TABSTOP, 588, 20, 175, 200, 10, g_language);
 		for (const auto* value : {L"EN — English", L"JP — 日本語", L"KR — 한국어", L"SC — 简体中文", L"TC — 繁體中文"}) SendMessageW(g_language, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(value));
 		SendMessageW(g_language, CB_SETCURSEL, g_lang, 0);
-		Control(L"STATIC", L"KSM 2.1.0 / Enhanced Vertical 0.5.4-beta4", SS_LEFT, 24, 24, 555, 28, 0, g_hint);
+		Control(L"STATIC", L"KSM 2.2.0 / Enhanced Vertical 0.5.4-beta4", SS_LEFT, 24, 24, 555, 28, 0, g_hint);
 		Control(L"EDIT", L"", ES_READONLY | ES_AUTOHSCROLL | WS_BORDER, 24, 70, 558, 29, 0, g_path);
 		Control(L"BUTTON", T("browse"), BS_PUSHBUTTON | WS_TABSTOP, 595, 68, 167, 32, 11, g_browse);
 		Control(L"EDIT", L"", ES_READONLY | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 24, 120, 738, 118, 0, g_status);

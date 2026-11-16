@@ -5,7 +5,8 @@ import shutil
 import subprocess
 
 root = Path(__file__).resolve().parents[1]
-base = '41bfdaa7331808aff7239a9ec283cdba01b3b406'
+import json
+base = json.loads((root / 'patches/dependencies/manifest.json').read_text())['upstreamCommit']
 original = set(subprocess.check_output(['git', '-c', 'safe.directory=' + root.as_posix(), '-C', str(root),
                                       'ls-tree', '-r', '--name-only', base], text=True).splitlines())
 fallback = Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)')) / 'Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/bin/clang-format.exe'

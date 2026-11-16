@@ -1,8 +1,57 @@
+diff --git a/include/NocoUI/Asset.hpp b/include/NocoUI/Asset.hpp
+index eeb8b997597fc09b8de7fd4556a1eea6ceba3634..f602dbacf0f25bfa2c48128c018a1a60ae448c58 100644
+--- a/include/NocoUI/Asset.hpp
++++ b/include/NocoUI/Asset.hpp
+@@ -203,7 +203,12 @@ namespace noco
+ 		void CancelPendingAsyncTextureLoads();
+ 
+ 		/// @brief テクスチャの読み込み処理を差し替える(nullptrで既定の読み込みに戻す)
+-		void SetTextureLoader(std::function<Texture(FilePathView, MipmapEnabledYN)> loader);
++		// The optional predicate confines custom loading to its owned resource paths.
++		// Other files retain native asynchronous loading and downscaling.
++		void SetTextureLoader(std::function<Texture(FilePathView, MipmapEnabledYN)> loader, std::function<bool(FilePathView)> handlesPath = {});
++
++		[[nodiscard]]
++		bool UsesCustomTextureLoader(FilePathView filePath);
+ 
+ 		/// @brief テクスチャを再読み込み
+ 		/// @param filePath テクスチャファイルのパス
 diff --git a/src/Asset.cpp b/src/Asset.cpp
-index c98fb0b0e3b8ebed2255f5531f724626a2779bea..bb128fbef4a4b47793d7e666b7184017a35bf55a 100644
+index 607f618a4ffda934c646ced220878c635a94a582..1a3db6678d488d840ec04684222a8e3042a33847 100644
 --- a/src/Asset.cpp
 +++ b/src/Asset.cpp
-@@ -71,8 +71,8 @@ namespace noco
+@@ -23,6 +23,12 @@ namespace noco
+ 			return loader;
+ 		}
+ 
++		std::function<bool(FilePathView)>& TextureLoaderPathPredicate()
++		{
++			static std::function<bool(FilePathView)> predicate;
++			return predicate;
++		}
++
+ 		// 描画サイズを下回らない範囲で、縦横を1/√2に縮小する回数を計算
+ 		int32 CalculateDownscaleLevel(const Size& imageSize, const SizeF& drawSize, PreserveAspectYN preserveAspect)
+ 		{
+@@ -65,7 +71,7 @@ namespace noco
+ 			}
+ 
+ 			const FilePath fullPath = Asset::GetFullPath(filePath);
+-			if (!FileSystem::IsFile(fullPath))
++			if (!Asset::UsesCustomTextureLoader(filePath) && !FileSystem::IsFile(fullPath))
+ 			{
+ 				return nullptr;
+ 			}
+@@ -92,7 +98,7 @@ namespace noco
+ 		Optional<DownscaleInfo> GetDownscaleInfo(FilePathView filePath, const SizeF& drawSize, PreserveAspectYN preserveAspect)
+ 		{
+ 			// SetTextureLoaderで読み込み処理を差し替えている場合は縮小しない
+-			if (TextureLoader())
++			if (Asset::UsesCustomTextureLoader(filePath))
+ 			{
+ 				return none;
+ 			}
+@@ -282,8 +288,8 @@ namespace noco
  	FilePath Asset::GetFullPath(FilePathView filePath)
  	{
  		return IsAbsolutePath(filePath)
@@ -13,12 +62,71 @@ index c98fb0b0e3b8ebed2255f5531f724626a2779bea..bb128fbef4a4b47793d7e666b7184017
  	}
  
  	const Texture& Asset::GetOrLoadTexture(FilePathView filePath, MipmapEnabledYN mipmapEnabled)
-@@ -88,7 +88,7 @@ namespace noco
+@@ -302,11 +308,11 @@ namespace noco
+ 		}
+ 
+ 		const FilePath fullPath = GetFullPath(filePath);
+-		if (!FileSystem::IsFile(fullPath))
++		if (!Asset::UsesCustomTextureLoader(filePath) && !FileSystem::IsFile(fullPath))
+ 		{
+ 			return EmptyTexture;
+ 		}
+-		if (const auto& loader = TextureLoader())
++		if (const auto& loader = TextureLoader(); Asset::UsesCustomTextureLoader(filePath))
+ 		{
+ 			return table.registerAsset(filePath, loader(filePath, mipmapEnabled));
+ 		}
+@@ -320,7 +326,7 @@ namespace noco
+ 
+ 	void Asset::PrewarmTextureAsync(FilePathView filePath, MipmapEnabledYN mipmapEnabled)
+ 	{
+-		if (TextureLoader())
++		if (Asset::UsesCustomTextureLoader(filePath))
+ 		{
+ 			PrewarmTexture(filePath, mipmapEnabled);
+ 			return;
+@@ -382,7 +388,7 @@ namespace noco
+ 
+ 	void Asset::PrewarmDownscaledTextureAsync(FilePathView filePath, const SizeF& drawSize, PreserveAspectYN preserveAspect)
+ 	{
+-		if (TextureLoader())
++		if (Asset::UsesCustomTextureLoader(filePath))
+ 		{
+ 			PrewarmDownscaledTexture(filePath, drawSize, preserveAspect);
+ 			return;
+@@ -418,9 +424,16 @@ namespace noco
+ 		pending.clear();
+ 	}
+ 
+-	void Asset::SetTextureLoader(std::function<Texture(FilePathView, MipmapEnabledYN)> loader)
++	void Asset::SetTextureLoader(std::function<Texture(FilePathView, MipmapEnabledYN)> loader, std::function<bool(FilePathView)> handlesPath)
+ 	{
+ 		TextureLoader() = std::move(loader);
++		TextureLoaderPathPredicate() = std::move(handlesPath);
++	}
++
++	bool Asset::UsesCustomTextureLoader(FilePathView filePath)
++	{
++		const auto& predicate = TextureLoaderPathPredicate();
++		return static_cast<bool>(TextureLoader()) && (!predicate || predicate(filePath));
+ 	}
+ 
+ 	const Texture& Asset::ReloadTexture(FilePathView filePath)
+@@ -502,7 +515,7 @@ namespace noco
+ 		}
+ 
+ 		const FilePath fullPath = GetFullPath(filePath);
+-		if (!FileSystem::IsFile(fullPath))
++		if (!Asset::UsesCustomTextureLoader(filePath) && !FileSystem::IsFile(fullPath))
+ 		{
+ 			return EmptyAudio;
+ 		}
+@@ -551,7 +564,7 @@ namespace noco
  		if (!table.isRegistered(filePath))
  		{
  			const FilePath fullPath = GetFullPath(filePath);
 -			if (!FileSystem::IsFile(fullPath))
-+			if (!TextureLoader() && !FileSystem::IsFile(fullPath))
++			if (!Asset::UsesCustomTextureLoader(filePath) && !FileSystem::IsFile(fullPath))
  			{
- 				return EmptyTexture;
+ 				return EmptyJSON;
  			}

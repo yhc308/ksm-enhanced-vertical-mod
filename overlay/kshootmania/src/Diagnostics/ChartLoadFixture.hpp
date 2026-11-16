@@ -43,7 +43,7 @@ namespace ChartLoadFixture
 						 const auto meta = SelectChartInfo::LoadMetaChartData(file);
 						 report.writeln(U"meta_error={} title={}"_fmt(static_cast<int>(meta.error), Unicode::FromUTF8(meta.meta.title)));
 					 });
-				const auto chart = kson::LoadKshChartData(file.toUTF8());
+				const auto chart = FsUtils::HasKsonExtension(file) ? kson::LoadKsonChartData(file.toUTF8()) : kson::LoadKshChartData(file.toUTF8());
 				report.writeln(U"full_error={}"_fmt(static_cast<int>(chart.error)));
 				const auto timing = kson::CreateTimingCache(chart.beat);
 				for (size_t lane = 0; lane < chart.note.bt.size(); ++lane)

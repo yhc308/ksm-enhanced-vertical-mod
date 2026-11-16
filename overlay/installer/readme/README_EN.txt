@@ -1,9 +1,15 @@
+﻿KSM 2.2.0 migration QA build (not a replacement for the KSM 2.1.0 package).
+When installing into a separate 2.2.0 folder, your existing 2.1.0 folder and mod can remain unchanged.
+This setup accepts original KSM 2.2.0 only. It will not update or remove an installation belonging to KSM 2.1.0.
+Before updating an existing 2.1.0 game: remove its mod with the matching old setup, apply the official 2.2.0 update, then use this setup. Preserve all original backups.
+Scores, EX records, settings and user skins are not migration targets. Do not overwrite the original game EXE manually while a mod remains installed.
+
 KSM Enhanced Vertical Mod 0.5.4-beta4 Installation Guide
-Supported version: K-Shoot Mania 2.1.0 Windows x64
+Supported version: K-Shoot Mania 2.2.0 Windows x64
 
 # Installation
 1. Close kshootmania.exe if it is running.
-2. Run KsmEnhancedVertical_0.5.4-beta4_Setup.exe.
+2. Run KsmEnhancedVertical_KSM2.2.0_0.5.4-beta4_Setup.exe.
 3. Select the folder containing kshootmania.exe, then click [Install mod]. (If the setup EXE is in the KSM folder, that folder is selected automatically.)
 4. After installation, run ksm-enhanced-vertical.exe in the same folder to launch the mod.
 5. The original kshootmania.exe is kept.

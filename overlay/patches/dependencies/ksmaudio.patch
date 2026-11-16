@@ -1668,7 +1668,7 @@ index fd3d8a410802690eb77562d1c2b93dddc3318c05..985d1bca3e092183292b9f71caa026cc
  	};
  }
 diff --git a/include/ksmaudio/Stream.hpp b/include/ksmaudio/Stream.hpp
-index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a29b44406 100644
+index a2bf96df8e85aace1a8b1b15e9d19abfd049ab68..caf8e4418906d968f819c2bb36a95c7136effb5b 100644
 --- a/include/ksmaudio/Stream.hpp
 +++ b/include/ksmaudio/Stream.hpp
 @@ -1,9 +1,11 @@
@@ -1684,7 +1684,7 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a
  #include "ksmaudio/Backend.hpp"
  #include "ksmaudio/AudioEffect/AudioEffect.hpp"
  
-@@ -12,18 +14,48 @@ namespace ksmaudio
+@@ -12,18 +14,44 @@ namespace ksmaudio
  	using SecondsF = std::chrono::duration<double>;
  	using Duration = SecondsF;
  
@@ -1696,10 +1696,6 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a
 +		std::uint64_t generation = 0;
 +		bool valid = false;
 +		bool playing = false;
-+		double observedTimeSec = 0, callbackTimeSec = 0;
-+		std::uint64_t interpolatedFrames = 0;
-+		std::uint32_t callbackFrames = 0;
-+		bool phaseLimited = false;
 +	};
 +
  	class Stream
@@ -1734,19 +1730,24 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a
  		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
  #else
  		class Impl;
-@@ -42,9 +74,9 @@ namespace ksmaudio
+@@ -41,10 +69,14 @@ namespace ksmaudio
+ 
  		Stream& operator=(const Stream&) = delete;
  
- #ifdef KSMAUDIO_BACKEND_BASS
--		Stream(Stream&&) = default;
+-		// BASSバックエンドではムーブ元とムーブ先の両方でBASS_StreamFreeされるためムーブ禁止(Webバックエンドも揃えて禁止)
++#ifdef KSMAUDIO_BACKEND_BASS
++		// Research candidate: explicit ownership transfer; never default-move BASS handles.
 +		Stream(Stream&& other) noexcept;
- 
--		Stream& operator=(Stream&&) = default;
 +		Stream& operator=(Stream&& other) noexcept;
- #else
- 		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
- 		Stream(Stream&&);
-@@ -62,6 +94,8 @@ namespace ksmaudio
++#else
+ 		Stream(Stream&&) = delete;
+-
+ 		Stream& operator=(Stream&&) = delete;
++#endif
+ 
+ 		void play() const;
+ 
+@@ -56,6 +88,8 @@ namespace ksmaudio
  
  		SecondsF posSec() const;
  
@@ -1756,7 +1757,7 @@ index 13d3b241c46acbb5b620c029aeaab35722044365..5bc2f04d2e7dfa70bd34c555a7124b6a
  
  		Duration duration() const;
 diff --git a/include/ksmaudio/StreamWithEffects.hpp b/include/ksmaudio/StreamWithEffects.hpp
-index 68351c3a27e9dbec72c426d1205bbf819b4df42a..aae4097b4f4b9897564b92a39a56628746120b63 100644
+index d08b0f1d2894366e8224e079c3f1f75c2084858b..aae4097b4f4b9897564b92a39a56628746120b63 100644
 --- a/include/ksmaudio/StreamWithEffects.hpp
 +++ b/include/ksmaudio/StreamWithEffects.hpp
 @@ -1,4 +1,4 @@
@@ -1765,19 +1766,20 @@ index 68351c3a27e9dbec72c426d1205bbf819b4df42a..aae4097b4f4b9897564b92a39a566287
  #include <unordered_map>
  #include "AudioEffect/AudioEffectBus.hpp"
  
-@@ -21,9 +21,9 @@ namespace ksmaudio
+@@ -21,10 +21,9 @@ namespace ksmaudio
  
  		StreamWithEffects& operator=(const StreamWithEffects&) = delete;
  
--		StreamWithEffects(StreamWithEffects&&) = default;
+-		// Note: Move is not allowed because AudioEffectBus holds the address of m_stream.
+-		StreamWithEffects(StreamWithEffects&&) = delete;
 +		StreamWithEffects(StreamWithEffects&& other) noexcept;
  
--		StreamWithEffects& operator=(StreamWithEffects&&) = default;
+-		StreamWithEffects& operator=(StreamWithEffects&&) = delete;
 +		StreamWithEffects& operator=(StreamWithEffects&& other) noexcept;
  
  		void play() const;
  
-@@ -34,6 +34,10 @@ namespace ksmaudio
+@@ -35,6 +34,10 @@ namespace ksmaudio
  		void updateManually() const;
  
  		SecondsF posSec() const;
@@ -1789,7 +1791,7 @@ index 68351c3a27e9dbec72c426d1205bbf819b4df42a..aae4097b4f4b9897564b92a39a566287
  		void seekPosSec(SecondsF timeSec) const;
  
 diff --git a/include/ksmaudio/ksmaudio.hpp b/include/ksmaudio/ksmaudio.hpp
-index 3dd875914c9c388585020419096ca942a8ac315a..ca65f9971bb508e63158d873da97878c07a5f3df 100644
+index 3dd875914c9c388585020419096ca942a8ac315a..b07fadfdf61ac8bb91f8091b2c0486adabeb2fb1 100644
 --- a/include/ksmaudio/ksmaudio.hpp
 +++ b/include/ksmaudio/ksmaudio.hpp
 @@ -1,5 +1,6 @@
@@ -1814,11 +1816,11 @@ index 3dd875914c9c388585020419096ca942a8ac315a..ca65f9971bb508e63158d873da97878c
  	/// @return 成功時true、失敗時false(失敗時はGetLastErrorCode()でBASSエラーコードを取得可能)
  	[[nodiscard]]
 -	bool Init(void* hWnd, AudioBackend audioBackend = AudioBackend::Default);
-+	bool Init(void* hWnd, AudioBackend audioBackend = AudioBackend::Default, const std::string& asioDriver = "");
++	bool Init(void* hWnd, AudioBackend audioBackend = AudioBackend::Default, const std::string& asioDriver = "", bool allowFallback = true);
 +
 +	// Synchronous startup diagnostics; observer is never called by the audio callback.
 +	[[nodiscard]] bool InitWithTrace(void* hWnd, AudioBackend backend, const std::string& driver,
-+									 const std::function<void(const char*)>& observer);
++									 const std::function<void(const char*)>& observer, bool allowFallback = true);
 +
 +	struct AudioOutputStatus
 +	{
@@ -1875,9 +1877,15 @@ index 3dd875914c9c388585020419096ca942a8ac315a..ca65f9971bb508e63158d873da97878c
  	void Terminate();
  
 diff --git a/ksmaudio.vcxproj b/ksmaudio.vcxproj
-index e889afc96022cba5d5d1dda46b802cd16a1eaff5..d3f80de0288f21d00750530fa73898d7ac9c53da 100644
+index e889afc96022cba5d5d1dda46b802cd16a1eaff5..391c53574a208e2b3a4e3d59cee1f156c2e655ed 100644
 --- a/ksmaudio.vcxproj
 +++ b/ksmaudio.vcxproj
+@@ -1,4 +1,4 @@
+-<?xml version="1.0" encoding="utf-8"?>
++﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup Label="ProjectConfigurations">
+     <ProjectConfiguration Include="Debug|Win32">
 @@ -163,6 +163,8 @@
      </Lib>
    </ItemDefinitionGroup>
@@ -1887,26 +1895,27 @@ index e889afc96022cba5d5d1dda46b802cd16a1eaff5..d3f80de0288f21d00750530fa73898d7
      <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffect.hpp" />
      <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectBus.hpp" />
      <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectParam.hpp" />
+@@ -209,6 +211,8 @@
+   <ItemGroup>
+     <ClCompile Include="src\AudioEffect\AudioEffectBus.cpp" />
+     <ClCompile Include="src\AudioEffect\AudioEffectParam.cpp" />
++    <ClCompile Include="src\AudioEffect\AudioEffectParamSpec.cpp" />
++    <ClCompile Include="src\AudioEffect\AudioEffectParamValidator.cpp" />
+     <ClCompile Include="src\AudioEffect\detail\WaveLengthUtils.cpp" />
+     <ClCompile Include="src\AudioEffect\DSP\BitcrusherDSP.cpp" />
+     <ClCompile Include="src\AudioEffect\DSP\FlangerDSP.cpp" />
 diff --git a/src/AsioOutput.hpp b/src/AsioOutput.hpp
 new file mode 100644
-index 0000000000000000000000000000000000000000..06aec2e8261a0fb60ce2b3e228248b9a6026ce52
+index 0000000000000000000000000000000000000000..ccef6f2040bb4fcb1d5740fc72416662a5d9b58c
 --- /dev/null
 +++ b/src/AsioOutput.hpp
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,23 @@
 +﻿#pragma once
 +#include "ksmaudio/Backend.hpp"
 +#include "ksmaudio/Sample.hpp"
 +
 +namespace ksmaudio::detail
 +{
-+	struct OutputClockTiming
-+	{
-+		std::uint64_t observedNanoseconds = 0, callbackNanoseconds = 0;
-+		std::uint64_t interpolatedFrames = 0;
-+		std::uint32_t callbackFrames = 0;
-+		bool valid = false, phaseLimited = false;
-+	};
-+	OutputClockTiming ReadOutputClockTiming();
 +	void ForgetChannel(DWORD channel);
 +	void LockOutput();
 +	void UnlockOutput();
@@ -1919,7 +1928,7 @@ index 0000000000000000000000000000000000000000..06aec2e8261a0fb60ce2b3e228248b9a
 +	bool PauseOutputChannel(DWORD channel);
 +	bool StopOutputChannel(DWORD channel);
 +	DWORD OutputChannelIsActive(DWORD channel);
-+	QWORD OutputChannelGetPosition(DWORD channel, const OutputClockTiming* timing = nullptr);
++	QWORD OutputChannelGetPosition(DWORD channel);
 +	QWORD OutputChannelGetRenderPosition(DWORD channel);
 +	bool OutputChannelSetPosition(DWORD channel, QWORD pos);
 +	DWORD OutputChannelGetData(DWORD channel, void* buffer, DWORD length);
@@ -2279,7 +2288,7 @@ index b2ec294131fdc52d5119418c36a24bb701f63b92..ef3cdad39dd60378f2eca0188526fe26
  		if (hChannel == 0)
  		{
 diff --git a/src/Stream.cpp b/src/Stream.cpp
-index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb5084756d 100644
+index b9efa56f7b0cf95d545047adf9bf2cb4a275da73..c8070d614cd19f269953e530a29cf18a78913267 100644
 --- a/src/Stream.cpp
 +++ b/src/Stream.cpp
 @@ -1,8 +1,13 @@
@@ -2410,9 +2419,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  
 -	Stream::~Stream()
 +	void Stream::registerResource()
- 	{
--		BASS_StreamFree(m_hStream);
--		if (m_hStreamSource.has_value())
++	{
 +		detail::OutputResources()[this] = {
 +			[this]
 +			{
@@ -2443,7 +2450,9 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
 +		};
 +	}
 +	void Stream::releaseNative()
-+	{
+ 	{
+-		BASS_StreamFree(m_hStream);
+-		if (m_hStreamSource.has_value())
 +		ksmaudio::qa::Scope qaScope{ "Stream.releaseNative", true };
 +		OutputBatchLock callbackBoundary;
 +		const std::string_view file{ m_filePath };
@@ -2570,7 +2579,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  	}
  
  	SecondsF Stream::posSec() const
-@@ -223,14 +365,41 @@ namespace ksmaudio
+@@ -223,14 +365,35 @@ namespace ksmaudio
  		{
  			return SecondsF{ 0.0 };
  		}
@@ -2596,17 +2605,11 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
 +		value.generation = (detail::OutputGeneration() << 32) + m_generation;
 +		if (!m_hStream || m_playbackSpeed <= 0)
 +			return value;
-+		const auto timing = IsASIOActive() ? detail::ReadOutputClockTiming() : detail::OutputClockTiming{};
 +		const QWORD rendered = detail::OutputChannelGetRenderPosition(m_hStream);
-+		const QWORD audible = detail::OutputChannelGetPosition(m_hStream, &timing);
++		const QWORD audible = detail::OutputChannelGetPosition(m_hStream);
 +		if (rendered == static_cast<QWORD>(-1) || audible == static_cast<QWORD>(-1))
 +			return value;
 +		value.outputFrame = detail::OutputFrame();
-+		value.observedTimeSec = timing.observedNanoseconds / 1e9;
-+		value.callbackTimeSec = timing.callbackNanoseconds / 1e9;
-+		value.callbackFrames = timing.callbackFrames;
-+		value.interpolatedFrames = timing.interpolatedFrames;
-+		value.phaseLimited = timing.phaseLimited;
 +		value.valid = true;
 +		value.audiblePositionSec = BASS_ChannelBytes2Seconds(m_hStream, audible) / m_playbackSpeed;
 +		value.renderPositionSec = IsASIOActive() ? BASS_ChannelBytes2Seconds(m_hStream, rendered) / m_playbackSpeed : value.audiblePositionSec;
@@ -2614,7 +2617,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  	}
  
  	Duration Stream::duration() const
-@@ -245,12 +414,31 @@ namespace ksmaudio
+@@ -245,12 +408,31 @@ namespace ksmaudio
  
  	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
  	{
@@ -2648,7 +2651,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  	}
  
  	void Stream::setFadeIn(Duration duration) const
-@@ -280,10 +468,10 @@ namespace ksmaudio
+@@ -280,10 +462,10 @@ namespace ksmaudio
  		applyVolume();
  		setFadeOut(duration);
  	}
@@ -2661,7 +2664,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  		return status == BASS_ACTIVE_PLAYING || status == BASS_ACTIVE_STALLED;
  	}
  
-@@ -349,6 +537,8 @@ namespace ksmaudio
+@@ -348,6 +530,8 @@ namespace ksmaudio
  
  	SecondsF Stream::latency() const
  	{
@@ -2670,7 +2673,7 @@ index b221cbc940486c3a5596485120a2e7b928b64a3e..29b727f5221a8c06c03833e119f7c2cb
  		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
  		if (playbuf != (DWORD)-1)
  		{
-@@ -359,16 +549,24 @@ namespace ksmaudio
+@@ -358,16 +542,24 @@ namespace ksmaudio
  
  	void Stream::lockBegin() const
  	{
@@ -2772,7 +2775,7 @@ index 9ce03b7d92ec8c079bbfe66f9ac326f4e015a135..a6e407bfa07b088b0dae1accf694d5e0
  			}
  
 diff --git a/src/Web/StreamWeb.cpp b/src/Web/StreamWeb.cpp
-index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796f000fb78 100644
+index e2baa71fdd76d4962cff4bb029e03f54f9b0e5f5..32678574e3aa2182a9f987652ce7019add3cbf9d 100644
 --- a/src/Web/StreamWeb.cpp
 +++ b/src/Web/StreamWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2848,7 +2851,7 @@ index 65a25982b80a368bbb1fa68f9a97729285594dfb..d209a78f983af14944a85874b5eaa796
  			web::Engine().unlock();
  		}
 diff --git a/src/Web/ksmaudioWeb.cpp b/src/Web/ksmaudioWeb.cpp
-index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde29c268f67 100644
+index 884d8b75bb66d089835870283ab83e7527085e91..7097149f0cdd26220c352ab00fb6403bf20f5585 100644
 --- a/src/Web/ksmaudioWeb.cpp
 +++ b/src/Web/ksmaudioWeb.cpp
 @@ -1,4 +1,4 @@
@@ -2862,7 +2865,7 @@ index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde2
  namespace ksmaudio
  {
 -	bool Init([[maybe_unused]] void* hWnd, [[maybe_unused]] AudioBackend audioBackend)
-+	bool Init([[maybe_unused]] void* hWnd, [[maybe_unused]] AudioBackend audioBackend, [[maybe_unused]] const std::string& asioDriver)
++	bool Init([[maybe_unused]] void* hWnd, [[maybe_unused]] AudioBackend audioBackend, [[maybe_unused]] const std::string& asioDriver, [[maybe_unused]] bool allowFallback)
  	{
  		return web::Engine().init();
  	}
@@ -2910,10 +2913,10 @@ index 884d8b75bb66d089835870283ab83e7527085e91..da56736dd27ec6f8125be2ab7f4fcde2
  	{
  		web::Engine().terminate();
 diff --git a/src/ksmaudio.cpp b/src/ksmaudio.cpp
-index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f9a956413 100644
+index d7e33131e22bc11268797909e69b4c7e38fe3c09..61962365bf11d0dc398ffb45acfa4038cb15736b 100644
 --- a/src/ksmaudio.cpp
 +++ b/src/ksmaudio.cpp
-@@ -1,77 +1,1090 @@
+@@ -1,77 +1,1057 @@
 +﻿#include "ksmaudio/Diagnostics.hpp"
  #include "ksmaudio/ksmaudio.hpp"
 +#include "AsioOutput.hpp"
@@ -2990,8 +2993,6 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +		bool s_available = false, s_reportedValid = false;
 +		std::uint64_t s_generation = 0, s_outputFrame = 0, s_scheduledEvents = 0, s_lateEvents = 0, s_rejectedEvents = 0;
 +		std::recursive_mutex s_outputMutex;
-+		std::chrono::steady_clock::time_point s_callbackTime;
-+		std::uint32_t s_clockCallbackFrames = 0;
 +		struct ScheduledSample
 +		{
 +			const Sample* owner = nullptr;
@@ -3197,10 +3198,6 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +			auto* samples = static_cast<float*>(buffer);
 +			for (DWORD i = 0; i < length / sizeof(float); ++i)
 +				samples[i] *= gain;
-+			// The mixer position and this high-resolution timestamp describe the same
-+			// completed output block. All readers use the output mutex as one boundary.
-+			s_clockCallbackFrames = length / (2 * sizeof(float));
-+			s_callbackTime = std::chrono::steady_clock::now();
 +			return length;
 +		}
 +		void CALLBACK NotifyASIO(DWORD notification, void*)
@@ -3239,8 +3236,6 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +			}
 +			s_reset = 0;
 +			s_callbackError = false;
-+			s_callbackTime = {};
-+			s_clockCallbackFrames = 0;
 +		}
 +		std::string ASIOError(const char* operation)
 +		{
@@ -3382,7 +3377,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
  	}
  
 -	bool Init(void* hWnd, AudioBackend audioBackend)
-+	bool Init(void* hWnd, AudioBackend audioBackend, const std::string& asioDriver)
++	bool Init(void* hWnd, AudioBackend audioBackend, const std::string& asioDriver, bool allowFallback)
  	{
 +		ReportInit("BEGIN reset output state and acquire output mutex");
 +		s_status = {};
@@ -3392,8 +3387,6 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +			std::lock_guard guard(s_outputMutex);
 +			++s_generation;
 +			s_outputFrame = 0;
-+			s_callbackTime = {};
-+			s_clockCallbackFrames = 0;
 +			s_events = {};
 +			s_origins.clear();
 +		}
@@ -3432,6 +3425,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +												  return BASS_ErrorGetCode();
 +											  });
 +						  });
++			if (!allowFallback) return false; // Test hosts must never open a physical fallback device.
 +			s_status.backend = AudioBackend::Default;
 +			s_status.driver.clear();
 +			s_status.sampleRate = 0;
@@ -3535,10 +3529,10 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
  		return true;
  	}
 +	bool InitWithTrace(void* hWnd, AudioBackend backend, const std::string& driver,
-+					   const std::function<void(const char*)>& observer)
++					   const std::function<void(const char*)>& observer, bool allowFallback)
 +	{
 +		const InitTraceScope trace{ observer };
-+		return Init(hWnd, backend, driver);
++		return Init(hWnd, backend, driver, allowFallback);
 +	}
  
 +	AudioLatencySnapshot GetAudioLatencySnapshot()
@@ -3810,25 +3804,6 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +		{
 +			s_outputMutex.unlock();
 +		}
-+		OutputClockTiming ReadOutputClockTiming()
-+		{
-+			std::lock_guard guard(s_outputMutex);
-+			OutputClockTiming value;
-+			const auto now = std::chrono::steady_clock::now();
-+			value.observedNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
-+			if (!IsASIOActive() || s_callbackTime == std::chrono::steady_clock::time_point{} ||
-+				!s_clockCallbackFrames || s_status.sampleRate <= 0)
-+				return value;
-+			value.valid = true;
-+			value.callbackNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(s_callbackTime.time_since_epoch()).count();
-+			value.callbackFrames = s_clockCallbackFrames;
-+			const auto elapsed = std::chrono::duration<double>(now - s_callbackTime).count();
-+			const double frames = (std::max)(0.0, elapsed * s_status.sampleRate);
-+			value.phaseLimited = frames >= s_clockCallbackFrames;
-+			// Do not invent output beyond the last completed block during an underrun.
-+			value.interpolatedFrames = static_cast<std::uint64_t>((std::min)(frames, static_cast<double>(s_clockCallbackFrames)));
-+			return value;
-+		}
 +		std::uint64_t OutputFrame()
 +		{
 +			return s_outputFrame;
@@ -3969,7 +3944,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +#endif
 +			return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
 +		}
-+		QWORD OutputChannelGetPosition(DWORD channel, const OutputClockTiming* timing)
++		QWORD OutputChannelGetPosition(DWORD channel)
 +		{
 +			qa::Scope qaHelper{ "OutputChannelGetPosition.wait_mutex" };
 +			std::lock_guard guard(s_outputMutex);
@@ -3977,22 +3952,17 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +#ifdef _WIN32
 +			if (IsMixed(channel))
 +			{
-+				const auto observed = timing ? *timing : ReadOutputClockTiming();
-+				const auto latencyFrames = static_cast<std::uint64_t>(std::llround(s_status.latencySec * s_status.sampleRate));
-+				const auto phaseFrames = observed.valid ? (std::min)(observed.interpolatedFrames, latencyFrames) : 0;
-+				const auto delayFrames = latencyFrames - phaseFrames;
 +				const auto origin = s_origins.find(channel);
 +				if (origin != s_origins.end())
 +				{
 +					if (origin->second.paused)
 +						return origin->second.pausedPosition;
-+					if (s_outputFrame == origin->second.frame ||
-+						(s_outputFrame - origin->second.frame + phaseFrames) < latencyFrames)
++					if ((s_outputFrame - origin->second.frame) < s_status.latencySec * s_status.sampleRate)
 +						return origin->second.position;
 +				}
 +				if (s_api.mixChannelFlags(channel, 0, 0) & BASS_MIXER_CHAN_PAUSE)
 +					return BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
-+				const DWORD delay = static_cast<DWORD>(delayFrames) * 2 * sizeof(float);
++				const DWORD delay = static_cast<DWORD>(s_status.latencySec * s_status.sampleRate) * 2 * sizeof(float);
 +				const QWORD pos = s_api.mixChannelGetPositionEx(channel, BASS_POS_BYTE, delay);
 +				// At startup/after seek, history may not yet cover the output latency.
 +				if (pos != static_cast<QWORD>(-1))
@@ -4000,7 +3970,7 @@ index d7e33131e22bc11268797909e69b4c7e38fe3c09..2a31a16d9168af73b5b7ae76710c970f
 +				const QWORD decoded = BASS_ChannelGetPosition(channel, BASS_POS_BYTE);
 +				if (decoded == static_cast<QWORD>(-1))
 +					return 0;
-+				const QWORD sourceDelay = BASS_ChannelSeconds2Bytes(channel, delayFrames / s_status.sampleRate);
++				const QWORD sourceDelay = BASS_ChannelSeconds2Bytes(channel, s_status.latencySec);
 +				return decoded > sourceDelay ? decoded - sourceDelay : 0;
 +			}
 +#endif

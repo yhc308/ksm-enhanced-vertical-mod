@@ -6,6 +6,7 @@ No supplied music or user scores are required; fixtures are synthesized here.
 from pathlib import Path
 import argparse
 import json
+import os
 import math
 import shutil
 import struct
@@ -26,6 +27,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable', type=Path)
     parser.add_argument('--run-root', type=Path, default=Path('build/unicode-path-regression'))
+    parser.add_argument('--silent-host', action='store_true')
+    parser.add_argument('--resource-root', type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     run = (root / args.run_root).resolve()
@@ -39,7 +42,9 @@ def main():
     (app / 'unicode-path-fixture').write_text('isolated Unicode regression', encoding='utf-8')
     for name in ['assets', 'dll', 'engine', 'imgs', 'lang', 'mods', 'se', 'shaders', 'ui']:
         if not (app / name).exists():
-            shutil.copytree(root / 'kshootmania/App' / name, app / name)
+            source = root / 'kshootmania/App' / name
+            if not source.exists() and args.resource_root: source = args.resource_root / name
+            shutil.copytree(source, app / name)
     for name in ['bass.dll', 'bass_fx.dll', 'bassasio.dll', 'bassmix.dll']:
         shutil.copy2(root / 'kshootmania/App' / name, app / name)
     if (app / 'cache').exists():
@@ -78,7 +83,20 @@ def main():
     invalid = {'format_version': '0.8.0', 'meta': {'title': 'Invalid timing fixture', 'artist': 'TEST', 'difficulty': 3, 'level': 1}, 'beat': {'bpm': [[0, 0.0]], 'time_sig': [[0, [4, 4]]]}, 'note': {'bt': [[[0, 0]], [], [], []]}}
     (app / 'invalid-bpm.kson').write_text(json.dumps(invalid), encoding='utf-8')
     (app / 'unicode-cases.json').write_text(json.dumps(cases, ensure_ascii=False, indent=2), encoding='utf-8')
-    result = subprocess.run([str(app / 'ksm-enhanced-vertical.exe'), '--unicode-path-test', '会 简体 繁體 한글 𠮷 🎵 👩🏽‍💻'], cwd=app, timeout=120, creationflags=0x08000000)
+    flags = ['--unicode-path-test', '会 简体 繁體 한글 𠮷 🎵 👩🏽‍💻']
+    if args.silent_host:
+        build = json.loads((root/'build/latest.json').read_text(encoding='utf-8-sig'))
+        assert build['diagnostics'] and Path(build['executable']).resolve() == args.executable.resolve()
+        audio = json.loads((root/'build/audio-engine-latest.json').read_text(encoding='utf-8-sig'))
+        mock = Path(audio['runtime'])/'bassasio.dll'
+        assert b'FakeAsioSilentOnly' in mock.read_bytes()
+        shutil.copy2(mock,app/'bassasio.dll')
+        environment = os.environ.copy(); environment['KSM_ASIO_TEST_MODE'] = ''
+        result = subprocess.run([str(root/'build/silent-qa/SilentRuntimeHost.exe'), str(app/'ksm-enhanced-vertical.exe'),str(app),'120','--silent-qa',*flags],env=environment,capture_output=True,timeout=140)
+        (app/'silent-host.txt').write_bytes(result.stdout+result.stderr)
+        assert not (app/'silent-qa-dialog.txt').exists()
+    else:
+        result = subprocess.run([str(app/'ksm-enhanced-vertical.exe'),*flags],cwd=app,timeout=120,creationflags=0x08000000)
     report = (app / 'unicode-path-results.txt').read_text(encoding='utf-8-sig')
     if result.returncode or 'failures=0' not in report or '\nFAIL ' in report:
         raise RuntimeError(report)

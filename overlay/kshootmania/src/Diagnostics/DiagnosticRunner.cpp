@@ -16,6 +16,7 @@
 #include "SkinPresetFixture.hpp"
 #include "Ini/AudioCalibration.hpp"
 #include "Vertical/OptionsPresentation.hpp"
+#include "Scenes/Option/OptionScene.hpp"
 #include "ksmaudio/ksmaudio.hpp"
 
 namespace DiagnosticRunner
@@ -146,6 +147,16 @@ namespace DiagnosticRunner
 
 	bool RunAfterInputInitialization()
 	{
+		if (ModDiagnostics::Arguments().contains(U"--options-220-test"))
+		{
+			{
+				OptionScene scene{ true };
+				scene.runMigration220Checks();
+			}
+			Vertical::OptionsPresentation::Reset();
+			ksmaudio::Terminate();
+			return true;
+		}
 		if (ModDiagnostics::Arguments().contains(U"--error-fatal-test"))
 		{
 			ErrorReportFixture::RequireIsolated();

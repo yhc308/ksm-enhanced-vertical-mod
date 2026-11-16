@@ -12,7 +12,7 @@ namespace MusicGame::Judgment
 		int64 maximum = 0;
 		const auto button = [&](const auto& lane, Button key)
 		{
-			ButtonLaneJudgment judgment{ JudgmentPlayMode::kOn, GaugeType::kNormalGauge, FastSlowMode::kHide, key, lane, chart.beat, timing };
+			ButtonLaneJudgment judgment{ JudgmentPlayMode::kOn, GaugeType::kNormalGauge, FastSlowMode::kHide, key, lane, {}, chart.beat, timing };
 			return static_cast<int64>(judgment.chipJudgmentCount()) * 5 + static_cast<int64>(judgment.longJudgmentCount()) * 2;
 		};
 		for (size_t i = 0; i < chart.note.bt.size(); ++i)

@@ -66,7 +66,7 @@ namespace Vertical
 		options.laserInputDelayMs = -11;
 		options.globalOffsetMs = 19;
 		options.audioProcDelayMs = 5;
-		Judgment::JudgmentMain judgment{ chart, timing, options, none, GameMode::kNormal };
+		Judgment::JudgmentMain judgment{ chart, timing, {}, options, none, GameMode::kNormal };
 		GameStatus game;
 		ViewStatus view;
 		DiagnosticInputReplay::Session session;

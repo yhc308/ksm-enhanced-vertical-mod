@@ -19,7 +19,7 @@ namespace Setup
 	{
 		constexpr auto kState = ".ksm-enhanced-install.json";
 		constexpr auto kJournal = ".ksm-enhanced-journal.json";
-		constexpr auto kContract = "ksm-2.1.0-enhanced-skin-v2";
+		constexpr auto kContract = "ksm-2.2.0-enhanced-skin-v1";
 		void Need(bool condition, const char* code, const std::string& message)
 		{
 			if (!condition) throw Error(code, message);
@@ -364,6 +364,10 @@ namespace Setup
 			|| std::regex_match(path, std::regex("mods/(enhanced|vertical)/[a-z0-9_./-]+"))
 			|| std::regex_match(path, std::regex("shaders/aps_color_dodge\\.(hlsl|frag|essl\\.frag)"))
 			|| path == "ui/parts/option_setting_item.noco"
+			|| path == "ui/parts/option_setting_heading.noco"
+			|| path == "ui/parts/select_folder_loading.noco"
+			|| path == "ui/font/font_monospace.noco"
+			|| path == "ui/scene/option.noco"
 			|| std::regex_match(path, std::regex("ui/menu_(custom|judge|vertical)_icon\\.png")), "protected_path", "Not an owned mod path: " + relative);
 		Need(path.rfind("imgs/default/", 0) != 0 && path.find("/../") == std::string::npos, "unsafe_path", "Retired or unsafe payload path");
 	}
@@ -418,7 +422,7 @@ namespace Setup
 				}
 			}
 		}
-		Need(matched, "target", "kshootmania.exe: Unsupported original executable. Expected verified KSM 2.1.0 Windows x64; actual SHA256=" + hash);
+		Need(matched, "target", "kshootmania.exe: Unsupported original executable. Expected verified KSM 2.2.0 Windows x64; actual SHA256=" + hash);
 	}
 	void Engine::Say(const std::wstring& message) { if (progress) progress(message); }
 	void Engine::ReportProgress(int percent) { if (progressValue) progressValue(percent); }
@@ -556,6 +560,7 @@ namespace Setup
 	{
 		auto state = ReadJson(Safe(kState));
 		Need((state.at("schemaVersion") == 2 || state.at("schemaVersion") == 3 || state.at("schemaVersion") == 4) && state.at("modId") == "ksm-enhanced-vertical", "state", "Unknown installation record");
+		Need(state.value("runtimeContract", "") == kContract, "runtime_mismatch", "This installation belongs to a different KSM base version. Use its original setup to remove the mod before updating the base game.");
 		const auto id = state.at("transaction").get<std::string>();
 		Need(std::regex_match(id, std::regex("[a-f0-9]{32}")) && state.at("files").is_array() && state.at("files").size() <= 4096, "state", "Invalid installation inventory");
 		std::set<std::string> seen;
@@ -912,6 +917,12 @@ namespace Setup
 	Json Engine::Run(const std::string& action)
 	{
 		Need(action == "inspect" || action == "install" || action == "update" || action == "remove" || action == "verify", "arguments", "Unknown action");
+		// Reject cross-base records before recovery, locking or any file transaction.
+		if (std::filesystem::exists(Safe(kState)))
+		{
+			const auto state = ReadJson(Safe(kState));
+			Need(state.value("runtimeContract", "") == kContract, "runtime_mismatch", "This installation belongs to a different KSM base version. Use its original setup to remove the mod before updating the base game.");
+		}
 		if (action == "inspect" && !std::filesystem::exists(Safe(kJournal))) return Inspect();
 		CheckIdle();
 		Handle lock(CreateFileW(Safe(".ksm-enhanced-install.lock").c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, nullptr));

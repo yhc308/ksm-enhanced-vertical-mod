@@ -86,8 +86,7 @@ class VerticalRenderPreview : public Co::UpdaterSceneBase
 	MusicGame::GameStatus m_game;
 	MusicGame::ViewStatus m_view;
 	MusicGame::Scroll::HighwayScroll m_scroll{ m_chart };
-	MusicGame::Graphics::GraphicsMain m_graphics{ m_chart, m_timing,
-												  chartPath().isEmpty() ? U"" : FileSystem::ParentPath(chartPath()), m_options };
+	MusicGame::Graphics::GraphicsMain m_graphics{ m_chart, m_timing, {}, chartPath().isEmpty() ? U"" : FileSystem::ParentPath(chartPath()), m_options };
 	std::array<HashSet<kson::Pulse>, kson::kNumLaserLanesSZ> m_curved;
 	int m_frames = 0;
 	Stopwatch m_spinClock{ StartImmediately::Yes };

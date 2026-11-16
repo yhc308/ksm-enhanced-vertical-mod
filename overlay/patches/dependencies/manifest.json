@@ -1,12 +1,12 @@
 {
-  "upstreamCommit": "41bfdaa7331808aff7239a9ec283cdba01b3b406",
+  "upstreamCommit": "63d6546808fe3afad4469f3e4d12ca85145650d8",
   "dependencies": [
     {
       "path": "ksmaudio",
       "url": "https://github.com/kshootmania/ksmaudio.git",
-      "baseCommit": "c51865f7757f47cffbd530469977aa94332d9826",
+      "baseCommit": "5c2466d181aba37e3dc3c3eba6368f59b6843bcd",
       "patch": "patches/dependencies/ksmaudio.patch",
-      "sha256": "020d151128eb2c9d9be67ba4680eb1dc161aa426803d3969495229186f65a115",
+      "sha256": "72e0482ffbd8fe4327a7955e2092781fa5797d87b7823dbd8019a6151ef25a6c",
       "changedFiles": [
         "THIRD_PARTY_LICENSE.txt",
         "ThirdParty_Windows/bassasio/bassasio.h",
@@ -37,10 +37,11 @@
     {
       "path": "kshootmania/ThirdParty/NocoUI",
       "url": "https://github.com/m4saka/NocoUI.git",
-      "baseCommit": "4a3c64d95beb838a2278069f58f9420d72512a1a",
+      "baseCommit": "c8c970525a9946e35a6894f1e7cfbde96d8968e2",
       "patch": "patches/dependencies/kshootmania-ThirdParty-NocoUI.patch",
-      "sha256": "a1c7f9b7ed3311847b25a83088aafd8450be1b08f736c64a6270584de1c7e5a6",
+      "sha256": "c63694f7241a008e6441db8efe3de16670630f978a35cd9e95e8388ee3803de6",
       "changedFiles": [
+        "include/NocoUI/Asset.hpp",
         "src/Asset.cpp"
       ]
     }

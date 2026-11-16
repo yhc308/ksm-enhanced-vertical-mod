@@ -925,7 +925,7 @@ void SkinOverlay::updateFixture()
 				I18n::LoadLanguage(languages[language]);
 				for (const auto& entry : m_entries)
 					if (entry.folder == U"default")
-						SkinFixture::Check(entry.description == U"K-Shoot MANIA v2.1.0 default skin", U"skin description metadata stays English across language changes");
+						SkinFixture::Check(entry.description == U"K-Shoot MANIA v2.2.0 default skin", U"skin description metadata stays English across language changes");
 				for (const int32 field : { 1, 6, 7, 8 })
 				{
 					const auto choice = Choice(field, m_draft, m_depthDraft.backgroundDepthEnabled);
@@ -1037,7 +1037,7 @@ void SkinOverlay::updateFixture()
 				SkinFixture::Check(m_game->settingsHispeed().type == MusicGame::HispeedType::OMod && m_game->settingsHispeed().value == 450 && m_game->settingsEffectiveHispeed() == 450, U"preview always uses OMod 450 independently of saved hispeed");
 				const auto& chart = m_game->chartData();
 				const auto cache = kson::CreateTimingCache(chart.beat);
-				MusicGame::Graphics::GraphicsMain ordinary{ chart, cache, FileSystem::ParentPath(info.chartFilePath), info.playOption };
+				MusicGame::Graphics::GraphicsMain ordinary{ chart, cache, {}, FileSystem::ParentPath(info.chartFilePath), info.playOption };
 				ordinary.update(MusicGame::GameStatus{}, m_game->previewView(), cache);
 				const auto expected = ordinary.geometrySignature(m_game->previewView());
 				const auto actual = m_game->geometrySignature();

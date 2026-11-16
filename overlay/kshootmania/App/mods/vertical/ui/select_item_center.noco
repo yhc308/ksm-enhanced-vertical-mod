@@ -935,6 +935,15 @@
               "clippingEnabled": false,
               "components": [
                 {
+                  "type": "RectRenderer",
+                  "fillColor": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ]
+                },
+                {
                   "addColor": [
                     0,
                     0,
@@ -954,9 +963,8 @@
                   "gridAnimationFPS": 10.0,
                   "gridAnimationStartIndex": 0,
                   "gridAnimationType": "None",
-                  "hideIfTextureEmpty": false,
-                  "mipmapEnabled": true,
-                  "mipmapLodBias": -1.0,
+                  "hideIfTextureEmpty": true,
+                  "mipmapLodBias": 0.0,
                   "nineSliceBottomTiled": false,
                   "nineSliceCenterTiled": false,
                   "nineSliceEnabled": false,
@@ -983,6 +991,7 @@
                   "preserveAspect": false,
                   "textureAddressMode": "Default",
                   "textureAssetName": "",
+                  "textureDownscaleMode": "Resize",
                   "textureFilePath": "imgs/jacket/nowprinting1.jpg",
                   "textureFilePath_paramRef": "jacketFilePath",
                   "textureFilter": "Default",

@@ -87,7 +87,7 @@ namespace SkinFixture
 		option.skinPreview = true;
 		option.isAutoPlay = IsAutoPlayYN::Yes;
 		option.fastSlowMode = FastSlowMode::kNew;
-		JudgmentMain judgment{ chart, cache, option, none, GameMode::kNormal };
+		JudgmentMain judgment{ chart, cache, {}, option, none, GameMode::kNormal };
 		GameStatus game;
 		ViewStatus view;
 		const auto advance = [&](JudgmentMain& j, GameStatus& g, ViewStatus& v, double time)
@@ -132,14 +132,14 @@ namespace SkinFixture
 		advance(judgment, game, view, 10);
 		advance(judgment, game, view, 10);
 		Check(view.previewChipDemoCount == 14 && view.inputTiming.count == stats.count, U"same-frame updates cannot double count");
-		JudgmentMain catchup{ chart, cache, option, none, GameMode::kNormal };
+		JudgmentMain catchup{ chart, cache, {}, option, none, GameMode::kNormal };
 		GameStatus caught;
 		ViewStatus caughtView;
 		advance(catchup, caught, caughtView, 10);
 		Check(caughtView.detailedJudgments.fastError == 2 && caughtView.detailedJudgments.fastNear == 2 && caughtView.detailedJudgments.fastCritical == 2 && caughtView.detailedJudgments.perfectCritical == 2 && caughtView.detailedJudgments.slowCritical == 2 && caughtView.detailedJudgments.slowNear == 2 && caughtView.detailedJudgments.slowError == 2 && caughtView.inputTiming.count == 10, U"low FPS catches all global events exactly once");
 		auto normal = option;
 		normal.skinPreview = false;
-		JudgmentMain autoplay{ chart, cache, normal, none, GameMode::kNormal };
+		JudgmentMain autoplay{ chart, cache, {}, normal, none, GameMode::kNormal };
 		GameStatus autoGame;
 		ViewStatus autoView;
 		advance(autoplay, autoGame, autoView, 10);

@@ -63,7 +63,7 @@ paths={}
 for i,(name,data) in enumerate(FILES.items()):
     p=payload/str(i); put(p,data); paths[name]=p
 targets={'schemaVersion':2,'modId':'ksm-enhanced-vertical','profiles':[
- {'id':'fixture','runtimeContract':'ksm-2.1.0-enhanced-skin-v2','executableHashes':[sha(b'ORIGINAL-A')],
+ {'id':'fixture','runtimeContract':'ksm-2.2.0-enhanced-skin-v1','executableHashes':[sha(b'ORIGINAL-A')],
   'requiredFiles':[], 'requiredLibraries':[{'path':'bass.dll','requiredExports':['BASS_Test']},{'path':'bass_fx.dll','requiredExports':['BASS_Test']}]}]}
 EXE=WORK/'SetupTest.exe'
 builder.assemble(ROOT/'build/native-installer/SetupTestStub.exe', EXE, paths, targets, fixture=True)

@@ -1,9 +1,11 @@
+> **KSM 2.2.0 마이그레이션 QA 브랜치입니다.** `main`의 KSM 2.1.0용 모드는 유지합니다. 별도 2.2.0 폴더와 2.2.0 전용 설치기를 사용하세요. 2.1.0용 모드의 업데이트·제거는 지원하지 않습니다. [연계 작업·검증 내용](../../overlay/docs/MIGRATION_2.2.0.md).
+
 # KSM Enhanced Vertical Mod (Windows x64 전용)
 
-**K-Shoot Mania 2.1.0을 세로 화면에서도 즐길 수 있도록 확장한 비공식 모드입니다.**
+**K-Shoot Mania 2.2.0을 세로 화면에서도 즐길 수 있도록 확장한 비공식 모드입니다.**
 버티컬 플레이, 스킨 프리셋, 화면 커스터마이징, EX 스코어, HARD+APS, 판정 타이밍 설정과 일부 ASIO 기능을 제공합니다.
 
-[다운로드](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases) · [소스 구조 및 빌드 안내](../DEVELOPMENT.md) · [전체 소스](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical) · [문제 제보](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
+[다운로드](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases) · [소스 구조 및 빌드 안내](../DEVELOPMENT.md) · [전체 소스](https://github.com/yhc308/ksm-enhanced-vertical/tree/feature/ksm-2.2.0) · [문제 제보](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
 ▶ English : **[Open](README_EN.md)**<br>
 ▶ 日本語 : **[開く](README_JA.md)**<br>

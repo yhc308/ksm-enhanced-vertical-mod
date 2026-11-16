@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 		}
 		if (argc > 2 && std::string(argv[1]) == "--probe-driver")
 		{
-			const bool initialized = ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, argv[2]);
+			const bool initialized = ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, argv[2], false);
 			Sleep(2500); // Silence only: no streams or samples are loaded in this branch.
 			const auto status = ksmaudio::GetAudioOutputStatus();
 			const auto failure = ksmaudio::GetAudioOutputFailure();
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 			for (const auto& mode : { L"", L"48k", L"locked48", L"change-rate" })
 			{
 				SetEnvironmentVariableW(L"KSM_ASIO_TEST_MODE", mode);
-				Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "rate policy initialized");
+				Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "rate policy initialized");
 				Check(ksmaudio::IsASIOActive(), "rate policy retains ASIO");
 				auto count = (unsigned(WINAPI*)())GetProcAddress(GetModuleHandleW(L"bassasio.dll"), "FakeAsioRateSetCalls");
 				Check(count != nullptr, "rate test counter available");
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 				ksmaudio::Terminate();
 			}
 			SetEnvironmentVariableW(L"KSM_ASIO_TEST_MODE", L"invalid-readback");
-			ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO");
+			ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false);
 			Check(!ksmaudio::IsASIOActive(), "invalid rate readback cannot become an active ASIO clock");
 			Check(!ksmaudio::GetAudioOutputStatus().warning.empty(), "invalid readback retains a diagnostic");
 			ksmaudio::Terminate();
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 		if (argc > 1 && std::string(argv[1]) == "--teardown-stress")
 		{
 			WAV("test-teardown.wav");
-			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "teardown ASIO initialized");
+			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "teardown ASIO initialized");
 			auto render = (DWORD(WINAPI*)(DWORD, float*))GetProcAddress(GetModuleHandleW(L"bassasio.dll"), "FakeAsioRender");
 			std::atomic<bool> stop{ false };
 			std::atomic<unsigned> callbacks{ 0 }, errors{ 0 };
@@ -177,7 +177,7 @@ int main(int argc, char** argv)
 		if (argc > 1 && std::string(argv[1]) == "--concurrency")
 		{
 			WAV("test-thread.wav");
-			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "concurrency ASIO initialized");
+			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "concurrency ASIO initialized");
 			auto render = (DWORD(WINAPI*)(DWORD, float*))GetProcAddress(GetModuleHandleW(L"bassasio.dll"), "FakeAsioRender");
 			{
 				Stream source("test-thread.wav", 1, false, true, true);
@@ -222,7 +222,7 @@ int main(int argc, char** argv)
 				{
 					SetEnvironmentVariableW(L"KSM_ASIO_TEST_MODE", mode);
 					SetEnvironmentVariableW(L"KSM_ASIO_TEST_LATENCY", latency);
-					Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "clock sweep initialized");
+					Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "clock sweep initialized");
 					auto module = GetModuleHandleW(L"bassasio.dll");
 					auto render = (DWORD(WINAPI*)(DWORD, float*))GetProcAddress(module, "FakeAsioRender");
 					std::vector<float> samples(128);
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
 			const int seconds = std::stoi(argv[3]);
 			Check(seconds > 0 && seconds <= 1800, "bounded soak duration");
 			ksmaudio::SetMasterVolume(0); // Decode/mix real sources; physically silent.
-			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, driver), "soak initialized");
+			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, driver, false), "soak initialized");
 			Check(ksmaudio::IsASIOActive(), "soak uses actual ASIO");
 			const std::string assets = argc > 4 ? argv[4] : ".";
 			{
@@ -303,7 +303,8 @@ int main(int argc, char** argv)
 		}
 		if (argc > 1 && std::string(argv[1]) == "--failure")
 		{
-			const bool initialized = ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO");
+			const bool initialized = ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false);
+			Check(!initialized, "strict failure never falls back to a real output device");
 			Check(!ksmaudio::IsASIOActive(), "failed ASIO never remains active");
 			Check(!ksmaudio::GetAudioOutputStatus().warning.empty(), "failure reason retained");
 			std::cout << "Fallback BASS initialized=" << initialized << ", warning=" << ksmaudio::GetAudioOutputStatus().warning << '\n';
@@ -313,7 +314,7 @@ int main(int argc, char** argv)
 		WAV("test-stereo.wav");
 		WAV("test-short.wav", 256);
 		Check(ksmaudio::GetASIODrivers().size() == 1, "ASIO enumeration");
-		Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "ASIO initialization");
+		Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "ASIO initialization");
 		Check(ksmaudio::IsASIOActive(), "active ASIO backend");
 		Check(ksmaudio::GetAudioOutputStatus().latencySec > 0, "reported output latency");
 		auto module = GetModuleHandleW(L"bassasio.dll");
@@ -675,7 +676,7 @@ int main(int argc, char** argv)
 			active.play();
 			ksmaudio::Terminate();
 			Check(!active.isPlaying(), "shutdown invalidates surviving stream handles safely");
-			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "initialization after surviving resource shutdown");
+			Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "initialization after surviving resource shutdown");
 			Sample replacement("test-short.wav");
 			replacement.play();
 			pump();
@@ -686,7 +687,7 @@ int main(int argc, char** argv)
 		Check(!ksmaudio::GetAudioOutputFailure().empty(), "driver reset detected");
 		ksmaudio::Terminate();
 		Check(!ksmaudio::IsASIOActive(), "ASIO shutdown");
-		Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO"), "ASIO reinitialization");
+		Check(ksmaudio::Init(nullptr, ksmaudio::AudioBackend::ASIO, "KSM Mock ASIO", false), "ASIO reinitialization");
 		Check(ksmaudio::GetAudioOutputFailure().empty(), "reset state cleared");
 		ksmaudio::Terminate();
 		std::cout << "TOTAL " << checks << " checks passed (mock ASIO, real BASS/BASSmix)\n";

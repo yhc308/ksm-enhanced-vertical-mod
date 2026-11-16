@@ -48,7 +48,7 @@ parts = git(source, "diff", "--cached", "--name-status", "--no-renames", "-z", b
 added, patched = [], []
 for i in range(0, len(parts) - 1, 2):
     status, name = parts[i:i+2]
-    if name.startswith(("build/", "test-runs/", "play-test/", "reference/", "imgs/", "tests/fixtures/", "kshootmania/App/songs/")):
+    if name.startswith(("build/", "releases_QA/", "releases/", "test-runs/", "play-test/", "reference/", "imgs/", "tests/fixtures/", "kshootmania/App/songs/")):
         raise SystemExit("Private/external runtime path cannot be exported: " + name)
     if Path(name).suffix.lower() in {".exe", ".dll", ".lib", ".pdb", ".obj", ".zip", ".ksc", ".psd", ".psb", ".mp4", ".log"}:
         raise SystemExit("Generated or private artifact cannot be exported: " + name)
@@ -79,7 +79,7 @@ for name in added:
     records.append({"path": name, "sha256": sha(data)})
 manifest["mainPatchSha256"] = sha(patch)
 manifest["overlayFiles"] = records
-manifest["sourceBranch"] = "main"
+manifest["sourceBranch"] = "feature/ksm-2.2.0"
 manifest["refactorTag"] = "archive/refactor-upstream-style-parity"
 manifest.pop("refactorBranch", None)
 manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

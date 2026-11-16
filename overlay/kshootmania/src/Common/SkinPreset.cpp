@@ -177,6 +177,10 @@ namespace SkinPreset
 										  if (normalized.starts_with(U"imgs/"))
 											  return LoadTexture(path, mip ? TextureDesc::Mipped : TextureDesc::Unmipped);
 										  return Texture{ noco::Asset::GetFullPath(path), mip ? TextureDesc::Mipped : TextureDesc::Unmipped };
+									  },
+									  [](FilePathView path)
+									  {
+										  return String{ path }.replaced(U'\\', U'/').starts_with(U"imgs/");
 									  });
 	}
 

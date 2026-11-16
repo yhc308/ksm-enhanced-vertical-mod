@@ -6,7 +6,9 @@ namespace MusicGame::Judgment
 	{
 		if (result == JudgmentResult::kError)
 		{
-			const int32 sub = Decrease(ErrorBase(maximum, chip));
+			// Match 2.2.0 NORMAL: apply all factors before the single integer truncation.
+			const double percent = chip ? kGaugeDecreasePercentByChipError : kGaugeDecreasePercentByLongError;
+			const int32 sub = static_cast<int32>(maximum * percent * kGaugeDecreaseRateNormal / 100);
 			value = Max(0, value - sub);
 			uncapped -= sub;
 		}

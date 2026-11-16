@@ -1,9 +1,15 @@
+﻿KSM 2.2.0 마이그레이션 QA 빌드입니다. 기존 KSM 2.1.0용 패키지와 별개입니다.
+별도의 2.2.0 폴더에 설치한다면 기존 2.1.0 폴더와 모드는 그대로 유지할 수 있습니다.
+이 설치기는 원본 KSM 2.2.0 전용이며 2.1.0용 모드를 업데이트하거나 제거하지 않습니다.
+기존 2.1.0 환경은 해당 버전 설치기로 모드를 제거하고 공식 2.2.0 업데이트를 적용한 뒤 이 설치기를 사용하세요. 최초 원본 백업은 보관하세요.
+점수·EX 기록·설정·사용자 스킨은 변환하거나 삭제하지 않습니다. 모드가 설치된 상태에서 원본 EXE만 임의로 교체하지 마세요.
+
 KSM Enhanced Vertical Mod 0.5.4-beta4 설치가이드
-지원 대상:  K-Shoot Mania 2.1.0 Windows x64 
+지원 대상:  K-Shoot Mania 2.2.0 Windows x64 
 
 # 설치
 1. 실행중인 kshootmania.exe 가 있다면 종료하셔야합니다.
-2. KsmEnhancedVertical_0.5.4-beta4_Setup.exe를 실행하세요.
+2. KsmEnhancedVertical_KSM2.2.0_0.5.4-beta4_Setup.exe를 실행하세요.
 3. kshootmania.exe가 있는 폴더를 선택하고 [모드 설치]를 누르세요. (설치 EXE를 KSM 폴더에 두면 해당 폴더를 자동 선택합니다)
 4. 설치 후 같은 폴더의 ksm-enhanced-vertical.exe로 모드를 실행합니다.
 5. 원본 kshootmania.exe은 유지됩니다.
