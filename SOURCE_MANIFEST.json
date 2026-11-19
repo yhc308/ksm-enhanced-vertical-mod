@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261120-013011-00206473",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "a64cb54e2850ba465b7fcc796e1b22df3f471724a8088997d7fb0f645f53ea54",
+  "mainPatchSha256": "7b591fe402065a15a8e961ac07c091f1173c7b93bc3269dbb701611aa0e1094e",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -16,7 +16,7 @@
     },
     {
       "path": ".github/workflows/migration220.yml",
-      "sha256": "5585c2668fd9d6a6ef9f3197e756be6a540c69f0dc50de50ba0009929edb26eb"
+      "sha256": "25a84465dfda977efa82822081cac6d1002dfe71f1627ce8bb829feaf7ffcc09"
     },
     {
       "path": ".github/workflows/review-source.yml",
@@ -132,7 +132,7 @@
     },
     {
       "path": "docs/UPSTREAM_UPDATE_POLICY.md",
-      "sha256": "6592447cfbb7629c3e2a33f9e4ae5b05ff59148c587dc351b05a50d003cb2479"
+      "sha256": "89105911e423f9c3c42481ad239f42980a500f0ebf227572ea146de55a06f12a"
     },
     {
       "path": "docs/review/CORE_TARGET.json",

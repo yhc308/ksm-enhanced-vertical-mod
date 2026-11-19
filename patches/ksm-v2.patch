@@ -76,7 +76,7 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..2beeccf110234c6f1fc59f96bf4a1629
 +# Upstream version maintenance policy
 +!/docs/UPSTREAM_UPDATE_POLICY.md
 diff --git a/README.md b/README.md
-index f98fbef4a04056fa471f536ee12767991ef23cf6..f06830fd57bbff36ed183c6bf071ba580be204d2 100644
+index f98fbef4a04056fa471f536ee12767991ef23cf6..48e2f2b0a47f71335a9f71dbf4c89d1b9824c1c5 100644
 --- a/README.md
 +++ b/README.md
 @@ -1,18 +1,60 @@
@@ -102,7 +102,7 @@ index f98fbef4a04056fa471f536ee12767991ef23cf6..f06830fd57bbff36ed183c6bf071ba58
  
 -本プロジェクトは個人プロジェクトであり、オープンソース主導の開発プロジェクトではありません。  
 -そのため、機能実装についてのPull Requestは基本的にマージできない場合が多いです。機能追加のご提案はIssueまたはK-Shoot MANIA掲示板( https://bbs.kshootmania.com )よりお願いいたします。
-+このフォークは、原作のGit履歴を保持したModの全体ソースを提供します。インストーラーの配布と利用者向けの案内は、[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod)をご覧ください。既定の `enhanced-vertical` ブランチに最新の2.2.0版を統合しています。`feature/ksm-2.2.0` は同じバージョンの開発用ブランチです。旧2.1.0版とその履歴は `legacy/ksm-2.1.0` および既存のリリースタグに保持しています。
++このフォークは、原作のGit履歴を保持したModの全体ソースを提供します。インストーラーの配布と利用者向けの案内は、[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod)をご覧ください。既定の `enhanced-vertical` ブランチに最新の2.2.0版を統合しています。旧2.1.0版とその履歴は `legacy/ksm-2.1.0` および既存のリリースタグに保持しています。
  
 -既存処理の不具合修正に関するContributionについては、Pull Requestにて歓迎いたします。
 +## 主な機能
