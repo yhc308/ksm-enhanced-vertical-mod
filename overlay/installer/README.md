@@ -127,3 +127,35 @@ The managed enhanced UI now includes the original baseline title template, along
 `inspect` reports `updateAvailable` and `updateBlockedReason`. `update` is one transaction, not remove followed by install. Schema 2/3 records are read and schema 4 is written. First-install originals are copied into the new backup inventory; undo files represent the immediately previous mod. Version downgrades, same-version reinstallation and unsupported/untracked installs are refused.
 
 Run `tests/UpdateEngine.py` for cancellation, operation-boundary faults and interrupted updates. `tests/UpdateProduction.py` checks the actual archived old installers and exact new normal runtime on a private desktop that is never switched to. Interactive visual regression uses the diagnostic build on the left secondary display. See `docs/UPDATE_0.5.4-beta4.md` for configuration compatibility.
+
+## Installer refresh (KSM 2.2.0, 2026-11-20)
+
+The setup and ZIP names contain only the mod version. Supported KSM is displayed inside the GUI and recorded in the package metadata. Mod version 0.5.4-beta4 and the game executable are unchanged; `installerRevisionNumber` advances independently. Missing legacy values read as zero. Same-mod/same-game builds update only to a higher installer revision.
+
+Install/update prepares a missing `skins/` directory. It is a user directory, never a payload entry or removal candidate. Existing directories and directory reparse points are left untouched. A conflicting regular file is rejected before managed changes. The journal records creation intent and the new directory's Windows identity. Rollback removes only that identified, empty directory; unknown ownership, replaced directories, links and user additions are retained. Interrupted creation before identity recording is conservatively retained.
+
+The GUI checks public releases at startup and on request, without authentication or uploading local data. WinHTTP uses bounded requests and an eight-second total budget, checked between blocking operations (each configured for a one-second timeout). Closing joins the cancelled worker; no background service remains. CLI install/update/remove do not contact GitHub. Queries include beta releases, exclude drafts, and require matching KSM/runtime metadata. They never install or download a ZIP automatically.
+
+### Publishing compatible update information
+
+PackageRelease.py creates `update-info-ksm-2.2.0.json` beside the ZIP. Attach this JSON **and the exact generated ZIP** to the same public release in `yhc308/ksm-enhanced-vertical-mod`. Do not edit the archive hash manually. This change does not publish a release.
+
+Metadata schema 1 contains `supportedGame`, `runtimeContract`, `package` (`version`, `buildId`, `installerRevision`, `installerRevisionNumber`), `zipName` and `zipSha256`. Only matching contracts are candidates. Comparison orders mod version (including beta versus stable), timestamped game build, then numeric installer revision for an identical build. Do not reuse a revision number for different installer contents. The listing is paginated, bounded to five pages and the total timeout; incomplete listings report unavailable. Legacy releases without metadata report unknown rather than up to date.
+
+Only this repository's validated HTTPS release pages can be opened, on a button click. Metadata download URLs must be the matching repository/tag asset. Redirects are bounded and restricted to GitHub/CDN hosts. Invalid metadata, network failures, API limits and timeouts are isolated from local file operations. Future KSM versions use their own metadata asset and contract.
+
+### Additional tests
+
+- `python installer/tests/InstallerRefresh.py`: protected skins directories, NTFS junctions, rollback/crash recovery and installer-only updates; also runs the baseline engine suite.
+- `python installer/tests/OnlineUpdates.py`: actual WinHTTP requests to an owned loopback mock server, including version selection, invalid input, redirects, timeout and cancellation.
+- `./installer/Build.ps1 -TestEngine` also builds OnlineUpdateTest.exe and PrivateGuiTest.exe. Test-only HTTP loopback support is absent from production.
+- `python installer/tests/GuiRefresh.py --setup <EXE> --original22 <official-runtime>`: actual setup on a never-switched private desktop, five languages, installation/removal progress, user-data preservation and close during online checking. Captures render child controls separately to avoid private-desktop clipping.
+- `python installer/tests/Upstream220.py --setup <EXE> --original22 <runtime22> --original21 <runtime21> --previous-setup <previous220EXE>`: actual official files and previous 2.2 installer migration.
+
+Runtime game diagnostics and physical-output/performance limitations remain in the migration validation report. This installer-only change does not establish new audio or hardware performance claims.
+
+Validated local package: `releases/ksm-2.2.0/0.5.4-beta4/KsmEnhancedVertical_0.5.4-beta4.zip`. Game build remains `20261117-025923-43ae7184` (SHA256 `460faf2aaef2ded159aee155fbc67d76399d6fce5e900b01f11b7ee068de707b`). Existing 2.1.0 files and the previous 2.2.0 installer ZIP were preserved.
+
+## 0.5.5-Beta5 publication
+
+This release targets KSM 2.2.0 and keeps 2.1.0 branches/releases intact. The game title and package labels use `0.5.5-Beta5`. Version comparison accepts both `beta` and `Beta`. Update metadata uses lowercase `package.version` for compatibility with the already distributed 2.2.0 installer, and optional `package.displayVersion` for the exact user-facing spelling; both must represent the same numeric version. The game code changes from the prior 2.2.0 build are limited to the title version string. Existing gameplay diagnostic evidence is retained with this scope recorded; the normal Release is rebuilt and mock-audio, setup, preservation, GUI and update checks are run for the new package.

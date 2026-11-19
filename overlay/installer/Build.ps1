@@ -16,6 +16,10 @@ $define=if($TestEngine){'/DKSM_INSTALLER_TEST=1'}else{''}
 $testCommand=if($TestEngine){'
 if errorlevel 1 exit /b 1
 cl /nologo /std:c++17 /EHsc /MT /O2 /utf-8 /W4 /DUNICODE /D_UNICODE /DNOMINMAX /DKSM_INSTALLER_TEST=1 /Isrc src\InstallerCore.cpp tests\CancelEngine.cpp /Fe"'+$output+'\CancelEngine.exe" /Fo"'+$output+'\\" /link /SUBSYSTEM:CONSOLE bcrypt.lib cabinet.lib ole32.lib
+if errorlevel 1 exit /b 1
+cl /nologo /std:c++17 /EHsc /MT /O2 /utf-8 /W4 /DUNICODE /D_UNICODE /DNOMINMAX /DKSM_INSTALLER_TEST=1 /Isrc src\InstallerCore.cpp src\UpdateCheck.cpp tests\OnlineUpdateTest.cpp /Fe"'+$output+'\OnlineUpdateTest.exe" /Fo"'+$output+'\\" /link /SUBSYSTEM:CONSOLE bcrypt.lib cabinet.lib ole32.lib winhttp.lib
+if errorlevel 1 exit /b 1
+cl /nologo /std:c++17 /EHsc /MT /O2 /utf-8 /W4 /DUNICODE /D_UNICODE /DNOMINMAX /Isrc src\InstallerCore.cpp tests\PrivateGuiTest.cpp /Fe"'+$output+'\PrivateGuiTest.exe" /Fo"'+$output+'\\" /link /SUBSYSTEM:CONSOLE bcrypt.lib cabinet.lib ole32.lib user32.lib gdi32.lib comctl32.lib
 '}else{''}
 $command=@"
 @echo off
@@ -24,7 +28,7 @@ if errorlevel 1 exit /b 1
 cd /d "$PSScriptRoot"
 rc /nologo /fo "$output\$name.res" Setup.rc
 if errorlevel 1 exit /b 1
-cl /nologo /std:c++17 /EHsc /MT /O2 /utf-8 /W4 /DUNICODE /D_UNICODE /DNOMINMAX $define /Isrc src\InstallerCore.cpp src\Main.cpp /Fo"$output\\" /Fe"$output\$name.exe" "$output\$name.res" /link /SUBSYSTEM:WINDOWS /MANIFEST:NO /DYNAMICBASE /NXCOMPAT /HIGHENTROPYVA bcrypt.lib cabinet.lib ole32.lib shell32.lib user32.lib gdi32.lib comctl32.lib
+cl /nologo /std:c++17 /EHsc /MT /O2 /utf-8 /W4 /DUNICODE /D_UNICODE /DNOMINMAX $define /Isrc src\InstallerCore.cpp src\UpdateCheck.cpp src\Main.cpp /Fo"$output\\" /Fe"$output\$name.exe" "$output\$name.res" /link /SUBSYSTEM:WINDOWS /MANIFEST:NO /DYNAMICBASE /NXCOMPAT /HIGHENTROPYVA bcrypt.lib cabinet.lib ole32.lib shell32.lib user32.lib gdi32.lib comctl32.lib winhttp.lib
 $testCommand
 exit /b %errorlevel%
 "@

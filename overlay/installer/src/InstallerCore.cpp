@@ -1,4 +1,5 @@
 ﻿#include "InstallerCore.hpp"
+#include "PackageVersion.hpp"
 #include <bcrypt.h>
 #include <compressapi.h>
 #include <tlhelp32.h>
@@ -40,8 +41,8 @@ namespace Setup
 		std::string UpdateBlockReason(const Json& state, const Json& package)
 		{
 			const auto old = state.value("version", ""), next = package.value("version", "");
-			const auto parts = [](const std::string& value) { std::smatch m; std::array<unsigned long, 4> v{}; Need(std::regex_match(value, m, std::regex("([0-9]+)\\.([0-9]+)\\.([0-9]+)-beta\\.?([0-9]+)")), "version", "Unknown version format"); for (size_t i = 0; i < v.size(); ++i) v[i] = std::stoul(m[i + 1]); return v; };
-			if (old == next)
+
+			if (VersionParts(old) == VersionParts(next))
 			{
 				// A rebuilt hotfix keeps its public version. Only strictly newer,
 				// timestamped release builds can replace an existing same-version build.
@@ -52,11 +53,17 @@ namespace Setup
 					if (oldBuild.substr(0, 15) < nextBuild.substr(0, 15)) return "";
 					if (oldBuild.substr(0, 15) > nextBuild.substr(0, 15)) return "Downgrading an installed mod build is not supported";
 				}
+				if (oldBuild == nextBuild)
+				{
+					const auto previousRevision = RevisionNumber(state), nextRevision = RevisionNumber(package);
+					if (previousRevision < nextRevision) return "";
+					if (previousRevision > nextRevision) return "Downgrading an installed setup revision is not supported";
+				}
 				return "This version is already installed";
 			}
-			if (parts(old) > parts(next)) return "Downgrading an installed mod is not supported";
-			const std::set<std::string> supported{"0.4.0-beta.1", "0.5.1-beta1", "0.5.2-beta2", "0.5.4-beta4"};
-			return supported.count(old) ? "" : "Installed version has no verified update path";
+			if (VersionParts(old) > VersionParts(next)) return "Downgrading an installed mod is not supported";
+			const std::set<std::string> supported{"0.4.0-beta.1", "0.5.1-beta1", "0.5.2-beta2", "0.5.4-beta4", "0.5.5-beta5"};
+			return supported.count(Lower(old)) ? "" : "Installed version has no verified update path";
 		}
 		// Parse file-backed PE metadata only; never load or execute a user's DLL.
 		class PeImage
@@ -559,6 +566,7 @@ namespace Setup
 	Json Engine::LoadState()
 	{
 		auto state = ReadJson(Safe(kState));
+		RevisionNumber(state);
 		Need((state.at("schemaVersion") == 2 || state.at("schemaVersion") == 3 || state.at("schemaVersion") == 4) && state.at("modId") == "ksm-enhanced-vertical", "state", "Unknown installation record");
 		Need(state.value("runtimeContract", "") == kContract, "runtime_mismatch", "This installation belongs to a different KSM base version. Use its original setup to remove the mod before updating the base game.");
 		const auto id = state.at("transaction").get<std::string>();
@@ -608,9 +616,74 @@ namespace Setup
 		Need(Hash(data) == hash, "journal", "Recovery/staged data checksum mismatch");
 		Safe(op.at("path")); Atomic(target, data);
 	}
+	void Engine::CheckSkinsDirectory() const
+	{
+		const auto path = Safe("skins", false);
+		const DWORD attributes = GetFileAttributesW(path.c_str());
+		if (attributes == INVALID_FILE_ATTRIBUTES)
+		{
+			const auto error = GetLastError();
+			Need(error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND, "skins_directory", "Cannot inspect skins folder");
+			return;
+		}
+		Need((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0, "skins_directory", "Cannot create skins folder: an existing file uses that name");
+	}
+	Json Engine::SkinsIdentity() const
+	{
+		const auto path = Safe("skins", false);
+		const auto attributes = GetFileAttributesW(path.c_str());
+		if (attributes == INVALID_FILE_ATTRIBUTES || (attributes & FILE_ATTRIBUTE_REPARSE_POINT)) return nullptr;
+		Handle directory(CreateFileW(path.c_str(), FILE_READ_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, nullptr));
+		BY_HANDLE_FILE_INFORMATION info{};
+		Win(directory.value != INVALID_HANDLE_VALUE && GetFileInformationByHandle(directory.value, &info), "Cannot identify new skins folder");
+		return Json{{"volume", info.dwVolumeSerialNumber}, {"high", info.nFileIndexHigh}, {"low", info.nFileIndexLow}};
+	}
+	void Engine::ValidateSkinsJournal(const Json& journal) const
+	{
+		if (!journal.contains("skinsDirectory")) return;
+		const auto& entry = journal.at("skinsDirectory");
+		Need(entry.is_object() && entry.size() == 2 && entry.at("path") == "skins", "journal", "Invalid user-directory operation");
+		const auto& identity = entry.at("createdIdentity");
+		Need(identity.is_null() || (identity.is_object() && identity.size() == 3 && identity.at("volume").is_number_unsigned() && identity.at("high").is_number_unsigned() && identity.at("low").is_number_unsigned()), "journal", "Invalid user-directory identity");
+	}
+	void Engine::CreateSkinsDirectory(Json& journal)
+	{
+		CheckSkinsDirectory();
+		if (GetFileAttributesW(Safe("skins", false).c_str()) != INVALID_FILE_ATTRIBUTES) return;
+		journal["skinsDirectory"] = Json{{"path", "skins"}, {"createdIdentity", nullptr}};
+		WriteJson(Safe(kJournal), journal); // Intent precedes mutation; an unknown owner is never deleted.
+		if (!CreateDirectoryW(Safe("skins", false).c_str(), nullptr))
+		{
+			if (GetLastError() == ERROR_ALREADY_EXISTS) { CheckSkinsDirectory(); return; }
+			Win(false, "Cannot create skins folder");
+		}
+		journal["skinsDirectory"]["createdIdentity"] = SkinsIdentity();
+		WriteJson(Safe(kJournal), journal);
+#ifdef KSM_INSTALLER_TEST
+		if (package.index.value("fixture", false))
+		{
+			if (GetEnvironmentVariableW(L"KSM_SETUP_SKINS_CRASH", nullptr, 0)) TerminateProcess(GetCurrentProcess(), 94);
+			if (GetEnvironmentVariableW(L"KSM_SETUP_SKINS_FAIL", nullptr, 0)) throw Error("injected_failure", "Injected failure after skins creation");
+		}
+#endif
+	}
+	void Engine::RollbackSkinsDirectory(const Json& journal)
+	{
+		ValidateSkinsJournal(journal);
+		if (!journal.contains("skinsDirectory")) return;
+		const auto& identity = journal.at("skinsDirectory").at("createdIdentity");
+		if (identity.is_null() || SkinsIdentity() != identity) return;
+		if (!RemoveDirectoryW(Safe("skins", false).c_str()))
+		{
+			const auto error = GetLastError();
+			// Empty-only removal, never recurse or delete files supplied by the user.
+			Need(error == ERROR_DIR_NOT_EMPTY || error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND, "recovery_conflict", "New skins folder could not be rolled back; retained");
+		}
+	}
 	void Engine::Rollback(const Json& journal)
 	{
 		Need(journal.at("modId") == "ksm-enhanced-vertical" && journal.at("schemaVersion") == 1, "journal", "Unknown transaction journal");
+		ValidateSkinsJournal(journal);
 		const auto id = journal.at("transaction").get<std::string>();
 		const auto& operations = journal.at("operations");
 		Need(operations.is_array() && operations.size() <= 8193, "journal", "Invalid journal inventory");
@@ -629,6 +702,7 @@ namespace Setup
 			Need(current == op.at("before") || current == op.at("after"), "recovery_conflict", "File changed since the interrupted operation; retained: " + op.at("path").get<std::string>());
 		}
 		for (auto i = operations.rbegin(); i != operations.rend(); ++i) Apply(*i, true);
+		RollbackSkinsDirectory(journal);
 	}
 	void Engine::Recover()
 	{
@@ -638,6 +712,7 @@ namespace Setup
 		const auto journal = ReadJson(Safe(kJournal));
 		Need(journal.at("phase") == "applying" || journal.at("phase") == "committed", "journal", "Invalid journal phase");
 		Need(journal.at("modId") == "ksm-enhanced-vertical" && journal.at("schemaVersion") == 1, "journal", "Invalid journal owner");
+		ValidateSkinsJournal(journal);
 		if (journal.contains("directoryCleanup")) ValidateDirectories(journal.at("directoryCleanup"), journal.at("directorySources"), false);
 		if (journal.at("phase") == "applying") Rollback(journal);
 		else
@@ -676,6 +751,7 @@ namespace Setup
 				}
 #endif
 			}
+			if (action == "install" || action == "update") { CheckCancel(); CreateSkinsDirectory(journal); CheckCancel(); }
 			journal["phase"] = "committed"; WriteJson(Safe(kJournal), journal);
 		}
 		catch (...) { Rollback(journal); Erase(Safe(kJournal)); throw; }
@@ -688,7 +764,7 @@ namespace Setup
 	{
 		Need(!std::filesystem::exists(Safe(kState)), "installed", "Mod is already installed; remove it before replacing the version");
 		Need(!std::filesystem::exists(Safe("ksm-enhanced-vertical.exe")), "manual_install", "Untracked manual mod installation detected; original files were not changed");
-		CheckTarget(true); CheckIdle(); Say(L"Validating embedded files..."); package.Validate(); CheckCancel(); ReportProgress(10);
+		CheckSkinsDirectory(); CheckTarget(true); CheckIdle(); Say(L"Validating embedded files..."); package.Validate(); CheckCancel(); ReportProgress(10);
 		uint64_t required = 16 * 1024 * 1024;
 		for (const auto& file : package.index.at("files"))
 		{
@@ -729,11 +805,11 @@ namespace Setup
 			++number;
 			ReportProgress(10 + int(50 * number / package.index.at("files").size()));
 		}
-		Json state{{"schemaVersion", 4}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"installerRevision", package.index.value("installerRevision", "legacy")}, {"runtimeContract", kContract}, {"upstreamHash", FileHash(Safe("kshootmania.exe"))}, {"transaction", id}, {"files", entries}, {"createdDirectories", createdDirectories}};
+		Json state{{"schemaVersion", 4}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"installerRevision", package.index.value("installerRevision", "legacy")}, {"installerRevisionNumber", RevisionNumber(package.index)}, {"runtimeContract", kContract}, {"upstreamHash", FileHash(Safe("kshootmania.exe"))}, {"transaction", id}, {"files", entries}, {"createdDirectories", createdDirectories}};
 		const auto stage = base + "/stage/" + std::to_string(number) + ".bin";
 		const auto data = JsonBytes(state); Write(Safe(stage), data);
 		operations.push_back(Operation(kState, nullptr, nullptr, Hash(data), stage));
-		CheckIdle(); Transaction(operations, id);
+		CheckIdle(); Transaction(operations, id, Json::array(), Json::array(), "install");
 		return Json{{"status", "PASS"}, {"action", "install"}, {"version", state["version"]}, {"files", entries.size()}, {"message", "Installed. Original executable, settings, songs, skins and all records preserved."}};
 	}
 
@@ -742,7 +818,7 @@ namespace Setup
 		const auto previous = LoadState();
 		const auto reason = UpdateBlockReason(previous, package.index);
 		Need(reason.empty(), "update_blocked", reason);
-		CheckTarget(true); CheckIdle(); package.Validate(); CheckCancel();
+		CheckSkinsDirectory(); CheckTarget(true); CheckIdle(); package.Validate(); CheckCancel();
 		Need(FileHash(Safe("kshootmania.exe")) == Lower(previous.at("upstreamHash")), "target", "Original game changed since installation");
 		std::map<std::string, Json> old, next;
 		std::map<std::string, std::string> sourceNames;
@@ -820,7 +896,7 @@ namespace Setup
 		for (const auto& entry : entries) retainedSources.push_back(entry.at("path"));
 		const auto parents = DirectoryParents(retainedSources);
 		for (const auto& directory : newDirectories) if (parents.count(directory)) directories.push_back(directory); else cleanup.push_back(directory);
-		Json state{{"schemaVersion", 4}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"installerRevision", package.index.value("installerRevision", "legacy")}, {"runtimeContract", kContract}, {"upstreamHash", previous.at("upstreamHash")}, {"transaction", id}, {"files", entries}, {"createdDirectories", directories}};
+		Json state{{"schemaVersion", 4}, {"modId", "ksm-enhanced-vertical"}, {"version", package.index.at("version")}, {"buildId", package.index.at("buildId")}, {"installerRevision", package.index.value("installerRevision", "legacy")}, {"installerRevisionNumber", RevisionNumber(package.index)}, {"runtimeContract", kContract}, {"upstreamHash", previous.at("upstreamHash")}, {"transaction", id}, {"files", entries}, {"createdDirectories", directories}};
 		const auto undo = base + "/undo/" + std::to_string(number) + ".bin", stage = base + "/stage/" + std::to_string(number) + ".bin";
 		const auto before = Read(Safe(kState)), after = JsonBytes(state); Write(Safe(undo), before); Write(Safe(stage), after);
 		operations.push_back(Operation(kState, Hash(before), undo, Hash(after), stage));
@@ -909,7 +985,7 @@ namespace Setup
 		if (std::filesystem::exists(Safe(kState)))
 		{
 			const auto state = LoadState();
-			return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", true}, {"version", state.value("version", state.value("buildId", "legacy"))}, {"buildId", state.value("buildId", "legacy")}, {"installerRevision", state.value("installerRevision", "legacy")}, {"updateAvailable", UpdateBlockReason(state, package.index).empty()}, {"updateBlockedReason", UpdateBlockReason(state, package.index)}, {"sameVersion", state.value("version", "") == package.index.at("version") && state.value("buildId", "") == package.index.at("buildId") && state.value("installerRevision", "legacy") == package.index.value("installerRevision", "legacy")}, {"target", Utf8(root.wstring())}};
+			return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", true}, {"version", state.value("version", state.value("buildId", "legacy"))}, {"buildId", state.value("buildId", "legacy")}, {"installerRevision", state.value("installerRevision", "legacy")}, {"installerRevisionNumber", RevisionNumber(state)}, {"updateAvailable", UpdateBlockReason(state, package.index).empty()}, {"updateBlockedReason", UpdateBlockReason(state, package.index)}, {"sameVersion", state.value("version", "") == package.index.at("version") && state.value("buildId", "") == package.index.at("buildId") && state.value("installerRevision", "legacy") == package.index.value("installerRevision", "legacy") && RevisionNumber(state) == RevisionNumber(package.index)}, {"target", Utf8(root.wstring())}};
 		}
 		Need(!std::filesystem::exists(Safe("ksm-enhanced-vertical.exe")), "manual_install", "Manual installation without ownership metadata detected");
 		return Json{{"status", "PASS"}, {"action", "inspect"}, {"installed", false}, {"version", ""}, {"sameVersion", false}, {"target", Utf8(root.wstring())}};

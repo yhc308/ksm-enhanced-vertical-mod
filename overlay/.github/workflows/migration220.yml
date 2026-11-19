@@ -31,6 +31,10 @@ jobs:
           ./installer/Build.ps1 -TestEngine
           python installer/tests/UpdateEngine.py
           if ($LASTEXITCODE) { throw 'KSM 2.2 installer transaction tests failed' }
+          python installer/tests/InstallerRefresh.py
+          if ($LASTEXITCODE) { throw 'Installer refresh tests failed' }
+          python installer/tests/OnlineUpdates.py
+          if ($LASTEXITCODE) { throw 'Online update tests failed' }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

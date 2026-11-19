@@ -1,5 +1,7 @@
 # KSM Enhanced Vertical Mod 0.5.1-beta1
 
+[Upstream update and version maintenance policy](docs/UPSTREAM_UPDATE_POLICY.md)
+
 Unofficial Windows x64 mod for K-Shoot Mania 2.1.0. Keep your original game installation.
 
 ## Install or remove the mod

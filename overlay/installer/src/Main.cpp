@@ -1,4 +1,6 @@
 ﻿#include "InstallerCore.hpp"
+#include "UpdateCheck.hpp"
+#include <mutex>
 #include <commctrl.h>
 #include <shobjidl.h>
 #include <shellapi.h>
@@ -9,19 +11,34 @@
 namespace
 {
 	using namespace Setup;
-	constexpr UINT kProgress = WM_APP + 1, kFinished = WM_APP + 2, kPercent = WM_APP + 3;
+	constexpr UINT kProgress = WM_APP + 1, kFinished = WM_APP + 2, kPercent = WM_APP + 3, kOnlineFinished = WM_APP + 4;
 	std::unique_ptr<Package> g_package;
-	HWND g_window{}, g_language{}, g_path{}, g_status{}, g_install{}, g_remove{}, g_browse{}, g_progress{}, g_hint{};
+	HWND g_window{}, g_language{}, g_path{}, g_status{}, g_install{}, g_remove{}, g_browse{}, g_progress{}, g_hint{}, g_version{}, g_onlineStatus{}, g_checkOnline{}, g_releasePage{};
 	HFONT g_font{};
 	std::atomic_bool g_cancel{false};
 	bool g_working = false, g_close = false;
 	int g_lang = 1, g_percent = 0;
+	std::thread g_onlineThread;
+	std::atomic_bool g_onlineCancel{false};
+	std::mutex g_onlineMutex;
+	OnlineUpdate g_onlineResult;
+	bool g_onlineBusy = false;
 	Path g_target;
 	std::string g_currentAction, g_installAction = "install";
 	const wchar_t* T(const char* key)
 	{
 		static const std::map<std::string, std::vector<const wchar_t*>> text{
-			{"title", {L"Enhanced Vertical Mod (KSM 2.2.0) — Setup", L"Enhanced Vertical Mod (KSM 2.2.0) — インストーラー", L"Enhanced Vertical Mod (KSM 2.2.0) — 설치", L"Enhanced Vertical Mod (KSM 2.2.0) — 安装程序", L"Enhanced Vertical Mod (KSM 2.2.0) — 安裝程式"}},
+			{"title", {L"Enhanced Vertical Mod — Setup", L"Enhanced Vertical Mod — インストーラー", L"Enhanced Vertical Mod — 설치", L"Enhanced Vertical Mod — 安装程序", L"Enhanced Vertical Mod — 安裝程式"}},
+			{"versionLabel", {L"Installer version: ", L"インストーラー: ", L"설치기 버전: ", L"安装程序版本：", L"安裝程式版本："}},
+			{"baseLabel", {L"Supported KSM: ", L"対応KSM: ", L"지원 KSM: ", L"支持的KSM：", L"支援的KSM："}},
+			{"checkOnline", {L"Check for updates", L"更新を確認", L"업데이트 확인", L"检查更新", L"檢查更新"}},
+			{"openRelease", {L"Open release page", L"リリースページを開く", L"릴리즈 페이지 열기", L"打开发布页面", L"開啟發布頁面"}},
+			{"onlineChecking", {L"Checking for updates...", L"更新を確認中…", L"업데이트 확인 중…", L"正在检查更新…", L"正在檢查更新…"}},
+			{"onlineAvailable", {L"A compatible update is available: ", L"対応する更新があります: ", L"호환되는 새 업데이트가 있습니다: ", L"发现兼容更新：", L"有相容更新："}},
+			{"onlineCurrent", {L"This installer is up to date.", L"このインストーラーは最新です。", L"이 설치기는 최신 버전입니다.", L"此安装程序已是最新版本。", L"此安裝程式已是最新版本。"}},
+			{"onlineUnknown", {L"No compatible release information is available.", L"対応するリリース情報がありません。", L"호환되는 릴리즈 정보를 확인할 수 없습니다.", L"未找到兼容的发布信息。", L"無法確認相容的發布資訊。"}},
+			{"onlineUnavailable", {L"Unable to check for updates. Installation is still available.", L"更新を確認できません。インストールは可能です。", L"업데이트를 확인할 수 없습니다. 설치는 계속할 수 있습니다.", L"无法检查更新，仍可安装。", L"無法檢查更新，仍可安裝。"}},
+			{"skinsDirectory", {L"Cannot prepare skins/: an existing file conflicts or access is denied. Details: ", L"skins/ を用意できません。ファイルの競合または権限を確認してください。詳細: ", L"skins/ 폴더를 준비할 수 없습니다. 같은 이름의 파일이나 접근 권한을 확인하세요. 상세: ", L"无法准备 skins/ 文件夹，请检查同名文件或权限。详情：", L"無法準備 skins/ 資料夾，請檢查同名檔案或權限。詳細："}},
 			{"browse", {L"Choose folder", L"フォルダー選択", L"폴더 선택", L"选择文件夹", L"選擇資料夾"}},
 			{"install", {L"Install mod", L"モードをインストール", L"모드 설치", L"安装模组", L"安裝模組"}},
 			{"updateReady", {L"An update is available. Use Update mod.", L"更新できます。「モードを更新」を選択してください。", L"새 버전으로 업데이트할 수 있습니다. 모드 업데이트를 누르세요.", L"可以更新。请选择更新模组。", L"可以更新。請選擇更新模組。"}},
@@ -53,6 +70,36 @@ namespace
 		return text.at(key).at(g_lang);
 	}
 	void Text(HWND control, const std::wstring& value) { SetWindowTextW(control, value.c_str()); }
+	void RefreshOnline()
+	{
+		Text(g_checkOnline, T("checkOnline")); Text(g_releasePage, T("openRelease"));
+		EnableWindow(g_checkOnline, !g_onlineBusy);
+		std::lock_guard<std::mutex> lock(g_onlineMutex);
+		const auto& r = g_onlineResult;
+		Text(g_onlineStatus, g_onlineBusy ? std::wstring(T("onlineChecking")) :
+			r.status == "available" ? std::wstring(T("onlineAvailable")) + Wide(r.version) + L"\r\n" + Wide(r.revision) :
+			std::wstring(T(r.status == "current" ? "onlineCurrent" : r.status == "unknown" ? "onlineUnknown" : "onlineUnavailable")));
+		EnableWindow(g_releasePage, !g_onlineBusy && r.status == "available" && IsReleasePage(r.releaseUrl));
+	}
+	void StopOnline()
+	{
+		g_onlineCancel = true;
+		if (g_onlineThread.joinable()) g_onlineThread.join();
+		g_onlineBusy = false;
+	}
+	void BeginOnline()
+	{
+		if (g_onlineBusy) return;
+		if (g_onlineThread.joinable()) g_onlineThread.join();
+		g_onlineCancel = false; g_onlineBusy = true; RefreshOnline();
+		const auto current = g_package->index;
+		g_onlineThread = std::thread([current]
+		{
+			auto result = CheckOnlineUpdate(current, g_onlineCancel);
+			{ std::lock_guard<std::mutex> lock(g_onlineMutex); g_onlineResult = std::move(result); }
+			PostMessageW(g_window, kOnlineFinished, 0, 0);
+		});
+	}
 	void SetProgress(int percent, int state = PBST_NORMAL)
 	{
 		g_percent = percent;
@@ -69,6 +116,7 @@ namespace
 		const auto code = result.value("code", "error");
 		if (code == "missing_executable") return std::wstring(T("missingExe")) + Wide(result.value("message", ""));
 		if (code == "runtime_mismatch") return T("runtimeMismatch");
+		if (code == "skins_directory") return std::wstring(T("skinsDirectory")) + Wide(result.value("message", ""));
 		if (code == "busy") return T("busy");
 		if (code == "target") return std::wstring(T("target")) + Wide(result.value("message", ""));
 		if (code.rfind("dependency_", 0) == 0) return std::wstring(T("dependency")) + Wide(result.value("message", ""));
@@ -86,11 +134,13 @@ namespace
 	void SaveGuiReport(const Json& result)
 	{
 		wchar_t temp[32768];
-		if (GetTempPathW(32768, temp)) try { WriteJson(Path(temp) / L"KsmEnhancedVerticalSetup-last-result.json", result); } catch (...) {}
+		if (GetTempPathW(32768, temp)) try { auto report = result; report["installerVersion"] = g_package->index.at("version"); report["installerRevision"] = g_package->index.at("installerRevision"); report["installerRevisionNumber"] = g_package->index.value("installerRevisionNumber", 0); WriteJson(Path(temp) / L"KsmEnhancedVerticalSetup-last-result.json", report); } catch (...) {}
 	}
 	void Refresh()
 	{
 		SetWindowTextW(g_window, T("title")); Text(g_browse, T("browse")); Text(g_install, T("install")); Text(g_remove, T("remove")); Text(g_hint, T("hint"));
+		Text(g_version, std::wstring(T("versionLabel")) + Wide(g_package->index.at("version")) + L"\r\n" + T("baseLabel") + L"2.2.0");
+		RefreshOnline();
 		EnableWindow(g_browse, !g_working); EnableWindow(g_language, !g_working);
 		EnableWindow(g_install, FALSE); EnableWindow(g_remove, FALSE);
 		if (g_working) { Text(g_status, T("working")); return; }
@@ -139,11 +189,18 @@ namespace
 		if (previous != g_target) SetProgress(0);
 		Refresh();
 	}
+	Json WithSetupInfo(Json result)
+	{
+		result["installerVersion"] = g_package->index.at("version");
+		result["installerRevision"] = g_package->index.at("installerRevision");
+		result["installerRevisionNumber"] = g_package->index.value("installerRevisionNumber", 0);
+		return result;
+	}
 	Json Execute(const std::string& action, const Path& target, std::function<void(const std::wstring&)> progress = {}, std::atomic_bool* cancel = nullptr, std::function<void(int)> progressValue = {})
 	{
-		try { Engine engine(*g_package, target); engine.progress = std::move(progress); engine.cancel = cancel; engine.progressValue = std::move(progressValue); return engine.Run(action); }
-		catch (const Error& e) { return Json{{"status", "FAIL"}, {"action", action}, {"code", e.code}, {"message", e.what()}, {"systemCode", e.systemCode}}; }
-		catch (const std::exception& e) { return Json{{"status", "FAIL"}, {"action", action}, {"code", "invalid_data"}, {"message", e.what()}}; }
+		try { Engine engine(*g_package, target); engine.progress = std::move(progress); engine.cancel = cancel; engine.progressValue = std::move(progressValue); return WithSetupInfo(engine.Run(action)); }
+		catch (const Error& e) { return WithSetupInfo(Json{{"status", "FAIL"}, {"action", action}, {"code", e.code}, {"message", e.what()}, {"systemCode", e.systemCode}}); }
+		catch (const std::exception& e) { return WithSetupInfo(Json{{"status", "FAIL"}, {"action", action}, {"code", "invalid_data"}, {"message", e.what()}}); }
 	}
 	void Start(const std::string& action)
 	{
@@ -168,8 +225,11 @@ namespace
 			if (id == 11) Choose();
 			if (id == 12) Start(g_installAction);
 			if (id == 13) Start("remove");
+			if (id == 14) BeginOnline();
+			if (id == 15) { std::lock_guard<std::mutex> lock(g_onlineMutex); if (!g_onlineBusy && g_onlineResult.status == "available" && IsReleasePage(g_onlineResult.releaseUrl)) ShellExecuteW(window, L"open", Wide(g_onlineResult.releaseUrl).c_str(), nullptr, nullptr, SW_SHOWNORMAL); }
 			return 0;
 		}
+		if (message == kOnlineFinished) { if (g_onlineThread.joinable()) g_onlineThread.join(); g_onlineBusy = false; RefreshOnline(); return 0; }
 		if (message == kPercent) { SetProgress(int(wparam)); return 0; }
 		if (message == kProgress)
 		{
@@ -208,7 +268,7 @@ namespace
 			if (g_working) { g_cancel = true; g_close = true; return 0; }
 			DestroyWindow(window); return 0;
 		}
-		if (message == WM_DESTROY) { PostQuitMessage(0); return 0; }
+		if (message == WM_DESTROY) { StopOnline(); PostQuitMessage(0); return 0; }
 		return DefWindowProcW(window, message, wparam, lparam);
 	}
 	void Control(const wchar_t* type, const wchar_t* text, DWORD style, int x, int y, int width, int height, int id, HWND& out)
@@ -252,21 +312,25 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show)
 		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 		INITCOMMONCONTROLSEX common{sizeof(common), ICC_PROGRESS_CLASS}; InitCommonControlsEx(&common);
 		WNDCLASSW type{}; type.lpfnWndProc = Procedure; type.hInstance = instance; type.hIcon = reinterpret_cast<HICON>(LoadImageW(instance, MAKEINTRESOURCEW(101), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED)); type.hCursor = LoadCursorW(nullptr, IDC_ARROW); type.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); type.lpszClassName = L"KsmEnhancedVerticalSetup"; RegisterClassW(&type);
-		g_window = CreateWindowExW(0, type.lpszClassName, T("title"), WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 800, 480, nullptr, nullptr, instance, nullptr);
+		g_window = CreateWindowExW(0, type.lpszClassName, T("title"), WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 800, 610, nullptr, nullptr, instance, nullptr);
 		SendMessageW(g_window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(LoadImageW(instance, MAKEINTRESOURCEW(101), IMAGE_ICON, GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_SHARED)));
 		g_font = CreateFontW(-17, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH, L"Segoe UI");
 		Control(WC_COMBOBOXW, L"", CBS_DROPDOWNLIST | WS_TABSTOP, 588, 20, 175, 200, 10, g_language);
 		for (const auto* value : {L"EN — English", L"JP — 日本語", L"KR — 한국어", L"SC — 简体中文", L"TC — 繁體中文"}) SendMessageW(g_language, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(value));
 		SendMessageW(g_language, CB_SETCURSEL, g_lang, 0);
-		Control(L"STATIC", L"KSM 2.2.0 / Enhanced Vertical 0.5.4-beta4", SS_LEFT, 24, 24, 555, 28, 0, g_hint);
-		Control(L"EDIT", L"", ES_READONLY | ES_AUTOHSCROLL | WS_BORDER, 24, 70, 558, 29, 0, g_path);
-		Control(L"BUTTON", T("browse"), BS_PUSHBUTTON | WS_TABSTOP, 595, 68, 167, 32, 11, g_browse);
-		Control(L"EDIT", L"", ES_READONLY | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 24, 120, 738, 118, 0, g_status);
-		Control(PROGRESS_CLASSW, L"", PBS_MARQUEE, 24, 245, 738, 16, 0, g_progress);
-		Control(L"STATIC", T("hint"), SS_LEFT, 24, 275, 738, 82, 0, g_hint);
-		Control(L"BUTTON", T("install"), BS_PUSHBUTTON | WS_TABSTOP, 365, 365, 190, 43, 12, g_install);
-		Control(L"BUTTON", T("remove"), BS_PUSHBUTTON | WS_TABSTOP, 572, 365, 190, 43, 13, g_remove);
+		Control(L"STATIC", L"", SS_LEFT, 24, 18, 555, 52, 0, g_version);
+		Control(L"EDIT", L"", ES_READONLY | ES_AUTOHSCROLL | WS_BORDER, 24, 85, 558, 29, 0, g_path);
+		Control(L"BUTTON", T("browse"), BS_PUSHBUTTON | WS_TABSTOP, 595, 83, 167, 32, 11, g_browse);
+		Control(L"EDIT", L"", ES_READONLY | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 24, 130, 738, 118, 0, g_status);
+		Control(PROGRESS_CLASSW, L"", PBS_MARQUEE, 24, 255, 738, 16, 0, g_progress);
+		Control(L"STATIC", T("hint"), SS_LEFT, 24, 285, 738, 78, 0, g_hint);
+		Control(L"BUTTON", T("install"), BS_PUSHBUTTON | WS_TABSTOP, 365, 374, 190, 43, 12, g_install);
+		Control(L"BUTTON", T("remove"), BS_PUSHBUTTON | WS_TABSTOP, 572, 374, 190, 43, 13, g_remove);
+		Control(L"STATIC", L"", SS_LEFT, 24, 435, 460, 78, 0, g_onlineStatus);
+		Control(L"BUTTON", T("checkOnline"), BS_PUSHBUTTON | WS_TABSTOP, 500, 435, 262, 32, 14, g_checkOnline);
+		Control(L"BUTTON", T("openRelease"), BS_PUSHBUTTON | WS_TABSTOP, 500, 475, 262, 32, 15, g_releasePage);
 		Refresh(); ShowWindow(g_window, show); UpdateWindow(g_window);
+		BeginOnline();
 		if (g_target.empty()) Choose();
 		if (!guiAction.empty() && !g_target.empty()) Start(guiAction);
 		MSG message{};

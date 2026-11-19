@@ -1,78 +1,50 @@
-﻿KSM 2.2.0 migration QA build (not a replacement for the KSM 2.1.0 package).
-When installing into a separate 2.2.0 folder, your existing 2.1.0 folder and mod can remain unchanged.
-This setup accepts original KSM 2.2.0 only. It will not update or remove an installation belonging to KSM 2.1.0.
-Before updating an existing 2.1.0 game: remove its mod with the matching old setup, apply the official 2.2.0 update, then use this setup. Preserve all original backups.
-Scores, EX records, settings and user skins are not migration targets. Do not overwrite the original game EXE manually while a mod remains installed.
+﻿KSM Enhanced Vertical Mod 0.5.5-Beta5
+Supported game: K-Shoot Mania 2.2.0, Windows x64
 
-KSM Enhanced Vertical Mod 0.5.4-beta4 Installation Guide
-Supported version: K-Shoot Mania 2.2.0 Windows x64
+# Supported version
+This setup supports original KSM 2.2.0 only. It cannot update or remove a mod installed for 2.1.0.
+To migrate a 2.1.0 installation, back up the original first, remove the mod with its own setup, then apply the official KSM 2.2.0 update. Do not replace only the original EXE while the mod is installed.
+No separate PowerShell, Python or .NET installation is required to run this setup.
 
-# Installation
-1. Close kshootmania.exe if it is running.
-2. Run KsmEnhancedVertical_KSM2.2.0_0.5.4-beta4_Setup.exe.
-3. Select the folder containing kshootmania.exe, then click [Install mod]. (If the setup EXE is in the KSM folder, that folder is selected automatically.)
-4. After installation, run ksm-enhanced-vertical.exe in the same folder to launch the mod.
-5. The original kshootmania.exe is kept.
+# Installation and updates
+1. Close any game running from the target folder.
+2. Run KsmEnhancedVertical_0.5.5-Beta5_Setup.exe.
+3. Choose the KSM 2.2.0 folder containing kshootmania.exe. Placing setup in that folder enables automatic detection.
+4. Select Install mod. Update mod is enabled for a supported existing 2.2.0 mod installation.
+5. After completion, run ksm-enhanced-vertical.exe in the same folder. You can still run the original kshootmania.exe.
 
-# Removal and reinstallation
-* Manual installations that were not installed through this setup EXE cannot be removed by the installer.
-1. Run the same setup EXE again, select the KSM folder, then click [Remove mod].
-2. Keep this EXE: no separate uninstaller or Start menu entry is installed.
-3. To update a supported older version, use Update mod in the new setup without removing the current version. Use the new setup for removal too.
+The setup defaults to Japanese and supports EN / JP / KR / SC / TC. Existing game language, key bindings and offsets are preserved.
+Setup checks for a newer installer at startup. Use Check for updates to check again, then Open release page when a compatible release is available. Downloads and installation are manual. Local installation and removal work without an internet connection.
 
-# Important notes when removing the mod
+# Removal and preserved files
+Keep this setup. To remove the mod, select the same game folder and choose Remove mod. No separate uninstaller is installed. Manual installations without an installation record cannot be removed automatically.
+Normal, EX and course records, newly earned records, score backups, settings, songs and user skins are preserved. Images you edited or deleted remain in that state.
+Unchanged mod files are removed or restored to their first-install originals. Edited language and other managed files are retained in .ksm-enhanced-recovery/<transaction>/.
+Empty mod folders created by setup are cleaned up safely. skins/, user files, backups and recovery folders remain.
+Do not edit or delete .ksm-enhanced-install.json or .ksm-enhanced-backup/. After an interruption, run the same setup and select the same folder to recover.
 
-Do not edit the installation record (.ksm-enhanced-install.json) or its backups. Doing so can make recovery impossible.
-Edited language files and other mod files (such as images added by the mod) are backed up under .ksm-enhanced-recovery/<transaction ID>/.
-Backups and recovery files are retained for safety. Do not delete them while using the installer.
+# Mod features
+- Landscape and portrait gameplay, with portrait UI
+- Viewport customization and user skins
+- P-CRITICAL, EX scoring, additional records and result displays
+- HARD+APS and an option to remember the selected EFF.RATE
+- Judgment timing settings, ASIO output and per-device additional judgment calibration
+- Laser, laser slam and note thickness, plus key-beam length and opacity
 
-Normal, EX and course records, records earned after installation, score backups, settings, songs and user skins are preserved.
-Images you edited or deleted remain as you left them.
+# Using skins
+Installation and updates create skins/ in the game folder if it is missing. Create a separate folder inside it for each skin.
+Example: <game folder>/skins/MySkin/button.png
+Match the relative paths and filenames used under imgs/. You do not need to replace every image: missing images fall back to the defaults in imgs/.
+Choose your skin in Viewport Custom. The Yellow missing-image setting helps identify images you have not replaced. Mod images are also included under imgs/.
 
-Unmodified installed images are restored to their original versions, or removed if they were added by the mod.
+# Reporting problems
+Include the installer version, build ID, Windows version, original KSM version, steps to reproduce and error details.
+https://github.com/yhc308/ksm-enhanced-vertical-mod/issues
 
-# Errors and help
-Check that the game is closed, the folder is correct and enough disk space is available. If interrupted, run the same EXE and select the same folder to recover.
-The installer stops without overwriting files if backups are damaged or the original version is unsupported. It requests administrator rights if write permission is insufficient.
-This is an unsigned test installer. Automatic updates are not provided.
+Game log: <game folder>/log/session-<number>-pid<number>/events-0.log
+Session information: session.txt in the same folder
+Last setup operation: %TEMP%/KsmEnhancedVerticalSetup-last-result.json
+Licenses: <game folder>/mods/enhanced/ and mods/enhanced/licenses/
 
-# Additional mod content
-- Vertical play
-- Viewport customization and skin support (using the added skins folder)
-- EX score and result screen improvements
-- HARD+APS
-- Judge timing settings mode
-
-# About skins
-- Mod images are also added to imgs.
-- Add skin images with matching filenames under the skins folder to apply them.
-
-When reporting a problem on GitHub, include the build ID, Windows version, original KSM version, reproduction steps and error details.
-
-Error log: [game folder]\log\session-<number>-pid<PID>\events-0.log
-Last GUI operation result: %TEMP%/KsmEnhancedVerticalSetup-last-result.json
-Licenses: [game folder]\mods\enhanced\ and [game folder]\mods\enhanced\licenses\
-
-# Empty-folder cleanup after removal
-After mod files have been removed successfully, folders recorded as newly added by this installation are removed only if empty, deepest first.
-For older installations without directory ownership records, cleanup is limited to registered paths in mods/enhanced, mods/vertical and skin_preview. The shared parent mods is kept.
-Folders containing files (including hidden files) or other folders are kept. Contents are never recursively deleted.
-Pre-existing shared folders, songs, user skins, records, settings, logs, installation backups and recovery data are preserved.
-If permissions or locks prevent cleanup, the folder is kept and a warning appears in the completion screen and last-operation JSON report.
-If folder cleanup is interrupted, run the same installer and select the same folder to resume recovery.
-
-# Changes in 0.5.4-beta4
-
-- Use the setup's Update mod button to update a supported installed version without removing it first.
-- Failed or cancelled updates restore the previous version. Removal after updating restores the original files from before the first mod installation.
-- Edited or deleted images remain as they are. Setup lists image updates that were not applied. Edited language and other managed files are saved in the recovery folder.
-- Normal, EX and course records, settings, songs and user skins are preserved. Use this new setup executable for removal too.
-- ASIO additional judgment correction is saved per device in DISPLAY / SOUND. It defaults to +15ms and supports −100 to +100ms in 1ms steps. Positive values advance judgment timing and reduce FAST errors. This is separate from the device-reported output latency.
-- Viewport settings include laser, slam laser and note thickness, key-beam length and opacity, and skin help. An option to remember the selected EFF.RATE is included.
-- Missing new settings use defaults. Old key-beam OFF settings become Normal mode with 0% opacity. Existing score files are not batch-converted.
-
-Supported updates: valid installations of 0.4.0-beta.1, 0.5.1-beta1 and its installer revisions, and 0.5.2-beta2. Untracked manual installations are not overwritten automatically. Same-build reinstalls and downgrades are not supported.
-
-# 0.5.4-beta4 hotfix
-A newer hotfix build can update the same 0.5.4-beta4 version with Update mod. Duplicate builds and build downgrades remain blocked.
-Portrait loading now uses the same background and aspect fit as the result screen, fixing the cropped background.
+Check write permissions, free space and whether the game is closed. Setup offers elevation when needed and does not overwrite an unsupported installation or damaged backups.
+This is an unsigned test-distribution installer.

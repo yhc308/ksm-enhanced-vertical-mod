@@ -62,6 +62,11 @@ namespace Setup
 		static void DataPath(const std::string& relative);
 		static std::string Kind(const std::string& relative);
 	private:
+		void CheckSkinsDirectory() const;
+		Json SkinsIdentity() const;
+		void ValidateSkinsJournal(const Json& journal) const;
+		void CreateSkinsDirectory(Json& journal);
+		void RollbackSkinsDirectory(const Json& journal);
 		Json LoadState();
 		Json Install();
 		Json Update();

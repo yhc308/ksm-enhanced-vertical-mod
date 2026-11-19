@@ -20,18 +20,20 @@ if release.get('upstreamVersion') == '2.2.0':
  assert set(v['reports']['portrait']['cases']) == {'geometry','viewport','options','laser','range','context','select'}
  assert set(v['reports']['landscape']['cases']) == {'geometry','viewport','options','select'}
  assert v['reports']['unicode']['checks'] >= 183
+ assert v['reports']['installerRefresh']['checks'] >= 330 and v['reports']['onlineUpdate']['checks'] >= 33
+ assert v['reports']['installerGui']['languages'] == 5 and v['reports']['installerGui']['progressComplete']
 else:
  assert len(v['reports']['production']['upgrades'])==4 and len(v['reports']['production']['runtimeCases'])>=13 and v['reports']['production']['sameVersionHotfix']['status']=='PASS' and len(v['reports']['production']['gui'])==5
 stub=(ROOT/'build/native-installer/SetupStub.exe').read_bytes();assert setup.startswith(stub)
 for marker in ('KSM_SETUP_FAIL_AFTER','KSM_SETUP_CRASH_AFTER','KSM_SETUP_LOW_SPACE','KSM_SETUP_DIRECTORY_DENY','KSM_SETUP_CLEANUP_CRASH_AFTER'):
  assert marker.encode()not in stub and marker.encode('utf-16le')not in stub
-setupName='KsmEnhancedVertical_KSM2.2.0_'+release['version']+'_Setup.exe'
-info={'setupFileName':setupName,'product':'KSM Enhanced Vertical Mod','version':release['version'],'installerRevision':index['installerRevision'],'createdUtc':datetime.now(timezone.utc).isoformat(),'gameBuildId':build['buildId'],'gameConfiguration':'Release','diagnostics':False,'gameSha256':sha(game),'setupSha256':sha(setup),'setupBytes':len(setup),'payloadFileCount':len(index['files']),'supportedGame':'K-Shoot Mania 2.2.0 Windows x64','defaultInstallerLanguage':'Japanese','installerLanguages':['EN','JP','KR','SC','TC'],'endUserDependencies':'Built-in Windows APIs; no PowerShell, Python or .NET installation required','originalExecutableIncluded':False,'ordinarySongsIncluded':False,'sdkIncluded':False,'userDataIncluded':False,'signature':'Unsigned beta build','releaseChannel':'KSM 2.2.0 migration QA','physicalAudioTimingValidated':False,'hardwarePerformanceValidated':False,'crossBaseUpdateSupported':False,'updatePolicy':'Single rollback-capable update transaction; supports verified older installations; no downgrade or duplicate-build reinstall','removalPolicy':'Restore original first-install baseline; preserve user-modified/deleted images and all user data','asioCorrection':'Per-device additional judgment calibration; default +15ms, range -100..+100ms; separate from driver-reported latency'}
+setupName='KsmEnhancedVertical_'+release['version']+'_Setup.exe'
+info={'setupFileName':setupName,'product':'KSM Enhanced Vertical Mod','version':release['version'],'installerRevision':index['installerRevision'],'installerRevisionNumber':index['installerRevisionNumber'],'createdUtc':datetime.now(timezone.utc).isoformat(),'gameBuildId':build['buildId'],'gameConfiguration':'Release','diagnostics':False,'gameSha256':sha(game),'setupSha256':sha(setup),'setupBytes':len(setup),'payloadFileCount':len(index['files']),'supportedGame':'K-Shoot Mania 2.2.0 Windows x64','defaultInstallerLanguage':'Japanese','installerLanguages':['EN','JP','KR','SC','TC'],'endUserDependencies':'Built-in Windows APIs; no PowerShell, Python or .NET installation required','originalExecutableIncluded':False,'ordinarySongsIncluded':False,'sdkIncluded':False,'userDataIncluded':False,'signature':'Unsigned beta build','releaseChannel':'Beta','physicalAudioTimingValidated':False,'hardwarePerformanceValidated':False,'crossBaseUpdateSupported':False,'updatePolicy':'Single rollback-capable update transaction; supports verified older installations; no downgrade or duplicate-build reinstall','removalPolicy':'Restore original first-install baseline; preserve user-modified/deleted images and all user data','asioCorrection':'Per-device additional judgment calibration; default +15ms, range -100..+100ms; separate from driver-reported latency'}
 files={setupName:setup,'BUILD_INFO.json':(json.dumps(info,indent=2)+'\n').encode()}
 for n in ('README_KO.txt','README_EN.txt','README_JA.txt'):
  b=(ROOT/'installer/readme'/n).read_bytes();assert release['version'].encode()in b;files[n]=b
-out=a.output_directory or ROOT/'releases'/('ksm-enhanced-vertical-KSM2.2.0-'+release['version']+'-installer');assert not out.exists(),'Never overwrite an existing release';out.mkdir(parents=True)
-archive=out/('ksm-enhanced-vertical-KSM2.2.0-'+release['version']+'-installer.zip')
+out=a.output_directory or ROOT/'releases'/'ksm-2.2.0'/release['version'];assert not out.exists(),'Never overwrite an existing release';out.mkdir(parents=True)
+archive=out/('KsmEnhancedVertical_'+release['version']+'.zip')
 with zipfile.ZipFile(archive,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=6)as z:
  for n,b in files.items():z.writestr(n,b)
 with zipfile.ZipFile(archive)as z:
@@ -42,3 +44,11 @@ for n,b in files.items():
 with(out/'FILES_SHA256.csv').open('w',encoding='utf8',newline='')as f:
  w=csv.writer(f);w.writerow(['Path','Bytes','SHA256']);w.writerows((n,len(b),sha(b))for n,b in files.items())
 v.update(version=release['version'],archiveIntegrity='PASS',archiveFileHashes='PASS',zipBytes=archive.stat().st_size,zipSha256=sha(archive.read_bytes()),payload=index['files']);(out/'VERIFICATION.json').write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf8');archive.with_suffix('.zip.sha256').write_text(v['zipSha256']+'  '+archive.name+'\n',encoding='ascii');print(json.dumps({'status':'PASS','zip':str(archive),'bytes':v['zipBytes'],'sha256':v['zipSha256']},indent=2))
+
+metadata={'schemaVersion':1,'supportedGame':'2.2.0','runtimeContract':'ksm-2.2.0-enhanced-skin-v1',
+ 'package':{k:index[k]for k in ('version','buildId','installerRevision','installerRevisionNumber')},
+ 'zipName':archive.name,'zipSha256':v['zipSha256']}
+# Older 2.2 installers parse lowercase beta only. Keep the wire version compatible.
+metadata['package']['displayVersion']=index['version']
+metadata['package']['version']=index['version'].replace('-Beta','-beta')
+(out/'update-info-ksm-2.2.0.json').write_text(json.dumps(metadata,indent=2)+'\n',encoding='utf8')

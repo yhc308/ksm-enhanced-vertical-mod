@@ -77,7 +77,7 @@ def assemble(stub, destination, files, targets, fixture=False, version=None, bui
         inventory.append({'path':relative,'kind':kind(relative),'size':len(data),'compressedSize':len(packed),
                           'offset':offset,'sha256':hashlib.sha256(data).hexdigest()})
         blocks.append(packed); offset += len(packed)
-    index = {'installerRevision':RELEASE['installerRevision'],'schemaVersion':1,'modId':'ksm-enhanced-vertical','version':version or RELEASE['version'],'buildId':build_id or ('native-installer-fixture' if fixture else json.loads((ROOT/'build/latest.json').read_text(encoding='utf-8-sig'))['buildId']),
+    index = {'installerRevision':RELEASE['installerRevision'],'installerRevisionNumber':RELEASE['installerRevisionNumber'],'schemaVersion':1,'modId':'ksm-enhanced-vertical','version':version or RELEASE['version'],'buildId':build_id or ('native-installer-fixture' if fixture else json.loads((ROOT/'build/latest.json').read_text(encoding='utf-8-sig'))['buildId']),
              'fixture':fixture,'targets':targets,'files':inventory}
     encoded = json.dumps(index,ensure_ascii=True,separators=(',',':')).encode()
     blob = b'KSMSET01' + struct.pack('<Q',len(encoded)) + encoded + b''.join(blocks)

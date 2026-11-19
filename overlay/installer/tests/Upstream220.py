@@ -1,4 +1,4 @@
-"""Real 2.2.0 installer transactions, without launching the game or audio."""
+﻿"""Real 2.2.0 installer transactions, without launching the game or audio."""
 from pathlib import Path
 import argparse, hashlib, importlib.util, json, shutil, subprocess, sys, uuid
 
@@ -7,6 +7,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--setup', type=Path, required=True)
 p.add_argument('--original22', type=Path, required=True)
 p.add_argument('--original21', type=Path, required=True)
+p.add_argument('--previous-setup', type=Path)
 a = p.parse_args()
 sys.path.insert(0, str(ROOT / 'installer'))
 spec = importlib.util.spec_from_file_location('package220', ROOT / 'installer/BuildPackage.py')
@@ -109,6 +110,24 @@ try:
     run(app, 'remove')
     check((app / image).read_bytes() == b'USER EDIT AFTER INSTALL', 'Post-install image edits preserved')
     check(new_ex.read_bytes() == b'NEW EX MAX RECORD', 'Post-install EX records preserved')
+    if a.previous_setup:
+        app = fixture('actual previous installer revision')
+        owned_skins = (app / 'skins').resolve(); owned_skins.relative_to(work.resolve())
+        shutil.rmtree(owned_skins)
+        baseline = inventory(app)
+        run(app, 'install', exe=a.previous_setup)
+        previous_state = json.loads((app / '.ksm-enhanced-install.json').read_text(encoding='utf-8-sig'))
+        previous_index = json.loads(a.previous_setup.with_suffix('.payload.json').read_text(encoding='utf-8-sig'))
+        check(previous_state.get('installerRevisionNumber', 0) == previous_index.get('installerRevisionNumber', 0), 'Previous actual 2.2 installer revision matches its published package')
+        report = run(app, 'inspect')
+        check(report['updateAvailable'], 'Actual prior 2.2 installation offers installer-only update')
+        game_hash = sha(app / 'ksm-enhanced-vertical.exe')
+        run(app, 'update'); run(app, 'verify')
+        expected_game = next(x['sha256'] for x in json.loads(a.setup.with_suffix('.payload.json').read_text())['files'] if x['path'] == 'ksm-enhanced-vertical.exe')
+        check(sha(app / 'ksm-enhanced-vertical.exe') == expected_game, 'Production update applies the exact verified game EXE')
+        check((app / 'skins').is_dir(), 'Installer-only production update prepares skins')
+        run(app, 'remove')
+        check(inventory(app) == baseline, 'Installer-only production update removal restores first-install originals')
     result = {'status': 'PASS', 'checks': len(checks), 'cases': checks,
               'fixture': str(work), 'gameLaunched': False, 'audioDevicesUsed': False}
 except Exception as e:

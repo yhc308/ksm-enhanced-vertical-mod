@@ -1,5 +1,6 @@
 {
-  "version": "0.5.4-beta4",
-  "installerRevision": "20261117-ksm220-migration1",
-  "upstreamVersion": "2.2.0"
+  "version": "0.5.5-Beta5",
+  "installerRevision": "20261120-beta5-release1",
+  "upstreamVersion": "2.2.0",
+  "installerRevisionNumber": 2
 }

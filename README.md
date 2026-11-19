@@ -1,4 +1,4 @@
-> **KSM 2.2.0 migration QA branch.** The existing `main` branch remains the KSM 2.1.0 version. Use the dedicated KSM 2.2.0 installer in a separate 2.2.0 folder; this branch does not upgrade/remove a 2.1.0 mod installation. [Integration and validation](overlay/docs/MIGRATION_2.2.0.md).
+> **KSM 2.2.0 branch.** The existing `main` branch remains the KSM 2.1.0 version. Use the dedicated KSM 2.2.0 installer in a separate 2.2.0 folder; this branch does not upgrade/remove a 2.1.0 mod installation. [Integration and validation](overlay/docs/MIGRATION_2.2.0.md).
 
 # KSM Enhanced Vertical Mod (Windows x64 only)
 

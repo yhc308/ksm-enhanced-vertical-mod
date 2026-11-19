@@ -1,8 +1,8 @@
 diff --git a/.gitignore b/.gitignore
-index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..3efb6f2931181af05de54427a44921ed9a4fb3c9 100644
+index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..2beeccf110234c6f1fc59f96bf4a162916f864f6 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -440,3 +440,69 @@ kshootmania/AppWeb/songs_default/*
+@@ -440,3 +440,72 @@ kshootmania/AppWeb/songs_default/*
  # Distribution files
  dist_scripts/kshootmania_v2/
  dist_scripts/*.zip
@@ -72,14 +72,17 @@ index 5a2f288789fcdcc4d40bcf7cc0ba7c909003a1e9..3efb6f2931181af05de54427a44921ed
 +
 +# Local migration packages are never source inputs
 +/releases_QA/
++
++# Upstream version maintenance policy
++!/docs/UPSTREAM_UPDATE_POLICY.md
 diff --git a/README.md b/README.md
-index f98fbef4a04056fa471f536ee12767991ef23cf6..733f6d4cb78f7e3b961fa036fd96cf154bc8a88c 100644
+index f98fbef4a04056fa471f536ee12767991ef23cf6..be92a4c02925deea9fc7573aa79b59649c62d2ad 100644
 --- a/README.md
 +++ b/README.md
 @@ -1,18 +1,60 @@
 -K-Shoot MANIA v2
 -========================
-+> **KSM 2.2.0 移行テスト用ブランチです。2.1.0版は従来のブランチ・配布物に保持されています。まだ公開リリースではありません。**
++> **KSM 2.2.0 対応版です。2.1.0版は従来のブランチ・配布物に保持されています。**
  
 -## ビルドに必要な環境 / Build Requirements
 +# KSM Enhanced Vertical Mod (Windows x64 専用)
@@ -95,7 +98,7 @@ index f98fbef4a04056fa471f536ee12767991ef23cf6..733f6d4cb78f7e3b961fa036fd96cf15
 +縦画面プレイ、スキンプリセット、画面のカスタマイズ、EXスコア、HARD+APS、判定タイミング設定、一部のASIO機能を提供します。
  
 -## Contributionについて
-+[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod) · [既存2.1.0版の配布](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases) · [開発ガイド](REVIEW.md) · [原作のビルド・貢献案内](docs/UPSTREAM_README.md)
++[独立Modリポジトリ](https://github.com/yhc308/ksm-enhanced-vertical-mod) · [2.2.0版ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.5-Beta5) · [従来の2.1.0版](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.4-beta4) · [開発ガイド](REVIEW.md) · [原作のビルド・貢献案内](docs/UPSTREAM_README.md)
  
 -本プロジェクトは個人プロジェクトであり、オープンソース主導の開発プロジェクトではありません。  
 -そのため、機能実装についてのPull Requestは基本的にマージできない場合が多いです。機能追加のご提案はIssueまたはK-Shoot MANIA掲示板( https://bbs.kshootmania.com )よりお願いいたします。
@@ -4470,7 +4473,7 @@ index d2f981bf35f57ced7171fd3278a7e66910f0e0e9..8e8d22719f82fcb323aabf34bd49869e
  	void RequestVirtualDown(Button button);
  
 diff --git a/kshootmania/src/Main.cpp b/kshootmania/src/Main.cpp
-index 95b32cadd306e1ed5b8a1161780eaf7ed9bcaaa0..7919580660f78d8a938b4901bb45be55498d8db4 100644
+index 95b32cadd306e1ed5b8a1161780eaf7ed9bcaaa0..010b6c0d9923dd0226ef8ad89a02209cb04c3713 100644
 --- a/kshootmania/src/Main.cpp
 +++ b/kshootmania/src/Main.cpp
 @@ -1,4 +1,14 @@
@@ -4888,7 +4891,7 @@ index 95b32cadd306e1ed5b8a1161780eaf7ed9bcaaa0..7919580660f78d8a938b4901bb45be55
  
  	// ウィンドウタイトル
 -	Window::SetTitle(U"K-Shoot MANIA {} (unofficial build)"_fmt(kAppVersion));
-+	Window::SetTitle(U"K-Shoot Mania V2.2.0 - Enhanced Vertical Mod 0.5.4-beta4 (Unofficial Build)");
++	Window::SetTitle(U"K-Shoot Mania V2.2.0 - Enhanced Vertical Mod 0.5.5-Beta5 (Unofficial Build)");
  
  	// カレントディレクトリを設定
  	// (ChangeCurrentDirectoryはここ以外は基本的に使用禁止。どうしても使う必要がある場合は必ずResourceDirectoryPathに戻すこと)

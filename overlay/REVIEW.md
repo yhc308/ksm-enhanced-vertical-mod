@@ -1,3 +1,5 @@
+> This document records the historical 2.1.0 review baseline. This branch now targets **KSM 2.2.0**. See [current integration and validation](docs/MIGRATION_2.2.0.md), [upstream change ledger](docs/MIGRATION_2.2.0_UPSTREAM.md), and [installer guide](installer/README.md) for the current implementation.
+
 # Enhanced Vertical: upstream review
 
 This branch is a full-source review view of the existing mod, based directly on

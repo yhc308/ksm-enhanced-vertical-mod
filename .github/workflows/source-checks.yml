@@ -74,6 +74,10 @@ jobs:
           ./build/source/installer/Build.ps1 -TestEngine
           python build/source/installer/tests/UpdateEngine.py
           if ($LASTEXITCODE) { throw 'Native installer update tests failed' }
+          python build/source/installer/tests/InstallerRefresh.py
+          if ($LASTEXITCODE) { throw 'Installer refresh tests failed' }
+          python build/source/installer/tests/OnlineUpdates.py
+          if ($LASTEXITCODE) { throw 'Online update tests failed' }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

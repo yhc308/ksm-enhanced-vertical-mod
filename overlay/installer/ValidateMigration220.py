@@ -33,6 +33,10 @@ for key,cases in groups.items():reports[key]={'status':'PASS','cases':cases,'ren
 text=(ROOT/'build/unicode220-final/App/unicode-path-results.txt').read_text(encoding='utf-8-sig')
 m=re.search(r'TOTAL checks=(\d+) failures=(\d+)',text);assert m and int(m[2])==0
 reports['unicode']={'status':'PASS','checks':int(m[1])}
+reports['installerRefresh']=passed(ROOT/'build/installer-refresh-engine-results.json')
+reports['onlineUpdate']=passed(ROOT/'build/online-update-results.json')
+reports['installerGui']=passed(ROOT/'build/installer-refresh-gui-results.json')
+assert reports['installerGui']['setupSha256']==hashlib.sha256(a.setup.read_bytes()).hexdigest()
 result={'status':'PASS','validationKind':'KSM220-silent-migration-QA','setupSha256':hashlib.sha256(a.setup.read_bytes()).hexdigest(),
  'gameBuildId':b['buildId'],'reports':reports,'limitations':['No physical WASAPI/ASIO output or acoustic/input latency measurement','No hardware-GPU/OBS frame-time performance claim','Normal Release built and packaged; runtime probes used the matching diagnostic code with discard-only mock ASIO and WARP','Linux/macOS not built or executed','Not every upstream fix has a dedicated input-driven end-to-end scenario; see upstream integration ledger']}
 (ROOT/'build/migration220-validation.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
