@@ -8,18 +8,18 @@ For playing the KSM 2.2.0 mod, use the [0.5.5-Beta5 installer release](https://g
 
 ## Choose the source version
 
-The exact source for this release is pinned by `v0.5.5-Beta5`. The versioned branch is `feature/ksm-2.2.0`.
+The exact source for this release is pinned by `v0.5.5-Beta5`. The default `main` branch contains the latest integrated 2.2.0 source; `feature/ksm-2.2.0` remains its development branch.
 
-This `feature/ksm-2.2.0` branch contains the 2.2.0 patch-and-overlay source. The existing `main` branch remains the 2.1.0 version. For the exact source packaged for **0.5.1-beta1**, use the immutable [`v0.5.1-beta1` tag](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/v0.5.1-beta1). Previous development and review checkpoints are retained as `archive/*` tags; their complete commit histories remain available.
+The 2.1.0 line through Mod 0.5.4-beta4 is preserved in `legacy/ksm-2.1.0`; its previous default-branch checkpoint is also tagged `archive/ksm-2.1.0-before-2.2.0`. Existing release tags remain unchanged. For the exact source packaged for **0.5.1-beta1**, use the immutable [`v0.5.1-beta1` tag](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/v0.5.1-beta1). Previous development and review checkpoints are retained as `archive/*` tags; their complete commit histories remain available.
 
-For an upstream-based view with the original Git history, see the [equivalent full-source branch](https://github.com/yhc308/ksm-enhanced-vertical/tree/feature/ksm-2.2.0).
+For an upstream-based view with the original Git history, see the [equivalent full-source branch](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical).
 
 ## Reconstruct the source
 
 Install Git and Python 3, then clone the main branch:
 
 ```sh
-git clone --branch feature/ksm-2.2.0 https://github.com/yhc308/ksm-enhanced-vertical-mod.git
+git clone --branch main https://github.com/yhc308/ksm-enhanced-vertical-mod.git
 cd ksm-enhanced-vertical-mod
 python scripts/VerifySource.py
 python scripts/PrepareSource.py

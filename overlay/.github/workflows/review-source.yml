@@ -1,12 +1,13 @@
-name: Review full source checks
+name: Historical KSM 2.1 review source checks
 on:
   push:
-    branches: [review/current-features-tests, enhanced-vertical]
+    branches: [review/current-features-tests]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   full-source-and-headless:
+    if: startsWith(github.ref, 'refs/heads/review/') || startsWith(github.ref, 'refs/heads/legacy/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,6 +41,7 @@ jobs:
             build/release-source-parity.json
             build/headless-results.xml
   windows-timer:
+    if: startsWith(github.ref, 'refs/heads/review/') || startsWith(github.ref, 'refs/heads/legacy/')
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

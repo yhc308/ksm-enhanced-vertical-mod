@@ -1,7 +1,7 @@
 name: KSM 2.2.0 migration checks
 on:
   push:
-    branches: [feature/ksm-2.2.0]
+    branches: [enhanced-vertical, feature/ksm-2.2.0]
   workflow_dispatch:
 permissions:
   contents: read

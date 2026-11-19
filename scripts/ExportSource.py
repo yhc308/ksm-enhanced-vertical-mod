@@ -79,7 +79,7 @@ for name in added:
     records.append({"path": name, "sha256": sha(data)})
 manifest["mainPatchSha256"] = sha(patch)
 manifest["overlayFiles"] = records
-manifest["sourceBranch"] = "feature/ksm-2.2.0"
+manifest["sourceBranch"] = manifest.get("sourceBranch", "main")
 manifest["refactorTag"] = "archive/refactor-upstream-style-parity"
 manifest.pop("refactorBranch", None)
 manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

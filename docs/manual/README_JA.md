@@ -1,11 +1,11 @@
-> **KSM 2.2.0 対応ブランチです。** `main` の KSM 2.1.0 版は維持しています。別の 2.2.0 フォルダーで 2.2.0 専用インストーラーを使用してください。2.1.0 版の更新・削除には対応しません。[移行・検証内容](../../overlay/docs/MIGRATION_2.2.0.md)。
+> **KSM 2.2.0 / Mod 0.5.5-Beta5 対応版です。** KSM 2.1.0向けの旧版（Mod 0.5.4-beta4まで）は [legacy/ksm-2.1.0](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/legacy/ksm-2.1.0) に保持しています。
 
 # KSM Enhanced Vertical Mod (Windows x64 専用)
 
 **K-Shoot Mania 2.2.0を縦画面でも楽しめるように拡張する非公式Modです。**
 縦画面プレイ、スキンプリセット、画面のカスタマイズ、EXスコア、HARD+APS、判定タイミング設定、一部のASIO機能を提供します。
 
-[ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases) · [ソース構成・ビルドガイド](../DEVELOPMENT.md) · [ソース全体](https://github.com/yhc308/ksm-enhanced-vertical/tree/feature/ksm-2.2.0) · [不具合報告](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
+[ダウンロード](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases) · [ソース構成・ビルドガイド](../DEVELOPMENT.md) · [ソース全体](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical) · [不具合報告](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
 ▶ English : **[Open](README_EN.md)**<br>
 ▶ 日本語 : **[開く](README_JA.md)** **(表示中)**<br>

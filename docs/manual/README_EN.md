@@ -1,4 +1,4 @@
-> **KSM 2.2.0 branch.** `main` remains the KSM 2.1.0 version. Use the dedicated 2.2.0 installer and a separate 2.2.0 folder. [Integration and validation](../../overlay/docs/MIGRATION_2.2.0.md).
+> **KSM 2.2.0 / Mod 0.5.5-Beta5.** The previous KSM 2.1.0 line (through Mod 0.5.4-beta4) is preserved in [legacy/ksm-2.1.0](https://github.com/yhc308/ksm-enhanced-vertical-mod/tree/legacy/ksm-2.1.0).
 
 # KSM Enhanced Vertical Mod (Windows x64 only)
 
@@ -6,7 +6,7 @@
 **An unofficial mod that brings vertical play to K-Shoot Mania 2.2.0.**
 Features include vertical play, skin presets, viewport customization, EX scoring, HARD+APS, judgment timing settings and partial ASIO support.
 
-[Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.2-beta2) · [Source structure and build guide](../DEVELOPMENT.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/feature/ksm-2.2.0) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
+[Download](https://github.com/yhc308/ksm-enhanced-vertical-mod/releases/tag/v0.5.2-beta2) · [Source structure and build guide](../DEVELOPMENT.md) · [Full source](https://github.com/yhc308/ksm-enhanced-vertical/tree/enhanced-vertical) · [Report an issue](https://github.com/yhc308/ksm-enhanced-vertical-mod/issues)
 
 ▶ English : **[Open](README_EN.md)** **(Currently viewing)**<br>
 ▶ 日本語 : **[開く](README_JA.md)**<br>

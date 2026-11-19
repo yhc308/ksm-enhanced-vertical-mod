@@ -4,7 +4,7 @@
   "initialImportCommit": "6cba303ddd96b49d33781f4b829b726cf72bb223",
   "sourceBuildId": "20261120-013011-00206473",
   "mainPatch": "patches/ksm-v2.patch",
-  "mainPatchSha256": "222b5e79f5ff215cbbcb4826a633f90488fd2e8be2d0d678395d822dfd606151",
+  "mainPatchSha256": "a64cb54e2850ba465b7fcc796e1b22df3f471724a8088997d7fb0f645f53ea54",
   "overlayFiles": [
     {
       "path": ".clang-format",
@@ -16,11 +16,11 @@
     },
     {
       "path": ".github/workflows/migration220.yml",
-      "sha256": "f1483e2295e4a2a383bd68b41ebcb677e6861789d79014cb08cae9ea275847c1"
+      "sha256": "5585c2668fd9d6a6ef9f3197e756be6a540c69f0dc50de50ba0009929edb26eb"
     },
     {
       "path": ".github/workflows/review-source.yml",
-      "sha256": "b36edf2130dd1fb82edbba0261f3d726d1b3889f5ce028a3540fa63b571ad18a"
+      "sha256": "d2ca008faf4c2757420ad736fb1794959c5da60b280c89ac7b4e3e97092c1663"
     },
     {
       "path": "README_ENHANCED.md",
@@ -132,7 +132,7 @@
     },
     {
       "path": "docs/UPSTREAM_UPDATE_POLICY.md",
-      "sha256": "ec76d41030418156aa15754bac41dd0e348c0f65d52c0371ca23eb5bf30aeeb0"
+      "sha256": "6592447cfbb7629c3e2a33f9e4ae5b05ff59148c587dc351b05a50d003cb2479"
     },
     {
       "path": "docs/review/CORE_TARGET.json",
@@ -1478,7 +1478,7 @@
   "releaseVersion": "0.5.5-Beta5",
   "reviewSourceBase": "7533cf48fd73a73976294fa2d9294477eb35345b",
   "installerRevision": "20261120-beta5-release1",
-  "sourceBranch": "feature/ksm-2.2.0",
+  "sourceBranch": "main",
   "refactorTag": "archive/refactor-upstream-style-parity",
   "upstreamVersion": "2.2.0",
   "installerRevisionNumber": 2,
